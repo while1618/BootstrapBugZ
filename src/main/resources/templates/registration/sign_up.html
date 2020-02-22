@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/reusable/header :: head(title='Sign Up')"></head>
+<body>
+<div th:replace="/reusable/scripts :: scripts"></div>
+<div th:replace="/reusable/navbar_home :: navbarHome"></div>
+<div class="container">
+    <div class="col-xl-3 col-lg-6 col-md-8 col-sm-10 mx-auto form p-4">
+        <form th:action="@{/sign-up}" th:method="post" th:object="${user}">
+            <h4 class="text-center">Sign Up</h4>
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" th:value="${user.firstName}">
+                <span class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="lastLame" th:value="${user.lastLame}">
+                <span class="text-danger" th:if="${#fields.hasErrors('lastLame')}" th:errors="*{lastLame}"></span>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" th:value="${user.username}">
+                <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" th:value="${user.email}">
+                <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" th:value="${user.password}">
+                <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+            </div>
+            <div class="form-group">
+                <label for="repeatPassword">Repeat Password</label>
+                <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" th:value="${user.repeatPassword}">
+                <span class="text-danger" th:if="${#fields.hasErrors('repeatPassword')}" th:errors="*{repeatPassword}"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Sign Up</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

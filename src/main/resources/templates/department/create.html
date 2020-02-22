@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/reusable/header :: head(title='Create Department')"></head>
+<body>
+<div th:replace="/reusable/scripts :: scripts"></div>
+<div th:replace="/reusable/navbar_app :: navbarApp"></div>
+<div class="container">
+    <div class="col-xl-3 col-lg-6 col-md-8 col-sm-10 mx-auto form p-4">
+        <form th:action="@{/department/create}" th:object="${department}" th:method="post">
+            <h4 class="text-center">Create Department</h4>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" class="form-control" th:value="${department.name}">
+                <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <select class="form-control" id="location" name="location">
+                    <option th:each="location : ${locations}" th:value="${location.id}"
+                            th:text="${location.street} + ', ' + ${location.city} + ', ' + ${location.country}"
+                            th:selected="${location.id == department.location?.id}"></option>
+                </select>
+                <span class="text-danger" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></span>
+            </div>
+            <div class="form-group" style="float: right">
+                <input type="submit" class="btn btn-success" value="Create">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
