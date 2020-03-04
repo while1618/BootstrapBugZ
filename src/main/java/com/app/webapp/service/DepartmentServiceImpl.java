@@ -4,9 +4,11 @@ import com.app.webapp.model.Department;
 import com.app.webapp.repository.DepartmentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -30,6 +32,21 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public Department findDepartmentById(Long id) {
         return departmentRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Optional<Department> findById(Long id) {
+        return departmentRepository.findById(id);
+    }
+
+    @Override
+    public Department save(Department department) {
+        return departmentRepository.save(department);
+    }
+
+    @Override
+    public void deleteAll() {
+        departmentRepository.deleteAll();
     }
 
     @Override

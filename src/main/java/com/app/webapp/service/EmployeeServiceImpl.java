@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -30,6 +31,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee findEmployeeById(Long id) {
         return employeeRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Optional<Employee> findById(Long id) {
+        return employeeRepository.findById(id);
+    }
+
+    @Override
+    public Employee save(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
+    @Override
+    public void deleteAll() {
+        employeeRepository.deleteAll();
     }
 
     @Override

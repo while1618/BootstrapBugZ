@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LocationServiceImpl implements LocationService {
@@ -30,6 +31,21 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Location findLocationById(Long id) {
         return locationRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Optional<Location> findById(Long id) {
+        return locationRepository.findById(id);
+    }
+
+    @Override
+    public Location save(Location location) {
+        return locationRepository.save(location);
+    }
+
+    @Override
+    public void deleteAll() {
+        locationRepository.deleteAll();
     }
 
     @Override

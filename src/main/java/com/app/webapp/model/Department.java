@@ -1,5 +1,10 @@
 package com.app.webapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -19,7 +24,8 @@ public class Department {
     @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Please enter a valid name.")
     private String name;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    @JsonBackReference
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Employee> employees;
 
     @ManyToOne()
@@ -54,6 +60,7 @@ public class Department {
         return location;
     }
 
-    public void setLocation(Location location) { this.location = location;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

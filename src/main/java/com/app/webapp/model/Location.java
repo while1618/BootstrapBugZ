@@ -1,5 +1,9 @@
 package com.app.webapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -29,7 +33,8 @@ public class Location {
     @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Please enter a valid country.")
     private String country;
 
-    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
+    @JsonBackReference
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Department> departments;
 
     public Long getId() {

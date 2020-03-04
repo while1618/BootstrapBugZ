@@ -15,8 +15,8 @@
             </div>
             <div class="form-group">
                 <label for="lastName">Last Name</label>
-                <input type="text" class="form-control" id="lastName" name="lastLame" th:value="${user.lastLame}">
-                <span class="text-danger" th:if="${#fields.hasErrors('lastLame')}" th:errors="*{lastLame}"></span>
+                <input type="text" class="form-control" id="lastName" name="lastName" th:value="${user.lastName}">
+                <span class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
             </div>
             <div class="form-group">
                 <label for="username">Username</label>
@@ -34,9 +34,9 @@
                 <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
             </div>
             <div class="form-group">
-                <label for="repeatPassword">Repeat Password</label>
-                <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" th:value="${user.repeatPassword}">
-                <span class="text-danger" th:if="${#fields.hasErrors('repeatPassword')}" th:errors="*{repeatPassword}"></span>
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" th:value="${user.confirmPassword}">
+                <span class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block btn-lg">Sign Up</button>
