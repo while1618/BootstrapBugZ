@@ -1,8 +1,8 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.model.Department;
-import com.app.webapp.service.DepartmentServiceImpl;
-import com.app.webapp.service.LocationServiceImpl;
+import com.app.webapp.service.DepartmentService;
+import com.app.webapp.service.LocationService;
 import com.app.webapp.validator.LocationValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +15,11 @@ import javax.validation.Valid;
 
 @Controller
 public class DepartmentController {
-    private final DepartmentServiceImpl departmentService;
-    private final LocationServiceImpl locationService;
+    private final DepartmentService departmentService;
+    private final LocationService locationService;
     private final LocationValidator locationValidator;
 
-    public DepartmentController(DepartmentServiceImpl departmentService, LocationServiceImpl locationService, LocationValidator locationValidator) {
+    public DepartmentController(DepartmentService departmentService, LocationService locationService, LocationValidator locationValidator) {
         this.departmentService = departmentService;
         this.locationService = locationService;
         this.locationValidator = locationValidator;

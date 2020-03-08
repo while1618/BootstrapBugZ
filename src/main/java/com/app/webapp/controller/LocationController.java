@@ -1,7 +1,7 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.model.Location;
-import com.app.webapp.service.LocationServiceImpl;
+import com.app.webapp.service.LocationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +13,9 @@ import javax.validation.Valid;
 
 @Controller
 public class LocationController {
-    private final LocationServiceImpl locationService;
+    private final LocationService locationService;
 
-    public LocationController(LocationServiceImpl locationService) {
+    public LocationController(LocationService locationService) {
         this.locationService = locationService;
     }
 

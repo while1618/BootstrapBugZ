@@ -1,7 +1,7 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.model.Department;
-import com.app.webapp.service.DepartmentServiceImpl;
+import com.app.webapp.service.DepartmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import java.util.Optional;
 @RequestMapping("/api")
 @RestController
 public class RestDepartmentController {
-    private final DepartmentServiceImpl departmentService;
+    private final DepartmentService departmentService;
 
-    public RestDepartmentController(DepartmentServiceImpl departmentService) {
+    public RestDepartmentController(DepartmentService departmentService) {
         this.departmentService = departmentService;
     }
 

@@ -19,9 +19,9 @@ public class Department {
     @Column(name = "department_id")
     private Long id;
 
-    @NotEmpty(message = "Please enter a name.")
-    @Size(min = 2, max = 40, message = "Name must be between 2 and 40 characters.")
-    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Please enter a valid name.")
+    @NotEmpty(message = "NotEmpty.departmentName")
+    @Size(min = 2, max = 40, message = "Size.departmentName")
+    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Regex.departmentName")
     private String name;
 
     @JsonBackReference

@@ -36,7 +36,7 @@
             <div class="form-group">
                 <label for="confirmPassword">Confirm Password</label>
                 <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" th:value="${user.confirmPassword}">
-                <span class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+                <span class="text-danger" th:if="${#fields.hasErrors('global')}" th:errors="*{global}"></span>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block btn-lg">Sign Up</button>

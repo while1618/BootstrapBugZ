@@ -1,7 +1,7 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.model.Employee;
-import com.app.webapp.service.EmployeeServiceImpl;
+import com.app.webapp.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class RestEmployeeController {
-    private final EmployeeServiceImpl employeeService;
+    private final EmployeeService employeeService;
 
-    public RestEmployeeController(EmployeeServiceImpl employeeService) {
+    public RestEmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 

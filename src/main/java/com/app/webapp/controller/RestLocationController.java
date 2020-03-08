@@ -1,7 +1,7 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.model.Location;
-import com.app.webapp.service.LocationServiceImpl;
+import com.app.webapp.service.LocationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +13,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class RestLocationController {
-    private final LocationServiceImpl locationService;
+    private final LocationService locationService;
 
-    public RestLocationController(LocationServiceImpl locationService) {
+    public RestLocationController(LocationService locationService) {
         this.locationService = locationService;
     }
 

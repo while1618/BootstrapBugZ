@@ -1,8 +1,8 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.model.Employee;
-import com.app.webapp.service.DepartmentServiceImpl;
-import com.app.webapp.service.EmployeeServiceImpl;
+import com.app.webapp.service.DepartmentService;
+import com.app.webapp.service.EmployeeService;
 import com.app.webapp.validator.DepartmentValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +15,11 @@ import javax.validation.Valid;
 
 @Controller
 public class EmployeeController {
-    private final EmployeeServiceImpl employeeService;
-    private final DepartmentServiceImpl departmentService;
+    private final EmployeeService employeeService;
+    private final DepartmentService departmentService;
     private final DepartmentValidator departmentValidator;
 
-    public EmployeeController(EmployeeServiceImpl employeeService, DepartmentServiceImpl departmentService, DepartmentValidator departmentValidator) {
+    public EmployeeController(EmployeeService employeeService, DepartmentService departmentService, DepartmentValidator departmentValidator) {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
         this.departmentValidator = departmentValidator;

@@ -1,7 +1,7 @@
 package com.app.webapp.validator;
 
 import com.app.webapp.model.Location;
-import com.app.webapp.service.LocationServiceImpl;
+import com.app.webapp.service.LocationService;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -10,9 +10,9 @@ import java.util.List;
 
 @Component
 public class LocationValidator implements Validator {
-    private final LocationServiceImpl locationService;
+    private final LocationService locationService;
 
-    public LocationValidator(LocationServiceImpl locationService) {
+    public LocationValidator(LocationService locationService) {
         this.locationService = locationService;
     }
 
@@ -26,6 +26,6 @@ public class LocationValidator implements Validator {
         Location location = (Location) o;
         List<Location> locations = locationService.findAllLocations();
         if (!locations.contains(location))
-            errors.rejectValue("location", "department.location","Please select valid location.");
+            errors.rejectValue("location", "department.location","Valid.location");
     }
 }

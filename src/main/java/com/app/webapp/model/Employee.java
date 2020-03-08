@@ -19,29 +19,29 @@ public class Employee {
     @Column(name = "employee_id")
     private Long id;
 
-    @NotEmpty(message = "Please enter a first name.")
-    @Size(min = 2, max = 16, message = "First name must be between 2 and 16 characters.")
-    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Please enter a valid first name.")
+    @NotEmpty(message = "NotEmpty.firstName")
+    @Size(min = 2, max = 16, message = "Size.firstName")
+    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Regex.firstName")
     private String firstName;
 
-    @NotEmpty(message = "Please enter a last name.")
-    @Size(min = 2, max = 16, message = "Last name must be between 2 and 16 characters.")
-    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Please enter a valid last name.")
+    @NotEmpty(message = "NotEmpty.lastName")
+    @Size(min = 2, max = 16, message = "Size.lastName")
+    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Regex.lastName")
     private String lastName;
 
-    @NotEmpty(message = "Please enter a email.")
-    @Email(message = "Please enter valid a email.")
+    @NotEmpty(message = "NotEmpty.email")
+    @Email(message = "Regex.email")
     private String email;
 
-    @NotEmpty(message = "Please enter a phone number.")
-    @Pattern(regexp = "^[+]*[(]?[0-9]{1,4}[)]?[-\\s./0-9]*$", message = "Please enter a valid phone number.")
+    @NotEmpty(message = "NotEmpty.phoneNumber")
+    @Pattern(regexp = "^[+]*[(]?[0-9]{1,4}[)]?[-\\s./0-9]*$", message = "Regex.phoneNumber")
     private String phoneNumber;
 
-    @NotNull(message = "Please enter a salary.")
-    @Positive(message = "Salary must be positive number.")
+    @NotNull(message = "NotNull.salary")
+    @Positive(message = "Positive.salary")
     private Double salary;
 
-    @NotNull(message = "Please enter a hire date.")
+    @NotNull(message = "NotNull.localDate")
     private LocalDate hireDate;
 
     @ManyToOne()

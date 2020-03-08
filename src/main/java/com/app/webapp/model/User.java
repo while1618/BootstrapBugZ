@@ -1,5 +1,7 @@
 package com.app.webapp.model;
 
+import com.app.webapp.validator.PasswordMatches;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -8,38 +10,46 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
+@PasswordMatches
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
-    @NotEmpty(message = "Please enter a first name.")
-    @Size(min = 2, max = 16, message = "First name must be between 2 and 16 characters.")
-    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Please enter a valid first name.")
+    @NotEmpty(message = "NotEmpty.firstName")
+    @Size(min = 2, max = 16, message = "Size.firstName")
+    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Regex.firstName")
     private String firstName;
 
-    @NotEmpty(message = "Please enter a last name.")
-    @Size(min = 2, max = 16, message = "Last name must be between 2 and 16 characters.")
-    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Please enter a valid last name.")
+    @NotEmpty(message = "NotEmpty.lastName")
+    @Size(min = 2, max = 16, message = "Size.lastName")
+    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Regex.lastName")
     private String lastName;
 
-    @NotEmpty(message = "Please enter a last name.")
-    @Size(min = 2, max = 16, message = "Username must be between 2 and 16 characters.")
-    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "Please enter a valid last name.")
+    @NotEmpty(message = "NotEmpty.username")
+    @Size(min = 2, max = 16, message = "Size.username")
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "Regex.username")
+    @Column(unique = true)
     private String username;
 
-    @NotEmpty(message = "Please enter a email.")
-    @Email(message = "Please enter valid a email.")
+    @NotEmpty(message = "NotEmpty.email")
+    @Email(message = "Regex.email")
+    @Column(unique = true)
     private String email;
 
-    @NotEmpty(message = "Please enter a password.")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",message = "Please enter a valid password.")
+    @NotEmpty(message = "NotEmpty.password")
+//    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Regex.password")
     private String password;
 
-    @NotEmpty(message = "Please repeat a password.")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",message = "Please enter a valid password.")
+    @Transient
     private String confirmPassword;
+
+    private boolean activated;
+
+    public User() {
+        this.activated = false;
+    }
 
     public Long getId() {
         return id;
@@ -95,5 +105,13 @@ public class User {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 }
