@@ -3,8 +3,11 @@ package com.app.webapp.controller;
 import com.app.webapp.event.OnRegistrationCompleteEvent;
 import com.app.webapp.model.User;
 import com.app.webapp.model.VerificationToken;
+import com.app.webapp.repository.VerificationTokenRepository;
 import com.app.webapp.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,18 +17,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Controller
 public class RegistrationController {
     private final UserService userService;
+    private final VerificationTokenRepository tokenRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final MessageSource messageSource;
 
-    public RegistrationController(UserService userService, ApplicationEventPublisher eventPublisher) {
+    public RegistrationController(UserService userService, ApplicationEventPublisher eventPublisher, VerificationTokenRepository tokenRepository, MessageSource messageSource) {
         this.userService = userService;
         this.eventPublisher = eventPublisher;
+        this.tokenRepository = tokenRepository;
+        this.messageSource = messageSource;
     }
 
     @GetMapping("/login")
@@ -46,9 +52,9 @@ public class RegistrationController {
     public ModelAndView signUp(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         if (userService.emailExist(user.getEmail()))
-            bindingResult.rejectValue("email", "exist", "Exist.email");
+            bindingResult.rejectValue("email", "exist", messageSource.getMessage("Exist.email", null, LocaleContextHolder.getLocale()));
         if (userService.usernameExist(user.getUsername()))
-            bindingResult.rejectValue("username", "exist", "Exist.username");
+            bindingResult.rejectValue("username", "exist", messageSource.getMessage("Exist.username", null, LocaleContextHolder.getLocale()));
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("registration/sign_up");
         } else {
@@ -64,18 +70,25 @@ public class RegistrationController {
         ModelAndView modelAndView = new ModelAndView();
         Optional<VerificationToken> verificationToken = userService.getVerificationToken(token);
         if (verificationToken.isPresent()) {
-            User user = verificationToken.get().getUser();
-            if (LocalDateTime.now().isBefore(verificationToken.get().getExpirationDate())) {
-                user.setActivated(true);
-                user.setConfirmPassword(user.getPassword());
-                userService.save(user);
-                modelAndView.setViewName("redirect:/login");
+            if (!verificationToken.get().isUsed()) {
+                User user = verificationToken.get().getUser();
+                if (LocalDateTime.now().isBefore(verificationToken.get().getExpirationDate())) {
+                    user.setActivated(true);
+                    user.setConfirmPassword(user.getPassword());
+                    userService.save(user);
+                    verificationToken.get().setUsed(true);
+                    tokenRepository.save(verificationToken.get());
+                    modelAndView.setViewName("redirect:/login");
+                } else {
+                    modelAndView.addObject("tokenExpired", messageSource.getMessage("Token.expired", null, LocaleContextHolder.getLocale()));
+                    modelAndView.setViewName("registration/bad_user");
+                }
             } else {
-                modelAndView.addObject("tokenExpired", "Token.expired");
+                modelAndView.addObject("tokenUsed", messageSource.getMessage("Token.used", null, LocaleContextHolder.getLocale()));
                 modelAndView.setViewName("registration/bad_user");
             }
         } else {
-            modelAndView.addObject("invalidToken", "Token.invalid");
+            modelAndView.addObject("invalidToken", messageSource.getMessage("Token.invalid", null, LocaleContextHolder.getLocale()));
             modelAndView.setViewName("registration/bad_user");
         }
         return modelAndView;

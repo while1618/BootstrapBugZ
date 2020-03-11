@@ -36,7 +36,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText("http://localhost:12345" + confirmationUrl);
+        email.setText("Please activate your account by clicking on link.\n http://localhost:12345" + confirmationUrl);
         mailSender.send(email);
     }
 }
