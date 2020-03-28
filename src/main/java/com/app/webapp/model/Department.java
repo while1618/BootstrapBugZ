@@ -1,9 +1,7 @@
 package com.app.webapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "departments")
 public class Department {
@@ -19,9 +18,9 @@ public class Department {
     @Column(name = "department_id")
     private Long id;
 
-    @NotEmpty(message = "NotEmpty.departmentName")
-    @Size(min = 2, max = 40, message = "Size.departmentName")
-    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "Regex.departmentName")
+    @NotEmpty(message = "{department.name.notEmpty}")
+    @Size(min = 2, max = 40, message = "{department.name.size}")
+    @Pattern(regexp = "^[a-zA-Z ,.'-]+$", message = "{department.name.regex}")
     private String name;
 
     @JsonBackReference
@@ -31,36 +30,4 @@ public class Department {
     @ManyToOne()
     @JoinColumn(name = "location_id")
     private Location location;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
 }

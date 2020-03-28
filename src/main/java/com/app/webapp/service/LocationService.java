@@ -24,13 +24,26 @@ public class LocationService implements ILocationService {
     }
 
     @Override
-    public List<Location> findAllLocations() {
-        return locationRepository.findAll();
+    public Location findLocationById(Long id) {
+        return locationRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Location findLocationById(Long id) {
-        return locationRepository.findById(id).orElse(null);
+    public void createLocation(Location location) {
+        locationRepository.save(location);
+    }
+
+    @Override
+    public void editLocation(Location location) {
+        locationRepository.save(location);
+    }
+
+
+
+
+    @Override
+    public List<Location> findAll() {
+        return locationRepository.findAll();
     }
 
     @Override
@@ -44,22 +57,17 @@ public class LocationService implements ILocationService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        locationRepository.deleteById(id);
+    }
+
+    @Override
     public void deleteAll() {
         locationRepository.deleteAll();
     }
 
     @Override
-    public void createLocation(Location location) {
-        locationRepository.save(location);
-    }
-
-    @Override
-    public void editLocation(Location location) {
-        locationRepository.save(location);
-    }
-
-    @Override
-    public void deleteLocation(Long id) {
-        locationRepository.deleteById(id);
+    public boolean existsById(Long id) {
+        return locationRepository.existsById(id);
     }
 }

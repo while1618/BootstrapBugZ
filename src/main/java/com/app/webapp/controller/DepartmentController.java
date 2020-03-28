@@ -1,8 +1,8 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.model.Department;
-import com.app.webapp.service.DepartmentService;
-import com.app.webapp.service.LocationService;
+import com.app.webapp.service.IDepartmentService;
+import com.app.webapp.service.ILocationService;
 import com.app.webapp.validator.LocationValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +15,11 @@ import javax.validation.Valid;
 
 @Controller
 public class DepartmentController {
-    private final DepartmentService departmentService;
-    private final LocationService locationService;
+    private final IDepartmentService departmentService;
+    private final ILocationService locationService;
     private final LocationValidator locationValidator;
 
-    public DepartmentController(DepartmentService departmentService, LocationService locationService, LocationValidator locationValidator) {
+    public DepartmentController(IDepartmentService departmentService, ILocationService locationService, LocationValidator locationValidator) {
         this.departmentService = departmentService;
         this.locationService = locationService;
         this.locationValidator = locationValidator;
@@ -35,7 +35,7 @@ public class DepartmentController {
     public ModelAndView createDepartment() {
         ModelAndView modelAndView = new ModelAndView("department/create");
         modelAndView.addObject("department", new Department());
-        modelAndView.addObject("locations", locationService.findAllLocations());
+        modelAndView.addObject("locations", locationService.findAll());
 
         return modelAndView;
     }
@@ -45,7 +45,7 @@ public class DepartmentController {
         ModelAndView modelAndView = new ModelAndView();
         locationValidator.validate(department.getLocation(), bindingResult);
         if (bindingResult.hasErrors()) {
-            modelAndView.addObject("locations", locationService.findAllLocations());
+            modelAndView.addObject("locations", locationService.findAll());
             modelAndView.setViewName("department/create");
         } else {
             departmentService.createDepartment(department);
@@ -59,7 +59,7 @@ public class DepartmentController {
     public String editEmployee(@PathVariable("id") Long id, Model model) {
         if (!model.containsAttribute("department"))
             model.addAttribute("department", departmentService.findDepartmentById(id));
-        model.addAttribute("locations", locationService.findAllLocations());
+        model.addAttribute("locations", locationService.findAll());
 
         return "department/edit";
     }
@@ -82,7 +82,7 @@ public class DepartmentController {
 
     @GetMapping("/department/delete/{id}")
     public String deleteDepartment(@PathVariable("id") Long id) {
-        departmentService.deleteDepartment(id);
+        departmentService.deleteById(id);
         return "redirect:/departments";
     }
 }

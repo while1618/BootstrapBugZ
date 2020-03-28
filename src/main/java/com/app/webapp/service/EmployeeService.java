@@ -24,13 +24,26 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public List<Employee> findAllEmployees() {
-        return employeeRepository.findAll();
+    public Employee findEmployeeById(Long id) {
+        return employeeRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Employee findEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
+    public void createEmployee(Employee employee) {
+        employeeRepository.save(employee);
+    }
+
+    @Override
+    public void editEmployee(Employee employee) {
+        employeeRepository.save(employee);
+    }
+
+
+
+
+    @Override
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
     }
 
     @Override
@@ -44,22 +57,17 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        employeeRepository.deleteById(id);
+    }
+
+    @Override
     public void deleteAll() {
         employeeRepository.deleteAll();
     }
 
     @Override
-    public void createEmployee(Employee employee) {
-        employeeRepository.save(employee);
-    }
-
-    @Override
-    public void editEmployee(Employee employee) {
-        employeeRepository.save(employee);
-    }
-
-    @Override
-    public void deleteEmployee(Long id) {
-        employeeRepository.deleteById(id);
+    public boolean existsById(Long id) {
+        return employeeRepository.existsById(id);
     }
 }

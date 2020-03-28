@@ -28,7 +28,7 @@ public class DepartmentValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Department department = (Department) o;
-        List<Department> departments = departmentService.findAllDepartments();
+        List<Department> departments = departmentService.findAll();
         if (!departments.contains(department))
             errors.rejectValue("department", "employee.department",messageSource.getMessage("Valid.department", null, LocaleContextHolder.getLocale()));
     }

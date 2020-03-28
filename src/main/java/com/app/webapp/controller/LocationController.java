@@ -1,7 +1,7 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.model.Location;
-import com.app.webapp.service.LocationService;
+import com.app.webapp.service.ILocationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +13,9 @@ import javax.validation.Valid;
 
 @Controller
 public class LocationController {
-    private final LocationService locationService;
+    private final ILocationService locationService;
 
-    public LocationController(LocationService locationService) {
+    public LocationController(ILocationService locationService) {
         this.locationService = locationService;
     }
 
@@ -71,7 +71,7 @@ public class LocationController {
 
     @GetMapping("/location/delete/{id}")
     public String deleteLocation(@PathVariable("id") Long id) {
-        locationService.deleteLocation(id);
+        locationService.deleteById(id);
         return "redirect:/locations";
     }
 }

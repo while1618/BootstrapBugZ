@@ -11,10 +11,12 @@
                     Oops!</h1>
                 <h2>
                     Bad User</h2>
+                <div th:if="${tokenExpired}"><a th:href="@{'/resend-confirmation-email?token=' + ${token}}">Resend verification email</a></div>
                 <div class="error-details">
                     <h1 th:text="${tokenExpired}">Error Message</h1>
                     <h1 th:text="${invalidToken}">Error Message</h1>
                     <h1 th:text="${tokenUsed}">Error Message</h1>
+                    <h1 th:text="${maxNumberOfSent}">Error Message</h1>
                 </div>
                 <div class="error-actions">
                     <a href="/" class="btn btn-primary btn-lg">

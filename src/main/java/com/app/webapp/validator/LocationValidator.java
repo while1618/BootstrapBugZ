@@ -28,7 +28,7 @@ public class LocationValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Location location = (Location) o;
-        List<Location> locations = locationService.findAllLocations();
+        List<Location> locations = locationService.findAll();
         if (!locations.contains(location))
             errors.rejectValue("location", "department.location",messageSource.getMessage("Valid.location", null, LocaleContextHolder.getLocale()));
     }

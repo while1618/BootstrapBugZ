@@ -1,8 +1,8 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.model.Employee;
-import com.app.webapp.service.DepartmentService;
-import com.app.webapp.service.EmployeeService;
+import com.app.webapp.service.IDepartmentService;
+import com.app.webapp.service.IEmployeeService;
 import com.app.webapp.validator.DepartmentValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +15,11 @@ import javax.validation.Valid;
 
 @Controller
 public class EmployeeController {
-    private final EmployeeService employeeService;
-    private final DepartmentService departmentService;
+    private final IEmployeeService employeeService;
+    private final IDepartmentService departmentService;
     private final DepartmentValidator departmentValidator;
 
-    public EmployeeController(EmployeeService employeeService, DepartmentService departmentService, DepartmentValidator departmentValidator) {
+    public EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService, DepartmentValidator departmentValidator) {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
         this.departmentValidator = departmentValidator;
@@ -35,7 +35,7 @@ public class EmployeeController {
     public ModelAndView createEmployee() {
         ModelAndView modelAndView = new ModelAndView("employee/create");
         modelAndView.addObject("employee", new Employee());
-        modelAndView.addObject("departments", departmentService.findAllDepartments());
+        modelAndView.addObject("departments", departmentService.findAll());
 
         return modelAndView;
     }
@@ -45,7 +45,7 @@ public class EmployeeController {
         ModelAndView modelAndView = new ModelAndView();
         departmentValidator.validate(employee.getDepartment(), bindingResult);
         if (bindingResult.hasErrors()) {
-            modelAndView.addObject("departments", departmentService.findAllDepartments());
+            modelAndView.addObject("departments", departmentService.findAll());
             modelAndView.setViewName("employee/create");
         } else {
             employeeService.createEmployee(employee);
@@ -59,7 +59,7 @@ public class EmployeeController {
     public String editEmployee(@PathVariable("id") Long id, Model model) {
         if (!model.containsAttribute("employee"))
             model.addAttribute("employee", employeeService.findEmployeeById(id));
-        model.addAttribute("departments", departmentService.findAllDepartments());
+        model.addAttribute("departments", departmentService.findAll());
 
         return "employee/edit";
     }
@@ -82,7 +82,7 @@ public class EmployeeController {
 
     @GetMapping("/employee/delete/{id}")
     public String deleteEmployee(@PathVariable("id") Long id) {
-        employeeService.deleteEmployee(id);
+        employeeService.deleteById(id);
         return "redirect:/employees";
     }
 }

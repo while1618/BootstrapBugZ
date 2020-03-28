@@ -1,31 +1,35 @@
 package com.app.webapp.event;
 
-import com.app.webapp.model.User;
 import com.app.webapp.model.VerificationToken;
 import com.app.webapp.service.registration.IVerificationTokenService;
 import com.app.webapp.service.utils.IEmailService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
-public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
+public class ResendVerificationEmailListener implements ApplicationListener<OnResendVerificationEmail> {
     private final IVerificationTokenService verificationTokenService;
     private final IEmailService emailService;
 
-    public RegistrationListener(IVerificationTokenService verificationTokenService, IEmailService emailService) {
+    public ResendVerificationEmailListener(IVerificationTokenService verificationTokenService, IEmailService emailService) {
         this.verificationTokenService = verificationTokenService;
         this.emailService = emailService;
     }
 
+    //TODO: check even.getVerificationToken()
     @Override
-    public void onApplicationEvent(OnRegistrationCompleteEvent event) {
-        User user = event.getUser();
+    public void onApplicationEvent(OnResendVerificationEmail event) {
+        VerificationToken verificationToken = event.getVerificationToken();
         String token = UUID.randomUUID().toString();
-        verificationTokenService.save(new VerificationToken(user, token));
-        String to = user.getEmail();
-        String subject = "Registration Confirmation";
+        verificationToken.setToken(token);
+        verificationToken.setExpirationDate(LocalDateTime.now().plusDays(1));
+        verificationToken.setNumberOfSent(verificationToken.getNumberOfSent() + 1);
+        verificationTokenService.save(verificationToken);
+        String to = verificationToken.getUser().getEmail();
+        String subject = "Resend Registration Confirmation";
         String body = "Please activate your account by clicking on link.\n" +
                 "http://localhost:12345/confirm-registration?token=" + token;
 

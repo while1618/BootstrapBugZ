@@ -19,11 +19,6 @@ public class DepartmentService implements IDepartmentService {
     }
 
     @Override
-    public List<Department> findAllDepartments() {
-        return departmentRepository.findAll();
-    }
-
-    @Override
     public Page<Department> findAllDepartments(Integer page) {
         return departmentRepository.findAll(PageRequest.of(page - 1, DepartmentService.pageSize));
     }
@@ -31,6 +26,24 @@ public class DepartmentService implements IDepartmentService {
     @Override
     public Department findDepartmentById(Long id) {
         return departmentRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void createDepartment(Department department) {
+        departmentRepository.save(department);
+    }
+
+    @Override
+    public void editDepartment(Department department) {
+        departmentRepository.save(department);
+    }
+
+
+
+
+    @Override
+    public List<Department> findAll() {
+        return departmentRepository.findAll();
     }
 
     @Override
@@ -44,22 +57,17 @@ public class DepartmentService implements IDepartmentService {
     }
 
     @Override
+    public void deleteById(Long id) {
+        departmentRepository.deleteById(id);
+    }
+
+    @Override
     public void deleteAll() {
         departmentRepository.deleteAll();
     }
 
     @Override
-    public void createDepartment(Department department) {
-        departmentRepository.save(department);
-    }
-
-    @Override
-    public void editDepartment(Department department) {
-        departmentRepository.save(department);
-    }
-
-    @Override
-    public void deleteDepartment(Long id) {
-        departmentRepository.deleteById(id);
+    public boolean existsById(Long id) {
+        return departmentRepository.existsById(id);
     }
 }
