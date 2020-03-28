@@ -3,7 +3,6 @@ package com.app.webapp.controller;
 import com.app.webapp.model.Department;
 import com.app.webapp.service.IDepartmentService;
 import com.app.webapp.service.ILocationService;
-import com.app.webapp.validator.LocationValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,12 +16,10 @@ import javax.validation.Valid;
 public class DepartmentController {
     private final IDepartmentService departmentService;
     private final ILocationService locationService;
-    private final LocationValidator locationValidator;
 
-    public DepartmentController(IDepartmentService departmentService, ILocationService locationService, LocationValidator locationValidator) {
+    public DepartmentController(IDepartmentService departmentService, ILocationService locationService) {
         this.departmentService = departmentService;
         this.locationService = locationService;
-        this.locationValidator = locationValidator;
     }
 
     @GetMapping("/departments")
@@ -43,7 +40,6 @@ public class DepartmentController {
     @PostMapping("/department/create")
     public ModelAndView createDepartment(@Valid @ModelAttribute("department") Department department, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        locationValidator.validate(department.getLocation(), bindingResult);
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("locations", locationService.findAll());
             modelAndView.setViewName("department/create");
@@ -67,7 +63,6 @@ public class DepartmentController {
     @PostMapping("/department/edit")
     public ModelAndView editDepartment(@Valid @ModelAttribute("department") Department department, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
-        locationValidator.validate(department.getLocation(), bindingResult);
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.department", bindingResult);
             redirectAttributes.addFlashAttribute("department", department);

@@ -11,6 +11,7 @@ import com.app.webapp.service.registration.IUserService;
 import com.app.webapp.service.registration.IVerificationTokenService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +39,17 @@ public class RestRegistrationController {
     @PostMapping("/sign-up")
     public ResponseEntity<User> signUp(@Valid @RequestBody User user) {
         if (userService.existsByEmail(user.getEmail()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exist.", new UserAlreadyExistException());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    messageSource.getMessage("email.exists", null, LocaleContextHolder.getLocale()),
+                    new UserAlreadyExistException()
+            );
         if (userService.existsByUsername(user.getUsername()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exist.", new UserAlreadyExistException());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    messageSource.getMessage("username.exists", null, LocaleContextHolder.getLocale()),
+                    new UserAlreadyExistException()
+            );
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
         return ResponseEntity.ok(userService.save(user));
     }
@@ -48,11 +57,23 @@ public class RestRegistrationController {
     @GetMapping("/confirm-registration")
     public ResponseEntity<?> confirmRegistration(@RequestParam("token") String token) {
         VerificationToken verificationToken = verificationTokenService.findByToken(token).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token not found", new VerificationTokenNotFoundException()));
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        messageSource.getMessage("verificationToken.notFound", null, LocaleContextHolder.getLocale()),
+                        new VerificationTokenNotFoundException()
+                ));
         if (verificationToken.isUsed())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token already used", new NotValidVerificationTokenException());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    messageSource.getMessage("verificationToken.used", null, LocaleContextHolder.getLocale()),
+                    new NotValidVerificationTokenException()
+            );
         if (LocalDateTime.now().isAfter(verificationToken.getExpirationDate()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token expired", new NotValidVerificationTokenException());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    messageSource.getMessage("verificationToken.expired", null, LocaleContextHolder.getLocale()),
+                    new NotValidVerificationTokenException()
+            );
         activateUser(verificationToken.getUser());
         deactivateToken(verificationToken);
         return ResponseEntity.noContent().build();
@@ -72,11 +93,22 @@ public class RestRegistrationController {
     @GetMapping("/resend-confirmation-email")
     public ResponseEntity<?> resendConfirmationEmail(@RequestParam("token") String token) {
         VerificationToken verificationToken = verificationTokenService.findByToken(token).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token not found", new VerificationTokenNotFoundException()));
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        messageSource.getMessage("verificationToken.notFound", null, LocaleContextHolder.getLocale()),
+                        new VerificationTokenNotFoundException()
+                ));
         if (verificationToken.isUsed())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token already used", new NotValidVerificationTokenException());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    messageSource.getMessage("verificationToken.used", null, LocaleContextHolder.getLocale()),
+                    new NotValidVerificationTokenException());
         if (verificationToken.getNumberOfSent() > VerificationToken.MAX_NUMBER_OF_SENT)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can not resend confirmation email anymore", new NotValidVerificationTokenException());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    messageSource.getMessage("verificationToken.maxNumberOfSent", null, LocaleContextHolder.getLocale()),
+                    new NotValidVerificationTokenException()
+            );
         eventPublisher.publishEvent(new OnResendVerificationEmail(verificationToken));
         return ResponseEntity.noContent().build();
     }

@@ -1,12 +1,14 @@
 package com.app.webapp.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
+@Getter
+@Setter
+@ToString
 public class VerificationToken {
     public static int MAX_NUMBER_OF_SENT = 3;
 
@@ -24,7 +26,7 @@ public class VerificationToken {
     private LocalDateTime expirationDate;
 
     private boolean used;
-    
+
     private int numberOfSent;
 
     public VerificationToken() {

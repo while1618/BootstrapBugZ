@@ -3,6 +3,8 @@ package com.app.webapp.controller.rest;
 import com.app.webapp.exception.EmployeeNotFoundException;
 import com.app.webapp.model.Employee;
 import com.app.webapp.service.IEmployeeService;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,23 +17,33 @@ import java.util.List;
 @RequestMapping("/api")
 public class RestEmployeeController {
     private final IEmployeeService employeeService;
+    private final MessageSource messageSource;
 
-    public RestEmployeeController(IEmployeeService employeeService) {
+    public RestEmployeeController(IEmployeeService employeeService, MessageSource messageSource) {
         this.employeeService = employeeService;
+        this.messageSource = messageSource;
     }
 
     @GetMapping("/employees")
     public ResponseEntity<List<Employee>> findAll() {
         List<Employee> employees = employeeService.findAll();
         if (employees.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No employees.", new EmployeeNotFoundException());
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    messageSource.getMessage("employees.notFound", null, LocaleContextHolder.getLocale()),
+                    new EmployeeNotFoundException()
+            );
         return ResponseEntity.ok(employees);
     }
 
     @GetMapping("/employees/{id}")
     public ResponseEntity<Employee> findById(@PathVariable("id") Long id) {
         Employee employee = employeeService.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found.", new EmployeeNotFoundException()));
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        messageSource.getMessage("employee.notFound", null, LocaleContextHolder.getLocale()),
+                        new EmployeeNotFoundException()
+                ));
         return ResponseEntity.ok(employee);
     }
 
@@ -43,22 +55,26 @@ public class RestEmployeeController {
 
     @PutMapping("/employees/{id}")
     public ResponseEntity<Employee> edit(@PathVariable("id") Long id, @Valid @RequestBody Employee employee) {
-        if (employeeService.existsById(id)) {
-            employee.setId(id);
-            return ResponseEntity.ok(employeeService.save(employee));
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct employee id.", new EmployeeNotFoundException());
-        }
+        if (!employeeService.existsById(id))
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    messageSource.getMessage("employee.wrongId", null, LocaleContextHolder.getLocale()),
+                    new EmployeeNotFoundException()
+            );
+        employee.setId(id);
+        return ResponseEntity.ok(employeeService.save(employee));
     }
 
     @DeleteMapping("/employees/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        if (employeeService.existsById(id)) {
-            employeeService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Provide correct employee id.", new EmployeeNotFoundException());
-        }
+        if (!employeeService.existsById(id))
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    messageSource.getMessage("employee.wrongId", null, LocaleContextHolder.getLocale()),
+                    new EmployeeNotFoundException()
+            );
+        employeeService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/employees")

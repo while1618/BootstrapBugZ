@@ -1,35 +1,26 @@
 package com.app.webapp.validator;
 
 import com.app.webapp.model.Department;
-import com.app.webapp.service.DepartmentService;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
+import com.app.webapp.model.Employee;
+import com.app.webapp.service.IDepartmentService;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-@Component
-public class DepartmentValidator implements Validator {
-    private final DepartmentService departmentService;
-    private final MessageSource messageSource;
+public class DepartmentValidator implements ConstraintValidator<ValidDepartment, Employee> {
+    @Autowired
+    private IDepartmentService departmentService;
 
-    public DepartmentValidator(DepartmentService departmentService, MessageSource messageSource) {
-        this.departmentService = departmentService;
-        this.messageSource = messageSource;
+    @Override
+    public void initialize(ValidDepartment constraintAnnotation) {
+
     }
 
     @Override
-    public boolean supports(Class<?> aClass) {
-        return Department.class.equals(aClass);
-    }
-
-    @Override
-    public void validate(Object o, Errors errors) {
-        Department department = (Department) o;
+    public boolean isValid(Employee employee, ConstraintValidatorContext constraintValidatorContext) {
         List<Department> departments = departmentService.findAll();
-        if (!departments.contains(department))
-            errors.rejectValue("department", "employee.department",messageSource.getMessage("Valid.department", null, LocaleContextHolder.getLocale()));
+        return departments.contains(employee.getDepartment());
     }
 }

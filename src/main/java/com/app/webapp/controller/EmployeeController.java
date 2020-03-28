@@ -3,7 +3,6 @@ package com.app.webapp.controller;
 import com.app.webapp.model.Employee;
 import com.app.webapp.service.IDepartmentService;
 import com.app.webapp.service.IEmployeeService;
-import com.app.webapp.validator.DepartmentValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,12 +16,10 @@ import javax.validation.Valid;
 public class EmployeeController {
     private final IEmployeeService employeeService;
     private final IDepartmentService departmentService;
-    private final DepartmentValidator departmentValidator;
 
-    public EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService, DepartmentValidator departmentValidator) {
+    public EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService) {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
-        this.departmentValidator = departmentValidator;
     }
 
     @GetMapping(value = "/employees")
@@ -43,7 +40,6 @@ public class EmployeeController {
     @PostMapping("/employee/create")
     public ModelAndView createEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        departmentValidator.validate(employee.getDepartment(), bindingResult);
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("departments", departmentService.findAll());
             modelAndView.setViewName("employee/create");
@@ -67,7 +63,6 @@ public class EmployeeController {
     @PostMapping("/employee/edit")
     public ModelAndView editEmployee(@Valid @ModelAttribute("employee") Employee employee, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         ModelAndView modelAndView = new ModelAndView();
-        departmentValidator.validate(employee.getDepartment(), bindingResult);
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.employee", bindingResult);
             redirectAttributes.addFlashAttribute("employee", employee);

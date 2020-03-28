@@ -1,7 +1,7 @@
 package com.app.webapp.model;
 
 import com.app.webapp.validator.PasswordMatches;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -9,9 +9,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@Data
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@ToString
 @PasswordMatches(message = "{password.doNotMatch}")
 public class User {
     @Id

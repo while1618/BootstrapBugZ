@@ -1,6 +1,7 @@
 package com.app.webapp.model;
 
-import lombok.Data;
+import com.app.webapp.validator.ValidDepartment;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -8,9 +9,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-@Data
 @Entity
 @Table(name = "employees")
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@ValidDepartment(message = "{employee.department.notValid}")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
