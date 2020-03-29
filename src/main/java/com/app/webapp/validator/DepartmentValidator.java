@@ -1,17 +1,18 @@
 package com.app.webapp.validator;
 
 import com.app.webapp.model.Department;
-import com.app.webapp.model.Employee;
 import com.app.webapp.service.IDepartmentService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class DepartmentValidator implements ConstraintValidator<ValidDepartment, Employee> {
-    @Autowired
-    private IDepartmentService departmentService;
+public class DepartmentValidator implements ConstraintValidator<ValidDepartment, Department> {
+    private final IDepartmentService departmentService;
+
+    public DepartmentValidator(IDepartmentService departmentService) {
+        this.departmentService = departmentService;
+    }
 
     @Override
     public void initialize(ValidDepartment constraintAnnotation) {
@@ -19,8 +20,8 @@ public class DepartmentValidator implements ConstraintValidator<ValidDepartment,
     }
 
     @Override
-    public boolean isValid(Employee employee, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Department department, ConstraintValidatorContext constraintValidatorContext) {
         List<Department> departments = departmentService.findAll();
-        return departments.contains(employee.getDepartment());
+        return departments.contains(department);
     }
 }

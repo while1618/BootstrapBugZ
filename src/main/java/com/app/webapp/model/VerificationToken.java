@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "verification_tokens")
 @Getter
 @Setter
 @ToString

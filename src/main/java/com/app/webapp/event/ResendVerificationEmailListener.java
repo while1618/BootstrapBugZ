@@ -19,7 +19,6 @@ public class ResendVerificationEmailListener implements ApplicationListener<OnRe
         this.emailService = emailService;
     }
 
-    //TODO: check even.getVerificationToken()
     @Override
     public void onApplicationEvent(OnResendVerificationEmail event) {
         VerificationToken verificationToken = event.getVerificationToken();

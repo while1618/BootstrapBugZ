@@ -14,7 +14,6 @@ import java.util.Objects;
 @Table(name = "locations")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Location {
@@ -41,6 +40,16 @@ public class Location {
     @JsonBackReference
     @OneToMany(mappedBy = "location", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Department> departments;
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "id=" + id +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {

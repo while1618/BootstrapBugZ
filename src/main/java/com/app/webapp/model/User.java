@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 @Table(name = "users")
 @Getter
 @Setter
-@ToString
 @PasswordMatches(message = "{password.doNotMatch}")
 public class User {
     @Id
@@ -53,5 +52,18 @@ public class User {
 
     public User() {
         this.activated = false;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", activated=" + activated +
+                '}';
     }
 }

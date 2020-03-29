@@ -15,10 +15,8 @@ import java.util.Objects;
 @Table(name = "departments")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@ValidLocation(message = "{department.location.notValid}")
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +34,17 @@ public class Department {
 
     @ManyToOne()
     @JoinColumn(name = "location_id")
+    @ValidLocation(message = "{department.location.notValid}")
     private Location location;
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", location=" + location +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {

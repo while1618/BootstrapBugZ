@@ -4,7 +4,7 @@ import com.app.webapp.event.OnRegistrationCompleteEvent;
 import com.app.webapp.event.OnResendVerificationEmail;
 import com.app.webapp.model.User;
 import com.app.webapp.model.VerificationToken;
-import com.app.webapp.service.registration.IUserService;
+import com.app.webapp.service.IUserService;
 import com.app.webapp.service.registration.IVerificationTokenService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;

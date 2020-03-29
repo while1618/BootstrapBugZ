@@ -10,7 +10,7 @@ public class MessageSourceConfiguration {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:/messages");
+        messageSource.setBasename("classpath:/ValidationMessages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }

@@ -16,7 +16,6 @@ import java.time.format.DateTimeParseException;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@ValidDepartment(message = "{employee.department.notValid}")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +49,7 @@ public class Employee {
 
     @ManyToOne()
     @JoinColumn(name = "department_id")
+    @ValidDepartment(message = "{employee.department.notValid}")
     private Department department;
 
     public String getHireDate() {

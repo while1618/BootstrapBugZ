@@ -1,9 +1,10 @@
-package com.app.webapp.service.registration;
+package com.app.webapp.service;
 
 import com.app.webapp.model.User;
 import com.app.webapp.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +18,11 @@ public class UserService implements IUserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Override

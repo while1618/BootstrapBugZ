@@ -1,16 +1,19 @@
 package com.app.webapp.controller.rest;
 
+import com.app.webapp.assembler.EmployeeAssembler;
 import com.app.webapp.exception.EmployeeNotFoundException;
 import com.app.webapp.model.Employee;
 import com.app.webapp.service.IEmployeeService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,10 +21,12 @@ import java.util.List;
 public class RestEmployeeController {
     private final IEmployeeService employeeService;
     private final MessageSource messageSource;
+    private final EmployeeAssembler employeeAssembler;
 
-    public RestEmployeeController(IEmployeeService employeeService, MessageSource messageSource) {
+    public RestEmployeeController(IEmployeeService employeeService, MessageSource messageSource, EmployeeAssembler employeeAssembler) {
         this.employeeService = employeeService;
         this.messageSource = messageSource;
+        this.employeeAssembler = employeeAssembler;
     }
 
     @GetMapping("/employees")
@@ -37,24 +42,26 @@ public class RestEmployeeController {
     }
 
     @GetMapping("/employees/{id}")
-    public ResponseEntity<Employee> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<EntityModel<Employee>> findById(@PathVariable("id") Long id) {
         Employee employee = employeeService.findById(id).orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         messageSource.getMessage("employee.notFound", null, LocaleContextHolder.getLocale()),
                         new EmployeeNotFoundException()
                 ));
-        return ResponseEntity.ok(employee);
+        return ResponseEntity.ok(employeeAssembler.toModel(employee));
     }
 
-    //TODO: ResponseEntity.created()
     @PostMapping("/employees")
-    public ResponseEntity<Employee> create(@Valid @RequestBody Employee employee) {
-        return ResponseEntity.ok(employeeService.save(employee));
+    public ResponseEntity<EntityModel<Employee>> create(@Valid @RequestBody Employee employee) {
+        EntityModel<Employee> model = employeeAssembler.toModel(employeeService.save(employee));
+        return ResponseEntity
+                .created(URI.create(model.getRequiredLink("self").getHref()))
+                .body(model);
     }
 
     @PutMapping("/employees/{id}")
-    public ResponseEntity<Employee> edit(@PathVariable("id") Long id, @Valid @RequestBody Employee employee) {
+    public ResponseEntity<EntityModel<Employee>> edit(@PathVariable("id") Long id, @Valid @RequestBody Employee employee) {
         if (!employeeService.existsById(id))
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -62,7 +69,7 @@ public class RestEmployeeController {
                     new EmployeeNotFoundException()
             );
         employee.setId(id);
-        return ResponseEntity.ok(employeeService.save(employee));
+        return ResponseEntity.ok(employeeAssembler.toModel(employeeService.save(employee)));
     }
 
     @DeleteMapping("/employees/{id}")
