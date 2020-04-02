@@ -1,11 +1,11 @@
 package com.app.webapp.controller.rest;
 
-import com.app.webapp.assembler.AccountAssembler;
+import com.app.webapp.assembler.UserAssembler;
 import com.app.webapp.event.OnRegistrationCompleteEvent;
 import com.app.webapp.event.OnResendVerificationEmail;
-import com.app.webapp.exception.NotValidVerificationTokenException;
-import com.app.webapp.exception.UserAlreadyExistException;
-import com.app.webapp.exception.VerificationTokenNotFoundException;
+import com.app.webapp.error.exception.NotValidVerificationTokenException;
+import com.app.webapp.error.exception.UserAlreadyExistException;
+import com.app.webapp.error.exception.VerificationTokenNotFoundException;
 import com.app.webapp.model.User;
 import com.app.webapp.model.VerificationToken;
 import com.app.webapp.service.IUserService;
@@ -14,10 +14,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -30,32 +28,24 @@ public class RestRegistrationController {
     private final IVerificationTokenService verificationTokenService;
     private final ApplicationEventPublisher eventPublisher;
     private final MessageSource messageSource;
-    private final AccountAssembler accountAssembler;
+    private final UserAssembler userAssembler;
 
-    public RestRegistrationController(IUserService userService, ApplicationEventPublisher eventPublisher, IVerificationTokenService verificationTokenService, MessageSource messageSource, AccountAssembler accountAssembler) {
+    public RestRegistrationController(IUserService userService, ApplicationEventPublisher eventPublisher, IVerificationTokenService verificationTokenService, MessageSource messageSource, UserAssembler userAssembler) {
         this.userService = userService;
         this.eventPublisher = eventPublisher;
         this.verificationTokenService = verificationTokenService;
         this.messageSource = messageSource;
-        this.accountAssembler = accountAssembler;
+        this.userAssembler = userAssembler;
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<EntityModel<User>> signUp(@Valid @RequestBody User user) {
         if (userService.existsByEmail(user.getEmail()))
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("email.exists", null, LocaleContextHolder.getLocale()),
-                    new UserAlreadyExistException()
-            );
+            throw new UserAlreadyExistException(messageSource.getMessage("email.exists", null, LocaleContextHolder.getLocale()));
         if (userService.existsByUsername(user.getUsername()))
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("username.exists", null, LocaleContextHolder.getLocale()),
-                    new UserAlreadyExistException()
-            );
+            throw new UserAlreadyExistException(messageSource.getMessage("username.exists", null, LocaleContextHolder.getLocale()));
         //TODO: encode password
-        EntityModel<User> model = accountAssembler.toModel(userService.save(user));
+        EntityModel<User> model = userAssembler.toModel(userService.save(user));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
         return ResponseEntity
                 .created(URI.create(model.getRequiredLink("self").getHref()))
@@ -65,23 +55,11 @@ public class RestRegistrationController {
     @GetMapping("/confirm-registration")
     public ResponseEntity<?> confirmRegistration(@RequestParam("token") String token) {
         VerificationToken verificationToken = verificationTokenService.findByToken(token).orElseThrow(
-                () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        messageSource.getMessage("verificationToken.notFound", null, LocaleContextHolder.getLocale()),
-                        new VerificationTokenNotFoundException()
-                ));
+                () -> new VerificationTokenNotFoundException(messageSource.getMessage("verificationToken.notFound", null, LocaleContextHolder.getLocale())));
         if (verificationToken.isUsed())
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("verificationToken.used", null, LocaleContextHolder.getLocale()),
-                    new NotValidVerificationTokenException()
-            );
+            throw new NotValidVerificationTokenException(messageSource.getMessage("verificationToken.used", null, LocaleContextHolder.getLocale()));
         if (LocalDateTime.now().isAfter(verificationToken.getExpirationDate()))
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("verificationToken.expired", null, LocaleContextHolder.getLocale()),
-                    new NotValidVerificationTokenException()
-            );
+            throw new NotValidVerificationTokenException(messageSource.getMessage("verificationToken.expired", null, LocaleContextHolder.getLocale()));
         activateUser(verificationToken.getUser());
         deactivateToken(verificationToken);
         return ResponseEntity.noContent().build();
@@ -100,22 +78,11 @@ public class RestRegistrationController {
     @GetMapping("/resend-confirmation-email")
     public ResponseEntity<?> resendConfirmationEmail(@RequestParam("token") String token) {
         VerificationToken verificationToken = verificationTokenService.findByToken(token).orElseThrow(
-                () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        messageSource.getMessage("verificationToken.notFound", null, LocaleContextHolder.getLocale()),
-                        new VerificationTokenNotFoundException()
-                ));
+                () -> new VerificationTokenNotFoundException(messageSource.getMessage("verificationToken.notFound", null, LocaleContextHolder.getLocale())));
         if (verificationToken.isUsed())
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("verificationToken.used", null, LocaleContextHolder.getLocale()),
-                    new NotValidVerificationTokenException());
+            throw new NotValidVerificationTokenException(messageSource.getMessage("verificationToken.used", null, LocaleContextHolder.getLocale()));
         if (verificationToken.getNumberOfSent() > VerificationToken.MAX_NUMBER_OF_SENT)
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("verificationToken.maxNumberOfSent", null, LocaleContextHolder.getLocale()),
-                    new NotValidVerificationTokenException()
-            );
+            throw new NotValidVerificationTokenException(messageSource.getMessage("verificationToken.maxNumberOfSent", null, LocaleContextHolder.getLocale()));
         eventPublisher.publishEvent(new OnResendVerificationEmail(verificationToken));
         return ResponseEntity.noContent().build();
     }

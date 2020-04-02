@@ -1,16 +1,14 @@
 package com.app.webapp.controller.rest;
 
-import com.app.webapp.exception.DepartmentNotFoundException;
+import com.app.webapp.error.exception.DepartmentNotFoundException;
 import com.app.webapp.model.Department;
 import com.app.webapp.assembler.DepartmentAssembler;
 import com.app.webapp.service.IDepartmentService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -33,22 +31,14 @@ public class RestDepartmentController {
     public ResponseEntity<List<Department>> findAll() {
         List<Department> departments = departmentService.findAll();
         if (departments.isEmpty())
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    messageSource.getMessage("departments.notFound", null, LocaleContextHolder.getLocale()),
-                    new DepartmentNotFoundException()
-            );
+            throw new DepartmentNotFoundException(messageSource.getMessage("departments.notFound", null, LocaleContextHolder.getLocale()));
         return ResponseEntity.ok(departments);
     }
 
     @GetMapping("/departments/{id}")
     public ResponseEntity<EntityModel<Department>> findById(@PathVariable("id") Long id) {
         Department department = departmentService.findById(id).orElseThrow(
-                () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        messageSource.getMessage("department.notFound", null, LocaleContextHolder.getLocale()),
-                        new DepartmentNotFoundException()
-                ));
+                () -> new DepartmentNotFoundException(messageSource.getMessage("department.notFound", null, LocaleContextHolder.getLocale())));
         return ResponseEntity.ok(departmentAssembler.toModel(department));
     }
 
@@ -63,11 +53,7 @@ public class RestDepartmentController {
     @PutMapping("/departments/{id}")
     public ResponseEntity<EntityModel<Department>> edit(@PathVariable("id") Long id, @Valid @RequestBody Department department) {
         if (!departmentService.existsById(id))
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("department.wrongId", null, LocaleContextHolder.getLocale()),
-                    new DepartmentNotFoundException()
-            );
+            throw new DepartmentNotFoundException(messageSource.getMessage("department.wrongId", null, LocaleContextHolder.getLocale()));
         department.setId(id);
         return ResponseEntity.ok(departmentAssembler.toModel(departmentService.save(department)));
     }
@@ -75,10 +61,7 @@ public class RestDepartmentController {
     @DeleteMapping("/departments/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         if (!departmentService.existsById(id))
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("department.wrongId", null, LocaleContextHolder.getLocale()),
-                    new DepartmentNotFoundException());
+            throw new DepartmentNotFoundException(messageSource.getMessage("department.wrongId", null, LocaleContextHolder.getLocale()));
         departmentService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

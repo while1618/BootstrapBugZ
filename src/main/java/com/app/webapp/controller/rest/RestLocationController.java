@@ -1,16 +1,14 @@
 package com.app.webapp.controller.rest;
 
 import com.app.webapp.assembler.LocationAssembler;
-import com.app.webapp.exception.LocationNotFoundException;
+import com.app.webapp.error.exception.LocationNotFoundException;
 import com.app.webapp.model.Location;
 import com.app.webapp.service.ILocationService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -33,22 +31,14 @@ public class RestLocationController {
     public ResponseEntity<List<Location>> findAll() {
         List<Location> locations = locationService.findAll();
         if (locations.isEmpty())
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    messageSource.getMessage("locations.notFound", null, LocaleContextHolder.getLocale()),
-                    new LocationNotFoundException()
-            );
+            throw new LocationNotFoundException(messageSource.getMessage("locations.notFound", null, LocaleContextHolder.getLocale()));
         return ResponseEntity.ok(locations);
     }
 
     @GetMapping("/locations/{id}")
     public ResponseEntity<EntityModel<Location>> findById(@PathVariable("id") Long id) {
         Location location = locationService.findById(id).orElseThrow(
-                () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        messageSource.getMessage("location.notFound", null, LocaleContextHolder.getLocale()),
-                        new LocationNotFoundException()
-                ));
+                () -> new LocationNotFoundException(messageSource.getMessage("location.notFound", null, LocaleContextHolder.getLocale())));
         return ResponseEntity.ok(locationAssembler.toModel(location));
     }
 
@@ -63,11 +53,7 @@ public class RestLocationController {
     @PutMapping("/locations/{id}")
     public ResponseEntity<EntityModel<Location>> edit(@PathVariable("id") Long id, @Valid @RequestBody Location location) {
         if (!locationService.existsById(id))
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("location.wrongId", null, LocaleContextHolder.getLocale()),
-                    new LocationNotFoundException()
-            );
+            throw new LocationNotFoundException(messageSource.getMessage("location.wrongId", null, LocaleContextHolder.getLocale()));
         location.setId(id);
         return ResponseEntity.ok(locationAssembler.toModel(locationService.save(location)));
     }
@@ -75,11 +61,7 @@ public class RestLocationController {
     @DeleteMapping("/locations/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         if (!locationService.existsById(id))
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    messageSource.getMessage("location.wrongId", null, LocaleContextHolder.getLocale()),
-                    new LocationNotFoundException()
-            );
+            throw new LocationNotFoundException(messageSource.getMessage("location.wrongId", null, LocaleContextHolder.getLocale()));
         locationService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
