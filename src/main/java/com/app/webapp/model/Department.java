@@ -3,6 +3,7 @@ package com.app.webapp.model;
 import com.app.webapp.validator.ValidLocation;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -17,7 +18,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Department {
+public class Department extends RepresentationModel<Department> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id")

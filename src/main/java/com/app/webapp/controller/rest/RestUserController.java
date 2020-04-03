@@ -1,12 +1,12 @@
 package com.app.webapp.controller.rest;
 
-import com.app.webapp.assembler.UserAssembler;
+import com.app.webapp.hal.UserModelAssembler;
 import com.app.webapp.error.exception.UserNotFoundException;
 import com.app.webapp.model.User;
 import com.app.webapp.service.IUserService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,26 +20,26 @@ import java.util.List;
 public class RestUserController {
     private final IUserService userService;
     private final MessageSource messageSource;
-    private final UserAssembler userAssembler;
+    private final UserModelAssembler assembler;
 
-    public RestUserController(IUserService userService, MessageSource messageSource, UserAssembler userAssembler) {
+    public RestUserController(IUserService userService, MessageSource messageSource, UserModelAssembler assembler) {
         this.userService = userService;
         this.messageSource = messageSource;
-        this.userAssembler = userAssembler;
+        this.assembler = assembler;
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> findAll() {
+    public ResponseEntity<CollectionModel<User>> findAll() {
         List<User> users = userService.findAll();
         if (users.isEmpty())
             throw new UserNotFoundException(messageSource.getMessage("users.notFound", null, LocaleContextHolder.getLocale()));
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(assembler.toCollectionModel(users));
     }
 
     @GetMapping("/users/{username}")
-    public ResponseEntity<EntityModel<User>> findByUsername(@PathVariable("username") String username) {
+    public ResponseEntity<User> findByUsername(@PathVariable("username") String username) {
         User user = userService.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale())));
-        return ResponseEntity.ok(userAssembler.toModel(user));
+        return ResponseEntity.ok(assembler.toModel(user));
     }
 }

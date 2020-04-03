@@ -1,7 +1,10 @@
 package com.app.webapp.model;
 
 import com.app.webapp.validator.PasswordMatches;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,7 +17,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @PasswordMatches(message = "{password.doNotMatch}")
-public class User {
+public class User extends RepresentationModel<User> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -43,9 +46,11 @@ public class User {
 
     @NotEmpty(message = "{password.notEmpty}")
 //    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "{password.regex}")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String confirmPassword;
 
     private boolean activated;

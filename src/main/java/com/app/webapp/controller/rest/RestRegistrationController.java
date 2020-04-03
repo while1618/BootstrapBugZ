@@ -1,6 +1,6 @@
 package com.app.webapp.controller.rest;
 
-import com.app.webapp.assembler.UserAssembler;
+import com.app.webapp.hal.UserModelAssembler;
 import com.app.webapp.event.OnRegistrationCompleteEvent;
 import com.app.webapp.event.OnResendVerificationEmail;
 import com.app.webapp.error.exception.NotValidVerificationTokenException;
@@ -13,7 +13,6 @@ import com.app.webapp.service.registration.IVerificationTokenService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,24 +27,24 @@ public class RestRegistrationController {
     private final IVerificationTokenService verificationTokenService;
     private final ApplicationEventPublisher eventPublisher;
     private final MessageSource messageSource;
-    private final UserAssembler userAssembler;
+    private final UserModelAssembler assembler;
 
-    public RestRegistrationController(IUserService userService, ApplicationEventPublisher eventPublisher, IVerificationTokenService verificationTokenService, MessageSource messageSource, UserAssembler userAssembler) {
+    public RestRegistrationController(IUserService userService, ApplicationEventPublisher eventPublisher, IVerificationTokenService verificationTokenService, MessageSource messageSource, UserModelAssembler assembler) {
         this.userService = userService;
         this.eventPublisher = eventPublisher;
         this.verificationTokenService = verificationTokenService;
         this.messageSource = messageSource;
-        this.userAssembler = userAssembler;
+        this.assembler = assembler;
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<EntityModel<User>> signUp(@Valid @RequestBody User user) {
+    public ResponseEntity<User> signUp(@Valid @RequestBody User user) {
         if (userService.existsByEmail(user.getEmail()))
             throw new UserAlreadyExistException(messageSource.getMessage("email.exists", null, LocaleContextHolder.getLocale()));
         if (userService.existsByUsername(user.getUsername()))
             throw new UserAlreadyExistException(messageSource.getMessage("username.exists", null, LocaleContextHolder.getLocale()));
         //TODO: encode password
-        EntityModel<User> model = userAssembler.toModel(userService.save(user));
+        User model = assembler.toModel(userService.save(user));
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
         return ResponseEntity
                 .created(URI.create(model.getRequiredLink("self").getHref()))

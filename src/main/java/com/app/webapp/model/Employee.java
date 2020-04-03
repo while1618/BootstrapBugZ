@@ -2,6 +2,7 @@ package com.app.webapp.model;
 
 import com.app.webapp.validator.ValidDepartment;
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -16,7 +17,7 @@ import java.time.format.DateTimeParseException;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee {
+public class Employee extends RepresentationModel<Employee> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id")

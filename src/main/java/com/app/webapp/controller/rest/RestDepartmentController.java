@@ -2,11 +2,11 @@ package com.app.webapp.controller.rest;
 
 import com.app.webapp.error.exception.DepartmentNotFoundException;
 import com.app.webapp.model.Department;
-import com.app.webapp.assembler.DepartmentAssembler;
+import com.app.webapp.hal.DepartmentModelAssembler;
 import com.app.webapp.service.IDepartmentService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,43 +19,43 @@ import java.util.List;
 public class RestDepartmentController {
     private final IDepartmentService departmentService;
     private final MessageSource messageSource;
-    private final DepartmentAssembler departmentAssembler;
+    private final DepartmentModelAssembler assembler;
 
-    public RestDepartmentController(IDepartmentService departmentService, MessageSource messageSource, DepartmentAssembler departmentAssembler) {
+    public RestDepartmentController(IDepartmentService departmentService, MessageSource messageSource, DepartmentModelAssembler assembler) {
         this.departmentService = departmentService;
         this.messageSource = messageSource;
-        this.departmentAssembler = departmentAssembler;
+        this.assembler = assembler;
     }
 
     @GetMapping("/departments")
-    public ResponseEntity<List<Department>> findAll() {
+    public ResponseEntity<CollectionModel<Department>> findAll() {
         List<Department> departments = departmentService.findAll();
         if (departments.isEmpty())
             throw new DepartmentNotFoundException(messageSource.getMessage("departments.notFound", null, LocaleContextHolder.getLocale()));
-        return ResponseEntity.ok(departments);
+        return ResponseEntity.ok(assembler.toCollectionModel(departments));
     }
 
     @GetMapping("/departments/{id}")
-    public ResponseEntity<EntityModel<Department>> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Department> findById(@PathVariable("id") Long id) {
         Department department = departmentService.findById(id).orElseThrow(
                 () -> new DepartmentNotFoundException(messageSource.getMessage("department.notFound", null, LocaleContextHolder.getLocale())));
-        return ResponseEntity.ok(departmentAssembler.toModel(department));
+        return ResponseEntity.ok(assembler.toModel(department));
     }
 
     @PostMapping("/departments")
-    public ResponseEntity<EntityModel<Department>> create(@Valid @RequestBody Department department) {
-        EntityModel<Department> model = departmentAssembler.toModel(departmentService.save(department));
+    public ResponseEntity<Department> create(@Valid @RequestBody Department department) {
+        Department model = assembler.toModel(departmentService.save(department));
         return ResponseEntity
                 .created(URI.create(model.getRequiredLink("self").getHref()))
                 .body(model);
     }
 
     @PutMapping("/departments/{id}")
-    public ResponseEntity<EntityModel<Department>> edit(@PathVariable("id") Long id, @Valid @RequestBody Department department) {
+    public ResponseEntity<Department> edit(@PathVariable("id") Long id, @Valid @RequestBody Department department) {
         if (!departmentService.existsById(id))
             throw new DepartmentNotFoundException(messageSource.getMessage("department.wrongId", null, LocaleContextHolder.getLocale()));
         department.setId(id);
-        return ResponseEntity.ok(departmentAssembler.toModel(departmentService.save(department)));
+        return ResponseEntity.ok(assembler.toModel(departmentService.save(department)));
     }
 
     @DeleteMapping("/departments/{id}")
