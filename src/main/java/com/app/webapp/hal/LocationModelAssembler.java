@@ -1,6 +1,6 @@
 package com.app.webapp.hal;
 
-import com.app.webapp.controller.rest.RestLocationController;
+import com.app.webapp.controller.LocationController;
 import com.app.webapp.model.Location;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -16,8 +16,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class LocationModelAssembler implements RepresentationModelAssembler<Location, Location> {
     @Override
     public Location toModel(Location location) {
-        location.add(linkTo(methodOn(RestLocationController.class).findById(location.getId())).withSelfRel());
-        location.add(linkTo(methodOn(RestLocationController.class).findAll()).withRel("locations"));
+        location.add(linkTo(methodOn(LocationController.class).findById(location.getId())).withSelfRel());
+        location.add(linkTo(methodOn(LocationController.class).findAll()).withRel("locations"));
 
         return location;
     }
@@ -26,11 +26,11 @@ public class LocationModelAssembler implements RepresentationModelAssembler<Loca
     public CollectionModel<Location> toCollectionModel(Iterable<? extends Location> entities) {
         Collection<Location> locations = new ArrayList<>();
         entities.forEach(location -> {
-            location.add(linkTo(methodOn(RestLocationController.class).findById(location.getId())).withSelfRel());
+            location.add(linkTo(methodOn(LocationController.class).findById(location.getId())).withSelfRel());
             locations.add(location);
         });
         CollectionModel<Location> models = new CollectionModel<>(locations);
-        models.add(linkTo(methodOn(RestLocationController.class).findAll()).withSelfRel());
+        models.add(linkTo(methodOn(LocationController.class).findAll()).withSelfRel());
         return models;
     }
 }

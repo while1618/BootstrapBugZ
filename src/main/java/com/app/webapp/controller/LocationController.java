@@ -1,77 +1,74 @@
 package com.app.webapp.controller;
 
+import com.app.webapp.hal.LocationModelAssembler;
+import com.app.webapp.error.exception.LocationNotFoundException;
 import com.app.webapp.model.Location;
-import com.app.webapp.service.ILocationService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import com.app.webapp.service.LocationService;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.net.URI;
+import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class LocationController {
-    private final ILocationService locationService;
+    private final LocationService locationService;
+    private final MessageSource messageSource;
+    private final LocationModelAssembler assembler;
 
-    public LocationController(ILocationService locationService) {
+    public LocationController(LocationService locationService, MessageSource messageSource, LocationModelAssembler assembler) {
         this.locationService = locationService;
+        this.messageSource = messageSource;
+        this.assembler = assembler;
     }
 
     @GetMapping("/locations")
-    public ModelAndView locations(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
-        ModelAndView modelAndView = new ModelAndView("location/locations");
-        return modelAndView.addObject("locations", locationService.findAllLocations(page));
+    public ResponseEntity<CollectionModel<Location>> findAll() {
+        List<Location> locations = locationService.findAll();
+        if (locations.isEmpty())
+            throw new LocationNotFoundException(messageSource.getMessage("locations.notFound", null, LocaleContextHolder.getLocale()));
+        return ResponseEntity.ok(assembler.toCollectionModel(locations));
     }
 
-    @GetMapping("/location/create")
-    public ModelAndView createLocation() {
-        ModelAndView modelAndView = new ModelAndView("location/create");
-        modelAndView.addObject("location", new Location());
-
-        return modelAndView;
+    @GetMapping("/locations/{id}")
+    public ResponseEntity<Location> findById(@PathVariable("id") Long id) {
+        Location location = locationService.findById(id).orElseThrow(
+                () -> new LocationNotFoundException(messageSource.getMessage("location.notFound", null, LocaleContextHolder.getLocale())));
+        return ResponseEntity.ok(assembler.toModel(location));
     }
 
-    @PostMapping("/location/create")
-    public ModelAndView createLocation(@Valid @ModelAttribute("location") Location location, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("location/create");
-        } else {
-            locationService.createLocation(location);
-            modelAndView.setViewName("redirect:/locations");
-        }
-
-        return modelAndView;
+    @PostMapping("/locations")
+    public ResponseEntity<Location> create(@Valid @RequestBody Location location) {
+        Location model = assembler.toModel(locationService.save(location));
+        return ResponseEntity
+                .created(URI.create(model.getRequiredLink("self").getHref()))
+                .body(model);
     }
 
-    @GetMapping("/location/edit/{id}")
-    public String editLocation(@PathVariable("id") Long id, Model model) {
-        if (!model.containsAttribute("location"))
-            model.addAttribute("location", locationService.findLocationById(id));
-
-        return "location/edit";
+    @PutMapping("/locations/{id}")
+    public ResponseEntity<Location> edit(@PathVariable("id") Long id, @Valid @RequestBody Location location) {
+        if (!locationService.existsById(id))
+            throw new LocationNotFoundException(messageSource.getMessage("location.wrongId", null, LocaleContextHolder.getLocale()));
+        location.setId(id);
+        return ResponseEntity.ok(assembler.toModel(locationService.save(location)));
     }
 
-    @PostMapping("/location/edit")
-    public ModelAndView editLocation(@Valid @ModelAttribute("location") Location location, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        ModelAndView modelAndView = new ModelAndView();
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.location", bindingResult);
-            redirectAttributes.addFlashAttribute("location", location);
-            modelAndView.setViewName("redirect:/location/edit/" + location.getId());
-        } else {
-            locationService.editLocation(location);
-            modelAndView.setViewName("redirect:/locations");
-        }
-
-        return modelAndView;
-    }
-
-    @GetMapping("/location/delete/{id}")
-    public String deleteLocation(@PathVariable("id") Long id) {
+    @DeleteMapping("/locations/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        if (!locationService.existsById(id))
+            throw new LocationNotFoundException(messageSource.getMessage("location.wrongId", null, LocaleContextHolder.getLocale()));
         locationService.deleteById(id);
-        return "redirect:/locations";
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/locations")
+    public ResponseEntity<?> deleteAll() {
+        locationService.deleteAll();
+        return ResponseEntity.noContent().build();
     }
 }

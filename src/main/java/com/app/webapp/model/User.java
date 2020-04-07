@@ -11,11 +11,15 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @PasswordMatches(message = "{password.doNotMatch}")
 public class User extends RepresentationModel<User> {
     @Id
@@ -53,10 +57,16 @@ public class User extends RepresentationModel<User> {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String confirmPassword;
 
-    private boolean activated;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(	name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
-    public User() {
-        this.activated = false;
+    private boolean activated = false;
+
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.app.webapp.validator;
 
+import com.app.webapp.validator.impl.PasswordMatchesValidator;
+
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;

@@ -1,8 +1,8 @@
 package com.app.webapp.event;
 
 import com.app.webapp.model.VerificationToken;
-import com.app.webapp.service.registration.IVerificationTokenService;
-import com.app.webapp.service.utils.IEmailService;
+import com.app.webapp.service.VerificationTokenService;
+import com.app.webapp.service.EmailService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +11,10 @@ import java.util.UUID;
 
 @Component
 public class ResendVerificationEmailListener implements ApplicationListener<OnResendVerificationEmail> {
-    private final IVerificationTokenService verificationTokenService;
-    private final IEmailService emailService;
+    private final VerificationTokenService verificationTokenService;
+    private final EmailService emailService;
 
-    public ResendVerificationEmailListener(IVerificationTokenService verificationTokenService, IEmailService emailService) {
+    public ResendVerificationEmailListener(VerificationTokenService verificationTokenService, EmailService emailService) {
         this.verificationTokenService = verificationTokenService;
         this.emailService = emailService;
     }
@@ -30,7 +30,7 @@ public class ResendVerificationEmailListener implements ApplicationListener<OnRe
         String to = verificationToken.getUser().getEmail();
         String subject = "Resend Registration Confirmation";
         String body = "Please activate your account by clicking on link.\n" +
-                "http://localhost:12345/confirm-registration?token=" + token;
+                "http://localhost:12345/api/auth/confirm-registration?token=" + token;
 
         emailService.sendEmail(to, subject, body);
     }

@@ -114,4 +114,12 @@ insert into employees (employee_id, first_name, last_name, email, hire_date, pho
 insert into employees (employee_id, first_name, last_name, email, hire_date, phone_number, salary, department_id) values (99, 'Koral', 'Mangenot', 'kmangenot2q@unesco.org', '2018-10-07 03:34:51', '+963 (790) 513-9645', 2577, 9);
 insert into employees (employee_id, first_name, last_name, email, hire_date, phone_number, salary, department_id) values (100, 'Darryl', 'Strettell', 'dstrettell2r@blinklist.com', '2020-01-25 00:52:16', '+33 (995) 985-9604', 3043, 10);
 
-insert into users (user_id, first_name, last_name, username, email, password, activated) values (1, 'Dejan', 'Zdravkovic', 'while', 'bagzi1996@gmail.com', '123', true);
+insert into roles (id, name) values (1, 'ROLE_USER');
+insert into roles (id, name) values (2, 'ROLE_MODERATOR');
+insert into roles (id, name) values (3, 'ROLE_ADMIN');
+
+insert into users (user_id, first_name, last_name, username, email, password, activated) values (1, 'Dejan', 'Zdravkovic', 'while', 'bagzi1996@gmail.com', '$2a$10$/zJs.45ISa/1e5UOzxrUpuhhdheUJRZtNCzDYilIF9oJMyvwpVHre', true);
+
+insert into user_roles (user_id, role_id) values (1, 1);
+insert into user_roles (user_id, role_id) values (1, 2);
+insert into user_roles (user_id, role_id) values (1, 3);
