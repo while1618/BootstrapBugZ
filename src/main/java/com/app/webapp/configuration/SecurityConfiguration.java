@@ -1,6 +1,6 @@
 package com.app.webapp.configuration;
 
-import com.app.webapp.security.JwtAuthenticationEntryPoint;
+import com.app.webapp.error.handling.CustomAuthenticationEntryPoint;
 import com.app.webapp.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -28,11 +28,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 )
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
-    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public SecurityConfiguration(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, JwtAuthenticationEntryPoint unauthorizedHandler) {
+    public SecurityConfiguration(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.userDetailsService = userDetailsService;
-        this.unauthorizedHandler = unauthorizedHandler;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
     @Bean
@@ -64,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf()
                     .disable()
                 .exceptionHandling()
-                    .authenticationEntryPoint(unauthorizedHandler)
+                    .authenticationEntryPoint(customAuthenticationEntryPoint)
                     .and()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

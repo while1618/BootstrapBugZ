@@ -8,7 +8,7 @@ import com.app.webapp.model.User;
 import com.app.webapp.model.VerificationToken;
 import com.app.webapp.payload.JwtAuthenticationResponse;
 import com.app.webapp.payload.LoginRequest;
-import com.app.webapp.security.JwtTokenProvider;
+import com.app.webapp.security.JwtTokenUtilities;
 import com.app.webapp.service.UserService;
 import com.app.webapp.service.VerificationTokenService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,16 +29,16 @@ import java.time.LocalDateTime;
 @RestController
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider tokenProvider;
+    private final JwtTokenUtilities jwtUtilities;
     private final UserService userService;
     private final VerificationTokenService verificationTokenService;
     private final ApplicationEventPublisher eventPublisher;
     private final MessageSource messageSource;
     private final UserModelAssembler assembler;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider, UserService userService, ApplicationEventPublisher eventPublisher, VerificationTokenService verificationTokenService, MessageSource messageSource, UserModelAssembler assembler) {
+    public AuthController(AuthenticationManager authenticationManager, JwtTokenUtilities jwtUtilities, UserService userService, ApplicationEventPublisher eventPublisher, VerificationTokenService verificationTokenService, MessageSource messageSource, UserModelAssembler assembler) {
         this.authenticationManager = authenticationManager;
-        this.tokenProvider = tokenProvider;
+        this.jwtUtilities = jwtUtilities;
         this.userService = userService;
         this.eventPublisher = eventPublisher;
         this.verificationTokenService = verificationTokenService;
@@ -58,8 +58,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(), loginRequest.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = tokenProvider.generateToken(authentication);
-            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+            return ResponseEntity.ok(new JwtAuthenticationResponse(jwtUtilities.generateToken(authentication)));
         } catch (Exception e) {
             throw new LoginException(messageSource.getMessage("login.badCredentials", null, LocaleContextHolder.getLocale()));
         }
