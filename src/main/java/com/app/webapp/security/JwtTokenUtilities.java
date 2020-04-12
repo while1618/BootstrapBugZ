@@ -34,8 +34,7 @@ public class JwtTokenUtilities {
     }
 
     public String getUsernameFromJWT(String token) throws JWTDecodeException {
-        return JWT.decode(token)
-                .getSubject();
+        return JWT.decode(token).getSubject();
     }
 
     public void validateToken(String token) throws JWTVerificationException {

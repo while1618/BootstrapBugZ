@@ -8,16 +8,16 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "verification_tokens")
 @Getter
-@Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class VerificationToken {
     private static int MAX_NUMBER_OF_SENT = 3;
+    private static int NUMBER_OF_DAYS = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "verification_token_id")
+    @Setter
     private Long id;
 
     private String token;
@@ -26,8 +26,9 @@ public class VerificationToken {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    private LocalDateTime expirationDate = LocalDateTime.now().plusDays(1);
+    private LocalDateTime expirationDate = LocalDateTime.now().plusDays(NUMBER_OF_DAYS);
 
+    @Setter
     private boolean used = false;
 
     private int numberOfSent = 0;
@@ -35,6 +36,18 @@ public class VerificationToken {
     public VerificationToken(User user, String token) {
         this.user = user;
         this.token = token;
+    }
+
+    public void updateToken(String token) {
+        this.token = token;
+    }
+
+    public void extendExpirationDate() {
+        expirationDate = LocalDateTime.now().plusDays(NUMBER_OF_DAYS);
+    }
+
+    public void increaseNumberOfSent() {
+        numberOfSent++;
     }
 
     public static int getMaxNumberOfSent() {

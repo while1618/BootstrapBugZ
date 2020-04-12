@@ -1,82 +1,55 @@
 package com.app.webapp.service.impl;
 
-import com.app.webapp.error.exception.RoleNotFoundException;
-import com.app.webapp.model.RoleName;
-import com.app.webapp.model.Role;
+import com.app.webapp.dto.model.UserDto;
+import com.app.webapp.error.ErrorDomains;
+import com.app.webapp.error.exception.ResourceNotFound;
+import com.app.webapp.hal.UserDtoModelAssembler;
 import com.app.webapp.model.User;
 import com.app.webapp.repository.UserRepository;
-import com.app.webapp.service.RoleService;
 import com.app.webapp.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RoleService roleService;
     private final MessageSource messageSource;
-    private final PasswordEncoder bCryptPasswordEncoder;
+    private final UserDtoModelAssembler assembler;
 
-    public UserServiceImpl(UserRepository userRepository, RoleService roleService, MessageSource messageSource, @Lazy PasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, MessageSource messageSource, UserDtoModelAssembler assembler) {
         this.userRepository = userRepository;
-        this.roleService = roleService;
         this.messageSource = messageSource;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.assembler = assembler;
     }
 
     @Override
-    public User save(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Role role = roleService.findByName(RoleName.ROLE_USER).orElseThrow(
-                () -> new RoleNotFoundException(messageSource.getMessage("role.notFound", null, LocaleContextHolder.getLocale()))
-        );
-        user.addRole(role);
-        return userRepository.save(user);
+    public CollectionModel<UserDto> findAll() {
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty())
+            throw new ResourceNotFound(messageSource.getMessage("users.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER);
+        return assembler.toCollectionModel(map(users));
+    }
+
+    private CollectionModel<UserDto> map(List<User> users) {
+        ModelMapper modelMapper = new ModelMapper();
+        Collection<UserDto> collection = new ArrayList<>();
+        for (User user: users) {
+            collection.add(modelMapper.map(user, UserDto.class));
+        }
+        return new CollectionModel<>(collection);
     }
 
     @Override
-    public void activate(User user) {
-        user.setActivated(true);
-        userRepository.save(user);
-    }
-
-    @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public Optional<User> findByUsernameOrEmail(String username, String email) {
-        return userRepository.findByUsernameOrEmail(username, email);
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
+    public UserDto findByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
+        return assembler.toModel(new ModelMapper().map(user, UserDto.class));
     }
 }
