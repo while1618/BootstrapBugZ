@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class LoginException extends RuntimeException {
-    private ErrorDomains domain = ErrorDomains.LOGIN;
+    private String domain = ErrorDomains.LOGIN;
 
     public LoginException(String message) {
         super(message);

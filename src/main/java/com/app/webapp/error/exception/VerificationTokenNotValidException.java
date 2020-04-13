@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class VerificationTokenNotValidException extends RuntimeException {
-    private ErrorDomains domain = ErrorDomains.VERIFICATION_TOKEN;
+    private String domain = ErrorDomains.VERIFICATION_TOKEN;
 
     public VerificationTokenNotValidException(String message) {
         super(message);

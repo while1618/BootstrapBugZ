@@ -30,12 +30,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             errorResponse.addError(error.getField(), error.getDefaultMessage());
         }
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
-            errorResponse.addError(ErrorDomains.GLOBAL.getName(), error.getDefaultMessage());
+            errorResponse.addError(ErrorDomains.GLOBAL, error.getDefaultMessage());
         }
         return new ResponseEntity<>(errorResponse, headers, status);
     }
 
-    private ResponseEntity<Object> createErrorResponseEntity(ErrorDomains domain, String message, HttpStatus status) {
+    private ResponseEntity<Object> createErrorResponseEntity(String domain, String message, HttpStatus status) {
         ErrorResponse errorResponse = new ErrorResponse(status, domain, message);
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }

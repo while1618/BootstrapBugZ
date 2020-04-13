@@ -1,19 +1,10 @@
 package com.app.webapp.error;
 
-import lombok.Getter;
-
-@Getter
-public enum ErrorDomains {
-    GLOBAL ("global"),
-    USER ("user"),
-    AUTH ("auth"),
-    ROLE ("role"),
-    LOGIN ("login"),
-    VERIFICATION_TOKEN ("verificationToken");
-
-    private final String name;
-
-    ErrorDomains(String name) {
-        this.name = name;
-    }
+public class ErrorDomains {
+    public static final String GLOBAL = "global";
+    public static final String USER = "user";
+    public static final String AUTH = "auth";
+    public static final String ROLE = "role";
+    public static final String LOGIN = "login";
+    public static final String VERIFICATION_TOKEN = "verificationToken";
 }

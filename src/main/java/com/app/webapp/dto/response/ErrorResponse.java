@@ -1,6 +1,5 @@
 package com.app.webapp.dto.response;
 
-import com.app.webapp.error.ErrorDomains;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.*;
 import lombok.Getter;
@@ -27,11 +26,11 @@ public class ErrorResponse {
         this.errors = new ArrayList<>();
     }
 
-    public ErrorResponse(HttpStatus status, ErrorDomains domain, String message) {
+    public ErrorResponse(HttpStatus status, String domain, String message) {
         this.status = status.value();
         this.error = status.getReasonPhrase();
         this.errors = new ArrayList<>();
-        this.errors.add(new Error(domain.getName(), message));
+        this.errors.add(new Error(domain, message));
     }
 
     public void addError(String domain, String message) {

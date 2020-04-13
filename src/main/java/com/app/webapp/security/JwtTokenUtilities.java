@@ -16,21 +16,18 @@ import java.util.Date;
 @Component
 public class JwtTokenUtilities {
     @Value("${jwt.expirationInTime}")
-    private Long jwtExpirationTime;
-    private Algorithm algorithm;
-
-    public JwtTokenUtilities(@Value("${jwt.secret}") String jwtSecret) {
-        this.algorithm = Algorithm.HMAC256(jwtSecret);
-    }
+    private Long expirationTime;
+    @Value("${jwt.secret}")
+    private String secret;
 
     public String generateToken(Authentication authentication) throws JWTCreationException {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Date expiryDate = new Date(new Date().getTime() + jwtExpirationTime);
+            Date expiryDate = new Date(new Date().getTime() + expirationTime);
             return JWT.create()
                     .withSubject(userDetails.getUsername())
                     .withIssuedAt(new Date())
                     .withExpiresAt(expiryDate)
-                    .sign(algorithm);
+                    .sign(Algorithm.HMAC256(secret));
     }
 
     public String getUsernameFromJWT(String token) throws JWTDecodeException {
@@ -38,7 +35,7 @@ public class JwtTokenUtilities {
     }
 
     public void validateToken(String token) throws JWTVerificationException {
-        JWTVerifier verifier = JWT.require(algorithm).build();
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret)).build();
         verifier.verify(token);
     }
 }
