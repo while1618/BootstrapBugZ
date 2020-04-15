@@ -17,6 +17,7 @@ public class AuthToken {
     @Column(name = "auth_token_id")
     private Long id;
 
+    @Column(unique = true)
     private String token;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
