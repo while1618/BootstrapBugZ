@@ -1,23 +1,21 @@
 package com.app.webapp.service.impl;
 
 import com.app.webapp.dto.model.UserDto;
-import com.app.webapp.dto.request.LoginRequest;
-import com.app.webapp.dto.request.SignUpRequest;
+import com.app.webapp.dto.request.*;
 import com.app.webapp.dto.response.JwtAuthenticationResponse;
 import com.app.webapp.error.ErrorDomains;
+import com.app.webapp.error.exception.BadRequestException;
 import com.app.webapp.error.exception.LoginException;
 import com.app.webapp.error.exception.ResourceNotFound;
-import com.app.webapp.error.exception.VerificationTokenNotValidException;
+import com.app.webapp.error.exception.AuthTokenNotValidException;
+import com.app.webapp.event.OnForgotPasswordEvent;
 import com.app.webapp.event.OnRegistrationCompleteEvent;
 import com.app.webapp.event.OnResendVerificationEmailEvent;
 import com.app.webapp.hal.UserDtoModelAssembler;
-import com.app.webapp.model.Role;
-import com.app.webapp.model.RoleName;
-import com.app.webapp.model.User;
-import com.app.webapp.model.VerificationToken;
+import com.app.webapp.model.*;
 import com.app.webapp.repository.RoleRepository;
 import com.app.webapp.repository.UserRepository;
-import com.app.webapp.repository.VerificationTokenRepository;
+import com.app.webapp.repository.AuthTokenRepository;
 import com.app.webapp.security.JwtTokenUtilities;
 import com.app.webapp.service.AuthService;
 import org.modelmapper.ModelMapper;
@@ -31,13 +29,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
+    private final AuthTokenRepository authTokenRepository;
     private final RoleRepository roleRepository;
-    private final VerificationTokenRepository verificationTokenRepository;
 
     private final AuthenticationManager authenticationManager;
     private final ApplicationEventPublisher eventPublisher;
@@ -48,12 +44,12 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtilities jwtUtilities;
 
     public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           VerificationTokenRepository verificationTokenRepository, AuthenticationManager authenticationManager,
+                           AuthTokenRepository authTokenRepository, AuthenticationManager authenticationManager,
                            ApplicationEventPublisher eventPublisher, MessageSource messageSource, PasswordEncoder bCryptPasswordEncoder,
                            UserDtoModelAssembler assembler, JwtTokenUtilities jwtUtilities) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.verificationTokenRepository = verificationTokenRepository;
+        this.authTokenRepository = authTokenRepository;
         this.authenticationManager = authenticationManager;
         this.eventPublisher = eventPublisher;
         this.messageSource = messageSource;
@@ -81,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDto signUp(SignUpRequest signUpRequest) {
-        User user = userRepository.save(createUser(signUpRequest));
+        User user = createUser(signUpRequest);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
         return assembler.toModel(new ModelMapper().map(user, UserDto.class));
     }
@@ -93,23 +89,20 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()));
-        Role role = roleRepository.findByName(RoleName.USER).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("role.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.ROLE));
+        Role role = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
+                () -> new ResourceNotFound(messageSource.getMessage("role.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         user.addRole(role);
-
-        return user;
+        return userRepository.save(user);
     }
 
     @Override
     public void confirmRegistration(String token) {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("verificationToken.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.VERIFICATION_TOKEN));
-        if (verificationToken.isUsed())
-            throw new VerificationTokenNotValidException(messageSource.getMessage("verificationToken.used", null, LocaleContextHolder.getLocale()));
-        if (LocalDateTime.now().isAfter(verificationToken.getExpirationDate()))
-            throw new VerificationTokenNotValidException(messageSource.getMessage("verificationToken.expired", null, LocaleContextHolder.getLocale()));
-        activateUser(verificationToken.getUser());
-        deactivateToken(verificationToken);
+        AuthToken authToken = authTokenRepository.findByTokenAndUsage(token, AuthTokenProperties.VERIFICATION).orElseThrow(
+                () -> new ResourceNotFound(messageSource.getMessage("token.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+        if (authToken.isExpired())
+            throw new AuthTokenNotValidException(messageSource.getMessage("token.expired", null, LocaleContextHolder.getLocale()));
+        activateUser(authToken.getUser());
+        authTokenRepository.delete(authToken);
     }
 
     private void activateUser(User user) {
@@ -117,21 +110,36 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
     }
 
-    private void deactivateToken(VerificationToken token) {
-        token.setUsed(true);
-        verificationTokenRepository.save(token);
+    @Override
+    public void resendConfirmationMail(ResendConfirmationEmailRequest request) {
+        User user = userRepository.findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail()).orElseThrow(
+                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+        if (user.isActivated())
+            throw new BadRequestException(messageSource.getMessage("user.activated", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH);
+        AuthToken authToken = authTokenRepository.findByUserAndUsage(user, AuthTokenProperties.VERIFICATION).orElseThrow(
+                () -> new ResourceNotFound(messageSource.getMessage("token.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+        eventPublisher.publishEvent(new OnResendVerificationEmailEvent(authToken));
     }
 
     @Override
-    public void resendConfirmationMail(String usernameOrEmail) {
-        User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
-        VerificationToken verificationToken = verificationTokenRepository.findByUser(user).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("verificationToken.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.VERIFICATION_TOKEN));
-        if (verificationToken.isUsed())
-            throw new VerificationTokenNotValidException(messageSource.getMessage("verificationToken.used", null, LocaleContextHolder.getLocale()));
-        if (verificationToken.getNumberOfSent() > VerificationToken.getMaxNumberOfSent())
-            throw new VerificationTokenNotValidException(messageSource.getMessage("verificationToken.maxNumberOfSent", null, LocaleContextHolder.getLocale()));
-        eventPublisher.publishEvent(new OnResendVerificationEmailEvent(verificationToken));
+    public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        User user = userRepository.findByEmail(forgotPasswordRequest.getEmail()).orElseThrow(
+                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+        eventPublisher.publishEvent(new OnForgotPasswordEvent(user));
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        AuthToken authToken = authTokenRepository.findByTokenAndUsage(resetPasswordRequest.getToken(), AuthTokenProperties.FORGOT_PASSWORD).orElseThrow(
+                () -> new ResourceNotFound(messageSource.getMessage("token.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+        if (authToken.isExpired())
+            throw new AuthTokenNotValidException(messageSource.getMessage("token.expired", null, LocaleContextHolder.getLocale()));
+        changePassword(authToken.getUser(), resetPasswordRequest.getPassword());
+        authTokenRepository.delete(authToken);
+    }
+
+    private void changePassword(User user, String password) {
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepository.save(user);
     }
 }

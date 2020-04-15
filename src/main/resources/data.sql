@@ -1,6 +1,6 @@
-insert into roles (role_id, name) values (1, 'USER');
-insert into roles (role_id, name) values (2, 'MODERATOR');
-insert into roles (role_id, name) values (3, 'ADMIN');
+insert into roles (role_id, name) values (1, 'ROLE_USER');
+insert into roles (role_id, name) values (2, 'ROLE_MODERATOR');
+insert into roles (role_id, name) values (3, 'ROLE_ADMIN');
 
 insert into users (user_id, first_name, last_name, username, email, password, activated) values (1, 'Dejan', 'Zdravkovic', 'while', 'bagzi1996@gmail.com', '$2a$10$/zJs.45ISa/1e5UOzxrUpuhhdheUJRZtNCzDYilIF9oJMyvwpVHre', true);
 

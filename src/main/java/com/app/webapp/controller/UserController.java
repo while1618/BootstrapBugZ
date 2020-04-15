@@ -1,13 +1,15 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.dto.model.UserDto;
+import com.app.webapp.dto.request.ChangePasswordRequest;
+import com.app.webapp.model.RoleName;
 import com.app.webapp.service.UserService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -26,5 +28,12 @@ public class UserController {
     @GetMapping("/users/{username}")
     public ResponseEntity<UserDto> findByUsername(@PathVariable("username") String username) {
         return ResponseEntity.ok(userService.findByUsername(username));
+    }
+
+    @PostMapping("/users/change-password")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+        userService.changePassword(changePasswordRequest);
+        return ResponseEntity.noContent().build();
     }
 }

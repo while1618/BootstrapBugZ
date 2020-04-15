@@ -1,8 +1,7 @@
 package com.app.webapp.controller;
 
 import com.app.webapp.dto.model.UserDto;
-import com.app.webapp.dto.request.LoginRequest;
-import com.app.webapp.dto.request.SignUpRequest;
+import com.app.webapp.dto.request.*;
 import com.app.webapp.dto.response.JwtAuthenticationResponse;
 import com.app.webapp.service.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +38,21 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/resend-confirmation-email")
-    public ResponseEntity<?> resendConfirmationEmail(@RequestParam("usernameOrEmail") String usernameOrEmail) {
-        authService.resendConfirmationMail(usernameOrEmail);
+    @PostMapping("/resend-confirmation-email")
+    public ResponseEntity<?> resendConfirmationEmail(@Valid @RequestBody ResendConfirmationEmailRequest resendConfirmationEmailRequest) {
+        authService.resendConfirmationMail(resendConfirmationEmailRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        authService.forgotPassword(forgotPasswordRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        authService.resetPassword(resetPasswordRequest);
         return ResponseEntity.noContent().build();
     }
 }

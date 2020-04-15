@@ -1,19 +1,19 @@
 package com.app.webapp.validator.impl;
 
 import com.app.webapp.repository.UserRepository;
-import com.app.webapp.validator.UniqueEmail;
+import com.app.webapp.validator.EmailExist;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class UniqueEmailImpl implements ConstraintValidator<UniqueEmail, String> {
+public class EmailExistImpl implements ConstraintValidator<EmailExist, String> {
    private final UserRepository userRepository;
 
-   public UniqueEmailImpl(UserRepository userRepository) {
+   public EmailExistImpl(UserRepository userRepository) {
       this.userRepository = userRepository;
    }
 
-   public void initialize(UniqueEmail constraint) {
+   public void initialize(EmailExist constraint) {
    }
 
    public boolean isValid(String email, ConstraintValidatorContext context) {

@@ -1,6 +1,6 @@
 package com.app.webapp.validator;
 
-import com.app.webapp.validator.impl.UniqueUsernameImpl;
+import com.app.webapp.validator.impl.UsernameExistImpl;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -13,9 +13,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE,FIELD,ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = UniqueUsernameImpl.class)
+@Constraint(validatedBy = UsernameExistImpl.class)
 @Documented
-public @interface UniqueUsername {
+public @interface UsernameExist {
     String message() default "";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

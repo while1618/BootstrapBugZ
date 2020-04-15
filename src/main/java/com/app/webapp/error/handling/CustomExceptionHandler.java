@@ -2,9 +2,10 @@ package com.app.webapp.error.handling;
 
 import com.app.webapp.dto.response.ErrorResponse;
 import com.app.webapp.error.ErrorDomains;
+import com.app.webapp.error.exception.BadRequestException;
 import com.app.webapp.error.exception.LoginException;
 import com.app.webapp.error.exception.ResourceNotFound;
-import com.app.webapp.error.exception.VerificationTokenNotValidException;
+import com.app.webapp.error.exception.AuthTokenNotValidException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,14 +51,19 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({VerificationTokenNotValidException.class})
-    public ResponseEntity<Object> verificationTokenNotValid(VerificationTokenNotValidException ex) {
+    @ExceptionHandler({AuthTokenNotValidException.class})
+    public ResponseEntity<Object> authTokenNotValid(AuthTokenNotValidException ex) {
+        return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<Object> badRequest(BadRequestException ex) {
         return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> exception(Exception ex) {
-        return createErrorResponseEntity(ErrorDomains.GLOBAL, ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return createErrorResponseEntity(ErrorDomains.GLOBAL, ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @Override

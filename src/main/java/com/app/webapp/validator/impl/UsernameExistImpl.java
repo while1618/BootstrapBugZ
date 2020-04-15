@@ -1,19 +1,19 @@
 package com.app.webapp.validator.impl;
 
 import com.app.webapp.repository.UserRepository;
-import com.app.webapp.validator.UniqueUsername;
+import com.app.webapp.validator.UsernameExist;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class UniqueUsernameImpl implements ConstraintValidator<UniqueUsername, String> {
+public class UsernameExistImpl implements ConstraintValidator<UsernameExist, String> {
    private final UserRepository userRepository;
 
-   public UniqueUsernameImpl(UserRepository userRepository) {
+   public UsernameExistImpl(UserRepository userRepository) {
       this.userRepository = userRepository;
    }
 
-   public void initialize(UniqueUsername constraint) {
+   public void initialize(UsernameExist constraint) {
    }
 
    public boolean isValid(String username, ConstraintValidatorContext context) {
