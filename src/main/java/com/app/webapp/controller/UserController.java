@@ -2,7 +2,6 @@ package com.app.webapp.controller;
 
 import com.app.webapp.dto.model.UserDto;
 import com.app.webapp.dto.request.ChangePasswordRequest;
-import com.app.webapp.model.RoleName;
 import com.app.webapp.service.UserService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;

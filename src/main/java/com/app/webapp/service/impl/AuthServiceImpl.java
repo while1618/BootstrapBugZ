@@ -98,9 +98,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void confirmRegistration(String token) {
         AuthToken authToken = authTokenRepository.findByTokenAndUsage(token, AuthTokenProperties.VERIFICATION).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("token.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+                () -> new ResourceNotFound(messageSource.getMessage("authToken.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         if (authToken.isExpired())
-            throw new AuthTokenNotValidException(messageSource.getMessage("token.expired", null, LocaleContextHolder.getLocale()));
+            throw new AuthTokenNotValidException(messageSource.getMessage("authToken.expired", null, LocaleContextHolder.getLocale()));
         activateUser(authToken.getUser());
         authTokenRepository.delete(authToken);
     }
@@ -117,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
         if (user.isActivated())
             throw new BadRequestException(messageSource.getMessage("user.activated", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH);
         AuthToken authToken = authTokenRepository.findByUserAndUsage(user, AuthTokenProperties.VERIFICATION).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("token.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+                () -> new ResourceNotFound(messageSource.getMessage("authToken.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         eventPublisher.publishEvent(new OnResendVerificationEmailEvent(authToken));
     }
 
@@ -131,9 +131,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
         AuthToken authToken = authTokenRepository.findByTokenAndUsage(resetPasswordRequest.getToken(), AuthTokenProperties.FORGOT_PASSWORD).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("token.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+                () -> new ResourceNotFound(messageSource.getMessage("authToken.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         if (authToken.isExpired())
-            throw new AuthTokenNotValidException(messageSource.getMessage("token.expired", null, LocaleContextHolder.getLocale()));
+            throw new AuthTokenNotValidException(messageSource.getMessage("authToken.expired", null, LocaleContextHolder.getLocale()));
         changePassword(authToken.getUser(), resetPasswordRequest.getPassword());
         authTokenRepository.delete(authToken);
     }

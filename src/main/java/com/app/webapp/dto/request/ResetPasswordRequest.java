@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 @FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
 public class ResetPasswordRequest {
-    @NotEmpty(message = "{securityToken.notFound}")
+    @NotEmpty(message = "{authToken.notFound}")
     private String token;
 
     @NotEmpty(message = "{password.notEmpty}")

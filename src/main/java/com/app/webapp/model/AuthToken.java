@@ -25,6 +25,7 @@ public class AuthToken {
 
     private LocalDateTime expirationDate = LocalDateTime.now().plusDays(AuthTokenProperties.NUMBER_OF_DAYS_VALID);
 
+    @Column(name = "`usage`")
     private String usage;
 
     public AuthToken(User user, String token, String usage) {
