@@ -7,16 +7,16 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class UsernameExistImpl implements ConstraintValidator<UsernameExist, String> {
-   private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-   public UsernameExistImpl(UserRepository userRepository) {
-      this.userRepository = userRepository;
-   }
+    public UsernameExistImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-   public void initialize(UsernameExist constraint) {
-   }
+    public void initialize(UsernameExist constraint) {
+    }
 
-   public boolean isValid(String username, ConstraintValidatorContext context) {
-      return !userRepository.existsByUsername(username);
-   }
+    public boolean isValid(String username, ConstraintValidatorContext context) {
+        return !userRepository.existsByUsername(username);
+    }
 }

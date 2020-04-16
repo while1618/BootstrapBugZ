@@ -2,7 +2,6 @@ package com.app.webapp.controller;
 
 import com.app.webapp.dto.model.UserDto;
 import com.app.webapp.dto.request.*;
-import com.app.webapp.dto.response.JwtAuthenticationResponse;
 import com.app.webapp.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +16,6 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<JwtAuthenticationResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(authService.login(loginRequest));
     }
 
     @PostMapping("/sign-up")

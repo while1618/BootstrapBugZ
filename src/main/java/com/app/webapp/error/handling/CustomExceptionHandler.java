@@ -3,7 +3,6 @@ package com.app.webapp.error.handling;
 import com.app.webapp.dto.response.ErrorResponse;
 import com.app.webapp.error.ErrorDomains;
 import com.app.webapp.error.exception.BadRequestException;
-import com.app.webapp.error.exception.LoginException;
 import com.app.webapp.error.exception.ResourceNotFound;
 import com.app.webapp.error.exception.AuthTokenNotValidException;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +30,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             errorResponse.addError(error.getField(), error.getDefaultMessage());
         }
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
-            errorResponse.addError(ErrorDomains.GLOBAL, error.getDefaultMessage());
+            Object errorObject = Objects.requireNonNull(error.getArguments())[1];
+            errorResponse.addError((errorObject == null) ? ErrorDomains.GLOBAL : errorObject.toString(), error.getDefaultMessage());
         }
         return new ResponseEntity<>(errorResponse, headers, status);
     }
@@ -46,14 +46,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({LoginException.class})
-    public ResponseEntity<Object> login(LoginException ex) {
-        return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler({AuthTokenNotValidException.class})
     public ResponseEntity<Object> authTokenNotValid(AuthTokenNotValidException ex) {
-        return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({BadRequestException.class})

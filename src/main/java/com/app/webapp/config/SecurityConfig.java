@@ -1,8 +1,11 @@
 package com.app.webapp.config;
 
-import com.app.webapp.error.handling.CustomAuthenticationEntryPoint;
+import com.app.webapp.repository.UserRepository;
 import com.app.webapp.security.JwtAuthenticationFilter;
+import com.app.webapp.security.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,14 +14,12 @@ import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -27,15 +28,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserRepository userRepository;
+    private final String secret;
+    private final MessageSource messageSource;
 
     public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-                          JwtAuthenticationFilter jwtAuthenticationFilter) {
+                          UserRepository userRepository, @Value("${jwt.secret}") String secret, MessageSource messageSource) {
         this.userDetailsService = userDetailsService;
-        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.userRepository = userRepository;
+        this.secret = secret;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -58,23 +60,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors()
-                    .and()
-                .csrf()
-                    .disable()
-                .exceptionHandling()
-                    .authenticationEntryPoint(customAuthenticationEntryPoint)
-                    .and()
-                .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
+                .and()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), secret, userRepository, messageSource))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), secret, userDetailsService, messageSource))
                 .authorizeRequests()
                     .antMatchers("/",
-                            "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg",
-                            "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
+                        "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg",
+                        "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
                     .antMatchers("/api/auth/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/login").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/users/**").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                    .anyRequest().authenticated();
     }
 }

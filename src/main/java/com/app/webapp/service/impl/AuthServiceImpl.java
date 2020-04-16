@@ -2,10 +2,8 @@ package com.app.webapp.service.impl;
 
 import com.app.webapp.dto.model.UserDto;
 import com.app.webapp.dto.request.*;
-import com.app.webapp.dto.response.JwtAuthenticationResponse;
 import com.app.webapp.error.ErrorDomains;
 import com.app.webapp.error.exception.BadRequestException;
-import com.app.webapp.error.exception.LoginException;
 import com.app.webapp.error.exception.ResourceNotFound;
 import com.app.webapp.error.exception.AuthTokenNotValidException;
 import com.app.webapp.event.OnForgotPasswordEvent;
@@ -16,16 +14,11 @@ import com.app.webapp.model.*;
 import com.app.webapp.repository.RoleRepository;
 import com.app.webapp.repository.UserRepository;
 import com.app.webapp.repository.AuthTokenRepository;
-import com.app.webapp.security.JwtTokenUtilities;
 import com.app.webapp.service.AuthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,44 +28,23 @@ public class AuthServiceImpl implements AuthService {
     private final AuthTokenRepository authTokenRepository;
     private final RoleRepository roleRepository;
 
-    private final AuthenticationManager authenticationManager;
     private final ApplicationEventPublisher eventPublisher;
     private final MessageSource messageSource;
     private final PasswordEncoder bCryptPasswordEncoder;
 
     private final UserDtoModelAssembler assembler;
-    private final JwtTokenUtilities jwtUtilities;
 
     public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           AuthTokenRepository authTokenRepository, AuthenticationManager authenticationManager,
-                           ApplicationEventPublisher eventPublisher, MessageSource messageSource, PasswordEncoder bCryptPasswordEncoder,
-                           UserDtoModelAssembler assembler, JwtTokenUtilities jwtUtilities) {
+                           AuthTokenRepository authTokenRepository, ApplicationEventPublisher eventPublisher,
+                           MessageSource messageSource, PasswordEncoder bCryptPasswordEncoder,
+                           UserDtoModelAssembler assembler) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.authTokenRepository = authTokenRepository;
-        this.authenticationManager = authenticationManager;
         this.eventPublisher = eventPublisher;
         this.messageSource = messageSource;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.assembler = assembler;
-        this.jwtUtilities = jwtUtilities;
-    }
-
-    @Override
-    public JwtAuthenticationResponse login(LoginRequest loginRequest) {
-        User user = userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail()).orElseThrow(
-                () -> new LoginException(messageSource.getMessage("login.badCredentials", null, LocaleContextHolder.getLocale())));
-        if (!user.isActivated())
-            throw new LoginException(messageSource.getMessage("login.notActivated", null, LocaleContextHolder.getLocale()));
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(), loginRequest.getPassword())
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            return new JwtAuthenticationResponse(jwtUtilities.generateToken(authentication));
-        } catch (Exception e) {
-            throw new LoginException(messageSource.getMessage("login.badCredentials", null, LocaleContextHolder.getLocale()));
-        }
     }
 
     @Override
