@@ -35,6 +35,4 @@ public class UserController {
         userService.changePassword(changePasswordRequest);
         return ResponseEntity.noContent().build();
     }
-
-    //TODO: implement edit user - check for username and email validation(should user be deactivated while email is not valid?)
 }

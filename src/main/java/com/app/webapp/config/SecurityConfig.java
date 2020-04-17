@@ -1,5 +1,6 @@
 package com.app.webapp.config;
 
+import com.app.webapp.error.handling.CustomAuthenticationEntryPoint;
 import com.app.webapp.repository.UserRepository;
 import com.app.webapp.security.JwtAuthenticationFilter;
 import com.app.webapp.security.JwtAuthorizationFilter;
@@ -30,13 +31,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
     private final String secret;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final MessageSource messageSource;
 
     public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-                          UserRepository userRepository, @Value("${jwt.secret}") String secret, MessageSource messageSource) {
+                          UserRepository userRepository, @Value("${jwt.secret}") String secret,
+                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint, MessageSource messageSource) {
         this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
         this.secret = secret;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
         this.messageSource = messageSource;
     }
 
@@ -66,13 +70,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), secret, userRepository, messageSource))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), secret, userDetailsService, messageSource))
+                .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint)
+                .and()
                 .authorizeRequests()
                     .antMatchers("/",
                         "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg",
                         "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
-                    .antMatchers("/api/auth/**").permitAll()
-                    .antMatchers(HttpMethod.POST, "/login").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+                    .antMatchers("/api/auth/login", "/api/auth/sign-up", "/api/auth/confirm-registration",
+                            "/api/auth/resend-confirmation-email", "/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/users", "/api/users/{username}").permitAll()
                     .anyRequest().authenticated();
     }
 }

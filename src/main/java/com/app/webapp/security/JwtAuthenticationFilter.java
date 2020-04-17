@@ -37,6 +37,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.secret = secret;
         this.userRepository = userRepository;
         this.messageSource = messageSource;
+        this.setFilterProcessesUrl("/api/auth/login");
     }
 
     @Override
