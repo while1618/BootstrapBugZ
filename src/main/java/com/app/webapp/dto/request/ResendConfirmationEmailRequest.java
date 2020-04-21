@@ -8,6 +8,6 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 public class ResendConfirmationEmailRequest {
-    @NotEmpty(message = "{login.usernameOrEmail.notEmpty}")
-    private String usernameOrEmail;
+    @NotEmpty(message = "{username.notEmpty}")
+    private String username;
 }

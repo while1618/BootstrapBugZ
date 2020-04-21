@@ -28,17 +28,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String usernameOrEmail) {
-        User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail).orElseThrow(
+    public UserDetails loadUserByUsername(String username) throws ResourceNotFound {
+        User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH)
         );
-        List<GrantedAuthority> authorities = getAuthorities(user);
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
-    }
-
-    private List<GrantedAuthority> getAuthorities(User user) {
-        return user.getRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getName().name())
-        ).collect(Collectors.toList());
+        return UserPrincipal.create(user);
     }
 }

@@ -1,8 +1,10 @@
 package com.app.webapp.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,10 +31,18 @@ public class User {
 
     private String password;
 
+    @Column(columnDefinition = "DATETIME(3)")
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @Column(columnDefinition = "DATETIME(3)")
+    private LocalDateTime logoutFromAllDevicesAt = LocalDateTime.now();
+
     private boolean activated = false;
 
+    private boolean nonLocked = true;
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(	name = "user_roles",
+    @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();

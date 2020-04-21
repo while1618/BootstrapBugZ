@@ -10,4 +10,5 @@ public interface UserService {
     CollectionModel<UserDto> findAll();
     UserDto findByUsername(String username);
     void changePassword(ChangePasswordRequest changePasswordRequest);
+    void logoutFromAllDevices();
 }

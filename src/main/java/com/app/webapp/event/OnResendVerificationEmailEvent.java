@@ -1,6 +1,6 @@
 package com.app.webapp.event;
 
-import com.app.webapp.model.AuthToken;
+import com.app.webapp.model.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
@@ -8,10 +8,10 @@ import org.springframework.context.ApplicationEvent;
 @Getter
 @Setter
 public class OnResendVerificationEmailEvent extends ApplicationEvent {
-    private AuthToken authToken;
+    private User user;
 
-    public OnResendVerificationEmailEvent(AuthToken authToken) {
-        super(authToken);
-        this.authToken = authToken;
+    public OnResendVerificationEmailEvent(User user) {
+        super(user);
+        this.user = user;
     }
 }

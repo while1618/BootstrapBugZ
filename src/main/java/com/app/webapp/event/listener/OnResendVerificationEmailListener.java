@@ -1,41 +1,32 @@
 package com.app.webapp.event.listener;
 
 import com.app.webapp.event.OnResendVerificationEmailEvent;
-import com.app.webapp.model.AuthToken;
-import com.app.webapp.repository.AuthTokenRepository;
+import com.app.webapp.model.User;
+import com.app.webapp.security.JwtProperties;
+import com.app.webapp.security.JwtUtilities;
 import com.app.webapp.service.EmailService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class OnResendVerificationEmailListener implements ApplicationListener<OnResendVerificationEmailEvent> {
-    private final AuthTokenRepository authTokenRepository;
+    private final JwtUtilities jwtUtilities;
     private final EmailService emailService;
 
-    public OnResendVerificationEmailListener(AuthTokenRepository authTokenRepository, EmailService emailService) {
-        this.authTokenRepository = authTokenRepository;
+    public OnResendVerificationEmailListener(JwtUtilities jwtUtilities, EmailService emailService) {
+        this.jwtUtilities = jwtUtilities;
         this.emailService = emailService;
     }
 
     @Override
     public void onApplicationEvent(OnResendVerificationEmailEvent event) {
-        AuthToken authToken = event.getAuthToken();
-        String token = updateToken(authToken);
-        sendEmail(authToken.getUser().getEmail(), token);
-    }
-
-    private String updateToken(AuthToken authToken) {
-        String token = UUID.randomUUID().toString();
-        authToken.updateToken(token);
-        authToken.extendExpirationDate();
-        authTokenRepository.save(authToken);
-        return token;
+        User user = event.getUser();
+        String token = jwtUtilities.createToken(user, JwtProperties.CONFIRM_REGISTRATION);
+        sendEmail(user.getEmail(), token);
     }
 
     private void sendEmail(String to, String token) {
-        String subject = "Resend Registration Confirmation";
+        String subject = "Activate Account";
         String body = "Please activate your account by clicking on link.\n" +
                 "http://localhost:12345/api/auth/confirm-registration?token=" + token;
 

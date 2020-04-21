@@ -35,4 +35,11 @@ public class UserController {
         userService.changePassword(changePasswordRequest);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/users/logout-from-all-devices")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> logoutFromAllDevices() {
+        userService.logoutFromAllDevices();
+        return ResponseEntity.noContent().build();
+    }
 }

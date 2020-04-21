@@ -4,6 +4,7 @@ import com.app.webapp.error.handling.CustomAuthenticationEntryPoint;
 import com.app.webapp.repository.UserRepository;
 import com.app.webapp.security.JwtAuthenticationFilter;
 import com.app.webapp.security.JwtAuthorizationFilter;
+import com.app.webapp.security.JwtUtilities;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -29,17 +30,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
-    private final UserRepository userRepository;
-    private final String secret;
+    private final JwtUtilities jwtUtilities;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final MessageSource messageSource;
 
     public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-                          UserRepository userRepository, @Value("${jwt.secret}") String secret,
-                          CustomAuthenticationEntryPoint customAuthenticationEntryPoint, MessageSource messageSource) {
+                          JwtUtilities jwtUtilities, CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                          MessageSource messageSource) {
         this.userDetailsService = userDetailsService;
-        this.userRepository = userRepository;
-        this.secret = secret;
+        this.jwtUtilities = jwtUtilities;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
         this.messageSource = messageSource;
     }
@@ -68,8 +67,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), secret, userRepository, messageSource))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), secret, userDetailsService, messageSource))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtUtilities, messageSource))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtilities, userDetailsService))
                 .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
@@ -78,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
                     .antMatchers("/api/auth/login", "/api/auth/sign-up", "/api/auth/confirm-registration",
                             "/api/auth/resend-confirmation-email", "/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/users", "/api/users/{username}").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/users").permitAll()
                     .anyRequest().authenticated();
     }
 }

@@ -2,23 +2,28 @@ package com.app.webapp.error.handling;
 
 import com.app.webapp.dto.response.ErrorResponse;
 import com.app.webapp.error.ErrorDomains;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
+@Component
 public class CustomFilterExceptionHandler {
-    public static void handleFilterException(HttpServletResponse response, String message) {
+    public static void handleException(HttpServletResponse response, String message) {
         try {
+            final ErrorResponse errorResponse = new ErrorResponse(
+                    HttpStatus.UNAUTHORIZED,
+                    ErrorDomains.AUTH,
+                    message
+            );
             response.setContentType("application/json");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getOutputStream().println(
-                    String.valueOf(new ErrorResponse(
-                            HttpStatus.UNAUTHORIZED,
-                            ErrorDomains.AUTH,
-                            message)));
+            response.getOutputStream().println(errorResponse.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 }

@@ -4,7 +4,9 @@ import com.app.webapp.dto.response.ErrorResponse;
 import com.app.webapp.error.ErrorDomains;
 import com.app.webapp.error.exception.BadRequestException;
 import com.app.webapp.error.exception.ResourceNotFound;
-import com.app.webapp.error.exception.AuthTokenNotValidException;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,14 +48,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({AuthTokenNotValidException.class})
-    public ResponseEntity<Object> authTokenNotValid(AuthTokenNotValidException ex) {
-        return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler({BadRequestException.class})
     public ResponseEntity<Object> badRequest(BadRequestException ex) {
         return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({JWTCreationException.class, JWTVerificationException.class, JWTDecodeException.class, IllegalArgumentException.class})
+    public ResponseEntity<Object> jwt() {
+        return createErrorResponseEntity(ErrorDomains.AUTH, HttpStatus.FORBIDDEN.getReasonPhrase(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({Exception.class})

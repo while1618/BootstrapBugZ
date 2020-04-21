@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -72,7 +73,21 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
         if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
             throw new BadRequestException(messageSource.getMessage("changePassword.badOldPassword", null, LocaleContextHolder.getLocale()), ErrorDomains.USER);
-        user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getNewPassword()));
+       changePassword(user, changePasswordRequest.getNewPassword());
+    }
+
+    private void changePassword(User user, String password) {
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+    @Override
+    public void logoutFromAllDevices() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName()).orElseThrow(
+                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
+        user.setLogoutFromAllDevicesAt(LocalDateTime.now());
         userRepository.save(user);
     }
 }
