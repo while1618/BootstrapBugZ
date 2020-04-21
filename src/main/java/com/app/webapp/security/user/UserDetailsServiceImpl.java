@@ -1,20 +1,15 @@
-package com.app.webapp.security;
+package com.app.webapp.security.user;
 
 import com.app.webapp.error.ErrorDomains;
 import com.app.webapp.error.exception.ResourceNotFound;
-import com.app.webapp.model.User;
-import com.app.webapp.repository.UserRepository;
+import com.app.webapp.model.user.User;
+import com.app.webapp.repository.user.UserRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

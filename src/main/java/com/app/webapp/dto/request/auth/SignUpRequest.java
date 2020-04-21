@@ -1,4 +1,4 @@
-package com.app.webapp.dto.request;
+package com.app.webapp.dto.request.auth;
 
 import com.app.webapp.validator.FieldMatch;
 import com.app.webapp.validator.EmailExist;

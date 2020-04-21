@@ -1,6 +1,5 @@
-package com.app.webapp.model;
+package com.app.webapp.model.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;

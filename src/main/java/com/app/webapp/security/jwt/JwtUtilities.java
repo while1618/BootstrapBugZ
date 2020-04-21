@@ -1,6 +1,7 @@
-package com.app.webapp.security;
+package com.app.webapp.security.jwt;
 
-import com.app.webapp.model.User;
+import com.app.webapp.model.user.User;
+import com.app.webapp.security.user.UserPrincipal;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

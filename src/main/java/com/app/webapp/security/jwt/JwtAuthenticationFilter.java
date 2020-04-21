@@ -1,8 +1,9 @@
-package com.app.webapp.security;
+package com.app.webapp.security.jwt;
 
-import com.app.webapp.dto.request.LoginRequest;
+import com.app.webapp.dto.request.auth.LoginRequest;
 import com.app.webapp.error.exception.ResourceNotFound;
 import com.app.webapp.error.handling.CustomFilterExceptionHandler;
+import com.app.webapp.security.user.UserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;

@@ -1,6 +1,6 @@
 package com.app.webapp.validator.impl;
 
-import com.app.webapp.repository.UserRepository;
+import com.app.webapp.repository.user.UserRepository;
 import com.app.webapp.validator.EmailExist;
 
 import javax.validation.ConstraintValidator;

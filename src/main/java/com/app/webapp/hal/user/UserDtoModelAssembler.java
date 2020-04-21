@@ -1,8 +1,7 @@
-package com.app.webapp.hal;
+package com.app.webapp.hal.user;
 
 import com.app.webapp.controller.UserController;
-import com.app.webapp.dto.model.UserDto;
-import com.app.webapp.model.User;
+import com.app.webapp.dto.model.user.UserDto;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;

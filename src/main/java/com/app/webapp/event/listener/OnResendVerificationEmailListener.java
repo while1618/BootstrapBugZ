@@ -1,9 +1,9 @@
 package com.app.webapp.event.listener;
 
 import com.app.webapp.event.OnResendVerificationEmailEvent;
-import com.app.webapp.model.User;
-import com.app.webapp.security.JwtProperties;
-import com.app.webapp.security.JwtUtilities;
+import com.app.webapp.model.user.User;
+import com.app.webapp.security.jwt.JwtProperties;
+import com.app.webapp.security.jwt.JwtUtilities;
 import com.app.webapp.service.EmailService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;

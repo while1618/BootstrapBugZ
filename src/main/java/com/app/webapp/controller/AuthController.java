@@ -1,7 +1,10 @@
 package com.app.webapp.controller;
 
-import com.app.webapp.dto.model.UserDto;
-import com.app.webapp.dto.request.*;
+import com.app.webapp.dto.model.user.UserDto;
+import com.app.webapp.dto.request.auth.ForgotPasswordRequest;
+import com.app.webapp.dto.request.auth.ResendConfirmationEmailRequest;
+import com.app.webapp.dto.request.auth.ResetPasswordRequest;
+import com.app.webapp.dto.request.auth.SignUpRequest;
 import com.app.webapp.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

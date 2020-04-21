@@ -1,6 +1,6 @@
-package com.app.webapp.repository;
+package com.app.webapp.repository.user;
 
-import com.app.webapp.model.User;
+import com.app.webapp.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

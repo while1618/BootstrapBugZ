@@ -1,7 +1,7 @@
-package com.app.webapp.repository;
+package com.app.webapp.repository.user;
 
-import com.app.webapp.model.RoleName;
-import com.app.webapp.model.Role;
+import com.app.webapp.model.user.RoleName;
+import com.app.webapp.model.user.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

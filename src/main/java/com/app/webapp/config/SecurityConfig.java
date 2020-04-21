@@ -1,12 +1,10 @@
 package com.app.webapp.config;
 
 import com.app.webapp.error.handling.CustomAuthenticationEntryPoint;
-import com.app.webapp.repository.UserRepository;
-import com.app.webapp.security.JwtAuthenticationFilter;
-import com.app.webapp.security.JwtAuthorizationFilter;
-import com.app.webapp.security.JwtUtilities;
+import com.app.webapp.security.jwt.JwtAuthenticationFilter;
+import com.app.webapp.security.jwt.JwtAuthorizationFilter;
+import com.app.webapp.security.jwt.JwtUtilities;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

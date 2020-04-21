@@ -1,6 +1,7 @@
-package com.app.webapp.security;
+package com.app.webapp.security.jwt;
 
 import com.app.webapp.error.exception.ResourceNotFound;
+import com.app.webapp.security.user.UserPrincipal;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;

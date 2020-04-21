@@ -1,4 +1,4 @@
-package com.app.webapp.dto.model;
+package com.app.webapp.dto.model.user;
 
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;

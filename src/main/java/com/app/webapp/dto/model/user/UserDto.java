@@ -1,4 +1,4 @@
-package com.app.webapp.dto.model;
+package com.app.webapp.dto.model.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

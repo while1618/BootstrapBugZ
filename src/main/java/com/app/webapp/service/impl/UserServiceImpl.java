@@ -1,17 +1,13 @@
 package com.app.webapp.service.impl;
 
-import com.app.webapp.dto.model.UserDto;
-import com.app.webapp.dto.request.ChangePasswordRequest;
-import com.app.webapp.dto.request.SignUpRequest;
+import com.app.webapp.dto.model.user.UserDto;
+import com.app.webapp.dto.request.user.ChangePasswordRequest;
 import com.app.webapp.error.ErrorDomains;
 import com.app.webapp.error.exception.BadRequestException;
 import com.app.webapp.error.exception.ResourceNotFound;
-import com.app.webapp.hal.UserDtoModelAssembler;
-import com.app.webapp.model.Role;
-import com.app.webapp.model.RoleName;
-import com.app.webapp.model.User;
-import com.app.webapp.repository.RoleRepository;
-import com.app.webapp.repository.UserRepository;
+import com.app.webapp.hal.user.UserDtoModelAssembler;
+import com.app.webapp.model.user.User;
+import com.app.webapp.repository.user.UserRepository;
 import com.app.webapp.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;

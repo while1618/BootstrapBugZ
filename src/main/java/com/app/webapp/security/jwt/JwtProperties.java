@@ -1,4 +1,4 @@
-package com.app.webapp.security;
+package com.app.webapp.security.jwt;
 
 public class JwtProperties {
     public static final int EXPIRATION_TIME = 3600000;  //1h

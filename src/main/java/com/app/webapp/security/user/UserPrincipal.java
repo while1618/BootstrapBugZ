@@ -1,6 +1,6 @@
-package com.app.webapp.security;
+package com.app.webapp.security.user;
 
-import com.app.webapp.model.User;
+import com.app.webapp.model.user.User;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
