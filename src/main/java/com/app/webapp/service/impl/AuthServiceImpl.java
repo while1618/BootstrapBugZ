@@ -27,8 +27,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
@@ -84,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void activateUser(User user) {
         user.setActivated(true);
-        user.setUpdatedAt(LocalDateTime.now());
+        user.updateUpdatedAt();
         userRepository.save(user);
     }
 
@@ -115,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void changePassword(User user, String password) {
         user.setPassword(bCryptPasswordEncoder.encode(password));
-        user.setUpdatedAt(LocalDateTime.now());
+        user.updateUpdatedAt();
         userRepository.save(user);
     }
 }

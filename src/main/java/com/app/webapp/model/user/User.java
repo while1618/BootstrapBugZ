@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,11 +31,9 @@ public class User {
 
     private String password;
 
-    @Column(columnDefinition = "DATETIME(3)")
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
-    @Column(columnDefinition = "DATETIME(3)")
-    private LocalDateTime logoutFromAllDevicesAt = LocalDateTime.now();
+    private LocalDateTime logoutFromAllDevicesAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
     private boolean activated = false;
 
@@ -48,5 +47,13 @@ public class User {
 
     public void addRole(Role role) {
         this.roles.add(role);
+    }
+
+    public void updateUpdatedAt() {
+        this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    public void updateLogoutFromAllDevicesAt() {
+        this.logoutFromAllDevicesAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 }

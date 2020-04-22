@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -86,7 +85,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException(messageSource.getMessage("username.exists", null, LocaleContextHolder.getLocale()), ErrorDomains.USER);
 
         user.setUsername(username);
-        user.setUpdatedAt(LocalDateTime.now());
+        user.updateUpdatedAt();
     }
 
     private void setEmail(User user, String email) {
@@ -97,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
         user.setEmail(email);
         user.setActivated(false);
-        user.setUpdatedAt(LocalDateTime.now());
+        user.updateUpdatedAt();
         eventPublisher.publishEvent(new OnResendVerificationEmailEvent(user));
     }
 
@@ -113,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
     private void changePassword(User user, String password) {
         user.setPassword(bCryptPasswordEncoder.encode(password));
-        user.setUpdatedAt(LocalDateTime.now());
+        user.updateUpdatedAt();
         userRepository.save(user);
     }
 
@@ -122,7 +121,7 @@ public class UserServiceImpl implements UserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(auth.getName()).orElseThrow(
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
-        user.setLogoutFromAllDevicesAt(LocalDateTime.now());
+        user.updateLogoutFromAllDevicesAt();
         userRepository.save(user);
     }
 }

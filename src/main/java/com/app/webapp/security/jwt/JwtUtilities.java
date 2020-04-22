@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Component
@@ -42,8 +41,8 @@ public class JwtUtilities {
 
     private String createSecret(LocalDateTime updatedAt, LocalDateTime logoutFromAllDevicesAt, String usage) {
         return serverSecret +
-                "." + updatedAt.truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_DATE_TIME) +
-                "." + logoutFromAllDevicesAt.truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_DATE_TIME) +
+                "." + updatedAt.format(DateTimeFormatter.ISO_DATE_TIME) +
+                "." + logoutFromAllDevicesAt.format(DateTimeFormatter.ISO_DATE_TIME) +
                 "." + usage;
     }
 
