@@ -2,6 +2,7 @@ package com.app.webapp.controller;
 
 import com.app.webapp.dto.model.user.UserDto;
 import com.app.webapp.dto.request.user.ChangePasswordRequest;
+import com.app.webapp.dto.request.user.EditUserRequest;
 import com.app.webapp.service.UserService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api")
@@ -29,7 +31,16 @@ public class UserController {
         return ResponseEntity.ok(userService.findByUsername(username));
     }
 
-    @PostMapping("/users/change-password")
+    @PutMapping("/users/edit")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserDto> edit(@Valid @RequestBody EditUserRequest editUserRequest) {
+        UserDto userDto = userService.edit(editUserRequest);
+        return ResponseEntity
+                .created(URI.create(userDto.getRequiredLink("self").getHref()))
+                .body(userDto);
+    }
+
+    @PutMapping("/users/change-password")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         userService.changePassword(changePasswordRequest);
