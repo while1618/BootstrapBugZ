@@ -1,7 +1,10 @@
 package com.app.webapp.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
