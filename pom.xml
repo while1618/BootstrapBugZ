@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.app</groupId>
-    <artifactId>webapp</artifactId>
+    <artifactId>bootstrapbugz</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>webapp</name>
+    <name>BootstrapBug-Z</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -58,6 +58,21 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.9.4</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+            <version>2.9.2</version>
         </dependency>
 
         <dependency>
