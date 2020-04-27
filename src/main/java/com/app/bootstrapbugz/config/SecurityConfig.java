@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtUtilities jwtUtilities;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final MessageSource messageSource;
+
     private static final String[] STATIC_WHITELIST = {
             "/",
             "/favicon.ico",
@@ -48,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v2/api-docs",
             "/webjars/**"
     };
-    private static final String[] API_WHITELIST = {
+    private static final String[] AUTH_WHITELIST = {
             "/api/auth/login",
             "/api/auth/sign-up",
             "/api/auth/confirm-registration",
@@ -95,9 +96,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
-                    .antMatchers(STATIC_WHITELIST).permitAll()
-                    .antMatchers(SWAGGER_WHITELIST).permitAll()
-                    .antMatchers(API_WHITELIST).permitAll()
-                    .anyRequest().authenticated();
+                .antMatchers(STATIC_WHITELIST).permitAll()
+                .antMatchers(SWAGGER_WHITELIST).permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
+                .anyRequest().authenticated();
     }
 }

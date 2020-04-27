@@ -5,19 +5,18 @@ import com.app.bootstrapbugz.dto.request.auth.ForgotPasswordRequest;
 import com.app.bootstrapbugz.dto.request.auth.ResendConfirmationEmailRequest;
 import com.app.bootstrapbugz.dto.request.auth.ResetPasswordRequest;
 import com.app.bootstrapbugz.dto.request.auth.SignUpRequest;
-import com.app.bootstrapbugz.error.ErrorDomains;
+import com.app.bootstrapbugz.constant.EmailPurpose;
+import com.app.bootstrapbugz.constant.ErrorDomains;
 import com.app.bootstrapbugz.error.exception.BadRequestException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
-import com.app.bootstrapbugz.event.OnForgotPasswordEvent;
-import com.app.bootstrapbugz.event.OnRegistrationCompleteEvent;
-import com.app.bootstrapbugz.event.OnResendVerificationEmailEvent;
+import com.app.bootstrapbugz.event.OnSendEmailToUser;
 import com.app.bootstrapbugz.hal.user.UserDtoModelAssembler;
 import com.app.bootstrapbugz.model.user.Role;
 import com.app.bootstrapbugz.model.user.RoleName;
 import com.app.bootstrapbugz.model.user.User;
 import com.app.bootstrapbugz.repository.user.RoleRepository;
 import com.app.bootstrapbugz.repository.user.UserRepository;
-import com.app.bootstrapbugz.security.jwt.JwtProperties;
+import com.app.bootstrapbugz.constant.JwtProperties;
 import com.app.bootstrapbugz.security.jwt.JwtUtilities;
 import com.app.bootstrapbugz.service.AuthService;
 import org.modelmapper.ModelMapper;
@@ -55,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserDto signUp(SignUpRequest signUpRequest) {
         User user = createUser(signUpRequest);
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
+        eventPublisher.publishEvent(new OnSendEmailToUser(user, EmailPurpose.CONFIRM_REGISTRATION));
         return assembler.toModel(new ModelMapper().map(user, UserDto.class));
     }
 
@@ -92,14 +91,14 @@ public class AuthServiceImpl implements AuthService {
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         if (user.isActivated())
             throw new BadRequestException(messageSource.getMessage("user.activated", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH);
-        eventPublisher.publishEvent(new OnResendVerificationEmailEvent(user));
+        eventPublisher.publishEvent(new OnSendEmailToUser(user, EmailPurpose.CONFIRM_REGISTRATION));
     }
 
     @Override
     public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
         User user = userRepository.findByEmail(forgotPasswordRequest.getEmail()).orElseThrow(
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
-        eventPublisher.publishEvent(new OnForgotPasswordEvent(user));
+        eventPublisher.publishEvent(new OnSendEmailToUser(user, EmailPurpose.FORGOT_PASSWORD));
     }
 
     @Override

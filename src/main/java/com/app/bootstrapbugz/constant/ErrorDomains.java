@@ -1,4 +1,4 @@
-package com.app.bootstrapbugz.error;
+package com.app.bootstrapbugz.constant;
 
 public class ErrorDomains {
     public static final String GLOBAL = "global";

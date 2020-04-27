@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.security.user;
 
-import com.app.bootstrapbugz.error.ErrorDomains;
+import com.app.bootstrapbugz.constant.ErrorDomains;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.model.user.User;
 import com.app.bootstrapbugz.repository.user.UserRepository;

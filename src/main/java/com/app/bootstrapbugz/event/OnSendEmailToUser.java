@@ -7,11 +7,13 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class OnForgotPasswordEvent extends ApplicationEvent {
+public class OnSendEmailToUser extends ApplicationEvent {
     private User user;
+    private String purpose;
 
-    public OnForgotPasswordEvent(User user) {
+    public OnSendEmailToUser(User user, String purpose) {
         super(user);
         this.user = user;
+        this.purpose = purpose;
     }
 }

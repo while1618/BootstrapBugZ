@@ -1,5 +1,6 @@
 package com.app.bootstrapbugz.security.jwt;
 
+import com.app.bootstrapbugz.constant.JwtProperties;
 import com.app.bootstrapbugz.model.user.User;
 import com.app.bootstrapbugz.security.user.UserPrincipal;
 import com.auth0.jwt.JWT;

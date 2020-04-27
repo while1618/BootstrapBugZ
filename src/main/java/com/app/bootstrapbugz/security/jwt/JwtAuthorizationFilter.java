@@ -1,5 +1,6 @@
 package com.app.bootstrapbugz.security.jwt;
 
+import com.app.bootstrapbugz.constant.JwtProperties;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.security.user.UserPrincipal;
 import com.auth0.jwt.exceptions.JWTVerificationException;

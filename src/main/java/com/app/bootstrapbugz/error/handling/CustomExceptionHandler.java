@@ -1,7 +1,7 @@
 package com.app.bootstrapbugz.error.handling;
 
 import com.app.bootstrapbugz.dto.response.ErrorResponse;
-import com.app.bootstrapbugz.error.ErrorDomains;
+import com.app.bootstrapbugz.constant.ErrorDomains;
 import com.app.bootstrapbugz.error.exception.BadRequestException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
 import com.auth0.jwt.exceptions.JWTCreationException;

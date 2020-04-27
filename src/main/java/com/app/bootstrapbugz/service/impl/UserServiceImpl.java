@@ -3,10 +3,11 @@ package com.app.bootstrapbugz.service.impl;
 import com.app.bootstrapbugz.dto.model.user.UserDto;
 import com.app.bootstrapbugz.dto.request.user.ChangePasswordRequest;
 import com.app.bootstrapbugz.dto.request.user.EditUserRequest;
-import com.app.bootstrapbugz.error.ErrorDomains;
+import com.app.bootstrapbugz.constant.EmailPurpose;
+import com.app.bootstrapbugz.constant.ErrorDomains;
 import com.app.bootstrapbugz.error.exception.BadRequestException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
-import com.app.bootstrapbugz.event.OnResendVerificationEmailEvent;
+import com.app.bootstrapbugz.event.OnSendEmailToUser;
 import com.app.bootstrapbugz.hal.user.UserDtoModelAssembler;
 import com.app.bootstrapbugz.model.user.User;
 import com.app.bootstrapbugz.repository.user.UserRepository;
@@ -97,7 +98,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setActivated(false);
         user.updateUpdatedAt();
-        eventPublisher.publishEvent(new OnResendVerificationEmailEvent(user));
+        eventPublisher.publishEvent(new OnSendEmailToUser(user, EmailPurpose.CONFIRM_REGISTRATION));
     }
 
     @Override

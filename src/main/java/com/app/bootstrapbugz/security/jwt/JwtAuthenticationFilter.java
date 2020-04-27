@@ -1,6 +1,7 @@
 package com.app.bootstrapbugz.security.jwt;
 
 import com.app.bootstrapbugz.dto.request.auth.LoginRequest;
+import com.app.bootstrapbugz.constant.JwtProperties;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.error.handling.CustomFilterExceptionHandler;
 import com.app.bootstrapbugz.security.user.UserPrincipal;

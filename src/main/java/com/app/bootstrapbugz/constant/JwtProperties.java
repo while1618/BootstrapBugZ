@@ -1,4 +1,4 @@
-package com.app.bootstrapbugz.security.jwt;
+package com.app.bootstrapbugz.constant;
 
 public class JwtProperties {
     public static final int EXPIRATION_TIME = 3600000;  //1h
