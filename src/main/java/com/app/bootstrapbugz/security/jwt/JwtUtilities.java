@@ -20,31 +20,31 @@ public class JwtUtilities {
     @Value("${jwt.serverSecret}")
     private String serverSecret;
 
-    public String createToken(User user, String usage) throws JWTCreationException {
-        String secret = createSecret(user.getUpdatedAt(), user.getLogoutFromAllDevicesAt(), usage);
+    public String createToken(User user, String purpose) throws JWTCreationException {
+        String secret = createSecret(user.getUpdatedAt(), user.getLogoutFromAllDevicesAt(), purpose);
         return createToken(user.getUsername(), secret);
     }
 
-    public void checkToken(String token, User user, String usage) throws JWTVerificationException {
-        String secret = createSecret(user.getUpdatedAt(), user.getLogoutFromAllDevicesAt(), usage);
+    public void checkToken(String token, User user, String purpose) throws JWTVerificationException {
+        String secret = createSecret(user.getUpdatedAt(), user.getLogoutFromAllDevicesAt(), purpose);
         checkToken(token, secret);
     }
 
-    public String createToken(UserPrincipal userPrincipal, String usage) throws JWTCreationException {
-        String secret = createSecret(userPrincipal.getUpdatedAt(), userPrincipal.getLogoutFromAllDevicesAt(), usage);
+    public String createToken(UserPrincipal userPrincipal, String purpose) throws JWTCreationException {
+        String secret = createSecret(userPrincipal.getUpdatedAt(), userPrincipal.getLogoutFromAllDevicesAt(), purpose);
         return createToken(userPrincipal.getUsername(), secret);
     }
 
-    public void checkToken(String token, UserPrincipal userPrincipal, String usage) throws JWTVerificationException {
-        String secret = createSecret(userPrincipal.getUpdatedAt(), userPrincipal.getLogoutFromAllDevicesAt(), usage);
+    public void checkToken(String token, UserPrincipal userPrincipal, String purpose) throws JWTVerificationException {
+        String secret = createSecret(userPrincipal.getUpdatedAt(), userPrincipal.getLogoutFromAllDevicesAt(), purpose);
         checkToken(token, secret);
     }
 
-    private String createSecret(LocalDateTime updatedAt, LocalDateTime logoutFromAllDevicesAt, String usage) {
+    private String createSecret(LocalDateTime updatedAt, LocalDateTime logoutFromAllDevicesAt, String purpose) {
         return serverSecret +
                 "." + updatedAt.format(DateTimeFormatter.ISO_DATE_TIME) +
                 "." + logoutFromAllDevicesAt.format(DateTimeFormatter.ISO_DATE_TIME) +
-                "." + usage;
+                "." + purpose;
     }
 
     private String createToken(String username, String secret) throws JWTCreationException {

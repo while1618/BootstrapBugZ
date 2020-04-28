@@ -22,13 +22,13 @@ public class OnSendEmailToUserListener implements ApplicationListener<OnSendEmai
     @Override
     public void onApplicationEvent(OnSendEmailToUser event) {
         User user = event.getUser();
-        String porpoise = event.getPurpose();
+        String purpose = event.getPurpose();
 
-        if (porpoise.equals(EmailPurpose.CONFIRM_REGISTRATION)){
+        if (purpose.equals(EmailPurpose.CONFIRM_REGISTRATION)){
             String token = jwtUtilities.createToken(user, JwtProperties.CONFIRM_REGISTRATION);
             sendConfirmRegistrationEmail(user.getEmail(), token);
         }
-        if (porpoise.equals(EmailPurpose.FORGOT_PASSWORD)) {
+        if (purpose.equals(EmailPurpose.FORGOT_PASSWORD)) {
             String token = jwtUtilities.createToken(user, JwtProperties.FORGOT_PASSWORD);
             sendForgotPasswordEmail(user.getEmail(), token);
         }

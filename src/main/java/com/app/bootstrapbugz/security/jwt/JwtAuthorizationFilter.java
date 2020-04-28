@@ -42,8 +42,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         } catch (ResourceNotFound | JWTVerificationException | IllegalArgumentException e) {
             log.error(e.getMessage());
+        } finally {
+            chain.doFilter(request, response);
         }
-        chain.doFilter(request, response);
     }
 
     private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) throws ResourceNotFound, JWTVerificationException, IllegalArgumentException {
