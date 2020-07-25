@@ -3,8 +3,11 @@ package com.app.bootstrapbugz.dto.request.auth;
 import com.app.bootstrapbugz.validator.FieldMatch;
 import com.app.bootstrapbugz.validator.EmailExist;
 import com.app.bootstrapbugz.validator.UsernameExist;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -13,6 +16,9 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 @FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
 public class SignUpRequest {
     @NotEmpty(message = "{firstName.notEmpty}")

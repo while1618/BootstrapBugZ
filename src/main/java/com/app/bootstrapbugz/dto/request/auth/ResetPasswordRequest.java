@@ -1,13 +1,17 @@
 package com.app.bootstrapbugz.dto.request.auth;
 
 import com.app.bootstrapbugz.validator.FieldMatch;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
 public class ResetPasswordRequest {
     @NotEmpty(message = "{authToken.notFound}")

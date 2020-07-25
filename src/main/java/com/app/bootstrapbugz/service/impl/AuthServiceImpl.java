@@ -59,12 +59,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private User createUser(SignUpRequest signUpRequest) {
-        User user = new User();
-        user.setFirstName(signUpRequest.getFirstName());
-        user.setLastName(signUpRequest.getLastName());
-        user.setUsername(signUpRequest.getUsername());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()));
+        User user = new User()
+                .setFirstName(signUpRequest.getFirstName())
+                .setLastName(signUpRequest.getLastName())
+                .setUsername(signUpRequest.getUsername())
+                .setEmail(signUpRequest.getEmail())
+                .setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()));
         Role role = roleRepository.findByName(RoleName.ROLE_USER).orElse(null);
         user.addRole(role);
         return userRepository.save(user);
@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
     public void confirmRegistration(String token) {
         String username = jwtUtilities.getSubject(token);
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+                () -> new BadRequestException(messageSource.getMessage("authToken.invalidToken", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         jwtUtilities.checkToken(token, user, JwtProperties.CONFIRM_REGISTRATION);
         activateUser(user);
     }
@@ -105,7 +105,7 @@ public class AuthServiceImpl implements AuthService {
     public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
         String username = jwtUtilities.getSubject(resetPasswordRequest.getToken());
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+                () -> new BadRequestException(messageSource.getMessage("authToken.invalidToken", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         jwtUtilities.checkToken(resetPasswordRequest.getToken(), user, JwtProperties.FORGOT_PASSWORD);
         changePassword(user, resetPasswordRequest.getPassword());
     }

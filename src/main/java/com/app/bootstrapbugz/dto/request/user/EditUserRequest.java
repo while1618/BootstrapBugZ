@@ -1,6 +1,8 @@
 package com.app.bootstrapbugz.dto.request.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
@@ -10,6 +12,8 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class EditUserRequest {
     @NotEmpty(message = "{firstName.notEmpty}")
     @Size(min = 2, max = 16, message = "{firstName.size}")
