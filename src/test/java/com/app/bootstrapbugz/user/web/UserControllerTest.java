@@ -33,6 +33,7 @@ public class UserControllerTest {
     private ObjectMapper objectMapper;
 
     private String token;
+    private static final String PATH = "/api/users";
 
     @BeforeAll
     void login() throws Exception {
@@ -40,12 +41,12 @@ public class UserControllerTest {
         ResultActions resultActions = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)));
-        token = resultActions.andReturn().getResponse().getHeader("Authorization");
+        token = resultActions.andReturn().getResponse().getHeader(JwtProperties.HEADER);
     }
 
     @Test
     void findAllUsers_statusOk() throws Exception {
-        mockMvc.perform(get("/api/users")
+        mockMvc.perform(get(PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, token))
                 .andExpect(status().isOk());
@@ -53,14 +54,14 @@ public class UserControllerTest {
 
     @Test
     void findAllUsers_userNotLoggedIn_statusForbidden() throws Exception {
-        mockMvc.perform(get("/api/users")
+        mockMvc.perform(get(PATH)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void findUserByUsername_statusOk() throws Exception {
-        mockMvc.perform(get("/api/users/{username}", "user")
+        mockMvc.perform(get(PATH + "/{username}", "user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, token))
                 .andExpect(status().isOk());
@@ -68,7 +69,7 @@ public class UserControllerTest {
 
     @Test
     void findUserByUsername_statusNotFound() throws Exception {
-        mockMvc.perform(get("/api/users/{username}", "test")
+        mockMvc.perform(get(PATH + "/{username}", "test")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, token))
                 .andExpect(status().isNotFound());
@@ -76,7 +77,7 @@ public class UserControllerTest {
 
     @Test
     void findUserByUsername_userNotLoggedIn_statusForbidden() throws Exception {
-        mockMvc.perform(get("/api/users/{username}", "user")
+        mockMvc.perform(get(PATH + "/{username}", "user")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
@@ -84,7 +85,7 @@ public class UserControllerTest {
     @Test
     void changePassword_statusNoContent() throws Exception {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("123", "1234", "1234");
-        mockMvc.perform(put("/api/users/change-password")
+        mockMvc.perform(put(PATH + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, token)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
@@ -94,7 +95,7 @@ public class UserControllerTest {
     @Test
     void changePassword_wrongOldPassword_statusBadRequest() throws Exception {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("12345", "1234", "1234");
-        mockMvc.perform(put("/api/users/change-password")
+        mockMvc.perform(put(PATH + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, token)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
@@ -104,7 +105,7 @@ public class UserControllerTest {
     @Test
     void changePassword_passwordsDoNotMatch_statusBadRequest() throws Exception {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("123", "1234", "12345");
-        mockMvc.perform(put("/api/users/change-password")
+        mockMvc.perform(put(PATH + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, token)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
@@ -114,26 +115,26 @@ public class UserControllerTest {
     @Test
     void changePassword_userNotLoggedIn_statusForbidden() throws Exception {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("123", "1234", "1234");
-        mockMvc.perform(put("/api/users/change-password")
+        mockMvc.perform(put(PATH + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void editUser_statusCreated() throws Exception {
-        EditUserRequest editUserRequest = new EditUserRequest("Test", "Test", "test", "user@localhost.com");
-        mockMvc.perform(put("/api/users/edit")
+    void editUser_statusOk() throws Exception {
+        EditUserRequest editUserRequest = new EditUserRequest("Test", "Test", "test", "the.littlefinger63@gmail.com");
+        mockMvc.perform(put(PATH + "/edit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, token)
                 .content(objectMapper.writeValueAsString(editUserRequest)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
     }
 
     @Test
     void editUser_invalidParameters_statusBadRequest() throws Exception {
-        EditUserRequest editUserRequest = new EditUserRequest("Test2", "Test2", "test", "user@localhost.com");
-        mockMvc.perform(put("/api/users/edit")
+        EditUserRequest editUserRequest = new EditUserRequest("Test2", "Test2", "test", "the.littlefinger63@gmail.com");
+        mockMvc.perform(put(PATH + "/edit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, token)
                 .content(objectMapper.writeValueAsString(editUserRequest)))
@@ -142,8 +143,8 @@ public class UserControllerTest {
 
     @Test
     void editUser_userNotLoggedIn_statusForbidden() throws Exception {
-        EditUserRequest editUserRequest = new EditUserRequest("Test", "Test", "test", "user@localhost.com");
-        mockMvc.perform(put("/api/users/edit")
+        EditUserRequest editUserRequest = new EditUserRequest("Test", "Test", "test", "the.littlefinger63@gmail.com");
+        mockMvc.perform(put(PATH + "/edit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(editUserRequest)))
                 .andExpect(status().isForbidden());
@@ -151,7 +152,7 @@ public class UserControllerTest {
 
     @Test
     void logoutFromAllDevices_statusNoContent() throws Exception {
-        mockMvc.perform(get("/api/users/logout-from-all-devices")
+        mockMvc.perform(get(PATH + "/logout-from-all-devices")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, token))
                 .andExpect(status().isNoContent());
@@ -159,7 +160,7 @@ public class UserControllerTest {
 
     @Test
     void logoutFromAllDevices_userNotLoggedIn_statusForbidden() throws Exception {
-        mockMvc.perform(get("/api/users/logout-from-all-devices")
+        mockMvc.perform(get(PATH + "/logout-from-all-devices")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api")
@@ -38,9 +37,7 @@ public class UserController {
     @PutMapping("/users/edit")
     public ResponseEntity<UserDto> edit(@Valid @RequestBody EditUserRequest editUserRequest) {
         UserDto userDto = userService.edit(editUserRequest);
-        return ResponseEntity
-                .created(URI.create(userDto.getRequiredLink("self").getHref()))
-                .body(userDto);
+        return ResponseEntity.ok(userDto);
     }
 
     @PutMapping("/users/change-password")

@@ -28,16 +28,18 @@ public class AuthControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private static final String PATH = "/api/auth";
+
     @Test
     void signUp_statusCreated() throws Exception {
         SignUpRequest signUpRequest = new SignUpRequest()
                 .setFirstName("Test")
                 .setLastName("Test")
                 .setUsername("test")
-                .setEmail("test@localhost.com")
+                .setEmail("test@gmail.com")
                 .setPassword("123")
                 .setConfirmPassword("123");
-        mockMvc.perform(post("/api/auth/sign-up")
+        mockMvc.perform(post(PATH + "/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(signUpRequest)))
                 .andExpect(status().isCreated());
@@ -49,10 +51,10 @@ public class AuthControllerTest {
                 .setFirstName("Test12")
                 .setLastName("Test12")
                 .setUsername("test")
-                .setEmail("test@localhost.com")
+                .setEmail("test@gmail.com")
                 .setPassword("1234")
                 .setConfirmPassword("123");
-        mockMvc.perform(post("/api/auth/sign-up")
+        mockMvc.perform(post(PATH + "/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(signUpRequest)))
                 .andExpect(status().isBadRequest());
@@ -61,16 +63,25 @@ public class AuthControllerTest {
     @Test
     void confirmRegistration_invalidToken_statusBadRequest() throws Exception {
         String invalidToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNTg3NDA1MTA1fQ.mZw2TRWdCnlRlqyKznhJKPxp_4vBBALYsOGjoqDbWq42lK9d2lFaavLxR-WuMelZJC2Ae0AVb4Xd-5JMpGgoJQ";
-        mockMvc.perform(get("/api/auth/confirm-registration")
+        mockMvc.perform(get(PATH + "/confirm-registration")
                 .param("token", invalidToken)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    void resendConfirmationEmail_statusNoContent() throws Exception {
+        ResendConfirmationEmailRequest resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("not_activated");
+        mockMvc.perform(post(PATH + "/resend-confirmation-email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
     void resendConfirmationEmail_userNotFount_statusNotFound() throws Exception {
         ResendConfirmationEmailRequest resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
-        mockMvc.perform(post("/api/auth/resend-confirmation-email")
+        mockMvc.perform(post(PATH + "/resend-confirmation-email")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
                 .andExpect(status().isNotFound());
@@ -79,7 +90,7 @@ public class AuthControllerTest {
     @Test
     void resendConfirmationEmail_alreadyActivated_statusBadRequest() throws Exception {
         ResendConfirmationEmailRequest resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("user");
-        mockMvc.perform(post("/api/auth/resend-confirmation-email")
+        mockMvc.perform(post(PATH + "/resend-confirmation-email")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
                 .andExpect(status().isBadRequest());
@@ -87,8 +98,8 @@ public class AuthControllerTest {
 
     @Test
     void forgotPassword_statusNoContent() throws Exception {
-        ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("user@localhost.com");
-        mockMvc.perform(post("/api/auth/forgot-password")
+        ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("the.littlefinger63@gmail.com");
+        mockMvc.perform(post(PATH + "/forgot-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
                 .andExpect(status().isNoContent());
@@ -96,8 +107,8 @@ public class AuthControllerTest {
 
     @Test
     void forgotPassword_userNotFount_statusNotFound() throws Exception {
-        ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("test@localhost.com");
-        mockMvc.perform(post("/api/auth/forgot-password")
+        ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("notFound@localhost.com");
+        mockMvc.perform(post(PATH + "/forgot-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
                 .andExpect(status().isNotFound());
@@ -106,7 +117,7 @@ public class AuthControllerTest {
     @Test
     void forgotPassword_invalidParameters_statusBadRequest() throws Exception {
         ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("test");
-        mockMvc.perform(post("/api/auth/forgot-password")
+        mockMvc.perform(post(PATH + "/forgot-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
                 .andExpect(status().isBadRequest());
@@ -116,7 +127,7 @@ public class AuthControllerTest {
     void resetPassword_invalidToken_statusBadRequest() throws Exception {
         String invalidToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNTg3NDA1MTA1fQ.mZw2TRWdCnlRlqyKznhJKPxp_4vBBALYsOGjoqDbWq42lK9d2lFaavLxR-WuMelZJC2Ae0AVb4Xd-5JMpGgoJQ";
         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest(invalidToken, "123", "123");
-        mockMvc.perform(put("/api/auth/reset-password")
+        mockMvc.perform(put(PATH + "/reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
                 .andExpect(status().isBadRequest());

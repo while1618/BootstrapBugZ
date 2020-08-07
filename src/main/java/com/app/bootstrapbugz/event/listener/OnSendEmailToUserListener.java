@@ -24,7 +24,7 @@ public class OnSendEmailToUserListener implements ApplicationListener<OnSendEmai
         User user = event.getUser();
         String purpose = event.getPurpose();
 
-        if (purpose.equals(EmailPurpose.CONFIRM_REGISTRATION)){
+        if (purpose.equals(EmailPurpose.CONFIRM_REGISTRATION)) {
             String token = jwtUtilities.createToken(user, JwtProperties.CONFIRM_REGISTRATION);
             sendConfirmRegistrationEmail(user.getEmail(), token);
         }
