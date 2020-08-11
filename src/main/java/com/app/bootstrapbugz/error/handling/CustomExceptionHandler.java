@@ -3,6 +3,7 @@ package com.app.bootstrapbugz.error.handling;
 import com.app.bootstrapbugz.dto.response.ErrorResponse;
 import com.app.bootstrapbugz.constant.ErrorDomains;
 import com.app.bootstrapbugz.error.exception.BadRequestException;
+import com.app.bootstrapbugz.error.exception.ForbiddenException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
@@ -52,6 +53,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({BadRequestException.class})
     public ResponseEntity<Object> badRequest(BadRequestException ex) {
         return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ForbiddenException.class})
+    public ResponseEntity<Object> forbidden(ForbiddenException ex) {
+        return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({JWTCreationException.class, JWTVerificationException.class, JWTDecodeException.class, IllegalArgumentException.class})

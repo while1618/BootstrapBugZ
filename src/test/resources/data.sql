@@ -25,13 +25,15 @@ create table users
     non_locked                 BOOLEAN   not null
 );
 
--- password for user and admin is "123"
+-- password for users is "123"
 insert into users (first_name, last_name, username, email, password, updated_at, logout_from_all_devices_at, activated, non_locked)
-values ('Admin', 'Admin', 'admin', 'admin@localhost.com', '$2a$10$/zJs.45ISa/1e5UOzxrUpuhhdheUJRZtNCzDYilIF9oJMyvwpVHre', current_timestamp, current_timestamp, true, true);
+values ('Admin', 'Admin', 'admin', 'skill.potion21@gmail.com', '$2a$10$/zJs.45ISa/1e5UOzxrUpuhhdheUJRZtNCzDYilIF9oJMyvwpVHre', current_timestamp, current_timestamp, true, true);
 insert into users (first_name, last_name, username, email, password, updated_at, logout_from_all_devices_at, activated, non_locked)
-values ('User', 'User', 'user', 'the.littlefinger63@gmail.com', '$2a$10$/zJs.45ISa/1e5UOzxrUpuhhdheUJRZtNCzDYilIF9oJMyvwpVHre', current_timestamp, current_timestamp, true, true);
+values ('User', 'User', 'user', 'decrescendo807@gmail.com', '$2a$10$/zJs.45ISa/1e5UOzxrUpuhhdheUJRZtNCzDYilIF9oJMyvwpVHre', current_timestamp, current_timestamp, true, true);
 insert into users (first_name, last_name, username, email, password, updated_at, logout_from_all_devices_at, activated, non_locked)
-values ('Not Activated', 'Not Activated', 'not_activated', 'non_activated@localhost.com', '$2a$10$/zJs.45ISa/1e5UOzxrUpuhhdheUJRZtNCzDYilIF9oJMyvwpVHre', current_timestamp, current_timestamp, false, true);
+values ('Not Activated', 'Not Activated', 'not_activated', 'marcellus.hts@gmail.com', '$2a$10$/zJs.45ISa/1e5UOzxrUpuhhdheUJRZtNCzDYilIF9oJMyvwpVHre', current_timestamp, current_timestamp, false, true);
+insert into users (first_name, last_name, username, email, password, updated_at, logout_from_all_devices_at, activated, non_locked)
+values ('Locked', 'Locked', 'locked', 'uvazeni.potpukovnik.naucnik@gmail.com', '$2a$10$/zJs.45ISa/1e5UOzxrUpuhhdheUJRZtNCzDYilIF9oJMyvwpVHre', current_timestamp, current_timestamp, true, false);
 
 create table user_roles
 (
@@ -46,3 +48,4 @@ insert into user_roles (user_id, role_id) values (1, 1);
 insert into user_roles (user_id, role_id) values (1, 2);
 insert into user_roles (user_id, role_id) values (2, 1);
 insert into user_roles (user_id, role_id) values (3, 1);
+insert into user_roles (user_id, role_id) values (4, 1);

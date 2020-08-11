@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserDataLayerTest {
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private RoleRepository roleRepository;
 
@@ -32,7 +31,7 @@ public class UserDataLayerTest {
         List<Role> roles = roleRepository.findAll();
         assertThat(users).isNotEmpty();
         assertThat(roles).isNotEmpty();
-        assertThat(users).hasSize(3);
+        assertThat(users).hasSize(4);
         assertThat(roles).hasSize(2);
     }
 }

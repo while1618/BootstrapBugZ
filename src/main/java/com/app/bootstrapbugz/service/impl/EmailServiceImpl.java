@@ -27,19 +27,4 @@ public class EmailServiceImpl implements EmailService {
         email.setText(body);
         mailSender.send(email);
     }
-
-    @Override
-    public void sendEmailWithAttachment(String to, String subject, String body, String pathToAttachment) throws MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper email = new MimeMessageHelper(message, true);
-
-        email.setTo(to);
-        email.setSubject(subject);
-        email.setText(body);
-
-        FileSystemResource file = new FileSystemResource(new File(pathToAttachment));
-        email.addAttachment("Invoice", file);
-
-        mailSender.send(message);
-    }
 }

@@ -5,11 +5,11 @@ import com.app.bootstrapbugz.dto.request.auth.ForgotPasswordRequest;
 import com.app.bootstrapbugz.dto.request.auth.ResendConfirmationEmailRequest;
 import com.app.bootstrapbugz.dto.request.auth.ResetPasswordRequest;
 import com.app.bootstrapbugz.dto.request.auth.SignUpRequest;
-import com.app.bootstrapbugz.constant.EmailPurpose;
 import com.app.bootstrapbugz.constant.ErrorDomains;
-import com.app.bootstrapbugz.error.exception.BadRequestException;
+import com.app.bootstrapbugz.error.exception.ForbiddenException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
-import com.app.bootstrapbugz.event.OnSendEmailToUser;
+import com.app.bootstrapbugz.event.OnSendConfirmationEmail;
+import com.app.bootstrapbugz.event.OnSendForgotPasswordEmail;
 import com.app.bootstrapbugz.hal.user.UserDtoModelAssembler;
 import com.app.bootstrapbugz.model.user.Role;
 import com.app.bootstrapbugz.model.user.RoleName;
@@ -31,11 +31,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final JwtUtilities jwtUtilities;
-
     private final ApplicationEventPublisher eventPublisher;
     private final MessageSource messageSource;
     private final PasswordEncoder bCryptPasswordEncoder;
-
     private final UserDtoModelAssembler assembler;
 
     public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
@@ -54,7 +52,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserDto signUp(SignUpRequest signUpRequest) {
         User user = createUser(signUpRequest);
-        eventPublisher.publishEvent(new OnSendEmailToUser(user, EmailPurpose.CONFIRM_REGISTRATION));
+        String token = jwtUtilities.createToken(user, JwtProperties.CONFIRM_REGISTRATION);
+        eventPublisher.publishEvent(new OnSendConfirmationEmail(user, token));
         return assembler.toModel(new ModelMapper().map(user, UserDto.class));
     }
 
@@ -74,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
     public void confirmRegistration(String token) {
         String username = jwtUtilities.getSubject(token);
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new BadRequestException(messageSource.getMessage("authToken.invalidToken", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+                () -> new ForbiddenException(messageSource.getMessage("authToken.invalidToken", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         jwtUtilities.checkToken(token, user, JwtProperties.CONFIRM_REGISTRATION);
         activateUser(user);
     }
@@ -86,26 +85,28 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void resendConfirmationMail(ResendConfirmationEmailRequest request) {
+    public void resendConfirmationEmail(ResendConfirmationEmailRequest request) {
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         if (user.isActivated())
-            throw new BadRequestException(messageSource.getMessage("user.activated", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH);
-        eventPublisher.publishEvent(new OnSendEmailToUser(user, EmailPurpose.CONFIRM_REGISTRATION));
+            throw new ForbiddenException(messageSource.getMessage("user.activated", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH);
+        String token = jwtUtilities.createToken(user, JwtProperties.CONFIRM_REGISTRATION);
+        eventPublisher.publishEvent(new OnSendConfirmationEmail(user, token));
     }
 
     @Override
     public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
         User user = userRepository.findByEmail(forgotPasswordRequest.getEmail()).orElseThrow(
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
-        eventPublisher.publishEvent(new OnSendEmailToUser(user, EmailPurpose.FORGOT_PASSWORD));
+        String token = jwtUtilities.createToken(user, JwtProperties.FORGOT_PASSWORD);
+        eventPublisher.publishEvent(new OnSendForgotPasswordEmail(user, token));
     }
 
     @Override
     public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
         String username = jwtUtilities.getSubject(resetPasswordRequest.getToken());
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new BadRequestException(messageSource.getMessage("authToken.invalidToken", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
+                () -> new ForbiddenException(messageSource.getMessage("authToken.invalidToken", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH));
         jwtUtilities.checkToken(resetPasswordRequest.getToken(), user, JwtProperties.FORGOT_PASSWORD);
         changePassword(user, resetPasswordRequest.getPassword());
     }

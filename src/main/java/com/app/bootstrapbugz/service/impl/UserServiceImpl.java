@@ -1,16 +1,17 @@
 package com.app.bootstrapbugz.service.impl;
 
+import com.app.bootstrapbugz.constant.JwtProperties;
 import com.app.bootstrapbugz.dto.model.user.UserDto;
 import com.app.bootstrapbugz.dto.request.user.ChangePasswordRequest;
 import com.app.bootstrapbugz.dto.request.user.EditUserRequest;
-import com.app.bootstrapbugz.constant.EmailPurpose;
 import com.app.bootstrapbugz.constant.ErrorDomains;
 import com.app.bootstrapbugz.error.exception.BadRequestException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
-import com.app.bootstrapbugz.event.OnSendEmailToUser;
+import com.app.bootstrapbugz.event.OnSendConfirmationEmail;
 import com.app.bootstrapbugz.hal.user.UserDtoModelAssembler;
 import com.app.bootstrapbugz.model.user.User;
 import com.app.bootstrapbugz.repository.user.UserRepository;
+import com.app.bootstrapbugz.security.jwt.JwtUtilities;
 import com.app.bootstrapbugz.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
@@ -33,14 +34,16 @@ public class UserServiceImpl implements UserService {
     private final UserDtoModelAssembler assembler;
     private final PasswordEncoder bCryptPasswordEncoder;
     private final ApplicationEventPublisher eventPublisher;
+    private final JwtUtilities jwtUtilities;
 
     public UserServiceImpl(UserRepository userRepository, MessageSource messageSource, UserDtoModelAssembler assembler,
-                           PasswordEncoder bCryptPasswordEncoder, ApplicationEventPublisher eventPublisher) {
+                           PasswordEncoder bCryptPasswordEncoder, ApplicationEventPublisher eventPublisher, JwtUtilities jwtUtilities) {
         this.userRepository = userRepository;
         this.messageSource = messageSource;
         this.assembler = assembler;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.eventPublisher = eventPublisher;
+        this.jwtUtilities = jwtUtilities;
     }
 
     @Override
@@ -54,7 +57,7 @@ public class UserServiceImpl implements UserService {
     private CollectionModel<UserDto> map(List<User> users) {
         ModelMapper modelMapper = new ModelMapper();
         Collection<UserDto> collection = new ArrayList<>();
-        for (User user: users) {
+        for (User user : users) {
             collection.add(modelMapper.map(user, UserDto.class));
         }
         return new CollectionModel<>(collection);
@@ -74,12 +77,12 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
         user.setFirstName(editUserRequest.getFirstName());
         user.setLastName(editUserRequest.getLastName());
-        setUsername(user, editUserRequest.getUsername());
-        setEmail(user, editUserRequest.getEmail());
+        tryToSetUsername(user, editUserRequest.getUsername());
+        tryToSetEmail(user, editUserRequest.getEmail());
         return assembler.toModel(new ModelMapper().map(userRepository.save(user), UserDto.class));
     }
 
-    private void setUsername(User user, String username) {
+    private void tryToSetUsername(User user, String username) {
         if (user.getUsername().equals(username))
             return;
         if (userRepository.existsByUsername(username))
@@ -89,7 +92,7 @@ public class UserServiceImpl implements UserService {
         user.updateUpdatedAt();
     }
 
-    private void setEmail(User user, String email) {
+    private void tryToSetEmail(User user, String email) {
         if (user.getEmail().equals(email))
             return;
         if (userRepository.existsByEmail(email))
@@ -98,7 +101,9 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setActivated(false);
         user.updateUpdatedAt();
-        eventPublisher.publishEvent(new OnSendEmailToUser(user, EmailPurpose.CONFIRM_REGISTRATION));
+
+        String token = jwtUtilities.createToken(user, JwtProperties.CONFIRM_REGISTRATION);
+        eventPublisher.publishEvent(new OnSendConfirmationEmail(user, token));
     }
 
     @Override
@@ -108,7 +113,7 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
         if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
             throw new BadRequestException(messageSource.getMessage("changePassword.badOldPassword", null, LocaleContextHolder.getLocale()), ErrorDomains.USER);
-       changePassword(user, changePasswordRequest.getNewPassword());
+        changePassword(user, changePasswordRequest.getNewPassword());
     }
 
     private void changePassword(User user, String password) {

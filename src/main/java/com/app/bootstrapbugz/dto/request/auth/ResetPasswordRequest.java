@@ -14,7 +14,6 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
 public class ResetPasswordRequest {
-    @NotEmpty(message = "{authToken.notFound}")
     private String token;
 
     @NotEmpty(message = "{password.notEmpty}")

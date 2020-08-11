@@ -43,7 +43,7 @@ public class AuthController {
 
     @PostMapping("/resend-confirmation-email")
     public ResponseEntity<?> resendConfirmationEmail(@Valid @RequestBody ResendConfirmationEmailRequest resendConfirmationEmailRequest) {
-        authService.resendConfirmationMail(resendConfirmationEmailRequest);
+        authService.resendConfirmationEmail(resendConfirmationEmailRequest);
         return ResponseEntity.noContent().build();
     }
 

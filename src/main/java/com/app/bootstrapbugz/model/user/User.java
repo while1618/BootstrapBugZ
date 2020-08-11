@@ -16,7 +16,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +43,11 @@ public class User {
 
     private String password;
 
-    private LocalDateTime updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    @Column(columnDefinition = "TIMESTAMP (6)")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    private LocalDateTime logoutFromAllDevicesAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    @Column(columnDefinition = "TIMESTAMP (6)")
+    private LocalDateTime logoutFromAllDevicesAt = LocalDateTime.now();
 
     private boolean activated = false;
 
@@ -63,10 +64,10 @@ public class User {
     }
 
     public void updateUpdatedAt() {
-        this.updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void updateLogoutFromAllDevicesAt() {
-        this.logoutFromAllDevicesAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        this.logoutFromAllDevicesAt = LocalDateTime.now();
     }
 }

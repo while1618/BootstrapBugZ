@@ -9,7 +9,7 @@ import com.app.bootstrapbugz.dto.request.auth.SignUpRequest;
 public interface AuthService {
     UserDto signUp(SignUpRequest signUpRequest);
     void confirmRegistration(String token);
-    void resendConfirmationMail(ResendConfirmationEmailRequest resendConfirmationEmailRequest);
+    void resendConfirmationEmail(ResendConfirmationEmailRequest resendConfirmationEmailRequest);
     void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
     void resetPassword(ResetPasswordRequest resetPasswordRequest);
 }

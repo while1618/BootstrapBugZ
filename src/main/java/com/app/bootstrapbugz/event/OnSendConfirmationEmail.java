@@ -7,13 +7,13 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class OnSendEmailToUser extends ApplicationEvent {
+public class OnSendConfirmationEmail extends ApplicationEvent {
     private User user;
-    private String purpose;
+    private String token;
 
-    public OnSendEmailToUser(User user, String purpose) {
+    public OnSendConfirmationEmail(User user, String token) {
         super(user);
         this.user = user;
-        this.purpose = purpose;
+        this.token = token;
     }
 }
