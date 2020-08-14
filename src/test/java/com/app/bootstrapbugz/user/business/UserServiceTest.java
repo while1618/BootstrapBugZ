@@ -212,7 +212,7 @@ public class UserServiceTest {
         LocalDateTime beforeLogout = user.getLogoutFromAllDevicesAt();
         when(userRepository.findByUsername("user")).thenReturn(Optional.ofNullable(user));
         userService.logoutFromAllDevices();
-        assertNotEquals(user.getLogoutFromAllDevicesAt(), beforeLogout);
+        assertNotEquals(beforeLogout, user.getLogoutFromAllDevicesAt());
     }
 
     @Test

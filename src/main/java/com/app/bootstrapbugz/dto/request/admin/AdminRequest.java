@@ -18,7 +18,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class AdminRequest {
     @NotEmpty(message = "{usernames.notEmpty}")
-    private List<
+    protected List<
             @NotEmpty(message = "{username.notEmpty}")
             @Size(min = 2, max = 16, message = "{username.size}")
             @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "{username.regex}") String> usernames;

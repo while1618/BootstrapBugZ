@@ -103,9 +103,9 @@ public class AdminControllerTest {
     @Test
     @Order(5)
     void changeUsersRole_statusNoContent() throws Exception {
-        AdminRequest changeRoleRequest = new ChangeRoleRequest()
-                .setRoleNames(Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN))
-                .setUsernames(Collections.singletonList("not_activated"));
+        ChangeRoleRequest changeRoleRequest = new ChangeRoleRequest(
+                Collections.singletonList("not_activated"),
+                Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
         mockMvc.perform(put(PATH + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, adminToken)
@@ -125,9 +125,9 @@ public class AdminControllerTest {
     @Test
     @Order(7)
     void changeUsersRole_statusUnauthorized() throws Exception {
-        AdminRequest changeRoleRequest = new ChangeRoleRequest()
-                .setRoleNames(Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN))
-                .setUsernames(Collections.singletonList("not_activated"));
+        ChangeRoleRequest changeRoleRequest = new ChangeRoleRequest(
+                Collections.singletonList("not_activated"),
+                Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
         mockMvc.perform(put(PATH + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtProperties.HEADER, userToken)
@@ -138,9 +138,9 @@ public class AdminControllerTest {
     @Test
     @Order(8)
     void changeUsersRole_adminNotLoggedIn_statusForbidden() throws Exception {
-        AdminRequest changeRoleRequest = new ChangeRoleRequest()
-                .setRoleNames(Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN))
-                .setUsernames(Collections.singletonList("not_activated"));
+        ChangeRoleRequest changeRoleRequest = new ChangeRoleRequest(
+                Collections.singletonList("not_activated"),
+                Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
         mockMvc.perform(put(PATH + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(changeRoleRequest)))
