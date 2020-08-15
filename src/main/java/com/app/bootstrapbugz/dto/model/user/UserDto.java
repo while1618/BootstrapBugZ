@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,5 +23,5 @@ public class UserDto extends RepresentationModel<UserDto> {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private boolean activated;
-    private List<RoleDto> roles;
+    private Set<RoleDto> roles;
 }

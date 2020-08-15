@@ -9,6 +9,7 @@ import com.app.bootstrapbugz.repository.user.UserRepository;
 import com.app.bootstrapbugz.service.AdminService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -33,7 +34,7 @@ public class AdminServiceImpl implements AdminService {
         List<User> users = userRepository.findAllByUsernameIn(changeRoleRequest.getUsernames());
         users.forEach(user -> {
             List<Role> roles = roleRepository.findAllByNameIn(changeRoleRequest.getRoleNames());
-            user.setRoles(roles);
+            user.setRoles(new HashSet<>(roles));
             user.updateUpdatedAt();
         });
         userRepository.saveAll(users);

@@ -7,8 +7,12 @@ import org.springframework.hateoas.CollectionModel;
 
 public interface UserService {
     CollectionModel<UserDto> findAll();
+
     UserDto findByUsername(String username);
+
     UserDto edit(EditUserRequest editUserRequest);
+
     void changePassword(ChangePasswordRequest changePasswordRequest);
+
     void logoutFromAllDevices();
 }

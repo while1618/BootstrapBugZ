@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -48,7 +50,7 @@ public class AdminServiceTest {
         changeRoleRequest = new ChangeRoleRequest(
                 adminRequest.getUsernames(),
                 Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
-        Role userRole = new Role(2L, RoleName.ROLE_USER);
+        Role userRole = new Role(1L, RoleName.ROLE_USER);
         users = Collections.singletonList(new User()
                 .setId(2L)
                 .setFirstName("User")
@@ -57,7 +59,7 @@ public class AdminServiceTest {
                 .setEmail("user@localhost.com")
                 .setPassword(bCryptPasswordEncoder.encode("123"))
                 .setActivated(true)
-                .setRoles(Collections.singletonList(userRole)));
+                .setRoles(Set.of(userRole)));
         roles = Arrays.asList(new Role(1L, RoleName.ROLE_ADMIN), userRole);
     }
 
@@ -76,7 +78,7 @@ public class AdminServiceTest {
         LocalDateTime updatedAtBeforeChange = users.get(0).getUpdatedAt();
         adminService.changeUsersRole(changeRoleRequest);
         assertNotEquals(updatedAtBeforeChange, users.get(0).getUpdatedAt());
-        assertEquals(roles, users.get(0).getRoles());
+        assertEquals(new HashSet<>(roles), users.get(0).getRoles());
     }
 
     @Test

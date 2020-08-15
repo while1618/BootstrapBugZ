@@ -30,6 +30,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,7 +68,7 @@ public class UserServiceTest {
 
     @BeforeEach
     void init() {
-        userRole = new Role(2L, RoleName.ROLE_USER);
+        userRole = new Role(1L, RoleName.ROLE_USER);
         user = new User()
                 .setId(2L)
                 .setFirstName("User")
@@ -76,7 +77,7 @@ public class UserServiceTest {
                 .setEmail("user@localhost.com")
                 .setPassword(bCryptPasswordEncoder.encode("123"))
                 .setActivated(true)
-                .setRoles(Collections.singletonList(userRole));
+                .setRoles(Set.of(userRole));
     }
 
     private void authentication() {
@@ -141,7 +142,7 @@ public class UserServiceTest {
                 .setEmail(editUserRequest.getEmail())
                 .setPassword(bCryptPasswordEncoder.encode("123"))
                 .setActivated(false)
-                .setRoles(Collections.singletonList(userRole));
+                .setRoles(Set.of(userRole));
     }
 
     @Test
