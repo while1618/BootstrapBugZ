@@ -1,9 +1,9 @@
 package com.app.bootstrapbugz.user.web;
 
-import com.app.bootstrapbugz.constant.JwtProperties;
 import com.app.bootstrapbugz.dto.request.auth.LoginRequest;
 import com.app.bootstrapbugz.dto.request.user.ChangePasswordRequest;
 import com.app.bootstrapbugz.dto.request.user.EditUserRequest;
+import com.app.bootstrapbugz.security.jwt.JwtUtilities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk());
-        token = resultActions.andReturn().getResponse().getHeader(JwtProperties.HEADER);
+        token = resultActions.andReturn().getResponse().getHeader(JwtUtilities.HEADER);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class UserControllerTest {
     void findAllUsers_statusOk() throws Exception {
         mockMvc.perform(get(PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token))
+                .header(JwtUtilities.HEADER, token))
                 .andExpect(status().isOk());
     }
 
@@ -72,7 +72,7 @@ public class UserControllerTest {
     void findUserByUsername_statusOk() throws Exception {
         mockMvc.perform(get(PATH + "/{username}", "user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token))
+                .header(JwtUtilities.HEADER, token))
                 .andExpect(status().isOk());
     }
 
@@ -81,7 +81,7 @@ public class UserControllerTest {
     void findUserByUsername_statusNotFound() throws Exception {
         mockMvc.perform(get(PATH + "/{username}", "test")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token))
+                .header(JwtUtilities.HEADER, token))
                 .andExpect(status().isNotFound());
     }
 
@@ -99,7 +99,7 @@ public class UserControllerTest {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("123", "1234", "1234");
         mockMvc.perform(put(PATH + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token)
+                .header(JwtUtilities.HEADER, token)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
                 .andExpect(status().isNoContent());
         login(new LoginRequest("user", changePasswordRequest.getNewPassword()));
@@ -111,7 +111,7 @@ public class UserControllerTest {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("123", "12345", "12345");
         mockMvc.perform(put(PATH + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token)
+                .header(JwtUtilities.HEADER, token)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
                 .andExpect(status().isBadRequest());
     }
@@ -122,7 +122,7 @@ public class UserControllerTest {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest("1234", "12345", "123456");
         mockMvc.perform(put(PATH + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token)
+                .header(JwtUtilities.HEADER, token)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
                 .andExpect(status().isBadRequest());
     }
@@ -143,7 +143,7 @@ public class UserControllerTest {
         EditUserRequest editUserRequest = new EditUserRequest("Test", "Test", "test", "decrescendo807@gmail.com");
         mockMvc.perform(put(PATH + "/edit")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token)
+                .header(JwtUtilities.HEADER, token)
                 .content(objectMapper.writeValueAsString(editUserRequest)))
                 .andExpect(status().isOk());
         login(new LoginRequest("test", "1234"));
@@ -155,7 +155,7 @@ public class UserControllerTest {
         EditUserRequest editUserRequest = new EditUserRequest("Test2", "Test2", "test", "decrescendo807@gmail.com");
         mockMvc.perform(put(PATH + "/edit")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token)
+                .header(JwtUtilities.HEADER, token)
                 .content(objectMapper.writeValueAsString(editUserRequest)))
                 .andExpect(status().isBadRequest());
     }
@@ -166,7 +166,7 @@ public class UserControllerTest {
         EditUserRequest editUserRequest = new EditUserRequest("Test", "Test", "admin", "decrescendo807@gmail.com");
         mockMvc.perform(put(PATH + "/edit")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token)
+                .header(JwtUtilities.HEADER, token)
                 .content(objectMapper.writeValueAsString(editUserRequest)))
                 .andExpect(status().isBadRequest());
     }
@@ -177,7 +177,7 @@ public class UserControllerTest {
         EditUserRequest editUserRequest = new EditUserRequest("Test", "Test", "test2", "skill.potion21@gmail.com");
         mockMvc.perform(put(PATH + "/edit")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token)
+                .header(JwtUtilities.HEADER, token)
                 .content(objectMapper.writeValueAsString(editUserRequest)))
                 .andExpect(status().isBadRequest());
     }
@@ -197,7 +197,7 @@ public class UserControllerTest {
     void logoutFromAllDevices_statusNoContent() throws Exception {
         mockMvc.perform(get(PATH + "/logout-from-all-devices")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token))
+                .header(JwtUtilities.HEADER, token))
                 .andExpect(status().isNoContent());
     }
 
@@ -214,7 +214,7 @@ public class UserControllerTest {
     void tryToAccessResourceAfterLogout_statusForbidden() throws Exception {
         mockMvc.perform(get(PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token))
+                .header(JwtUtilities.HEADER, token))
                 .andExpect(status().isForbidden());
     }
 
@@ -230,7 +230,7 @@ public class UserControllerTest {
         EditUserRequest editUserRequest = new EditUserRequest("Test", "Test", "test", "the.littlefinger63@gmail.com");
         mockMvc.perform(put(PATH + "/edit")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, token)
+                .header(JwtUtilities.HEADER, token)
                 .content(objectMapper.writeValueAsString(editUserRequest)))
                 .andExpect(status().isOk());
     }

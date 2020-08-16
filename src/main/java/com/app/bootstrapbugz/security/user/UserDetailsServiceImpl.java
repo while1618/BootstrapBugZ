@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.security.user;
 
-import com.app.bootstrapbugz.constant.ErrorDomains;
+import com.app.bootstrapbugz.constant.ErrorDomain;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.model.user.User;
 import com.app.bootstrapbugz.repository.user.UserRepository;
@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws ResourceNotFound {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.AUTH)
+                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.AUTH)
         );
         return UserPrincipal.create(user);
     }

@@ -1,10 +1,10 @@
 package com.app.bootstrapbugz.admin.web;
 
-import com.app.bootstrapbugz.constant.JwtProperties;
 import com.app.bootstrapbugz.dto.request.admin.AdminRequest;
 import com.app.bootstrapbugz.dto.request.admin.ChangeRoleRequest;
 import com.app.bootstrapbugz.dto.request.auth.LoginRequest;
 import com.app.bootstrapbugz.model.user.RoleName;
+import com.app.bootstrapbugz.security.jwt.JwtUtilities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ public class AdminControllerTest {
         ResultActions resultActions = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)));
-        adminToken = resultActions.andReturn().getResponse().getHeader(JwtProperties.HEADER);
+        adminToken = resultActions.andReturn().getResponse().getHeader(JwtUtilities.HEADER);
     }
 
     @BeforeAll
@@ -59,7 +59,7 @@ public class AdminControllerTest {
         ResultActions resultActions = mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)));
-        userToken = resultActions.andReturn().getResponse().getHeader(JwtProperties.HEADER);
+        userToken = resultActions.andReturn().getResponse().getHeader(JwtUtilities.HEADER);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class AdminControllerTest {
     void logoutUserFromAllDevices_statusNoContent() throws Exception {
         mockMvc.perform(get(PATH + "/users/logout")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken)
+                .header(JwtUtilities.HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isNoContent());
     }
@@ -77,7 +77,7 @@ public class AdminControllerTest {
     void logoutUserFromAllDevices_invalidParameters_statusBadRequest() throws Exception {
         mockMvc.perform(get(PATH + "/users/logout")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken))
+                .header(JwtUtilities.HEADER, adminToken))
                 .andExpect(status().isBadRequest());
     }
 
@@ -86,7 +86,7 @@ public class AdminControllerTest {
     void logoutUserFromAllDevices_statusUnauthorized() throws Exception {
         mockMvc.perform(get(PATH + "/users/logout")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, userToken)
+                .header(JwtUtilities.HEADER, userToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isUnauthorized());
     }
@@ -108,7 +108,7 @@ public class AdminControllerTest {
                 Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
         mockMvc.perform(put(PATH + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken)
+                .header(JwtUtilities.HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(changeRoleRequest)))
                 .andExpect(status().isNoContent());
     }
@@ -118,7 +118,7 @@ public class AdminControllerTest {
     void changeUsersRole_invalidParameters_statusBadRequest() throws Exception {
         mockMvc.perform(put(PATH + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken))
+                .header(JwtUtilities.HEADER, adminToken))
                 .andExpect(status().isBadRequest());
     }
 
@@ -130,7 +130,7 @@ public class AdminControllerTest {
                 Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
         mockMvc.perform(put(PATH + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, userToken)
+                .header(JwtUtilities.HEADER, userToken)
                 .content(objectMapper.writeValueAsString(changeRoleRequest)))
                 .andExpect(status().isUnauthorized());
     }
@@ -152,7 +152,7 @@ public class AdminControllerTest {
     void lockUsers_statusNoContent() throws Exception {
         mockMvc.perform(put(PATH + "/users/lock")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken)
+                .header(JwtUtilities.HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isNoContent());
     }
@@ -162,7 +162,7 @@ public class AdminControllerTest {
     void lockUsers_invalidParameters_statusBadRequest() throws Exception {
         mockMvc.perform(put(PATH + "/users/lock")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken))
+                .header(JwtUtilities.HEADER, adminToken))
                 .andExpect(status().isBadRequest());
     }
 
@@ -171,7 +171,7 @@ public class AdminControllerTest {
     void lockUsers_statusUnauthorized() throws Exception {
         mockMvc.perform(put(PATH + "/users/lock")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, userToken)
+                .header(JwtUtilities.HEADER, userToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isUnauthorized());
     }
@@ -190,7 +190,7 @@ public class AdminControllerTest {
     void unlockUsers_statusNoContent() throws Exception {
         mockMvc.perform(put(PATH + "/users/unlock")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken)
+                .header(JwtUtilities.HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isNoContent());
     }
@@ -200,7 +200,7 @@ public class AdminControllerTest {
     void unlockUsers_invalidParameters_statusBadRequest() throws Exception {
         mockMvc.perform(put(PATH + "/users/unlock")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken))
+                .header(JwtUtilities.HEADER, adminToken))
                 .andExpect(status().isBadRequest());
     }
 
@@ -209,7 +209,7 @@ public class AdminControllerTest {
     void unlockUsers_statusUnauthorized() throws Exception {
         mockMvc.perform(put(PATH + "/users/unlock")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, userToken)
+                .header(JwtUtilities.HEADER, userToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isUnauthorized());
     }
@@ -228,7 +228,7 @@ public class AdminControllerTest {
     void deactivateUser_statusNoContent() throws Exception {
         mockMvc.perform(put(PATH + "/users/deactivate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken)
+                .header(JwtUtilities.HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isNoContent());
     }
@@ -238,7 +238,7 @@ public class AdminControllerTest {
     void deactivateUser_invalidParameters_statusBadRequest() throws Exception {
         mockMvc.perform(put(PATH + "/users/deactivate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken))
+                .header(JwtUtilities.HEADER, adminToken))
                 .andExpect(status().isBadRequest());
     }
 
@@ -247,7 +247,7 @@ public class AdminControllerTest {
     void deactivateUser_statusUnauthorized() throws Exception {
         mockMvc.perform(put(PATH + "/users/deactivate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, userToken)
+                .header(JwtUtilities.HEADER, userToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isUnauthorized());
     }
@@ -266,7 +266,7 @@ public class AdminControllerTest {
     void activateUser_statusNoContent() throws Exception {
         mockMvc.perform(put(PATH + "/users/activate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken)
+                .header(JwtUtilities.HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isNoContent());
     }
@@ -276,7 +276,7 @@ public class AdminControllerTest {
     void activateUser_invalidParameters_statusBadRequest() throws Exception {
         mockMvc.perform(put(PATH + "/users/activate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken))
+                .header(JwtUtilities.HEADER, adminToken))
                 .andExpect(status().isBadRequest());
     }
 
@@ -285,7 +285,7 @@ public class AdminControllerTest {
     void activateUser_statusUnauthorized() throws Exception {
         mockMvc.perform(put(PATH + "/users/activate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, userToken)
+                .header(JwtUtilities.HEADER, userToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isUnauthorized());
     }
@@ -304,7 +304,7 @@ public class AdminControllerTest {
     void deleteUser_statusNoContent() throws Exception {
         mockMvc.perform(delete(PATH + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken)
+                .header(JwtUtilities.HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isNoContent());
     }
@@ -314,7 +314,7 @@ public class AdminControllerTest {
     void deleteUser_invalidParameters_statusBadRequest() throws Exception {
         mockMvc.perform(delete(PATH + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, adminToken))
+                .header(JwtUtilities.HEADER, adminToken))
                 .andExpect(status().isBadRequest());
     }
 
@@ -323,7 +323,7 @@ public class AdminControllerTest {
     void deleteUser_statusUnauthorized() throws Exception {
         mockMvc.perform(delete(PATH + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtProperties.HEADER, userToken)
+                .header(JwtUtilities.HEADER, userToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
                 .andExpect(status().isUnauthorized());
     }

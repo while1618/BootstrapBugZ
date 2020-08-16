@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.security.jwt;
 
-import com.app.bootstrapbugz.constant.JwtProperties;
+import com.app.bootstrapbugz.constant.JwtPurpose;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.security.user.UserPrincipal;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -32,8 +32,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String token = request.getHeader(JwtProperties.HEADER);
-        if (token == null || !token.startsWith(JwtProperties.BEARER)) {
+        String token = request.getHeader(JwtUtilities.HEADER);
+        if (token == null || !token.startsWith(JwtUtilities.BEARER)) {
             chain.doFilter(request, response);
             return;
         }
@@ -50,7 +50,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) throws ResourceNotFound, JWTVerificationException, IllegalArgumentException {
         String username = jwtUtilities.getSubject(token);
         UserPrincipal userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
-        jwtUtilities.checkToken(token, userPrincipal, JwtProperties.ACCESSING_RESOURCES);
+        jwtUtilities.checkToken(token, userPrincipal, JwtPurpose.ACCESSING_RESOURCES);
 
         return new UsernamePasswordAuthenticationToken(userPrincipal.getUsername(), null, userPrincipal.getAuthorities());
     }

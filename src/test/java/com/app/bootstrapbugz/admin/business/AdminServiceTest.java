@@ -24,8 +24,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class AdminServiceTest {
@@ -121,6 +126,6 @@ public class AdminServiceTest {
     void deleteUsers_ok() {
         when(userRepository.findAllByUsernameIn(adminRequest.getUsernames())).thenReturn(users);
         adminService.deleteUsers(adminRequest);
-        verify(userRepository).deleteAll(users);
+        verify(userRepository, times(1)).deleteAll(users);
     }
 }

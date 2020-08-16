@@ -1,5 +1,6 @@
 package com.app.bootstrapbugz.dto.response;
 
+import com.app.bootstrapbugz.constant.ErrorDomain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,11 +30,11 @@ public class ErrorResponse {
         this.errors = new ArrayList<>();
     }
 
-    public ErrorResponse(HttpStatus status, String domain, String message) {
+    public ErrorResponse(HttpStatus status, ErrorDomain domain, String message) {
         this.status = status.value();
         this.error = status.getReasonPhrase();
         this.errors = new ArrayList<>();
-        this.errors.add(new Error(domain, message));
+        this.errors.add(new Error(domain.getValue(), message));
     }
 
     public void addError(String domain, String message) {

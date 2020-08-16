@@ -1,7 +1,7 @@
 package com.app.bootstrapbugz.security.jwt;
 
+import com.app.bootstrapbugz.constant.JwtPurpose;
 import com.app.bootstrapbugz.dto.request.auth.LoginRequest;
-import com.app.bootstrapbugz.constant.JwtProperties;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.error.handling.CustomFilterExceptionHandler;
 import com.app.bootstrapbugz.security.user.UserPrincipal;
@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication auth) {
-        String token = jwtUtilities.createToken((UserPrincipal) auth.getPrincipal(), JwtProperties.ACCESSING_RESOURCES);
-        response.addHeader(JwtProperties.HEADER, JwtProperties.BEARER + token);
+        String token = jwtUtilities.createToken((UserPrincipal) auth.getPrincipal(), JwtPurpose.ACCESSING_RESOURCES);
+        response.addHeader(JwtUtilities.HEADER, JwtUtilities.BEARER + token);
     }
 }

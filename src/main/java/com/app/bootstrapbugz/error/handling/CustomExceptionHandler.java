@@ -1,7 +1,7 @@
 package com.app.bootstrapbugz.error.handling;
 
 import com.app.bootstrapbugz.dto.response.ErrorResponse;
-import com.app.bootstrapbugz.constant.ErrorDomains;
+import com.app.bootstrapbugz.constant.ErrorDomain;
 import com.app.bootstrapbugz.error.exception.BadRequestException;
 import com.app.bootstrapbugz.error.exception.ForbiddenException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
@@ -35,12 +35,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         }
         for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
             Object errorObject = Objects.requireNonNull(error.getArguments())[1];
-            errorResponse.addError((errorObject == null) ? ErrorDomains.GLOBAL : errorObject.toString(), error.getDefaultMessage());
+            errorResponse.addError((errorObject == null) ? ErrorDomain.GLOBAL.getValue() : errorObject.toString(), error.getDefaultMessage());
         }
         return new ResponseEntity<>(errorResponse, headers, status);
     }
 
-    private ResponseEntity<Object> createErrorResponseEntity(String domain, String message, HttpStatus status) {
+    private ResponseEntity<Object> createErrorResponseEntity(ErrorDomain domain, String message, HttpStatus status) {
         ErrorResponse errorResponse = new ErrorResponse(status, domain, message);
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
@@ -62,22 +62,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({JWTCreationException.class, JWTVerificationException.class, JWTDecodeException.class, IllegalArgumentException.class})
     public ResponseEntity<Object> jwt() {
-        return createErrorResponseEntity(ErrorDomains.AUTH, HttpStatus.FORBIDDEN.getReasonPhrase(), HttpStatus.FORBIDDEN);
+        return createErrorResponseEntity(ErrorDomain.AUTH, HttpStatus.FORBIDDEN.getReasonPhrase(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> exception(Exception ex) {
-        return createErrorResponseEntity(ErrorDomains.GLOBAL, ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return createErrorResponseEntity(ErrorDomain.GLOBAL, ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
-        return createErrorResponseEntity(ErrorDomains.AUTH, ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        return createErrorResponseEntity(ErrorDomain.AUTH, ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return createErrorResponseEntity(ErrorDomains.GLOBAL, ex.getParameterName() + " parameter is missing", status);
+        return createErrorResponseEntity(ErrorDomain.GLOBAL, ex.getParameterName() + " parameter is missing", status);
     }
 
     @Override
@@ -86,13 +86,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         builder.append(ex.getMethod());
         builder.append(" method is not supported for this request. Supported methods are ");
         Objects.requireNonNull(ex.getSupportedHttpMethods()).forEach(t -> builder.append(t).append(" "));
-        return createErrorResponseEntity(ErrorDomains.GLOBAL, builder.toString(), status);
+        return createErrorResponseEntity(ErrorDomain.GLOBAL, builder.toString(), status);
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
         return createErrorResponseEntity(
-                ErrorDomains.GLOBAL,
+                ErrorDomain.GLOBAL,
                 ex.getName() + " should be of type " + Objects.requireNonNull(ex.getRequiredType()).getName(),
                 HttpStatus.BAD_REQUEST);
     }

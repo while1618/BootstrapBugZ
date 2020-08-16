@@ -1,13 +1,13 @@
 package com.app.bootstrapbugz.service.impl;
 
-import com.app.bootstrapbugz.constant.JwtProperties;
+import com.app.bootstrapbugz.constant.JwtPurpose;
 import com.app.bootstrapbugz.dto.model.user.UserDto;
 import com.app.bootstrapbugz.dto.request.user.ChangePasswordRequest;
 import com.app.bootstrapbugz.dto.request.user.EditUserRequest;
-import com.app.bootstrapbugz.constant.ErrorDomains;
+import com.app.bootstrapbugz.constant.ErrorDomain;
 import com.app.bootstrapbugz.error.exception.BadRequestException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
-import com.app.bootstrapbugz.event.OnSendConfirmationEmail;
+import com.app.bootstrapbugz.event.OnSendJwtEmail;
 import com.app.bootstrapbugz.hal.user.UserDtoModelAssembler;
 import com.app.bootstrapbugz.model.user.User;
 import com.app.bootstrapbugz.repository.user.UserRepository;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public CollectionModel<UserDto> findAll() {
         List<User> users = userRepository.findAll();
         if (users.isEmpty())
-            throw new ResourceNotFound(messageSource.getMessage("users.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER);
+            throw new ResourceNotFound(messageSource.getMessage("users.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER);
         return assembler.toCollectionModel(map(users));
     }
 
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findByUsername(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
+                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER));
         return assembler.toModel(new ModelMapper().map(user, UserDto.class));
     }
 
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     public UserDto edit(EditUserRequest editUserRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(auth.getName()).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
+                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER));
         user.setFirstName(editUserRequest.getFirstName());
         user.setLastName(editUserRequest.getLastName());
         tryToSetUsername(user, editUserRequest.getUsername());
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         if (user.getUsername().equals(username))
             return;
         if (userRepository.existsByUsername(username))
-            throw new BadRequestException(messageSource.getMessage("username.exists", null, LocaleContextHolder.getLocale()), ErrorDomains.USER);
+            throw new BadRequestException(messageSource.getMessage("username.exists", null, LocaleContextHolder.getLocale()), ErrorDomain.USER);
 
         user.setUsername(username);
         user.updateUpdatedAt();
@@ -96,23 +96,23 @@ public class UserServiceImpl implements UserService {
         if (user.getEmail().equals(email))
             return;
         if (userRepository.existsByEmail(email))
-            throw new BadRequestException(messageSource.getMessage("email.exists", null, LocaleContextHolder.getLocale()), ErrorDomains.USER);
+            throw new BadRequestException(messageSource.getMessage("email.exists", null, LocaleContextHolder.getLocale()), ErrorDomain.USER);
 
         user.setEmail(email);
         user.setActivated(false);
         user.updateUpdatedAt();
 
-        String token = jwtUtilities.createToken(user, JwtProperties.CONFIRM_REGISTRATION);
-        eventPublisher.publishEvent(new OnSendConfirmationEmail(user, token));
+        String token = jwtUtilities.createToken(user, JwtPurpose.CONFIRM_REGISTRATION);
+        eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
     }
 
     @Override
     public void changePassword(ChangePasswordRequest changePasswordRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(auth.getName()).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
+                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER));
         if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
-            throw new BadRequestException(messageSource.getMessage("changePassword.badOldPassword", null, LocaleContextHolder.getLocale()), ErrorDomains.USER);
+            throw new BadRequestException(messageSource.getMessage("changePassword.badOldPassword", null, LocaleContextHolder.getLocale()), ErrorDomain.USER);
         changePassword(user, changePasswordRequest.getNewPassword());
     }
 
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
     public void logoutFromAllDevices() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(auth.getName()).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomains.USER));
+                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER));
         user.updateLogoutFromAllDevicesAt();
         userRepository.save(user);
     }

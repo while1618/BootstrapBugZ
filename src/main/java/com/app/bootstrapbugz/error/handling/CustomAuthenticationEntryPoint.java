@@ -1,7 +1,7 @@
 package com.app.bootstrapbugz.error.handling;
 
 import com.app.bootstrapbugz.dto.response.ErrorResponse;
-import com.app.bootstrapbugz.constant.ErrorDomains;
+import com.app.bootstrapbugz.constant.ErrorDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -20,7 +20,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         try {
             final ErrorResponse errorResponse = new ErrorResponse(
                     HttpStatus.FORBIDDEN,
-                    ErrorDomains.AUTH,
+                    ErrorDomain.AUTH,
                     HttpStatus.FORBIDDEN.getReasonPhrase()
             );
             response.setContentType("application/json");
