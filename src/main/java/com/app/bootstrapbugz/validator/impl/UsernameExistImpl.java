@@ -13,7 +13,9 @@ public class UsernameExistImpl implements ConstraintValidator<UsernameExist, Str
         this.userRepository = userRepository;
     }
 
+    @Override
     public void initialize(UsernameExist constraint) {
+        // it must be overridden but there is no need to put code in it
     }
 
     public boolean isValid(String username, ConstraintValidatorContext context) {

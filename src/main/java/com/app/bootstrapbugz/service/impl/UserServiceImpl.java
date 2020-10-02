@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         for (User user : users) {
             collection.add(modelMapper.map(user, UserDto.class));
         }
-        return new CollectionModel<>(collection);
+        return CollectionModel.of(collection);
     }
 
     @Override

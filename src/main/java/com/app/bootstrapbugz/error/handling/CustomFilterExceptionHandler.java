@@ -11,7 +11,9 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-public class CustomFilterExceptionHandler {
+public final class CustomFilterExceptionHandler {
+    private CustomFilterExceptionHandler() {}
+
     public static void handleException(HttpServletResponse response, String message) {
         try {
             final ErrorResponse errorResponse = new ErrorResponse(

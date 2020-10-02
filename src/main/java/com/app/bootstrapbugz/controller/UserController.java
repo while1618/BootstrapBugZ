@@ -41,13 +41,13 @@ public class UserController {
     }
 
     @PutMapping("/users/change-password")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         userService.changePassword(changePasswordRequest);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/users/logout-from-all-devices")
-    public ResponseEntity<?> logoutFromAllDevices() {
+    public ResponseEntity<Void> logoutFromAllDevices() {
         userService.logoutFromAllDevices();
         return ResponseEntity.noContent().build();
     }

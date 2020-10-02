@@ -10,6 +10,7 @@ public class FieldMatchImpl implements ConstraintValidator<FieldMatch, Object> {
     private String firstFieldName;
     private String secondFieldName;
 
+    @Override
     public void initialize(FieldMatch constraint) {
         firstFieldName = constraint.first();
         secondFieldName = constraint.second();
@@ -21,7 +22,9 @@ public class FieldMatchImpl implements ConstraintValidator<FieldMatch, Object> {
             final Object secondObj = BeanUtils.getProperty(obj, secondFieldName);
 
             return firstObj == null && secondObj == null || firstObj != null && firstObj.equals(secondObj);
-        } catch (final Exception ignore) {}
+        } catch (final Exception ignore) {
+            // no need to do anything
+        }
         return true;
     }
 }

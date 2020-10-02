@@ -29,7 +29,7 @@ public class UserDtoModelAssembler implements RepresentationModelAssembler<UserD
             user.add(linkTo(methodOn(UserController.class).findByUsername(user.getUsername())).withSelfRel());
             users.add(user);
         });
-        CollectionModel<UserDto> models = new CollectionModel<>(users);
+        CollectionModel<UserDto> models = CollectionModel.of(users);
         models.add(linkTo(methodOn(UserController.class).findAll()).withSelfRel());
         return models;
     }

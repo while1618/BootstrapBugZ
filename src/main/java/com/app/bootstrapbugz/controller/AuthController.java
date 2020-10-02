@@ -36,25 +36,25 @@ public class AuthController {
     }
 
     @GetMapping("/confirm-registration")
-    public ResponseEntity<?> confirmRegistration(@RequestParam("token") String token) {
+    public ResponseEntity<Void> confirmRegistration(@RequestParam("token") String token) {
         authService.confirmRegistration(token);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/resend-confirmation-email")
-    public ResponseEntity<?> resendConfirmationEmail(@Valid @RequestBody ResendConfirmationEmailRequest resendConfirmationEmailRequest) {
+    public ResponseEntity<Void> resendConfirmationEmail(@Valid @RequestBody ResendConfirmationEmailRequest resendConfirmationEmailRequest) {
         authService.resendConfirmationEmail(resendConfirmationEmailRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         authService.forgotPassword(forgotPasswordRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
         authService.resetPassword(resetPasswordRequest);
         return ResponseEntity.noContent().build();
     }

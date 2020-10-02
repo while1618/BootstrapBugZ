@@ -13,7 +13,9 @@ public class EmailExistImpl implements ConstraintValidator<EmailExist, String> {
         this.userRepository = userRepository;
     }
 
+    @Override
     public void initialize(EmailExist constraint) {
+        // it must be overridden but there is no need to put code in it
     }
 
     public boolean isValid(String email, ConstraintValidatorContext context) {

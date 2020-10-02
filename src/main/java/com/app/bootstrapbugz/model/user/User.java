@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +26,9 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Accessors(chain = true)
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = -7881387078460754905L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

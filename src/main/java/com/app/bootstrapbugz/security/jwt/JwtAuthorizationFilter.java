@@ -47,7 +47,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
     }
 
-    private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) throws ResourceNotFound, JWTVerificationException, IllegalArgumentException {
+    private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
         String username = jwtUtilities.getSubject(token);
         UserPrincipal userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
         jwtUtilities.checkToken(token, userPrincipal, JwtPurpose.ACCESSING_RESOURCES);

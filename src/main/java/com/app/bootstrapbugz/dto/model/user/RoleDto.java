@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
 
 @Getter
@@ -12,6 +13,7 @@ import org.springframework.hateoas.RepresentationModel;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class RoleDto extends RepresentationModel<RoleDto> {
     private String name;
 }

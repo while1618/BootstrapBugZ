@@ -42,7 +42,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -95,8 +95,9 @@ public class UserServiceTest {
     void findAll_ok() {
         when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
         CollectionModel<UserDto> foundUsers = userService.findAll();
-        assertThat(foundUsers).isNotNull();
-        assertThat(foundUsers).hasSize(1);
+        assertThat(foundUsers)
+                .isNotNull()
+                .hasSize(1);
     }
 
     @Test
