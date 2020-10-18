@@ -1,10 +1,10 @@
 package com.app.bootstrapbugz.auth.web;
 
-import com.app.bootstrapbugz.dto.request.auth.ForgotPasswordRequest;
-import com.app.bootstrapbugz.dto.request.auth.ResendConfirmationEmailRequest;
-import com.app.bootstrapbugz.dto.request.auth.ResetPasswordRequest;
-import com.app.bootstrapbugz.dto.request.auth.SignUpRequest;
-import com.app.bootstrapbugz.dto.request.auth.LoginRequest;
+import com.app.bootstrapbugz.auth.dto.request.ForgotPasswordRequest;
+import com.app.bootstrapbugz.auth.dto.request.ResendConfirmationEmailRequest;
+import com.app.bootstrapbugz.auth.dto.request.ResetPasswordRequest;
+import com.app.bootstrapbugz.auth.dto.request.SignUpRequest;
+import com.app.bootstrapbugz.auth.dto.request.LoginRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;

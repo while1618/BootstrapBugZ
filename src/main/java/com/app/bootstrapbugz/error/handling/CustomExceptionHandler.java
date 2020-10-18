@@ -1,7 +1,7 @@
 package com.app.bootstrapbugz.error.handling;
 
-import com.app.bootstrapbugz.dto.response.ErrorResponse;
-import com.app.bootstrapbugz.constant.ErrorDomain;
+import com.app.bootstrapbugz.error.response.ErrorResponse;
+import com.app.bootstrapbugz.error.ErrorDomain;
 import com.app.bootstrapbugz.error.exception.BadRequestException;
 import com.app.bootstrapbugz.error.exception.ForbiddenException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;

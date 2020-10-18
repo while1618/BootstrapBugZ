@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.validator.impl;
 
-import com.app.bootstrapbugz.repository.user.UserRepository;
+import com.app.bootstrapbugz.user.repository.UserRepository;
 import com.app.bootstrapbugz.validator.EmailExist;
 
 import javax.validation.ConstraintValidator;

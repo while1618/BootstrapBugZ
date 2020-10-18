@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.error.exception;
 
-import com.app.bootstrapbugz.constant.ErrorDomain;
+import com.app.bootstrapbugz.error.ErrorDomain;
 import lombok.Getter;
 
 @Getter

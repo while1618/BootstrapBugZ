@@ -1,13 +1,13 @@
 package com.app.bootstrapbugz.admin.business;
 
-import com.app.bootstrapbugz.dto.request.admin.AdminRequest;
-import com.app.bootstrapbugz.dto.request.admin.ChangeRoleRequest;
-import com.app.bootstrapbugz.model.user.Role;
-import com.app.bootstrapbugz.model.user.RoleName;
-import com.app.bootstrapbugz.model.user.User;
-import com.app.bootstrapbugz.repository.user.RoleRepository;
-import com.app.bootstrapbugz.repository.user.UserRepository;
-import com.app.bootstrapbugz.service.impl.AdminServiceImpl;
+import com.app.bootstrapbugz.admin.dto.request.AdminRequest;
+import com.app.bootstrapbugz.admin.dto.request.ChangeRoleRequest;
+import com.app.bootstrapbugz.user.model.Role;
+import com.app.bootstrapbugz.user.model.RoleName;
+import com.app.bootstrapbugz.user.model.User;
+import com.app.bootstrapbugz.user.repository.RoleRepository;
+import com.app.bootstrapbugz.user.repository.UserRepository;
+import com.app.bootstrapbugz.admin.service.impl.AdminServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

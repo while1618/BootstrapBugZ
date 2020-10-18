@@ -1,0 +1,88 @@
+package com.app.bootstrapbugz.admin.service.impl;
+
+import com.app.bootstrapbugz.admin.dto.request.AdminRequest;
+import com.app.bootstrapbugz.admin.dto.request.ChangeRoleRequest;
+import com.app.bootstrapbugz.user.model.Role;
+import com.app.bootstrapbugz.user.model.User;
+import com.app.bootstrapbugz.user.repository.RoleRepository;
+import com.app.bootstrapbugz.user.repository.UserRepository;
+import com.app.bootstrapbugz.admin.service.AdminService;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+
+    public AdminServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
+
+    @Override
+    public void logoutUsersFromAllDevices(AdminRequest adminRequest) {
+        List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+        users.forEach(User::updateLogoutFromAllDevicesAt);
+        userRepository.saveAll(users);
+    }
+
+    @Override
+    public void changeUsersRole(ChangeRoleRequest changeRoleRequest) {
+        List<User> users = userRepository.findAllByUsernameIn(changeRoleRequest.getUsernames());
+        users.forEach(user -> {
+            List<Role> roles = roleRepository.findAllByNameIn(changeRoleRequest.getRoleNames());
+            user.setRoles(new HashSet<>(roles));
+            user.updateUpdatedAt();
+        });
+        userRepository.saveAll(users);
+    }
+
+    @Override
+    public void lockUsers(AdminRequest adminRequest) {
+        List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+        users.forEach(user -> {
+            user.setNonLocked(false);
+            user.updateUpdatedAt();
+        });
+        userRepository.saveAll(users);
+    }
+
+    @Override
+    public void unlockUsers(AdminRequest adminRequest) {
+        List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+        users.forEach(user -> {
+            user.setNonLocked(true);
+            user.updateUpdatedAt();
+        });
+        userRepository.saveAll(users);
+    }
+
+    @Override
+    public void activateUser(AdminRequest adminRequest) {
+        List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+        users.forEach(user -> {
+            user.setActivated(true);
+            user.updateUpdatedAt();
+        });
+        userRepository.saveAll(users);
+    }
+
+    @Override
+    public void deactivateUser(AdminRequest adminRequest) {
+        List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+        users.forEach(user -> {
+            user.setActivated(false);
+            user.updateUpdatedAt();
+        });
+        userRepository.saveAll(users);
+    }
+
+    @Override
+    public void deleteUsers(AdminRequest adminRequest) {
+        List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+        userRepository.deleteAll(users);
+    }
+}

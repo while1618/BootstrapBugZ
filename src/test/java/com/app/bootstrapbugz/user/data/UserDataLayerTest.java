@@ -1,10 +1,10 @@
 package com.app.bootstrapbugz.user.data;
 
-import com.app.bootstrapbugz.model.user.Role;
-import com.app.bootstrapbugz.model.user.RoleName;
-import com.app.bootstrapbugz.model.user.User;
-import com.app.bootstrapbugz.repository.user.RoleRepository;
-import com.app.bootstrapbugz.repository.user.UserRepository;
+import com.app.bootstrapbugz.user.model.Role;
+import com.app.bootstrapbugz.user.model.RoleName;
+import com.app.bootstrapbugz.user.model.User;
+import com.app.bootstrapbugz.user.repository.RoleRepository;
+import com.app.bootstrapbugz.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

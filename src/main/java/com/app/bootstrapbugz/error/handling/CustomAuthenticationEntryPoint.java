@@ -1,7 +1,7 @@
 package com.app.bootstrapbugz.error.handling;
 
-import com.app.bootstrapbugz.dto.response.ErrorResponse;
-import com.app.bootstrapbugz.constant.ErrorDomain;
+import com.app.bootstrapbugz.error.response.ErrorResponse;
+import com.app.bootstrapbugz.error.ErrorDomain;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;

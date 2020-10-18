@@ -1,17 +1,17 @@
 package com.app.bootstrapbugz.user.business;
 
-import com.app.bootstrapbugz.dto.model.user.UserDto;
-import com.app.bootstrapbugz.dto.request.user.ChangePasswordRequest;
-import com.app.bootstrapbugz.dto.request.user.EditUserRequest;
+import com.app.bootstrapbugz.user.dto.model.UserDto;
+import com.app.bootstrapbugz.user.dto.request.ChangePasswordRequest;
+import com.app.bootstrapbugz.user.dto.request.EditUserRequest;
 import com.app.bootstrapbugz.error.exception.BadRequestException;
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
-import com.app.bootstrapbugz.hal.user.UserDtoModelAssembler;
-import com.app.bootstrapbugz.model.user.Role;
-import com.app.bootstrapbugz.model.user.RoleName;
-import com.app.bootstrapbugz.model.user.User;
-import com.app.bootstrapbugz.repository.user.UserRepository;
-import com.app.bootstrapbugz.security.jwt.JwtUtilities;
-import com.app.bootstrapbugz.service.impl.UserServiceImpl;
+import com.app.bootstrapbugz.user.dto.hal.UserDtoModelAssembler;
+import com.app.bootstrapbugz.user.model.Role;
+import com.app.bootstrapbugz.user.model.RoleName;
+import com.app.bootstrapbugz.user.model.User;
+import com.app.bootstrapbugz.user.repository.UserRepository;
+import com.app.bootstrapbugz.jwt.JwtUtilities;
+import com.app.bootstrapbugz.user.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

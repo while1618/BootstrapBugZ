@@ -1,10 +1,10 @@
 package com.app.bootstrapbugz.admin.web;
 
-import com.app.bootstrapbugz.dto.request.admin.AdminRequest;
-import com.app.bootstrapbugz.dto.request.admin.ChangeRoleRequest;
-import com.app.bootstrapbugz.dto.request.auth.LoginRequest;
-import com.app.bootstrapbugz.model.user.RoleName;
-import com.app.bootstrapbugz.security.jwt.JwtUtilities;
+import com.app.bootstrapbugz.admin.dto.request.AdminRequest;
+import com.app.bootstrapbugz.admin.dto.request.ChangeRoleRequest;
+import com.app.bootstrapbugz.auth.dto.request.LoginRequest;
+import com.app.bootstrapbugz.user.model.RoleName;
+import com.app.bootstrapbugz.jwt.JwtUtilities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
