@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.jwt.event;
 
-import com.app.bootstrapbugz.jwt.JwtPurpose;
+import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.user.model.User;
 import lombok.Getter;
 import lombok.Setter;

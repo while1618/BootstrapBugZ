@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.auth.business;
 
-import com.app.bootstrapbugz.jwt.JwtPurpose;
+import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.user.dto.model.UserDto;
 import com.app.bootstrapbugz.auth.dto.request.ForgotPasswordRequest;
 import com.app.bootstrapbugz.auth.dto.request.ResendConfirmationEmailRequest;
@@ -14,7 +14,7 @@ import com.app.bootstrapbugz.user.model.RoleName;
 import com.app.bootstrapbugz.user.model.User;
 import com.app.bootstrapbugz.user.repository.RoleRepository;
 import com.app.bootstrapbugz.user.repository.UserRepository;
-import com.app.bootstrapbugz.jwt.JwtUtilities;
+import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.auth.service.impl.AuthServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

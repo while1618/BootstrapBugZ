@@ -3,7 +3,7 @@ package com.app.bootstrapbugz.config;
 import com.app.bootstrapbugz.error.handling.CustomAuthenticationEntryPoint;
 import com.app.bootstrapbugz.jwt.security.JwtAuthenticationFilter;
 import com.app.bootstrapbugz.jwt.security.JwtAuthorizationFilter;
-import com.app.bootstrapbugz.jwt.JwtUtilities;
+import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

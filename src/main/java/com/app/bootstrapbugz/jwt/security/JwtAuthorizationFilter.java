@@ -1,8 +1,8 @@
 package com.app.bootstrapbugz.jwt.security;
 
 import com.app.bootstrapbugz.error.exception.ResourceNotFound;
-import com.app.bootstrapbugz.jwt.JwtPurpose;
-import com.app.bootstrapbugz.jwt.JwtUtilities;
+import com.app.bootstrapbugz.jwt.util.JwtPurpose;
+import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.security.UserPrincipal;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;

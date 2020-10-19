@@ -4,7 +4,7 @@ import com.app.bootstrapbugz.admin.dto.request.AdminRequest;
 import com.app.bootstrapbugz.admin.dto.request.ChangeRoleRequest;
 import com.app.bootstrapbugz.auth.dto.request.LoginRequest;
 import com.app.bootstrapbugz.user.model.RoleName;
-import com.app.bootstrapbugz.jwt.JwtUtilities;
+import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

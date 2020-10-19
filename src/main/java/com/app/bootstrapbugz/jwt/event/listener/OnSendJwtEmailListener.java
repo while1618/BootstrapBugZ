@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.jwt.event.listener;
 
-import com.app.bootstrapbugz.jwt.JwtPurpose;
+import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.jwt.event.OnSendJwtEmail;
 import com.app.bootstrapbugz.email.service.EmailService;
 import org.springframework.context.ApplicationListener;

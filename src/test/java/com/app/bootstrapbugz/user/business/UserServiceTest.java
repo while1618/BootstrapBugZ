@@ -10,7 +10,7 @@ import com.app.bootstrapbugz.user.model.Role;
 import com.app.bootstrapbugz.user.model.RoleName;
 import com.app.bootstrapbugz.user.model.User;
 import com.app.bootstrapbugz.user.repository.UserRepository;
-import com.app.bootstrapbugz.jwt.JwtUtilities;
+import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.app.bootstrapbugz.jwt;
+package com.app.bootstrapbugz.jwt.util;
 
 import com.app.bootstrapbugz.user.model.User;
 import com.app.bootstrapbugz.user.security.UserPrincipal;

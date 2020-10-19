@@ -3,7 +3,7 @@ package com.app.bootstrapbugz.user.web;
 import com.app.bootstrapbugz.auth.dto.request.LoginRequest;
 import com.app.bootstrapbugz.user.dto.request.ChangePasswordRequest;
 import com.app.bootstrapbugz.user.dto.request.EditUserRequest;
-import com.app.bootstrapbugz.jwt.JwtUtilities;
+import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

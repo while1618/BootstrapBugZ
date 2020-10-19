@@ -36,8 +36,7 @@ public class UserController {
 
     @PutMapping("/users/edit")
     public ResponseEntity<UserDto> edit(@Valid @RequestBody EditUserRequest editUserRequest) {
-        UserDto userDto = userService.edit(editUserRequest);
-        return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(userService.edit(editUserRequest));
     }
 
     @PutMapping("/users/change-password")

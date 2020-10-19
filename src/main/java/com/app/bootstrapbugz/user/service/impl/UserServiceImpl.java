@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.user.service.impl;
 
-import com.app.bootstrapbugz.jwt.JwtPurpose;
+import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.user.dto.model.UserDto;
 import com.app.bootstrapbugz.user.dto.request.ChangePasswordRequest;
 import com.app.bootstrapbugz.user.dto.request.EditUserRequest;
@@ -11,15 +11,14 @@ import com.app.bootstrapbugz.jwt.event.OnSendJwtEmail;
 import com.app.bootstrapbugz.user.dto.hal.UserDtoModelAssembler;
 import com.app.bootstrapbugz.user.model.User;
 import com.app.bootstrapbugz.user.repository.UserRepository;
-import com.app.bootstrapbugz.jwt.JwtUtilities;
+import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.service.UserService;
+import com.app.bootstrapbugz.user.util.UserUtilities;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -72,9 +71,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto edit(EditUserRequest editUserRequest) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(auth.getName()).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER));
+        User user = UserUtilities.findLoggedUser(userRepository, messageSource);
         user.setFirstName(editUserRequest.getFirstName());
         user.setLastName(editUserRequest.getLastName());
         tryToSetUsername(user, editUserRequest.getUsername());
@@ -108,9 +105,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(ChangePasswordRequest changePasswordRequest) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(auth.getName()).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER));
+        User user = UserUtilities.findLoggedUser(userRepository, messageSource);
         if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
             throw new BadRequestException(messageSource.getMessage("changePassword.badOldPassword", null, LocaleContextHolder.getLocale()), ErrorDomain.USER);
         changePassword(user, changePasswordRequest.getNewPassword());
@@ -124,9 +119,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void logoutFromAllDevices() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(auth.getName()).orElseThrow(
-                () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER));
+        User user = UserUtilities.findLoggedUser(userRepository, messageSource);
         user.updateLogoutFromAllDevicesAt();
         userRepository.save(user);
     }
