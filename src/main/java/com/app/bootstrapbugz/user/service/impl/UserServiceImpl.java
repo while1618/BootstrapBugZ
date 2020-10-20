@@ -1,5 +1,6 @@
 package com.app.bootstrapbugz.user.service.impl;
 
+import com.app.bootstrapbugz.hal.util.HalUtilities;
 import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.user.dto.model.UserDto;
 import com.app.bootstrapbugz.user.dto.request.ChangePasswordRequest;
@@ -22,8 +23,6 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -53,15 +52,7 @@ public class UserServiceImpl implements UserService {
         List<User> users = userRepository.findAll();
         if (users.isEmpty())
             throw new ResourceNotFound(messageSource.getMessage("users.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER);
-        return assembler.toCollectionModel(map(users));
-    }
-
-    private CollectionModel<UserDto> map(List<User> users) {
-        Collection<UserDto> collection = new ArrayList<>();
-        for (User user : users) {
-            collection.add(modelMapper.map(user, UserDto.class));
-        }
-        return CollectionModel.of(collection);
+        return assembler.toCollectionModel(HalUtilities.mapListOfEntities(users, UserDto.class, modelMapper));
     }
 
     @Override
