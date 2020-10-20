@@ -34,11 +34,12 @@ public class AuthServiceImpl implements AuthService {
     private final MessageSource messageSource;
     private final PasswordEncoder bCryptPasswordEncoder;
     private final UserDtoModelAssembler assembler;
+    private final ModelMapper modelMapper;
 
     public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
                            JwtUtilities jwtUtilities, ApplicationEventPublisher eventPublisher,
                            MessageSource messageSource, PasswordEncoder bCryptPasswordEncoder,
-                           UserDtoModelAssembler assembler) {
+                           UserDtoModelAssembler assembler, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.jwtUtilities = jwtUtilities;
@@ -46,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
         this.messageSource = messageSource;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.assembler = assembler;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
         User user = createUser(signUpRequest);
         String token = jwtUtilities.createToken(user, JwtPurpose.CONFIRM_REGISTRATION);
         eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
-        return assembler.toModel(new ModelMapper().map(user, UserDto.class));
+        return assembler.toModel(modelMapper.map(user, UserDto.class));
     }
 
     private User createUser(SignUpRequest signUpRequest) {

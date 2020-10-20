@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.hateoas.CollectionModel;
@@ -59,6 +60,8 @@ class UserServiceTest {
     private SecurityContext securityContext;
     @Mock
     private JwtUtilities jwtUtilities;
+    @Spy
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private UserServiceImpl userService;

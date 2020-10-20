@@ -34,15 +34,18 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder bCryptPasswordEncoder;
     private final ApplicationEventPublisher eventPublisher;
     private final JwtUtilities jwtUtilities;
+    private final ModelMapper modelMapper;
 
     public UserServiceImpl(UserRepository userRepository, MessageSource messageSource, UserDtoModelAssembler assembler,
-                           PasswordEncoder bCryptPasswordEncoder, ApplicationEventPublisher eventPublisher, JwtUtilities jwtUtilities) {
+                           PasswordEncoder bCryptPasswordEncoder, ApplicationEventPublisher eventPublisher,
+                           JwtUtilities jwtUtilities, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.messageSource = messageSource;
         this.assembler = assembler;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.eventPublisher = eventPublisher;
         this.jwtUtilities = jwtUtilities;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -54,7 +57,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private CollectionModel<UserDto> map(List<User> users) {
-        ModelMapper modelMapper = new ModelMapper();
         Collection<UserDto> collection = new ArrayList<>();
         for (User user : users) {
             collection.add(modelMapper.map(user, UserDto.class));
@@ -66,7 +68,7 @@ public class UserServiceImpl implements UserService {
     public UserDto findByUsername(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new ResourceNotFound(messageSource.getMessage("user.notFound", null, LocaleContextHolder.getLocale()), ErrorDomain.USER));
-        return assembler.toModel(new ModelMapper().map(user, UserDto.class));
+        return assembler.toModel(modelMapper.map(user, UserDto.class));
     }
 
     @Override
@@ -76,7 +78,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(editUserRequest.getLastName());
         tryToSetUsername(user, editUserRequest.getUsername());
         tryToSetEmail(user, editUserRequest.getEmail());
-        return assembler.toModel(new ModelMapper().map(userRepository.save(user), UserDto.class));
+        return assembler.toModel(modelMapper.map(userRepository.save(user), UserDto.class));
     }
 
     private void tryToSetUsername(User user, String username) {
