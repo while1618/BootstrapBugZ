@@ -90,8 +90,8 @@ class AuthServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         UserDto createdUser = authService.signUp(signUpRequest);
         assertThat(createdUser).isNotNull();
-        assertEquals(user.getUsername(), createdUser.getUsername());
-        assertEquals(user.getEmail(), createdUser.getEmail());
+        assertEquals(createdUser.getUsername(), user.getUsername());
+        assertEquals(createdUser.getEmail(), user.getEmail());
     }
 
     @Test
