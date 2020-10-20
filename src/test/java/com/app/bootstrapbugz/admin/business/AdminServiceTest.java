@@ -51,10 +51,10 @@ class AdminServiceTest {
 
     @BeforeEach
     void init() {
-        adminRequest = new AdminRequest(Collections.singletonList("user"));
+        adminRequest = new AdminRequest(Set.of("user"));
         changeRoleRequest = new ChangeRoleRequest(
                 adminRequest.getUsernames(),
-                Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
+                Set.of(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
         Role userRole = new Role(1L, RoleName.ROLE_USER);
         users = Collections.singletonList(new User()
                 .setId(2L)

@@ -19,8 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -41,7 +40,7 @@ class AdminControllerTest {
     private String adminToken;
     private String userToken;
 
-    private static final AdminRequest ADMIN_REQUEST = new AdminRequest(Arrays.asList("not_activated", "locked"));
+    private static final AdminRequest ADMIN_REQUEST = new AdminRequest(Set.of("not_activated", "locked"));
     private static final String PATH = "/api/admin";
 
     @BeforeAll
@@ -104,8 +103,8 @@ class AdminControllerTest {
     @Order(5)
     void changeUsersRole_statusNoContent() throws Exception {
         ChangeRoleRequest changeRoleRequest = new ChangeRoleRequest(
-                Collections.singletonList("not_activated"),
-                Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
+                Set.of("not_activated"),
+                Set.of(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
         mockMvc.perform(put(PATH + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtUtilities.HEADER, adminToken)
@@ -126,8 +125,8 @@ class AdminControllerTest {
     @Order(7)
     void changeUsersRole_statusUnauthorized() throws Exception {
         ChangeRoleRequest changeRoleRequest = new ChangeRoleRequest(
-                Collections.singletonList("not_activated"),
-                Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
+                Set.of("not_activated"),
+                Set.of(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
         mockMvc.perform(put(PATH + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(JwtUtilities.HEADER, userToken)
@@ -139,8 +138,8 @@ class AdminControllerTest {
     @Order(8)
     void changeUsersRole_adminNotLoggedIn_statusForbidden() throws Exception {
         ChangeRoleRequest changeRoleRequest = new ChangeRoleRequest(
-                Collections.singletonList("not_activated"),
-                Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
+                Set.of("not_activated"),
+                Set.of(RoleName.ROLE_USER, RoleName.ROLE_ADMIN));
         mockMvc.perform(put(PATH + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(changeRoleRequest)))

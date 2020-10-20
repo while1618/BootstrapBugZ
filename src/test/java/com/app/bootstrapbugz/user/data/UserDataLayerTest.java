@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,7 +37,7 @@ class UserDataLayerTest {
 
     @Test
     void findAllUsersByUsernameIn() {
-        List<String> usernames = Arrays.asList("user", "admin");
+        Set<String> usernames = Set.of("user", "admin");
         List<User> users = userRepository.findAllByUsernameIn(usernames);
         assertThat(users).hasSize(2);
     }
@@ -74,7 +74,7 @@ class UserDataLayerTest {
 
     @Test
     void findAllRolesByNameIn() {
-        List<RoleName> names = Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN);
+        Set<RoleName> names = Set.of(RoleName.ROLE_USER, RoleName.ROLE_ADMIN);
         List<Role> roles = roleRepository.findAllByNameIn(names);
         assertThat(roles).hasSize(2);
     }

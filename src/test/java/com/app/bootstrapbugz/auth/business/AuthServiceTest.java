@@ -84,23 +84,14 @@ class AuthServiceTest {
 
     @Test
     void signUp_ok() {
+        SignUpRequest signUpRequest = new SignUpRequest("User", "User", "user",
+                "user@localhost.com", "123", "123");
         when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.of(userRole));
         when(userRepository.save(any(User.class))).thenReturn(user);
-        SignUpRequest signUpRequest = signUpRequest();
         UserDto createdUser = authService.signUp(signUpRequest);
         assertThat(createdUser).isNotNull();
-        assertEquals(signUpRequest.getUsername(), createdUser.getUsername());
-        assertEquals(signUpRequest.getEmail(), createdUser.getEmail());
-    }
-
-    private SignUpRequest signUpRequest() {
-        return new SignUpRequest()
-                .setFirstName("User")
-                .setLastName("User")
-                .setUsername("user")
-                .setEmail("user@localhost.com")
-                .setPassword("123")
-                .setConfirmPassword("123");
+        assertEquals(user.getUsername(), createdUser.getUsername());
+        assertEquals(user.getEmail(), createdUser.getEmail());
     }
 
     @Test
@@ -160,7 +151,7 @@ class AuthServiceTest {
         when(userRepository.findByUsername(null)).thenReturn(Optional.ofNullable(user));
         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest("", "1234", "1234");
         authService.resetPassword(resetPasswordRequest);
-        assertTrue(bCryptPasswordEncoder.matches("1234", user.getPassword()));
+        assertTrue(bCryptPasswordEncoder.matches(resetPasswordRequest.getPassword(), user.getPassword()));
         assertFalse(bCryptPasswordEncoder.matches("123", user.getPassword()));
         assertNotEquals(beforeUpdate, user.getUpdatedAt());
     }
