@@ -1,87 +1,118 @@
 package com.app.bootstrapbugz.user.data;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.app.bootstrapbugz.user.model.Role;
 import com.app.bootstrapbugz.user.model.RoleName;
 import com.app.bootstrapbugz.user.model.User;
 import com.app.bootstrapbugz.user.repository.RoleRepository;
 import com.app.bootstrapbugz.user.repository.UserRepository;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.List;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 @DataJpaTest
 class UserDataLayerTest {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+  @Autowired private UserRepository userRepository;
+  @Autowired private RoleRepository roleRepository;
+  @Autowired private EntityManager entityManager;
 
-    @Test
-    void injectedComponentsAreNotNull(){
-        assertThat(userRepository).isNotNull();
-        assertThat(roleRepository).isNotNull();
-    }
+  @Test
+  void findAll() {
+    List<User> users = userRepository.findAll();
+    assertThat(users).hasSize(4);
+  }
 
-    @Test
-    void findAllUsers() {
-        List<User> users = userRepository.findAll();
-        assertThat(users).hasSize(4);
-    }
+  @Test
+  void findAllByUsernameIn() {
+    Set<String> usernames = Set.of("user", "admin");
+    List<User> users = userRepository.findAllByUsernameIn(usernames);
+    assertThat(users).hasSize(2);
+  }
 
-    @Test
-    void findAllUsersByUsernameIn() {
-        Set<String> usernames = Set.of("user", "admin");
-        List<User> users = userRepository.findAllByUsernameIn(usernames);
-        assertThat(users).hasSize(2);
-    }
+  @Test
+  void findByEmail() {
+    User user = userRepository.findByEmail("skill.potion21@gmail.com").orElseThrow();
+    assertEquals("admin", user.getUsername());
+  }
 
-    @Test
-    void findUserByEmail() {
-        User user = userRepository.findByEmail("skill.potion21@gmail.com").orElseThrow();
-        assertEquals("admin", user.getUsername());
-    }
+  @Test
+  void findByUsername() {
+    User user = userRepository.findByUsername("admin").orElseThrow();
+    assertEquals("Admin", user.getFirstName());
+  }
 
-    @Test
-    void findUserByUsername() {
-        User user = userRepository.findByUsername("admin").orElseThrow();
-        assertEquals("Admin", user.getFirstName());
-    }
+  @Test
+  void existsByEmail() {
+    boolean found = userRepository.existsByEmail("skill.potion21@gmail.com");
+    assertTrue(found);
+  }
 
-    @Test
-    void userExistsByEmail() {
-        boolean found = userRepository.existsByEmail("skill.potion21@gmail.com");
-        assertTrue(found);
-    }
+  @Test
+  void existsByUsername() {
+    boolean found = userRepository.existsByUsername("admin");
+    assertTrue(found);
+  }
 
-    @Test
-    void userExistsByUsername() {
-        boolean found = userRepository.existsByUsername("admin");
-        assertTrue(found);
-    }
+  @Test
+  void save() {
+    Set<RoleName> names = Set.of(RoleName.USER, RoleName.ADMIN);
+    List<Role> roles = roleRepository.findAllByNameIn(names);
+    User user =
+        new User()
+            .setFirstName("Test")
+            .setLastName("Test")
+            .setUsername("test")
+            .setEmail("test@localhost.com")
+            .setPassword("qwerty123")
+            .setRoles(new HashSet<>(roles));
+    userRepository.save(user);
+    flushAndClear();
+    User userFromDB = userRepository.findByUsername("test").orElseThrow();
+    assertEquals(user, userFromDB);
+  }
 
-    @Test
-    void findAllRoles() {
-        List<Role> roles = roleRepository.findAll();
-        assertThat(roles).hasSize(2);
-    }
+  private void flushAndClear() {
+    entityManager.flush();
+    entityManager.clear();
+  }
 
-    @Test
-    void findAllRolesByNameIn() {
-        Set<RoleName> names = Set.of(RoleName.ROLE_USER, RoleName.ROLE_ADMIN);
-        List<Role> roles = roleRepository.findAllByNameIn(names);
-        assertThat(roles).hasSize(2);
-    }
+  @Test
+  void saveAll() {
+    Set<RoleName> names = Set.of(RoleName.USER, RoleName.ADMIN);
+    List<Role> roles = roleRepository.findAllByNameIn(names);
+    User user1 =
+        new User()
+            .setFirstName("Test")
+            .setLastName("Test")
+            .setUsername("test")
+            .setEmail("test@localhost.com")
+            .setPassword("qwerty123")
+            .setRoles(new HashSet<>(roles));
+    User user2 =
+        new User()
+            .setFirstName("Test2")
+            .setLastName("Test2")
+            .setUsername("test2")
+            .setEmail("test2@localhost.com")
+            .setPassword("qwerty123")
+            .setRoles(new HashSet<>(roles));
+    userRepository.saveAll(Set.of(user1, user2));
+    List<User> users = userRepository.findAll();
+    assertThat(users).hasSize(6);
+  }
 
-    @Test
-    void findRoleByName() {
-        Role role = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow();
-        assertEquals(1L, role.getId());
-    }
+  @Test
+  void deleteAll() {
+    List<User> users = userRepository.findAllByUsernameIn(Set.of("user", "not_activated"));
+    users.forEach(user -> userRepository.delete(user));
+    assertThat(userRepository.findAll()).hasSize(2);
+    assertThat(roleRepository.findAll()).hasSize(2);
+  }
 }

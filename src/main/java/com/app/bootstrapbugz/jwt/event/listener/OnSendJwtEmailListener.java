@@ -1,49 +1,46 @@
 package com.app.bootstrapbugz.jwt.event.listener;
 
-import com.app.bootstrapbugz.jwt.util.JwtPurpose;
-import com.app.bootstrapbugz.jwt.event.OnSendJwtEmail;
 import com.app.bootstrapbugz.email.service.EmailService;
+import com.app.bootstrapbugz.jwt.event.OnSendJwtEmail;
+import com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
-import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
+@Slf4j
 @Component
 public class OnSendJwtEmailListener implements ApplicationListener<OnSendJwtEmail> {
-    private final EmailService emailService;
-    private final String port;
-    private final String hostname;
+  @Value("${ui.app.url}")
+  private String uiAppUrl;
+  private final EmailService emailService;
 
-    public OnSendJwtEmailListener(EmailService emailService, Environment environment) throws UnknownHostException {
-        this.emailService = emailService;
-        hostname = InetAddress.getLocalHost().getHostName();
-        port = environment.getProperty("server.port");
+  public OnSendJwtEmailListener(EmailService emailService) {
+    this.emailService = emailService;
+  }
+
+  @Override
+  public void onApplicationEvent(OnSendJwtEmail event) {
+    switch (event.getPurpose()) {
+      case CONFIRM_REGISTRATION -> sendEmail(event, "Confirm Registration", "confirm-registration");
+      case FORGOT_PASSWORD -> sendEmail(event, "Reset Password", "reset-password");
+      default -> log.error("Unknown JWT purpose");
     }
+  }
 
-    @Override
-    public void onApplicationEvent(OnSendJwtEmail event) {
-        if (event.getPurpose().equals(JwtPurpose.CONFIRM_REGISTRATION))
-            sendConfirmRegistrationEmail(event.getToken(), event.getUser().getEmail());
-
-        if (event.getPurpose().equals(JwtPurpose.FORGOT_PASSWORD))
-            sendForgotPasswordEmail(event.getToken(), event.getUser().getEmail());
+  private void sendEmail(OnSendJwtEmail event, String subject, String path) {
+    try {
+      File template = new ClassPathResource("templates/email/" + path + ".html").getFile();
+      String body = Files.asCharSource(template, StandardCharsets.UTF_8).read();
+      String link = uiAppUrl + "/" + path + "?token=" + event.getToken();
+      body = body.replace("$name", event.getUser().getUsername()).replace("$link", link);
+      emailService.sendHtmlEmail(event.getUser().getEmail(), subject, body);
+    } catch (IOException e) {
+      log.error(e.getMessage());
     }
-
-    private void sendConfirmRegistrationEmail(String token, String email) {
-        String subject = "Activate Account";
-        String body = "Please activate your account by clicking on link.\n" +
-                "http://" + hostname + ":" + port + "/api/auth/confirm-registration?token=" + token;
-
-        emailService.sendEmail(email, subject, body);
-    }
-
-    private void sendForgotPasswordEmail(String token, String email) {
-        String subject = "Forgot Password";
-        String body = "Please go to this link to change your password.\n" +
-                "http://" + hostname + ":" + port + "/api/auth/reset-password?token=" + token;
-
-        emailService.sendEmail(email, subject, body);
-    }
+  }
 }

@@ -1,19 +1,21 @@
 package com.app.bootstrapbugz.auth.service;
 
-import com.app.bootstrapbugz.user.dto.model.UserDto;
-import com.app.bootstrapbugz.auth.dto.request.ForgotPasswordRequest;
-import com.app.bootstrapbugz.auth.dto.request.ResendConfirmationEmailRequest;
-import com.app.bootstrapbugz.auth.dto.request.ResetPasswordRequest;
-import com.app.bootstrapbugz.auth.dto.request.SignUpRequest;
+import com.app.bootstrapbugz.auth.request.ForgotPasswordRequest;
+import com.app.bootstrapbugz.auth.request.ResendConfirmationEmailRequest;
+import com.app.bootstrapbugz.auth.request.ResetPasswordRequest;
+import com.app.bootstrapbugz.auth.request.SignUpRequest;
+import com.app.bootstrapbugz.user.dto.SimpleUserDto;
 
 public interface AuthService {
-    UserDto signUp(SignUpRequest signUpRequest);
+  SimpleUserDto signUp(SignUpRequest signUpRequest);
 
-    void confirmRegistration(String token);
+  void confirmRegistration(String token);
 
-    void resendConfirmationEmail(ResendConfirmationEmailRequest resendConfirmationEmailRequest);
+  void resendConfirmationEmail(ResendConfirmationEmailRequest resendConfirmationEmailRequest);
 
-    void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
+  void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 
-    void resetPassword(ResetPasswordRequest resetPasswordRequest);
+  void resetPassword(ResetPasswordRequest resetPasswordRequest);
+
+  void logout();
 }

@@ -1,20 +1,22 @@
 package com.app.bootstrapbugz.admin.service;
 
-import com.app.bootstrapbugz.admin.dto.request.AdminRequest;
-import com.app.bootstrapbugz.admin.dto.request.ChangeRoleRequest;
+import com.app.bootstrapbugz.admin.request.AdminRequest;
+import com.app.bootstrapbugz.admin.request.ChangeRoleRequest;
+import com.app.bootstrapbugz.user.dto.UserDto;
+import java.util.List;
 
 public interface AdminService {
-    void logoutUsersFromAllDevices(AdminRequest adminRequest);
+  List<UserDto> findAllUsers();
 
-    void changeUsersRole(ChangeRoleRequest changeRoleRequest);
+  void changeRole(ChangeRoleRequest changeRoleRequest);
 
-    void lockUsers(AdminRequest adminRequest);
+  void lock(AdminRequest adminRequest);
 
-    void unlockUsers(AdminRequest adminRequest);
+  void unlock(AdminRequest adminRequest);
 
-    void activateUser(AdminRequest adminRequest);
+  void activate(AdminRequest adminRequest);
 
-    void deactivateUser(AdminRequest adminRequest);
+  void deactivate(AdminRequest adminRequest);
 
-    void deleteUsers(AdminRequest adminRequest);
+  void delete(AdminRequest adminRequest);
 }

@@ -1,18 +1,16 @@
 package com.app.bootstrapbugz.user.service;
 
-import com.app.bootstrapbugz.user.dto.model.UserDto;
-import com.app.bootstrapbugz.user.dto.request.ChangePasswordRequest;
-import com.app.bootstrapbugz.user.dto.request.EditUserRequest;
-import org.springframework.hateoas.CollectionModel;
+import com.app.bootstrapbugz.user.dto.SimpleUserDto;
+import com.app.bootstrapbugz.user.request.ChangePasswordRequest;
+import com.app.bootstrapbugz.user.request.UpdateUserRequest;
+import java.util.List;
 
 public interface UserService {
-    CollectionModel<UserDto> findAll();
+  List<SimpleUserDto> findAll();
 
-    UserDto findByUsername(String username);
+  SimpleUserDto findByUsername(String username);
 
-    UserDto edit(EditUserRequest editUserRequest);
+  SimpleUserDto update(UpdateUserRequest updateUserRequest);
 
-    void changePassword(ChangePasswordRequest changePasswordRequest);
-
-    void logoutFromAllDevices();
+  void changePassword(ChangePasswordRequest changePasswordRequest);
 }
