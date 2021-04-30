@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.jwt.security;
 
-import com.app.bootstrapbugz.common.error.exception.ResourceNotFound;
+import com.app.bootstrapbugz.shared.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.security.UserPrincipal;

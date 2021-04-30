@@ -10,5 +10,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResendConfirmationEmailRequest {
-  private String username;
+  private String usernameOrEmail;
 }

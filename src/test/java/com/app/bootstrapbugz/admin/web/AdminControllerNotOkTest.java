@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.app.bootstrapbugz.admin.request.AdminRequest;
 import com.app.bootstrapbugz.admin.request.ChangeRoleRequest;
 import com.app.bootstrapbugz.auth.request.LoginRequest;
-import com.app.bootstrapbugz.common.constants.Path;
+import com.app.bootstrapbugz.shared.constants.Path;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.model.RoleName;
 import com.fasterxml.jackson.databind.ObjectMapper;

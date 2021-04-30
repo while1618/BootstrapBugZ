@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.jwt.event.listener;
 
-import com.app.bootstrapbugz.email.service.EmailService;
+import com.app.bootstrapbugz.shared.email.service.EmailService;
 import com.app.bootstrapbugz.jwt.event.OnSendJwtEmail;
 import com.google.common.io.Files;
 import java.io.File;

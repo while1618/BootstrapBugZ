@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.admin.request;
 
-import com.app.bootstrapbugz.common.constants.Regex;
+import com.app.bootstrapbugz.shared.constants.Regex;
 import com.app.bootstrapbugz.user.model.RoleName;
 import java.util.Set;
 import javax.validation.constraints.NotEmpty;

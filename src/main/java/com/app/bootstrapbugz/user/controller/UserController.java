@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.user.controller;
 
-import com.app.bootstrapbugz.common.constants.Path;
+import com.app.bootstrapbugz.shared.constants.Path;
 import com.app.bootstrapbugz.user.dto.SimpleUserDto;
 import com.app.bootstrapbugz.user.request.ChangePasswordRequest;
 import com.app.bootstrapbugz.user.request.UpdateUserRequest;

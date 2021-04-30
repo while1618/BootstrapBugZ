@@ -3,8 +3,8 @@ package com.app.bootstrapbugz.user.business;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import com.app.bootstrapbugz.common.error.exception.BadRequestException;
-import com.app.bootstrapbugz.common.error.exception.ResourceNotFound;
+import com.app.bootstrapbugz.shared.error.exception.BadRequestException;
+import com.app.bootstrapbugz.shared.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.mapper.UserMapperImpl;
 import com.app.bootstrapbugz.user.model.Role;

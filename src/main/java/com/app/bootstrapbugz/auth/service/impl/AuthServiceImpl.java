@@ -5,9 +5,9 @@ import com.app.bootstrapbugz.auth.request.ResendConfirmationEmailRequest;
 import com.app.bootstrapbugz.auth.request.ResetPasswordRequest;
 import com.app.bootstrapbugz.auth.request.SignUpRequest;
 import com.app.bootstrapbugz.auth.service.AuthService;
-import com.app.bootstrapbugz.common.error.ErrorDomain;
-import com.app.bootstrapbugz.common.error.exception.ForbiddenException;
-import com.app.bootstrapbugz.common.error.exception.ResourceNotFound;
+import com.app.bootstrapbugz.shared.error.ErrorDomain;
+import com.app.bootstrapbugz.shared.error.exception.ForbiddenException;
+import com.app.bootstrapbugz.shared.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.jwt.event.OnSendJwtEmail;
 import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;
@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
   public void resendConfirmationEmail(ResendConfirmationEmailRequest request) {
     User user =
         userRepository
-            .findByUsernameOrEmail(request.getUsername(), request.getUsername())
+            .findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
             .orElseThrow(
                 () ->
                     new ResourceNotFound(

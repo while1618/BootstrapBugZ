@@ -1,7 +1,7 @@
 package com.app.bootstrapbugz.config;
 
-import com.app.bootstrapbugz.common.constants.Path;
-import com.app.bootstrapbugz.common.error.handling.CustomAuthenticationEntryPoint;
+import com.app.bootstrapbugz.shared.constants.Path;
+import com.app.bootstrapbugz.shared.error.handling.CustomAuthenticationEntryPoint;
 import com.app.bootstrapbugz.jwt.security.JwtAuthenticationFilter;
 import com.app.bootstrapbugz.jwt.security.JwtAuthorizationFilter;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;

@@ -1,9 +1,9 @@
 package com.app.bootstrapbugz.auth.request;
 
-import com.app.bootstrapbugz.common.constants.Regex;
-import com.app.bootstrapbugz.common.validator.EmailExist;
-import com.app.bootstrapbugz.common.validator.FieldMatch;
-import com.app.bootstrapbugz.common.validator.UsernameExist;
+import com.app.bootstrapbugz.shared.constants.Regex;
+import com.app.bootstrapbugz.shared.validator.EmailExist;
+import com.app.bootstrapbugz.shared.validator.FieldMatch;
+import com.app.bootstrapbugz.shared.validator.UsernameExist;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;

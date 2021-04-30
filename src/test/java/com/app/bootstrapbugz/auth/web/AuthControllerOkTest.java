@@ -13,7 +13,7 @@ import com.app.bootstrapbugz.auth.request.LoginRequest;
 import com.app.bootstrapbugz.auth.request.ResendConfirmationEmailRequest;
 import com.app.bootstrapbugz.auth.request.ResetPasswordRequest;
 import com.app.bootstrapbugz.auth.request.SignUpRequest;
-import com.app.bootstrapbugz.common.constants.Path;
+import com.app.bootstrapbugz.shared.constants.Path;
 import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.model.Role;

@@ -1,8 +1,8 @@
 package com.app.bootstrapbugz.user.service.impl;
 
-import com.app.bootstrapbugz.common.error.ErrorDomain;
-import com.app.bootstrapbugz.common.error.exception.BadRequestException;
-import com.app.bootstrapbugz.common.error.exception.ResourceNotFound;
+import com.app.bootstrapbugz.shared.error.ErrorDomain;
+import com.app.bootstrapbugz.shared.error.exception.BadRequestException;
+import com.app.bootstrapbugz.shared.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.jwt.event.OnSendJwtEmail;
 import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;

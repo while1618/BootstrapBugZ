@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.app.bootstrapbugz.auth.request.LoginRequest;
-import com.app.bootstrapbugz.common.constants.Path;
+import com.app.bootstrapbugz.shared.constants.Path;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.request.ChangePasswordRequest;
 import com.app.bootstrapbugz.user.request.UpdateUserRequest;

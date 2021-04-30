@@ -1,5 +1,6 @@
 package com.app.bootstrapbugz.admin.web;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.app.bootstrapbugz.admin.request.AdminRequest;
 import com.app.bootstrapbugz.admin.request.ChangeRoleRequest;
 import com.app.bootstrapbugz.auth.request.LoginRequest;
-import com.app.bootstrapbugz.common.constants.Path;
+import com.app.bootstrapbugz.shared.constants.Path;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.model.RoleName;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,6 +56,12 @@ class AdminControllerOkTest {
 
   @Test
   @Order(1)
+  void dummyTestForIntelliJ() {
+    assertTrue(true);
+  }
+
+  @Test
+  @Order(2)
   void findAllUsers_ok() throws Exception {
     mockMvc
         .perform(
@@ -67,7 +74,7 @@ class AdminControllerOkTest {
   }
 
   @Test
-  @Order(2)
+  @Order(3)
   void changeRole_noContent() throws Exception {
     ChangeRoleRequest changeRoleRequest =
         new ChangeRoleRequest(Set.of("not_activated"), Set.of(RoleName.USER, RoleName.ADMIN));
@@ -81,7 +88,7 @@ class AdminControllerOkTest {
   }
 
   @Test
-  @Order(3)
+  @Order(4)
   void lock_noContent() throws Exception {
     mockMvc
         .perform(
@@ -93,7 +100,7 @@ class AdminControllerOkTest {
   }
 
   @Test
-  @Order(4)
+  @Order(5)
   void unlock_noContent() throws Exception {
     mockMvc
         .perform(
@@ -105,7 +112,7 @@ class AdminControllerOkTest {
   }
 
   @Test
-  @Order(5)
+  @Order(6)
   void deactivate_noContent() throws Exception {
     mockMvc
         .perform(
@@ -117,7 +124,7 @@ class AdminControllerOkTest {
   }
 
   @Test
-  @Order(6)
+  @Order(7)
   void activate_noContent() throws Exception {
     mockMvc
         .perform(
@@ -129,7 +136,7 @@ class AdminControllerOkTest {
   }
 
   @Test
-  @Order(7)
+  @Order(8)
   void delete_noContent() throws Exception {
     mockMvc
         .perform(

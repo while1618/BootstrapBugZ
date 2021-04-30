@@ -1,7 +1,7 @@
 package com.app.bootstrapbugz.user.security;
 
-import com.app.bootstrapbugz.common.error.ErrorDomain;
-import com.app.bootstrapbugz.common.error.exception.ResourceNotFound;
+import com.app.bootstrapbugz.shared.error.ErrorDomain;
+import com.app.bootstrapbugz.shared.error.exception.ResourceNotFound;
 import com.app.bootstrapbugz.user.model.User;
 import com.app.bootstrapbugz.user.repository.UserRepository;
 import org.springframework.context.MessageSource;

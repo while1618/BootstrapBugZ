@@ -1,6 +1,6 @@
 package com.app.bootstrapbugz.user.request;
 
-import com.app.bootstrapbugz.common.constants.Regex;
+import com.app.bootstrapbugz.shared.constants.Regex;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;

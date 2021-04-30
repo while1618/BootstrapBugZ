@@ -1,7 +1,7 @@
 package com.app.bootstrapbugz.user.request;
 
-import com.app.bootstrapbugz.common.constants.Regex;
-import com.app.bootstrapbugz.common.validator.FieldMatch;
+import com.app.bootstrapbugz.shared.constants.Regex;
+import com.app.bootstrapbugz.shared.validator.FieldMatch;
 import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

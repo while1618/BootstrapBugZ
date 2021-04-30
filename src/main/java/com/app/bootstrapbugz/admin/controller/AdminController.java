@@ -3,7 +3,7 @@ package com.app.bootstrapbugz.admin.controller;
 import com.app.bootstrapbugz.admin.request.AdminRequest;
 import com.app.bootstrapbugz.admin.request.ChangeRoleRequest;
 import com.app.bootstrapbugz.admin.service.AdminService;
-import com.app.bootstrapbugz.common.constants.Path;
+import com.app.bootstrapbugz.shared.constants.Path;
 import com.app.bootstrapbugz.user.dto.UserDto;
 import java.util.List;
 import javax.validation.Valid;

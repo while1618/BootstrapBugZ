@@ -1,9 +1,9 @@
 package com.app.bootstrapbugz.jwt.security;
 
 import com.app.bootstrapbugz.auth.request.LoginRequest;
-import com.app.bootstrapbugz.common.constants.Path;
-import com.app.bootstrapbugz.common.error.exception.ResourceNotFound;
-import com.app.bootstrapbugz.common.error.handling.CustomFilterExceptionHandler;
+import com.app.bootstrapbugz.shared.constants.Path;
+import com.app.bootstrapbugz.shared.error.exception.ResourceNotFound;
+import com.app.bootstrapbugz.shared.error.handling.CustomFilterExceptionHandler;
 import com.app.bootstrapbugz.jwt.util.JwtPurpose;
 import com.app.bootstrapbugz.jwt.util.JwtUtilities;
 import com.app.bootstrapbugz.user.security.UserPrincipal;
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
           new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
       UsernamePasswordAuthenticationToken authenticationToken =
           new UsernamePasswordAuthenticationToken(
-              loginRequest.getUsername(), loginRequest.getPassword(), new ArrayList<>());
+              loginRequest.getUsernameOrEmail(), loginRequest.getPassword(), new ArrayList<>());
       return authenticationManager.authenticate(authenticationToken);
     } catch (IOException | AuthenticationException | ResourceNotFound e) {
       CustomFilterExceptionHandler.handleException(response, getMessageBasedOnException(e));
