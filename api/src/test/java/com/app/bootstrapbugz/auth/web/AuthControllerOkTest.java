@@ -50,7 +50,7 @@ class AuthControllerOkTest {
         .perform(
             post(Path.AUTH + "/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new LoginRequest("user", "qwerty123"))))
+                .content(objectMapper.writeValueAsString(new LoginRequest("decrescendo807@gmail.com", "qwerty123"))))
         .andExpect(status().isOk())
         .andExpect(header().exists(JwtUtilities.HEADER));
   }

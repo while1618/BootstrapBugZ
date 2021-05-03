@@ -23,6 +23,7 @@
     <jwt.version>3.15.0</jwt.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <beanutils.version>1.9.4</beanutils.version>
+    <commonsValidator.version>1.7</commonsValidator.version>
     <springfox.version>3.0.0</springfox.version>
     <jacoco.version>0.8.6</jacoco.version>
   </properties>
@@ -105,6 +106,11 @@
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>${beanutils.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>${commonsValidator.version}</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
