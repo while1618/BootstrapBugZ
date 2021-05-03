@@ -19,5 +19,6 @@ public class ResetPasswordRequest {
   @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
   private String password;
 
+  @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
   private String confirmPassword;
 }

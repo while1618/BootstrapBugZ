@@ -38,5 +38,6 @@ public class SignUpRequest {
   @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
   private String password;
 
+  @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
   private String confirmPassword;
 }

@@ -14,10 +14,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @FieldMatch(first = "newPassword", second = "confirmNewPassword", message = "{password.doNotMatch}")
 public class ChangePasswordRequest {
+  @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
   private String oldPassword;
 
   @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
   private String newPassword;
 
+  @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
   private String confirmNewPassword;
 }
