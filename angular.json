@@ -1,0 +1,209 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "angular-ui",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "projects": {
+    "angular-ui": {
+      "projectType": "application",
+      "root": "apps/angular-ui",
+      "sourceRoot": "apps/angular-ui/src",
+      "prefix": "bootstrapbugz",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/angular-ui",
+            "index": "apps/angular-ui/src/index.html",
+            "main": "apps/angular-ui/src/main.ts",
+            "polyfills": "apps/angular-ui/src/polyfills.ts",
+            "tsConfig": "apps/angular-ui/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/angular-ui/src/favicon.ico",
+              "apps/angular-ui/src/assets"
+            ],
+            "styles": ["apps/angular-ui/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/angular-ui/src/environments/environment.ts",
+                  "with": "apps/angular-ui/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "angular-ui:build:production"
+            },
+            "development": {
+              "browserTarget": "angular-ui:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "angular-ui:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/angular-ui/src/**/*.ts",
+              "apps/angular-ui/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/angular-ui"],
+          "options": {
+            "jestConfig": "apps/angular-ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "angular-ui-e2e": {
+      "root": "apps/angular-ui-e2e",
+      "sourceRoot": "apps/angular-ui-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/angular-ui-e2e/cypress.json",
+            "tsConfig": "apps/angular-ui-e2e/tsconfig.e2e.json",
+            "devServerTarget": "angular-ui:serve:development"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "angular-ui:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/angular-ui-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "spring-boot-api": {
+      "root": "apps/spring-boot-api",
+      "sourceRoot": "apps/spring-boot-api/src",
+      "projectType": "application",
+      "architect": {
+        "run": {
+          "builder": "@nxrocks/nx-spring-boot:run",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "serve": {
+          "builder": "@nxrocks/nx-spring-boot:serve",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "test": {
+          "builder": "@nxrocks/nx-spring-boot:test",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "clean": {
+          "builder": "@nxrocks/nx-spring-boot:clean",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "buildJar": {
+          "builder": "@nxrocks/nx-spring-boot:buildJar",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "buildWar": {
+          "builder": "@nxrocks/nx-spring-boot:buildWar",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "buildImage": {
+          "builder": "@nxrocks/nx-spring-boot:buildImage",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "buildInfo": {
+          "builder": "@nxrocks/nx-spring-boot:buildInfo",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "implicitDependencies": {
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    ".eslintrc.json": "*"
+  },
+  "affected": {
+    "defaultBase": "master"
+  },
+  "npmScope": "bootstrapbugz",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
+    }
+  },
+  "projects": {
+    "angular-ui": {
+      "tags": []
+    },
+    "angular-ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["angular-ui"]
+    },
+    "spring-boot-api": {
+      "tags": []
+    }
+  }
+}
