@@ -287,6 +287,33 @@
           }
         }
       }
+    },
+    "angular-ui-auth-service": {
+      "projectType": "library",
+      "root": "libs/angular-ui/auth/service",
+      "sourceRoot": "libs/angular-ui/auth/service/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/angular-ui/auth/service"
+          ],
+          "options": {
+            "jestConfig": "libs/angular-ui/auth/service/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/auth/service/src/**/*.ts",
+              "libs/angular-ui/auth/service/src/**/*.html"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

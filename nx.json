@@ -40,6 +40,9 @@
     },
     "angular-ui-user-service": {
       "tags": []
+    },
+    "angular-ui-auth-service": {
+      "tags": []
     }
   }
 }

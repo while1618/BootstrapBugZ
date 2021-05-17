@@ -5,5 +5,6 @@ module.exports = {
     '<rootDir>/libs/angular-ui/auth/data',
     '<rootDir>/libs/angular-ui/admin/data',
     '<rootDir>/libs/angular-ui/user/service',
+    '<rootDir>/libs/angular-ui/auth/service',
   ],
 };
