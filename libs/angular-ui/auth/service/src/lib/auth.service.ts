@@ -31,7 +31,7 @@ export class AuthService {
 
   confirmRegistration(token: string) {
     const params = new HttpParams().set('token', token);
-    return this.http.get(`${this.API_URL}/confirm-registration`, { params: params });
+    return this.http.get(`${this.API_URL}/confirm-registration`, { params });
   }
 
   resendConfirmationEmail(resendConfirmationEmailRequest: ResendConfirmationEmailRequest) {

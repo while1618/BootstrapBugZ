@@ -27,5 +27,9 @@ module.exports = {
       rules: {},
     },
     { files: ['src/main.ts'], rules: { 'no-console': 'off' } },
+    {
+      files: ['src/test-setup.ts'],
+      rules: { 'import/no-extraneous-dependencies': 'off' },
+    },
   ],
 };

@@ -26,5 +26,9 @@ module.exports = {
       extends: ['plugin:@nrwl/nx/angular-template', 'plugin:@angular-eslint/template/recommended'],
       rules: {},
     },
+    {
+      files: ['src/test-setup.ts'],
+      rules: { 'import/no-extraneous-dependencies': 'off' },
+    },
   ],
 };
