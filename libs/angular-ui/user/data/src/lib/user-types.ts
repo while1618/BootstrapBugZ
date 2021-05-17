@@ -5,8 +5,13 @@ export interface SimpleUser {
   email: string;
 }
 
+export enum RoleName {
+  USER,
+  ADMIN,
+}
+
 export interface Role {
-  name: string;
+  name: RoleName;
 }
 
 export interface User extends SimpleUser {

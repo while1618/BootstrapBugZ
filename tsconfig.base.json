@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@bootstrapbugz/angular-ui/user/data": ["libs/angular-ui/user/data/src/index.ts"],
-      "@bootstrapbugz/angular-ui/auth/data": ["libs/angular-ui/auth/data/src/index.ts"]
+      "@bootstrapbugz/angular-ui/auth/data": ["libs/angular-ui/auth/data/src/index.ts"],
+      "@bootstrapbugz/angular-ui/admin/data": ["libs/angular-ui/admin/data/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
