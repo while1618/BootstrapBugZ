@@ -37,6 +37,9 @@
     },
     "angular-ui-admin-data": {
       "tags": []
+    },
+    "angular-ui-user-service": {
+      "tags": []
     }
   }
 }

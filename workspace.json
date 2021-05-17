@@ -260,6 +260,33 @@
           }
         }
       }
+    },
+    "angular-ui-user-service": {
+      "projectType": "library",
+      "root": "libs/angular-ui/user/service",
+      "sourceRoot": "libs/angular-ui/user/service/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/angular-ui/user/service"
+          ],
+          "options": {
+            "jestConfig": "libs/angular-ui/user/service/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/user/service/src/**/*.ts",
+              "libs/angular-ui/user/service/src/**/*.html"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {
