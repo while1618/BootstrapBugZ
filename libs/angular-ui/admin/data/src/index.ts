@@ -1,1 +1,1 @@
-export * from './lib/admin-requests';
+export * from './lib/admin.requests';
