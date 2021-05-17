@@ -71,13 +71,8 @@
             "polyfills": "apps/angular-ui/src/polyfills.ts",
             "tsConfig": "apps/angular-ui/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "apps/angular-ui/src/favicon.ico",
-              "apps/angular-ui/src/assets"
-            ],
-            "styles": [
-              "apps/angular-ui/src/styles.scss"
-            ],
+            "assets": ["apps/angular-ui/src/favicon.ico", "apps/angular-ui/src/assets"],
+            "styles": ["apps/angular-ui/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -134,17 +129,12 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/angular-ui/src/**/*.ts",
-              "apps/angular-ui/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/angular-ui/src/**/*.ts", "apps/angular-ui/src/**/*.html"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/angular-ui"
-          ],
+          "outputs": ["coverage/apps/angular-ui"],
           "options": {
             "jestConfig": "apps/angular-ui/jest.config.js",
             "passWithNoTests": true
@@ -173,9 +163,7 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/angular-ui-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/angular-ui-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -188,9 +176,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/user/data"
-          ],
+          "outputs": ["coverage/libs/angular-ui/user/data"],
           "options": {
             "jestConfig": "libs/angular-ui/user/data/jest.config.js",
             "passWithNoTests": true
@@ -215,9 +201,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/auth/data"
-          ],
+          "outputs": ["coverage/libs/angular-ui/auth/data"],
           "options": {
             "jestConfig": "libs/angular-ui/auth/data/jest.config.js",
             "passWithNoTests": true
@@ -242,9 +226,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/admin/data"
-          ],
+          "outputs": ["coverage/libs/angular-ui/admin/data"],
           "options": {
             "jestConfig": "libs/angular-ui/admin/data/jest.config.js",
             "passWithNoTests": true
@@ -269,9 +251,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/user/service"
-          ],
+          "outputs": ["coverage/libs/angular-ui/user/service"],
           "options": {
             "jestConfig": "libs/angular-ui/user/service/jest.config.js",
             "passWithNoTests": true
@@ -296,9 +276,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/auth/service"
-          ],
+          "outputs": ["coverage/libs/angular-ui/auth/service"],
           "options": {
             "jestConfig": "libs/angular-ui/auth/service/jest.config.js",
             "passWithNoTests": true
@@ -323,9 +301,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/admin/service"
-          ],
+          "outputs": ["coverage/libs/angular-ui/admin/service"],
           "options": {
             "jestConfig": "libs/angular-ui/admin/service/jest.config.js",
             "passWithNoTests": true
