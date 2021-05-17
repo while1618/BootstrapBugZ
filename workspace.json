@@ -314,6 +314,33 @@
           }
         }
       }
+    },
+    "angular-ui-admin-service": {
+      "projectType": "library",
+      "root": "libs/angular-ui/admin/service",
+      "sourceRoot": "libs/angular-ui/admin/service/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/angular-ui/admin/service"
+          ],
+          "options": {
+            "jestConfig": "libs/angular-ui/admin/service/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/admin/service/src/**/*.ts",
+              "libs/angular-ui/admin/service/src/**/*.html"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

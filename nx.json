@@ -43,6 +43,9 @@
     },
     "angular-ui-auth-service": {
       "tags": []
+    },
+    "angular-ui-admin-service": {
+      "tags": []
     }
   }
 }
