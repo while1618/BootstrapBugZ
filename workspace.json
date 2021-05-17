@@ -179,6 +179,33 @@
           }
         }
       }
+    },
+    "angular-ui-user-types": {
+      "projectType": "library",
+      "root": "libs/angular-ui/user/types",
+      "sourceRoot": "libs/angular-ui/user/types/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/angular-ui/user/types"
+          ],
+          "options": {
+            "jestConfig": "libs/angular-ui/user/types/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/user/types/src/**/*.ts",
+              "libs/angular-ui/user/types/src/**/*.html"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

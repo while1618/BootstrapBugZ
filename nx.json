@@ -28,6 +28,9 @@
     "angular-ui-e2e": {
       "tags": [],
       "implicitDependencies": ["angular-ui"]
+    },
+    "angular-ui-user-types": {
+      "tags": []
     }
   }
 }
