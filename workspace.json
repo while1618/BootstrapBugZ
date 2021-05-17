@@ -71,13 +71,8 @@
             "polyfills": "apps/angular-ui/src/polyfills.ts",
             "tsConfig": "apps/angular-ui/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "apps/angular-ui/src/favicon.ico",
-              "apps/angular-ui/src/assets"
-            ],
-            "styles": [
-              "apps/angular-ui/src/styles.scss"
-            ],
+            "assets": ["apps/angular-ui/src/favicon.ico", "apps/angular-ui/src/assets"],
+            "styles": ["apps/angular-ui/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -134,17 +129,12 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/angular-ui/src/**/*.ts",
-              "apps/angular-ui/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/angular-ui/src/**/*.ts", "apps/angular-ui/src/**/*.html"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/angular-ui"
-          ],
+          "outputs": ["coverage/apps/angular-ui"],
           "options": {
             "jestConfig": "apps/angular-ui/jest.config.js",
             "passWithNoTests": true
@@ -173,26 +163,22 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/angular-ui-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/angular-ui-e2e/**/*.{js,ts}"]
           }
         }
       }
     },
-    "angular-ui-user-types": {
+    "angular-ui-user-data": {
       "projectType": "library",
-      "root": "libs/angular-ui/user/types",
-      "sourceRoot": "libs/angular-ui/user/types/src",
+      "root": "libs/angular-ui/user/data",
+      "sourceRoot": "libs/angular-ui/user/data/src",
       "prefix": "bootstrapbugz",
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/user/types"
-          ],
+          "outputs": ["coverage/libs/angular-ui/user/data"],
           "options": {
-            "jestConfig": "libs/angular-ui/user/types/jest.config.js",
+            "jestConfig": "libs/angular-ui/user/data/jest.config.js",
             "passWithNoTests": true
           }
         },
@@ -200,8 +186,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "libs/angular-ui/user/types/src/**/*.ts",
-              "libs/angular-ui/user/types/src/**/*.html"
+              "libs/angular-ui/user/data/src/**/*.ts",
+              "libs/angular-ui/user/data/src/**/*.html"
             ]
           }
         }

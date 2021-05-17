@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@bootstrapbugz/angular-ui/user/types": ["libs/angular-ui/user/types/src/index.ts"]
+      "@bootstrapbugz/angular-ui/user/data": ["libs/angular-ui/user/data/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

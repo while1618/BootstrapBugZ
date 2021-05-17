@@ -29,7 +29,7 @@
       "tags": [],
       "implicitDependencies": ["angular-ui"]
     },
-    "angular-ui-user-types": {
+    "angular-ui-user-data": {
       "tags": []
     }
   }
