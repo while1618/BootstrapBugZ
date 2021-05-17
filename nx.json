@@ -31,6 +31,9 @@
     },
     "angular-ui-user-data": {
       "tags": []
+    },
+    "angular-ui-auth-data": {
+      "tags": []
     }
   }
 }
