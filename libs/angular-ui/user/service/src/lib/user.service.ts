@@ -23,7 +23,7 @@ export class UserService {
   }
 
   changePassword(changePasswordRequest: ChangePasswordRequest) {
-    return this.http.put(`${this.API_URL}/users/change-password`, changePasswordRequest);
+    return this.http.put<void>(`${this.API_URL}/users/change-password`, changePasswordRequest);
   }
 
   updateUser(updateUser: UpdateUserRequest) {
