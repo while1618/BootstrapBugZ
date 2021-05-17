@@ -9,7 +9,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.ts'],
+      files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
       parserOptions: {
         project: ['tsconfig.base.json'],
         createDefaultProgram: true,
@@ -31,7 +31,7 @@ module.exports = {
       },
     },
     {
-      files: ['*.component.html'],
+      files: ['*.html'],
       extends: ['plugin:@angular-eslint/template/recommended'],
     },
     {
