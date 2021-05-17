@@ -7,6 +7,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
   },
+  plugins: ['@nrwl/nx'],
   overrides: [
     {
       files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
@@ -14,12 +15,7 @@ module.exports = {
         project: ['tsconfig.base.json'],
         createDefaultProgram: true,
       },
-      extends: [
-        'plugin:@angular-eslint/recommended',
-        'airbnb-typescript/base',
-        'prettier',
-        'plugin:prettier/recommended',
-      ],
+      extends: ['airbnb-typescript/base', 'prettier', 'plugin:prettier/recommended'],
       rules: {
         'import/prefer-default-export': 'off',
         'class-methods-use-this': 'off',
@@ -28,15 +24,23 @@ module.exports = {
         'prefer-destructuring': ['error', { object: true, array: false }],
         'no-underscore-dangle': ['error', { allowAfterThis: true }],
         '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
+        '@nrwl/nx/enforce-module-boundaries': [
+          'error',
+          {
+            enforceBuildableLibDependency: true,
+            allow: [],
+            depConstraints: [{ sourceTag: '*', onlyDependOnLibsWithTags: ['*'] }],
+          },
+        ],
       },
     },
     {
-      files: ['*.html'],
-      extends: ['plugin:@angular-eslint/template/recommended'],
+      files: ['*.ts', '*.tsx'],
+      extends: ['plugin:@nrwl/nx/typescript'],
     },
     {
-      files: ['*.component.ts'],
-      extends: ['plugin:@angular-eslint/template/process-inline-templates'],
+      files: ['*.js', '*.jsx'],
+      extends: ['plugin:@nrwl/nx/javascript'],
     },
   ],
 };

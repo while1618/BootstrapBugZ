@@ -9,7 +9,7 @@ module.exports = {
         'plugin:@nrwl/nx/angular',
         'plugin:@angular-eslint/template/process-inline-templates',
       ],
-      parserOptions: { project: ['libs/angular-ui/admin/data/tsconfig.*?.json'] },
+      parserOptions: { project: ['libs/angular-ui/user/service/tsconfig.*?.json'] },
       rules: {
         '@angular-eslint/directive-selector': [
           'error',

@@ -8,7 +8,7 @@
       "dependencies": "*",
       "devDependencies": "*"
     },
-    ".eslintrc.json": "*"
+    ".eslintrc.js": "*"
   },
   "tasksRunnerOptions": {
     "default": {
