@@ -15,18 +15,18 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   findAll() {
-    return this.http.get<SimpleUser[]>('/users');
+    return this.http.get<SimpleUser[]>(`${this.API_URL}/users`);
   }
 
   findByUsername(username: string) {
-    return this.http.get<SimpleUser>(`/users/${username}`);
+    return this.http.get<SimpleUser>(`${this.API_URL}/users/${username}`);
   }
 
   changePassword(changePasswordRequest: ChangePasswordRequest) {
-    return this.http.put('/users/change-password', changePasswordRequest);
+    return this.http.put(`${this.API_URL}/users/change-password`, changePasswordRequest);
   }
 
   updateUser(updateUser: UpdateUserRequest) {
-    return this.http.put<SimpleUser>('/users/update', updateUser);
+    return this.http.put<SimpleUser>(`${this.API_URL}/users/update`, updateUser);
   }
 }
