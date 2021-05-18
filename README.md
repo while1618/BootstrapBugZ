@@ -39,9 +39,9 @@ Run `nx g @nrwl/angular:app my-app` to generate an application.
 
 When using Nx, you can create multiple applications and libraries in the same workspace.
 
-## Generate a library
+## Generate a custom angular library
 
-Run `nx g @nrwl/angular:lib my-lib` to generate a library.
+Run `nx workspace-generator angular-lib my-lib` to generate a library.
 
 > You can also use any of the plugins above to generate libraries as well.
 
