@@ -10,16 +10,6 @@ module.exports = {
         'plugin:@angular-eslint/template/process-inline-templates',
       ],
       parserOptions: { project: ['libs/angular-ui/admin/service/tsconfig.*?.json'] },
-      rules: {
-        '@angular-eslint/directive-selector': [
-          'error',
-          { type: 'attribute', prefix: 'bootstrapbugz', style: 'camelCase' },
-        ],
-        '@angular-eslint/component-selector': [
-          'error',
-          { type: 'element', prefix: 'bootstrapbugz', style: 'kebab-case' },
-        ],
-      },
     },
     {
       files: ['*.html'],
