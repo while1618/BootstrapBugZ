@@ -8,19 +8,19 @@ export const libraryGenerator = wrapAngularDevkitSchematic('@nrwl/angular', 'app
 export default async function (tree: Tree, options: any) {
   await libraryGenerator(tree, options);
   await formatFiles(tree);
-  deleteRootEslintFile(tree);
-  replaceEslintFileInApp(tree, options);
-  replaceEslintFileInE2E(tree, options);
+  await deleteRootEslintFile(tree);
+  await replaceEslintFileInApp(tree, options);
+  await replaceEslintFileInE2E(tree, options);
   return () => {
     installPackagesTask(tree);
   };
 }
 
-function deleteRootEslintFile(tree: Tree) {
+async function deleteRootEslintFile(tree: Tree) {
   tree.delete('.eslintrc.json');
 }
 
-function replaceEslintFileInApp(tree: Tree, options: any) {
+async function replaceEslintFileInApp(tree: Tree, options: any) {
   const appPath = path.join('apps', stringUtils.dasherize(options.name));
   const filesPath = path.join(__dirname, './files/app');
   const substitutions = {
@@ -31,7 +31,7 @@ function replaceEslintFileInApp(tree: Tree, options: any) {
   generateFiles(tree, filesPath, appPath, substitutions);
 }
 
-function replaceEslintFileInE2E(tree: Tree, options: any) {
+async function replaceEslintFileInE2E(tree: Tree, options: any) {
   const e2ePath = path.join('apps', `${stringUtils.dasherize(options.name)}-e2e`);
   const filesPath = path.join(__dirname, './files/e2e');
   const substitutions = {

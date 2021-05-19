@@ -8,18 +8,18 @@ export const libraryGenerator = wrapAngularDevkitSchematic('@nrwl/angular', 'lib
 export default async function (tree: Tree, options: any) {
   await libraryGenerator(tree, options);
   await formatFiles(tree);
-  deleteRootEslintFile(tree);
-  replaceEslintFileInLib(tree, options);
+  await deleteRootEslintFile(tree);
+  await replaceEslintFileInLib(tree, options);
   return () => {
     installPackagesTask(tree);
   };
 }
 
-function deleteRootEslintFile(tree: Tree) {
+async function deleteRootEslintFile(tree: Tree) {
   tree.delete('.eslintrc.json');
 }
 
-function replaceEslintFileInLib(tree: Tree, options: any) {
+async function replaceEslintFileInLib(tree: Tree, options: any) {
   const libPath = path.join('libs', stringUtils.dasherize(options.name));
   const filesPath = path.join(__dirname, './files');
   const substitutions = {
