@@ -11,10 +11,10 @@ export interface SchematicOptions {
 
 export default async function (tree: Tree, options: SchematicOptions) {
   await libraryGenerator(tree, options);
-  await formatFiles(tree);
   await deleteRootEslintFile(tree);
   await replaceEslintFileInApp(tree, options);
   await replaceEslintFileInE2E(tree, options);
+  await formatFiles(tree);
   return () => {
     installPackagesTask(tree);
   };
