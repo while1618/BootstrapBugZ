@@ -7,11 +7,11 @@
     <version>2.4.5</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
-  <groupId>com.app</groupId>
-  <artifactId>BootstrapBugZ</artifactId>
+  <groupId>org.bootstrapbugz</groupId>
+  <artifactId>api</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>BootstrapBugZ</name>
-  <description>BootstrapBugZ</description>
+  <name>api</name>
+  <description>api for BootstrapBugZ app</description>
 
   <properties>
     <java.version>15</java.version>
