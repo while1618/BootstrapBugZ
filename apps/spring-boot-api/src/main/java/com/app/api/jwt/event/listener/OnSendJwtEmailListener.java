@@ -18,6 +18,9 @@ public class OnSendJwtEmailListener implements ApplicationListener<OnSendJwtEmai
   @Value("${ui.app.url}")
   private String uiAppUrl;
 
+  @Value("${app.name}")
+  private String appName;
+
   private final EmailService emailService;
 
   public OnSendJwtEmailListener(EmailService emailService) {
@@ -38,7 +41,10 @@ public class OnSendJwtEmailListener implements ApplicationListener<OnSendJwtEmai
       File template = new ClassPathResource("templates/email/" + path + ".html").getFile();
       String body = Files.asCharSource(template, StandardCharsets.UTF_8).read();
       String link = uiAppUrl + "/" + path + "?token=" + event.getToken();
-      body = body.replace("$name", event.getUser().getUsername()).replace("$link", link);
+      body =
+          body.replace("$name", event.getUser().getUsername())
+              .replace("$link", link)
+              .replace("$appName", appName);
       emailService.sendHtmlEmail(event.getUser().getEmail(), subject, body);
     } catch (IOException e) {
       log.error(e.getMessage());
