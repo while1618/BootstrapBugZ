@@ -8,10 +8,10 @@
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.app</groupId>
-  <artifactId>BootstrapBug-Z</artifactId>
+  <artifactId>BootstrapBugZ</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>BootstrapBug-Z</name>
-  <description>BootstrapBug-Z</description>
+  <name>BootstrapBugZ</name>
+  <description>BootstrapBugZ</description>
 
   <properties>
     <java.version>15</java.version>
