@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['<%= relativePathFromLibToRoot %>.eslintrc.js'],
+  extends: ['<%= relativePathFromLibToRoot %>/.eslintrc.js'],
   ignorePatterns: ['!**/*'],
   overrides: [
     {
