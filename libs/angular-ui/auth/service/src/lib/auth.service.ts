@@ -6,8 +6,8 @@ import {
   ResendConfirmationEmailRequest,
   ResetPasswordRequest,
   SignUpRequest,
-} from '@bootstrapbugz/angular-ui/auth/data';
-import { SimpleUser } from '@bootstrapbugz/angular-ui/user/data';
+  SimpleUser,
+} from '@bootstrapbugz/shared';
 
 @Injectable({
   providedIn: 'root',
