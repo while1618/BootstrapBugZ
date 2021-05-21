@@ -8,5 +8,6 @@ module.exports = {
     '<rootDir>/libs/angular-ui/auth/data',
     '<rootDir>/libs/angular-ui/admin/data',
     '<rootDir>/libs/shared',
+    '<rootDir>/libs/angular-ui/shared',
   ],
 };

@@ -49,6 +49,9 @@
     },
     "shared": {
       "tags": []
+    },
+    "angular-ui-shared": {
+      "tags": []
     }
   }
 }

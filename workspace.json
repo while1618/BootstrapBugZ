@@ -338,6 +338,31 @@
           }
         }
       }
+    },
+    "angular-ui-shared": {
+      "projectType": "library",
+      "root": "libs/angular-ui/shared",
+      "sourceRoot": "libs/angular-ui/shared/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/angular-ui/shared"],
+          "options": {
+            "jestConfig": "libs/angular-ui/shared/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/shared/src/**/*.ts",
+              "libs/angular-ui/shared/src/**/*.html"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {
