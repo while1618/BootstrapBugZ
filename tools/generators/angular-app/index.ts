@@ -1,4 +1,4 @@
-import { Tree, formatFiles, installPackagesTask, generateFiles } from '@nrwl/devkit';
+import { formatFiles, generateFiles, installPackagesTask, Tree } from '@nrwl/devkit';
 import { wrapAngularDevkitSchematic } from '@nrwl/tao/src/commands/ngcli-adapter';
 import { stringUtils } from '@nrwl/workspace';
 import * as path from 'path';

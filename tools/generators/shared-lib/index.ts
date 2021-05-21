@@ -1,5 +1,5 @@
 import { formatFiles, generateFiles, installPackagesTask, Tree } from '@nrwl/devkit';
-import { stringUtils, libraryGenerator } from '@nrwl/workspace';
+import { libraryGenerator, stringUtils } from '@nrwl/workspace';
 import * as path from 'path';
 
 export interface SchematicOptions {
