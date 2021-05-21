@@ -213,6 +213,81 @@
           }
         }
       }
+    },
+    "angular-ui-admin": {
+      "projectType": "library",
+      "root": "libs/angular-ui/admin",
+      "sourceRoot": "libs/angular-ui/admin/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/angular-ui/admin"],
+          "options": {
+            "jestConfig": "libs/angular-ui/admin/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/admin/src/**/*.ts",
+              "libs/angular-ui/admin/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "angular-ui-auth": {
+      "projectType": "library",
+      "root": "libs/angular-ui/auth",
+      "sourceRoot": "libs/angular-ui/auth/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/angular-ui/auth"],
+          "options": {
+            "jestConfig": "libs/angular-ui/auth/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/auth/src/**/*.ts",
+              "libs/angular-ui/auth/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "angular-ui-user": {
+      "projectType": "library",
+      "root": "libs/angular-ui/user",
+      "sourceRoot": "libs/angular-ui/user/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/angular-ui/user"],
+          "options": {
+            "jestConfig": "libs/angular-ui/user/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/user/src/**/*.ts",
+              "libs/angular-ui/user/src/**/*.html"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {

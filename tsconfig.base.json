@@ -16,7 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "@bootstrapbugz/shared": ["libs/shared/src/index.ts"],
-      "@bootstrapbugz/angular-ui/shared": ["libs/angular-ui/shared/src/index.ts"]
+      "@bootstrapbugz/angular-ui/shared": ["libs/angular-ui/shared/src/index.ts"],
+      "@bootstrapbugz/angular-ui/admin": ["libs/angular-ui/admin/src/index.ts"],
+      "@bootstrapbugz/angular-ui/auth": ["libs/angular-ui/auth/src/index.ts"],
+      "@bootstrapbugz/angular-ui/user": ["libs/angular-ui/user/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
