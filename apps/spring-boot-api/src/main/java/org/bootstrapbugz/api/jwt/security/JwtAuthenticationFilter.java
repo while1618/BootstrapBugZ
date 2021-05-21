@@ -1,5 +1,14 @@
 package org.bootstrapbugz.api.jwt.security;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.jwt.util.JwtPurpose;
 import org.bootstrapbugz.api.jwt.util.JwtUtilities;
@@ -7,12 +16,6 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.user.security.UserPrincipal;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.util.ArrayList;
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;

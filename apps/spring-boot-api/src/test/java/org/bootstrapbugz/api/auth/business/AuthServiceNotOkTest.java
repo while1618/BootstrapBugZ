@@ -3,6 +3,8 @@ package org.bootstrapbugz.api.auth.business;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+import java.util.Set;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
@@ -16,8 +18,6 @@ import org.bootstrapbugz.api.user.model.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

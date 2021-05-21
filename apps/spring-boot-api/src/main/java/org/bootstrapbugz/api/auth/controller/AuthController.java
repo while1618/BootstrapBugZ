@@ -1,5 +1,7 @@
 package org.bootstrapbugz.api.auth.controller;
 
+import javax.validation.Valid;
+
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
@@ -7,7 +9,6 @@ import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.dto.SimpleUserDto;
-import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

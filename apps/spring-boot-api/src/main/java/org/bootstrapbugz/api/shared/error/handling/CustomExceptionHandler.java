@@ -1,15 +1,18 @@
 package org.bootstrapbugz.api.shared.error.handling;
 
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
+
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
-import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import java.util.Objects;
-import javax.annotation.Nonnull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

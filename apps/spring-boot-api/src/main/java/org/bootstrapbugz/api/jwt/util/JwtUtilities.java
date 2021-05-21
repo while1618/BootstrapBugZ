@@ -1,12 +1,14 @@
 package org.bootstrapbugz.api.jwt.util;
 
-import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.security.UserPrincipal;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+
+import org.bootstrapbugz.api.user.model.User;
+import org.bootstrapbugz.api.user.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

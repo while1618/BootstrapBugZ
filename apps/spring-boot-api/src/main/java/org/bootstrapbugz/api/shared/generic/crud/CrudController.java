@@ -1,7 +1,8 @@
 package org.bootstrapbugz.api.shared.generic.crud;
 
-import org.bootstrapbugz.api.shared.generic.crud.request.DeleteRequest;
 import javax.validation.Valid;
+
+import org.bootstrapbugz.api.shared.generic.crud.request.DeleteRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

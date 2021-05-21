@@ -8,12 +8,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;

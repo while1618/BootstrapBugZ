@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.config;
 
 import java.util.Objects;
 import java.util.Properties;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;

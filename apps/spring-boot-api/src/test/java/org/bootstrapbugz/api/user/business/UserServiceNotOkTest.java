@@ -3,6 +3,9 @@ package org.bootstrapbugz.api.user.business;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+import java.util.Set;
+
 import org.bootstrapbugz.api.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
@@ -14,8 +17,6 @@ import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
 import org.bootstrapbugz.api.user.service.impl.UserServiceImpl;
-import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

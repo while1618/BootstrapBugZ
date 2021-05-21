@@ -9,6 +9,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.impl.AdminServiceImpl;
@@ -19,12 +26,6 @@ import org.bootstrapbugz.api.user.model.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

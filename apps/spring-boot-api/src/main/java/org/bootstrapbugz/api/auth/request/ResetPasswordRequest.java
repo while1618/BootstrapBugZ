@@ -1,8 +1,10 @@
 package org.bootstrapbugz.api.auth.request;
 
+import javax.validation.constraints.Pattern;
+
 import org.bootstrapbugz.api.shared.constants.Regex;
 import org.bootstrapbugz.api.shared.validator.FieldMatch;
-import javax.validation.constraints.Pattern;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,9 @@
 package org.bootstrapbugz.api.shared.error.exception;
 
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import java.io.Serial;
+
+import org.bootstrapbugz.api.shared.error.ErrorDomain;
+
 import lombok.Getter;
 
 @Getter

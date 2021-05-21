@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.user.dto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

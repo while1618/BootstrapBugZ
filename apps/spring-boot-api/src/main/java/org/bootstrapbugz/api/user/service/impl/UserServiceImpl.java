@@ -1,5 +1,7 @@
 package org.bootstrapbugz.api.user.service.impl;
 
+import java.util.List;
+
 import org.bootstrapbugz.api.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.jwt.util.JwtPurpose;
 import org.bootstrapbugz.api.jwt.util.JwtUtilities;
@@ -14,7 +16,6 @@ import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
 import org.bootstrapbugz.api.user.service.UserService;
 import org.bootstrapbugz.api.user.util.UserUtilities;
-import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
@@ -20,7 +21,6 @@ import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

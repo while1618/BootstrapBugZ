@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.user.model;
 
-import com.google.common.base.Objects;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Clock;
@@ -8,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +18,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.google.common.base.Objects;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

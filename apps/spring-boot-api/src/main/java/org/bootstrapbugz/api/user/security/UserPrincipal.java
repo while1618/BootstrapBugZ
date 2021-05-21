@@ -1,18 +1,21 @@
 package org.bootstrapbugz.api.user.security;
 
-import org.bootstrapbugz.api.user.model.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.bootstrapbugz.api.user.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor

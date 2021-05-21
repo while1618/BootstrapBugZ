@@ -1,13 +1,16 @@
 package org.bootstrapbugz.api.shared.email.service.impl;
 
-import org.bootstrapbugz.api.shared.email.service.EmailService;
 import java.nio.charset.StandardCharsets;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import lombok.extern.slf4j.Slf4j;
+
+import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service

@@ -1,16 +1,19 @@
 package org.bootstrapbugz.api.jwt.event.listener;
 
-import org.bootstrapbugz.api.jwt.event.OnSendJwtEmail;
-import org.bootstrapbugz.api.shared.email.service.EmailService;
-import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import lombok.extern.slf4j.Slf4j;
+
+import com.google.common.io.Files;
+
+import org.bootstrapbugz.api.jwt.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

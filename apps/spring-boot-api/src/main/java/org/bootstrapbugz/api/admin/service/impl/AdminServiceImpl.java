@@ -1,5 +1,8 @@
 package org.bootstrapbugz.api.admin.service.impl;
 
+import java.util.HashSet;
+import java.util.List;
+
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
@@ -11,8 +14,6 @@ import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import java.util.HashSet;
-import java.util.List;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;

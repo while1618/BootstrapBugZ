@@ -1,10 +1,12 @@
 package org.bootstrapbugz.api.jwt.event;
 
+import java.io.Serial;
+
 import org.bootstrapbugz.api.jwt.util.JwtPurpose;
 import org.bootstrapbugz.api.user.model.User;
-import java.io.Serial;
-import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
+
+import lombok.Getter;
 
 @Getter
 public class OnSendJwtEmail extends ApplicationEvent {

@@ -9,14 +9,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Set;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.model.RoleName;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;

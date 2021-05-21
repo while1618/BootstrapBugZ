@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.admin.request;
 
-import org.bootstrapbugz.api.shared.constants.Regex;
 import java.util.Set;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -9,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.bootstrapbugz.api.shared.constants.Regex;
 
 @Getter
 @Setter

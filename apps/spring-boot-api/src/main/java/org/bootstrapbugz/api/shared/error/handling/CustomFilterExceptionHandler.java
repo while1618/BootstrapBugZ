@@ -1,12 +1,15 @@
 package org.bootstrapbugz.api.shared.error.handling;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

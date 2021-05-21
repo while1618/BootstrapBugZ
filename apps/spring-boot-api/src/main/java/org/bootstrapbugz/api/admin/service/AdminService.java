@@ -1,9 +1,10 @@
 package org.bootstrapbugz.api.admin.service;
 
+import java.util.List;
+
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.user.dto.UserDto;
-import java.util.List;
 
 public interface AdminService {
   List<UserDto> findAllUsers();
