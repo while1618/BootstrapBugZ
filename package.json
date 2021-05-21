@@ -24,7 +24,10 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "postinstall": "ngcc --properties es2015 browser module main"
+    "postinstall": "ngcc --properties es2015 browser module main",
+    "g:angular-app": "nx workspace-generator angular-app",
+    "g:angular-lib": "nx workspace-generator angular-lib",
+    "g:shared-lib": "nx workspace-generator shared-lib"
   },
   "private": true,
   "dependencies": {
