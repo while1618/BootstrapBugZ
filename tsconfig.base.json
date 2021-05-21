@@ -15,9 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@bootstrapbugz/angular-ui/user/service": ["libs/angular-ui/user/service/src/index.ts"],
-      "@bootstrapbugz/angular-ui/auth/service": ["libs/angular-ui/auth/service/src/index.ts"],
-      "@bootstrapbugz/angular-ui/admin/service": ["libs/angular-ui/admin/service/src/index.ts"],
       "@bootstrapbugz/shared": ["libs/shared/src/index.ts"],
       "@bootstrapbugz/angular-ui/shared": ["libs/angular-ui/shared/src/index.ts"]
     }

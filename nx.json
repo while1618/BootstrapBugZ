@@ -29,15 +29,6 @@
       "tags": [],
       "implicitDependencies": ["angular-ui"]
     },
-    "angular-ui-user-service": {
-      "tags": []
-    },
-    "angular-ui-auth-service": {
-      "tags": []
-    },
-    "angular-ui-admin-service": {
-      "tags": []
-    },
     "shared": {
       "tags": []
     },
