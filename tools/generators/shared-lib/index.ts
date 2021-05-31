@@ -6,21 +6,11 @@ export interface SchematicOptions {
   name: string;
 }
 
-export default async function (tree: Tree, options: SchematicOptions) {
-  await libraryGenerator(tree, options);
-  await deleteRootEslintFile(tree);
-  await replaceEslintFileInLib(tree, options);
-  await formatFiles(tree);
-  return () => {
-    installPackagesTask(tree);
-  };
-}
-
-async function deleteRootEslintFile(tree: Tree) {
+const deleteRootEslintFile = async (tree: Tree) => {
   tree.delete('.eslintrc.json');
-}
+};
 
-async function replaceEslintFileInLib(tree: Tree, options: SchematicOptions) {
+const replaceEslintFileInLib = async (tree: Tree, options: SchematicOptions) => {
   const libPath = path.join('libs', stringUtils.dasherize(options.name));
   const filesPath = path.join(__dirname, './files');
   const substitutions = {
@@ -29,4 +19,14 @@ async function replaceEslintFileInLib(tree: Tree, options: SchematicOptions) {
   };
   tree.delete(`${libPath}/.eslintrc.json`);
   generateFiles(tree, filesPath, libPath, substitutions);
-}
+};
+
+export default async (tree: Tree, options: SchematicOptions) => {
+  await libraryGenerator(tree, options);
+  await deleteRootEslintFile(tree);
+  await replaceEslintFileInLib(tree, options);
+  await formatFiles(tree);
+  return () => {
+    installPackagesTask(tree);
+  };
+};
