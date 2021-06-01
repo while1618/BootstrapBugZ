@@ -4,7 +4,7 @@ import {
   ResendConfirmationEmailRequest,
   ResetPasswordRequest,
   SignUpRequest,
-  User,
+  SimpleUser,
 } from '@bootstrapbugz/shared';
 import { createAction, props } from '@ngrx/store';
 
@@ -38,7 +38,7 @@ export const loginFailure = createAction(LOGIN_FAILURE, props<{ error: Error }>(
 
 export const signUp = createAction(SIGN_UP, props<{ signUpRequest: SignUpRequest }>());
 
-export const signUpSuccess = createAction(SIGN_UP_SUCCESS, props<{ user: User }>());
+export const signUpSuccess = createAction(SIGN_UP_SUCCESS, props<{ user: SimpleUser }>());
 
 export const signUpFailure = createAction(SIGN_UP_FAILURE, props<{ error: Error }>());
 

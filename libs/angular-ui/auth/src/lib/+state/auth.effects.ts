@@ -14,7 +14,9 @@ export class AuthEffects {
       ofType(AuthActions.login),
       switchMap((data) =>
         this.authService.login(data.loginRequest).pipe(
-          map((value) => AuthActions.loginSuccess({ token: 'dsadsa' })),
+          map((response) =>
+            AuthActions.loginSuccess({ token: response.headers.get('Authorization') })
+          ),
           catchError((error) => of(AuthActions.loginFailure({ error })))
         )
       )

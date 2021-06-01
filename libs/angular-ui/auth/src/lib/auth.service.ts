@@ -18,7 +18,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(loginRequest: LoginRequest) {
-    return this.http.post<void>(`${this.API_URL}/login`, loginRequest);
+    return this.http.post<void>(`${this.API_URL}/login`, loginRequest, { observe: 'response' });
   }
 
   logout() {
@@ -31,7 +31,7 @@ export class AuthService {
 
   confirmRegistration(token: string) {
     const params = new HttpParams().set('token', token);
-    return this.http.get(`${this.API_URL}/confirm-registration`, { params });
+    return this.http.get<void>(`${this.API_URL}/confirm-registration`, { params });
   }
 
   resendConfirmationEmail(resendConfirmationEmailRequest: ResendConfirmationEmailRequest) {
