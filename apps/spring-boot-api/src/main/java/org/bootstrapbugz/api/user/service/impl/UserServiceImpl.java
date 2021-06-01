@@ -2,9 +2,9 @@ package org.bootstrapbugz.api.user.service.impl;
 
 import java.util.List;
 
-import org.bootstrapbugz.api.jwt.event.OnSendJwtEmail;
-import org.bootstrapbugz.api.jwt.util.JwtPurpose;
-import org.bootstrapbugz.api.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.jwt.util.JwtPurpose;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;

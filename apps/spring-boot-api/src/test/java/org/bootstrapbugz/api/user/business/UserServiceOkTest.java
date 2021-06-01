@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.bootstrapbugz.api.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.user.dto.SimpleUserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;

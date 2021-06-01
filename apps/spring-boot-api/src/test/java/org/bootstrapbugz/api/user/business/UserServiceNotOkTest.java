@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.Set;
 
-import org.bootstrapbugz.api.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;

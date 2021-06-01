@@ -1,8 +1,8 @@
-package org.bootstrapbugz.api.jwt.event;
+package org.bootstrapbugz.api.auth.jwt.event;
 
 import java.io.Serial;
 
-import org.bootstrapbugz.api.jwt.util.JwtPurpose;
+import org.bootstrapbugz.api.auth.jwt.util.JwtPurpose;
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.context.ApplicationEvent;
 

@@ -9,7 +9,7 @@ import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
-import org.bootstrapbugz.api.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;

@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.jwt.util;
+package org.bootstrapbugz.api.auth.jwt.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

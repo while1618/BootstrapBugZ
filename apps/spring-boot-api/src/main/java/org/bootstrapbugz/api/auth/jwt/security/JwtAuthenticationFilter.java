@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.jwt.security;
+package org.bootstrapbugz.api.auth.jwt.security;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.bootstrapbugz.api.auth.request.LoginRequest;
-import org.bootstrapbugz.api.jwt.util.JwtPurpose;
-import org.bootstrapbugz.api.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.jwt.util.JwtPurpose;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;

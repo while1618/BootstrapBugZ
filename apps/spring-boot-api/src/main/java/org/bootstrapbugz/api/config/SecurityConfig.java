@@ -1,8 +1,8 @@
 package org.bootstrapbugz.api.config;
 
-import org.bootstrapbugz.api.jwt.security.JwtAuthenticationFilter;
-import org.bootstrapbugz.api.jwt.security.JwtAuthorizationFilter;
-import org.bootstrapbugz.api.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.jwt.security.JwtAuthenticationFilter;
+import org.bootstrapbugz.api.auth.jwt.security.JwtAuthorizationFilter;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.jwt.event.listener;
+package org.bootstrapbugz.api.auth.jwt.event.listener;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 
 import com.google.common.io.Files;
 
-import org.bootstrapbugz.api.jwt.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;

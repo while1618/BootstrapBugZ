@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.jwt.security;
+package org.bootstrapbugz.api.auth.jwt.security;
 
 import java.io.IOException;
 
@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
-import org.bootstrapbugz.api.jwt.util.JwtPurpose;
-import org.bootstrapbugz.api.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.jwt.util.JwtPurpose;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.user.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Qualifier;
