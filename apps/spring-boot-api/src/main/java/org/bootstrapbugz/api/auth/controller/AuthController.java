@@ -1,8 +1,9 @@
 package org.bootstrapbugz.api.auth.controller;
 
 import javax.validation.Valid;
-
+import org.bootstrapbugz.api.auth.jwt.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
+import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
@@ -26,6 +27,12 @@ public class AuthController {
 
   public AuthController(AuthService authService) {
     this.authService = authService;
+  }
+
+  @PostMapping("/refresh-token")
+  public ResponseEntity<RefreshTokenDto> refreshToken(
+      @Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+    return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
   }
 
   @PostMapping("/sign-up")

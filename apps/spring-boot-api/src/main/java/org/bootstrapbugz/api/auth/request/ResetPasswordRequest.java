@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.auth.request;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.bootstrapbugz.api.shared.constants.Regex;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
 public class ResetPasswordRequest {
+  @NotBlank(message = "{token.invalid}")
   private String token;
 
   @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")

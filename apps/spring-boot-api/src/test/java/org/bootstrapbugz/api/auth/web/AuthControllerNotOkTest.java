@@ -187,7 +187,7 @@ class AuthControllerNotOkTest {
   }
 
   @Test
-  void resetPassword_tokenNotProvided_forbidden() throws Exception {
+  void resetPassword_tokenNotProvided_badRequest() throws Exception {
     ResetPasswordRequest resetPasswordRequest =
         new ResetPasswordRequest("", "qwerty123", "qwerty123");
     mockMvc
@@ -195,7 +195,7 @@ class AuthControllerNotOkTest {
             put(Path.AUTH + "/reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
-        .andExpect(status().isForbidden());
+        .andExpect(status().isBadRequest());
   }
 
   @Test

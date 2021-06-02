@@ -1,6 +1,8 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
+import org.bootstrapbugz.api.auth.jwt.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
+import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
@@ -53,6 +55,11 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
+  public RefreshTokenDto refreshToken(RefreshTokenRequest refreshTokenRequest) {
+    return null;
+  }
+
+  @Override
   public SimpleUserDto signUp(SignUpRequest signUpRequest) {
     User user = createUser(signUpRequest);
     String token = jwtUtilities.createToken(user, JwtPurpose.CONFIRM_REGISTRATION);
@@ -83,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
                 () ->
                     new ForbiddenException(
                         messageSource.getMessage(
-                            "authToken.invalid", null, LocaleContextHolder.getLocale()),
+                          "token.invalid", null, LocaleContextHolder.getLocale()),
                         ErrorDomain.AUTH));
     jwtUtilities.checkToken(token, user, JwtPurpose.CONFIRM_REGISTRATION);
     activateUser(user);
@@ -139,7 +146,7 @@ public class AuthServiceImpl implements AuthService {
                 () ->
                     new ForbiddenException(
                         messageSource.getMessage(
-                            "authToken.invalid", null, LocaleContextHolder.getLocale()),
+                          "token.invalid", null, LocaleContextHolder.getLocale()),
                         ErrorDomain.AUTH));
     jwtUtilities.checkToken(resetPasswordRequest.getToken(), user, JwtPurpose.FORGOT_PASSWORD);
     changePassword(user, resetPasswordRequest.getPassword());
