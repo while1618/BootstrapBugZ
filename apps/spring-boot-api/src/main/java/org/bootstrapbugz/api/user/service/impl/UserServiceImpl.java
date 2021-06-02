@@ -2,9 +2,9 @@ package org.bootstrapbugz.api.user.service.impl;
 
 import java.util.List;
 
-import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
-import org.bootstrapbugz.api.auth.jwt.util.JwtPurpose;
-import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.util.JwtPurpose;
+import org.bootstrapbugz.api.auth.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
@@ -15,7 +15,7 @@ import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
 import org.bootstrapbugz.api.user.service.UserService;
-import org.bootstrapbugz.api.user.util.UserUtilities;
+import org.bootstrapbugz.api.auth.util.AuthUtilities;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public SimpleUserDto update(UpdateUserRequest updateUserRequest) {
-    User user = UserUtilities.findLoggedUser(userRepository, messageSource);
+    User user = AuthUtilities.findLoggedUser(userRepository, messageSource);
     user.setFirstName(updateUserRequest.getFirstName());
     user.setLastName(updateUserRequest.getLastName());
     tryToSetUsername(user, updateUserRequest.getUsername());
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void changePassword(ChangePasswordRequest changePasswordRequest) {
-    User user = UserUtilities.findLoggedUser(userRepository, messageSource);
+    User user = AuthUtilities.findLoggedUser(userRepository, messageSource);
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
       throw new BadRequestException(
           messageSource.getMessage("oldPassword.invalid", null, LocaleContextHolder.getLocale()),

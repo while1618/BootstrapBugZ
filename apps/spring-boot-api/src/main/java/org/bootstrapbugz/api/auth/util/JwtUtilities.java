@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.jwt.util;
+package org.bootstrapbugz.api.auth.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +8,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.security.UserPrincipal;
+import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

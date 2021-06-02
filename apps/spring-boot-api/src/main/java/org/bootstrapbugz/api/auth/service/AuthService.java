@@ -1,6 +1,6 @@
 package org.bootstrapbugz.api.auth.service;
 
-import org.bootstrapbugz.api.auth.jwt.dto.RefreshTokenDto;
+import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;

@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
-import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.model.RoleName;
 import org.junit.jupiter.api.BeforeAll;

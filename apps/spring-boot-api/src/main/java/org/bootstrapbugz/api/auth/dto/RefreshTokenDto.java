@@ -1,10 +1,10 @@
-package org.bootstrapbugz.api.auth.jwt.dto;
+package org.bootstrapbugz.api.auth.dto;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.util.JwtUtilities;
 
 @Getter
 @Setter

@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.jwt.util;
+package org.bootstrapbugz.api.auth.util;
 
 public enum JwtPurpose {
   ACCESSING_RESOURCES,

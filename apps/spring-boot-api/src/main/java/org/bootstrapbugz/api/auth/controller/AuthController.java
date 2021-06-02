@@ -1,7 +1,7 @@
 package org.bootstrapbugz.api.auth.controller;
 
 import javax.validation.Valid;
-import org.bootstrapbugz.api.auth.jwt.dto.RefreshTokenDto;
+import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;

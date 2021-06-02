@@ -1,15 +1,15 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
-import org.bootstrapbugz.api.auth.jwt.dto.RefreshTokenDto;
+import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
-import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
-import org.bootstrapbugz.api.auth.jwt.util.JwtPurpose;
-import org.bootstrapbugz.api.auth.jwt.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.util.JwtPurpose;
+import org.bootstrapbugz.api.auth.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
@@ -20,7 +20,7 @@ import org.bootstrapbugz.api.user.model.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import org.bootstrapbugz.api.user.util.UserUtilities;
+import org.bootstrapbugz.api.auth.util.AuthUtilities;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -160,7 +160,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void logout() {
-    User user = UserUtilities.findLoggedUser(userRepository, messageSource);
+    User user = AuthUtilities.findLoggedUser(userRepository, messageSource);
     user.updateLastLogout();
     userRepository.save(user);
   }

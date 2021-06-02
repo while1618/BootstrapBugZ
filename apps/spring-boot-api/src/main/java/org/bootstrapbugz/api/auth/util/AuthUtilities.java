@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.user.util;
+package org.bootstrapbugz.api.auth.util;
 
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
@@ -9,8 +9,8 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class UserUtilities {
-  private UserUtilities() {}
+public class AuthUtilities {
+  private AuthUtilities() {}
 
   public static User findLoggedUser(UserRepository userRepository, MessageSource messageSource) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();

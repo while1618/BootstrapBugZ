@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.user.security;
+package org.bootstrapbugz.api.auth.security;
 
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
