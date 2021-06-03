@@ -14,7 +14,7 @@ const deleteRootEslintFile = async (tree: Tree) => {
 };
 
 const replaceEslintFileInApp = async (tree: Tree, options: SchematicOptions) => {
-  const appPath = path.join('apps', stringUtils.dasherize(options.name));
+  const appPath = path.join('apps', stringUtils.dasherize(options.name).replace(/\\/g, '/'));
   const filesPath = path.join(__dirname, './files/app');
   const substitutions = {
     appPath,
@@ -25,7 +25,10 @@ const replaceEslintFileInApp = async (tree: Tree, options: SchematicOptions) => 
 };
 
 const replaceEslintFileInE2E = async (tree: Tree, options: SchematicOptions) => {
-  const e2ePath = path.join('apps', `${stringUtils.dasherize(options.name)}-e2e`);
+  const e2ePath = path.join(
+    'apps',
+    `${stringUtils.dasherize(options.name).replace(/\\/g, '/')}-e2e`
+  );
   const filesPath = path.join(__dirname, './files/e2e');
   const substitutions = {
     e2ePath,

@@ -11,7 +11,7 @@ const deleteRootEslintFile = async (tree: Tree) => {
 };
 
 const replaceEslintFileInLib = async (tree: Tree, options: SchematicOptions) => {
-  const libPath = path.join('libs', stringUtils.dasherize(options.name));
+  const libPath = path.join('libs', stringUtils.dasherize(options.name).replace(/\\/g, '/'));
   const filesPath = path.join(__dirname, './files');
   const substitutions = {
     libPath,
