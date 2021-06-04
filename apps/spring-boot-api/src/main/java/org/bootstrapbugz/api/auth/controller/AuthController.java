@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.auth.controller;
 
+import java.util.Map;
 import javax.validation.Valid;
 import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
@@ -8,6 +9,8 @@ import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
+import org.bootstrapbugz.api.auth.util.AuthUtilities;
+import org.bootstrapbugz.api.auth.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.dto.SimpleUserDto;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,8 +72,14 @@ public class AuthController {
   }
 
   @GetMapping("/logout")
-  public ResponseEntity<Void> logout() {
-    authService.logout();
+  public ResponseEntity<Void> logout(@RequestHeader("authorization") String token) {
+    authService.logout(token.replace(JwtUtilities.BEARER, ""));
+    return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/logout-from-all-devices")
+  public ResponseEntity<Void> logoutFromAllDevices() {
+    authService.logoutFromAllDevices();
     return ResponseEntity.noContent().build();
   }
 }

@@ -1,14 +1,11 @@
 package org.bootstrapbugz.api.auth.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.util.JwtPurpose;
 import org.bootstrapbugz.api.auth.util.JwtUtilities;
@@ -77,7 +74,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       Authentication auth) {
     String token =
         jwtUtilities.createToken(
-            (UserPrincipal) auth.getPrincipal(), JwtPurpose.ACCESSING_RESOURCES);
+            ((UserPrincipal) auth.getPrincipal()).getUsername(), JwtPurpose.ACCESSING_RESOURCES);
     response.addHeader(JwtUtilities.HEADER, JwtUtilities.BEARER + token);
     response.addHeader("access-control-expose-headers", JwtUtilities.HEADER);
   }

@@ -21,5 +21,7 @@ public interface AuthService {
 
   void resetPassword(ResetPasswordRequest resetPasswordRequest);
 
-  void logout();
+  void logout(String token);
+
+  void logoutFromAllDevices();
 }

@@ -1,68 +1,85 @@
 package org.bootstrapbugz.api.auth.util;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-
-import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.auth.security.UserPrincipal;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import java.util.Date;
+import java.util.Optional;
+import org.bootstrapbugz.api.auth.model.JwtBlacklist;
+import org.bootstrapbugz.api.auth.repository.JwtBlacklistRepository;
+import org.bootstrapbugz.api.auth.model.UserBlacklist;
+import org.bootstrapbugz.api.auth.repository.UserBlacklistRepository;
+import org.bootstrapbugz.api.shared.error.ErrorDomain;
+import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtilities {
   public static final String HEADER = "Authorization";
   public static final String BEARER = "Bearer ";
-  private static final int EXPIRATION_TIME = 3600000; // 1h
+
+  @Value("${jwt.expirationTime}")
+  private int expirationTime; // 1h
 
   @Value("${jwt.serverSecret}")
   private String serverSecret;
 
-  public String createToken(User user, JwtPurpose purpose) {
-    String secret = createSecret(user.getUpdatedAt(), user.getLastLogout(), purpose);
-    return createToken(user.getUsername(), secret);
+  private final JwtBlacklistRepository jwtBlacklistRepository;
+  private final UserBlacklistRepository userBlacklistRepository;
+  private final MessageSource messageSource;
+
+  public JwtUtilities(
+      JwtBlacklistRepository jwtBlacklistRepository,
+      UserBlacklistRepository userBlacklistRepository,
+      MessageSource messageSource) {
+    this.jwtBlacklistRepository = jwtBlacklistRepository;
+    this.userBlacklistRepository = userBlacklistRepository;
+    this.messageSource = messageSource;
   }
 
-  public void checkToken(String token, User user, JwtPurpose purpose) {
-    String secret = createSecret(user.getUpdatedAt(), user.getLastLogout(), purpose);
-    checkToken(token, secret);
+  private String createSecret(JwtPurpose purpose) {
+    return serverSecret + "." + purpose;
   }
 
-  public String createToken(UserPrincipal userPrincipal, JwtPurpose purpose) {
-    String secret =
-        createSecret(userPrincipal.getUpdatedAt(), userPrincipal.getLastLogout(), purpose);
-    return createToken(userPrincipal.getUsername(), secret);
-  }
-
-  public void checkToken(String token, UserPrincipal userPrincipal, JwtPurpose purpose) {
-    String secret =
-        createSecret(userPrincipal.getUpdatedAt(), userPrincipal.getLastLogout(), purpose);
-    checkToken(token, secret);
-  }
-
-  private String createSecret(
-      LocalDateTime updatedAt, LocalDateTime lastLogout, JwtPurpose purpose) {
-    return serverSecret
-        + "."
-        + updatedAt.format(DateTimeFormatter.ISO_DATE_TIME)
-        + "."
-        + lastLogout.format(DateTimeFormatter.ISO_DATE_TIME)
-        + "."
-        + purpose;
-  }
-
-  private String createToken(String username, String secret) {
+  public String createToken(String username, JwtPurpose purpose) {
     return JWT.create()
         .withSubject(username)
-        .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-        .sign(Algorithm.HMAC512(secret.getBytes()));
+        .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
+        .withIssuedAt(new Date())
+        .sign(Algorithm.HMAC512(createSecret(purpose).getBytes()));
   }
 
-  private void checkToken(String token, String secret) {
-    JWT.require(Algorithm.HMAC512(secret.getBytes())).build().verify(token.replace(BEARER, ""));
+  public void checkToken(String token, JwtPurpose purpose) {
+    token = token.replace(BEARER, "");
+    isValid(token, purpose);
+    isInJwtBlacklist(token);
+    isInUserBlacklist(token);
+  }
+
+  private void isValid(String token, JwtPurpose purpose) {
+    JWT.require(Algorithm.HMAC512(createSecret(purpose).getBytes())).build().verify(token);
+  }
+
+  private void isInJwtBlacklist(String token) {
+    Optional<JwtBlacklist> tokenInBlacklist = jwtBlacklistRepository.findById(token);
+    if (tokenInBlacklist.isPresent())
+      throw new ForbiddenException(
+          messageSource.getMessage("token.invalid", null, LocaleContextHolder.getLocale()),
+          ErrorDomain.AUTH);
+  }
+
+  private void isInUserBlacklist(String token) {
+    DecodedJWT decodedJwt = JWT.decode(token);
+    Optional<UserBlacklist> userInBlacklist =
+        userBlacklistRepository.findById(decodedJwt.getSubject());
+    if (userInBlacklist.isPresent()
+        && decodedJwt.getIssuedAt().before(userInBlacklist.get().getUpdatedAt()))
+      throw new ForbiddenException(
+          messageSource.getMessage("token.invalid", null, LocaleContextHolder.getLocale()),
+          ErrorDomain.AUTH);
   }
 
   public String getSubject(String token) {

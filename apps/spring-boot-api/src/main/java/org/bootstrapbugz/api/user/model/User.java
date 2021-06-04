@@ -1,13 +1,10 @@
 package org.bootstrapbugz.api.user.model;
 
+import com.google.common.base.Objects;
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,9 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import com.google.common.base.Objects;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,12 +46,6 @@ public class User implements Serializable {
 
   private String password;
 
-  @Column(columnDefinition = "TIMESTAMP (3)")
-  private LocalDateTime updatedAt = LocalDateTime.now(Clock.tickMillis(ZoneId.of("UTC")));
-
-  @Column(columnDefinition = "TIMESTAMP (3)")
-  private LocalDateTime lastLogout = LocalDateTime.now(Clock.tickMillis(ZoneId.of("UTC")));
-
   private boolean activated = false;
 
   private boolean nonLocked = true;
@@ -82,14 +70,6 @@ public class User implements Serializable {
       }
     }
     return admin;
-  }
-
-  public void updateUpdatedAt() {
-    this.updatedAt = LocalDateTime.now(Clock.tickMillis(ZoneId.of("UTC")));
-  }
-
-  public void updateLastLogout() {
-    this.lastLogout = LocalDateTime.now(Clock.tickMillis(ZoneId.of("UTC")));
   }
 
   @Override

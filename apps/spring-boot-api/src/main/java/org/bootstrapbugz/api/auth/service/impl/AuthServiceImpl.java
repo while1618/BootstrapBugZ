@@ -1,13 +1,19 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
+import java.util.Date;
 import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
+import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.model.JwtBlacklist;
+import org.bootstrapbugz.api.auth.repository.JwtBlacklistRepository;
+import org.bootstrapbugz.api.auth.model.UserBlacklist;
+import org.bootstrapbugz.api.auth.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
-import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.util.AuthUtilities;
 import org.bootstrapbugz.api.auth.util.JwtPurpose;
 import org.bootstrapbugz.api.auth.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
@@ -20,7 +26,6 @@ import org.bootstrapbugz.api.user.model.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import org.bootstrapbugz.api.auth.util.AuthUtilities;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -31,6 +36,8 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
+  private final UserBlacklistRepository userBlacklistRepository;
+  private final JwtBlacklistRepository jwtBlacklistRepository;
   private final JwtUtilities jwtUtilities;
   private final ApplicationEventPublisher eventPublisher;
   private final MessageSource messageSource;
@@ -40,6 +47,8 @@ public class AuthServiceImpl implements AuthService {
   public AuthServiceImpl(
       UserRepository userRepository,
       RoleRepository roleRepository,
+      UserBlacklistRepository userBlacklistRepository,
+      JwtBlacklistRepository jwtBlacklistRepository,
       JwtUtilities jwtUtilities,
       ApplicationEventPublisher eventPublisher,
       MessageSource messageSource,
@@ -47,6 +56,8 @@ public class AuthServiceImpl implements AuthService {
       UserMapper userMapper) {
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
+    this.userBlacklistRepository = userBlacklistRepository;
+    this.jwtBlacklistRepository = jwtBlacklistRepository;
     this.jwtUtilities = jwtUtilities;
     this.eventPublisher = eventPublisher;
     this.messageSource = messageSource;
@@ -62,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public SimpleUserDto signUp(SignUpRequest signUpRequest) {
     User user = createUser(signUpRequest);
-    String token = jwtUtilities.createToken(user, JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
     return userMapper.userToSimpleUserDto(user);
   }
@@ -90,15 +101,14 @@ public class AuthServiceImpl implements AuthService {
                 () ->
                     new ForbiddenException(
                         messageSource.getMessage(
-                          "token.invalid", null, LocaleContextHolder.getLocale()),
+                            "token.invalid", null, LocaleContextHolder.getLocale()),
                         ErrorDomain.AUTH));
-    jwtUtilities.checkToken(token, user, JwtPurpose.CONFIRM_REGISTRATION);
+    jwtUtilities.checkToken(token, JwtPurpose.CONFIRM_REGISTRATION);
     activateUser(user);
   }
 
   private void activateUser(User user) {
     user.setActivated(true);
-    user.updateUpdatedAt();
     userRepository.save(user);
   }
 
@@ -117,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
       throw new ForbiddenException(
           messageSource.getMessage("user.activated", null, LocaleContextHolder.getLocale()),
           ErrorDomain.AUTH);
-    String token = jwtUtilities.createToken(user, JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
 
@@ -132,7 +142,7 @@ public class AuthServiceImpl implements AuthService {
                         messageSource.getMessage(
                             "user.notFound", null, LocaleContextHolder.getLocale()),
                         ErrorDomain.AUTH));
-    String token = jwtUtilities.createToken(user, JwtPurpose.FORGOT_PASSWORD);
+    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.FORGOT_PASSWORD));
   }
 
@@ -146,22 +156,26 @@ public class AuthServiceImpl implements AuthService {
                 () ->
                     new ForbiddenException(
                         messageSource.getMessage(
-                          "token.invalid", null, LocaleContextHolder.getLocale()),
+                            "token.invalid", null, LocaleContextHolder.getLocale()),
                         ErrorDomain.AUTH));
-    jwtUtilities.checkToken(resetPasswordRequest.getToken(), user, JwtPurpose.FORGOT_PASSWORD);
+    jwtUtilities.checkToken(resetPasswordRequest.getToken(), JwtPurpose.FORGOT_PASSWORD);
     changePassword(user, resetPasswordRequest.getPassword());
   }
 
   private void changePassword(User user, String password) {
     user.setPassword(bCryptPasswordEncoder.encode(password));
-    user.updateUpdatedAt();
+    userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
     userRepository.save(user);
   }
 
   @Override
-  public void logout() {
+  public void logout(String token) {
+    jwtBlacklistRepository.save(new JwtBlacklist(token));
+  }
+
+  @Override
+  public void logoutFromAllDevices() {
     User user = AuthUtilities.findLoggedUser(userRepository, messageSource);
-    user.updateLastLogout();
-    userRepository.save(user);
+    userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
   }
 }

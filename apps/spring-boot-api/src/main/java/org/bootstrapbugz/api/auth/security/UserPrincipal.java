@@ -1,21 +1,17 @@
 package org.bootstrapbugz.api.auth.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serial;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
@@ -26,8 +22,6 @@ public class UserPrincipal implements UserDetails {
   private final String username;
   @JsonIgnore private final String email;
   @JsonIgnore private final String password;
-  private final LocalDateTime updatedAt;
-  private final LocalDateTime lastLogout;
   private final boolean enabled;
   private final boolean accountNonLocked;
   private final Collection<? extends GrantedAuthority> authorities;
@@ -39,8 +33,6 @@ public class UserPrincipal implements UserDetails {
         user.getUsername(),
         user.getEmail(),
         user.getPassword(),
-        user.getUpdatedAt(),
-        user.getLastLogout(),
         user.isActivated(),
         user.isNonLocked(),
         authorities);

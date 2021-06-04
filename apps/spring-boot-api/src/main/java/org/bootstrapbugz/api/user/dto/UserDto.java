@@ -1,8 +1,6 @@
 package org.bootstrapbugz.api.user.dto;
 
-import java.time.LocalDateTime;
 import java.util.Set;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +16,6 @@ public class UserDto {
   private String lastName;
   private String username;
   private String email;
-  private LocalDateTime updatedAt;
-  private LocalDateTime lastLogout;
   private boolean activated;
   private boolean nonLocked;
   private Set<RoleDto> roles;

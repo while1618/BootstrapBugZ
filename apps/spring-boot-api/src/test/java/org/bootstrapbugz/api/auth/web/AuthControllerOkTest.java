@@ -100,7 +100,7 @@ class AuthControllerOkTest {
   @Order(4)
   void confirmRegistration_userFromDB_noContent() throws Exception {
     User user = userRepository.findByUsername("test").orElseThrow();
-    String token = jwtUtilities.createToken(user, JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     mockMvc
         .perform(
             get(Path.AUTH + "/confirm-registration")
@@ -113,7 +113,7 @@ class AuthControllerOkTest {
   @Order(5)
   void confirmRegistration_userGeneratedFromJava_noContent() throws Exception {
     User user = createUser();
-    String token = jwtUtilities.createToken(user, JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     mockMvc
         .perform(
             get(Path.AUTH + "/confirm-registration")
@@ -152,7 +152,7 @@ class AuthControllerOkTest {
   @Order(7)
   void resetPassword_noContent() throws Exception {
     User user = userRepository.findByUsername("test").orElseThrow();
-    String token = jwtUtilities.createToken(user, JwtPurpose.FORGOT_PASSWORD);
+    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
     ResetPasswordRequest resetPasswordRequest =
         new ResetPasswordRequest(token, "BlaBla123", "BlaBla123");
     mockMvc

@@ -16,8 +16,6 @@ create table users (
     username VARCHAR not null,
     email VARCHAR not null,
     password VARCHAR not null,
-    updated_at TIMESTAMP not null,
-    last_logout TIMESTAMP not null,
     activated BOOLEAN not null,
     non_locked BOOLEAN not null
 );
@@ -28,8 +26,6 @@ insert into users (
         username,
         email,
         password,
-        updated_at,
-        last_logout,
         activated,
         non_locked
     )
@@ -39,8 +35,6 @@ values (
         'admin',
         'skill.potion21@gmail.com',
         '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
-        current_timestamp,
-        current_timestamp,
         true,
         true
     );
@@ -50,8 +44,6 @@ insert into users (
         username,
         email,
         password,
-        updated_at,
-        last_logout,
         activated,
         non_locked
     )
@@ -61,8 +53,6 @@ values (
         'user',
         'decrescendo807@gmail.com',
         '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
-        current_timestamp,
-        current_timestamp,
         true,
         true
     );
@@ -72,8 +62,6 @@ insert into users (
         username,
         email,
         password,
-        updated_at,
-        last_logout,
         activated,
         non_locked
     )
@@ -83,8 +71,6 @@ values (
         'not_activated',
         'marcellus.hts@gmail.com',
         '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
-        current_timestamp,
-        current_timestamp,
         false,
         true
     );
@@ -94,8 +80,6 @@ insert into users (
         username,
         email,
         password,
-        updated_at,
-        last_logout,
         activated,
         non_locked
     )
@@ -105,8 +89,6 @@ values (
         'locked',
         'uvazeni.potpukovnik.naucnik@gmail.com',
         '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
-        current_timestamp,
-        current_timestamp,
         true,
         false
     );

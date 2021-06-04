@@ -106,6 +106,6 @@ class AuthServiceNotOkTest {
   @Test
   void logout_noAuth_userNotFound() {
     authentication(false);
-    assertThrows(ResourceNotFound.class, () -> authService.logout());
+    assertThrows(ResourceNotFound.class, () -> authService.logout(""));
   }
 }

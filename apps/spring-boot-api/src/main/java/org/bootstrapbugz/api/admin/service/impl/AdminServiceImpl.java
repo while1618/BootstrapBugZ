@@ -1,11 +1,13 @@
 package org.bootstrapbugz.api.admin.service.impl;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
+import org.bootstrapbugz.api.auth.model.UserBlacklist;
+import org.bootstrapbugz.api.auth.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.user.dto.UserDto;
@@ -23,16 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminServiceImpl implements AdminService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
+  private final UserBlacklistRepository userBlacklistRepository;
   private final MessageSource messageSource;
   private final UserMapper userMapper;
 
   public AdminServiceImpl(
       UserRepository userRepository,
       RoleRepository roleRepository,
+      UserBlacklistRepository userBlacklistRepository,
       MessageSource messageSource,
       UserMapper userMapper) {
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
+    this.userBlacklistRepository = userBlacklistRepository;
     this.messageSource = messageSource;
     this.userMapper = userMapper;
   }
@@ -54,7 +59,7 @@ public class AdminServiceImpl implements AdminService {
         user -> {
           List<Role> roles = roleRepository.findAllByNameIn(changeRoleRequest.getRoleNames());
           user.setRoles(new HashSet<>(roles));
-          user.updateUpdatedAt();
+          userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
         });
     userRepository.saveAll(users);
   }
@@ -65,7 +70,7 @@ public class AdminServiceImpl implements AdminService {
     users.forEach(
         user -> {
           user.setNonLocked(false);
-          user.updateUpdatedAt();
+          userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
         });
     userRepository.saveAll(users);
   }
@@ -76,7 +81,7 @@ public class AdminServiceImpl implements AdminService {
     users.forEach(
         user -> {
           user.setNonLocked(true);
-          user.updateUpdatedAt();
+          userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
         });
     userRepository.saveAll(users);
   }
@@ -87,7 +92,7 @@ public class AdminServiceImpl implements AdminService {
     users.forEach(
         user -> {
           user.setActivated(true);
-          user.updateUpdatedAt();
+          userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
         });
     userRepository.saveAll(users);
   }
@@ -98,7 +103,7 @@ public class AdminServiceImpl implements AdminService {
     users.forEach(
         user -> {
           user.setActivated(false);
-          user.updateUpdatedAt();
+          userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
         });
     userRepository.saveAll(users);
   }
