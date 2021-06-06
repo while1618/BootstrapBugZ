@@ -21,8 +21,8 @@ public class JwtUtilities {
   public static final String HEADER = "Authorization";
   public static final String BEARER = "Bearer ";
 
-  @Value("${jwt.expirationTime}")
-  private int expirationTime; // 15min
+  @Value("${jwt.expirationTimeInSecs}")
+  private int expirationTimeInSecs; // 15min
 
   @Value("${jwt.serverSecret}")
   private String serverSecret;
@@ -47,7 +47,7 @@ public class JwtUtilities {
   public String createToken(String username, JwtPurpose purpose) {
     return JWT.create()
         .withSubject(username)
-        .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime * 1000L))
+        .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSecs * 1000L))
         .withIssuedAt(new Date())
         .sign(Algorithm.HMAC512(createSecret(purpose).getBytes()));
   }
