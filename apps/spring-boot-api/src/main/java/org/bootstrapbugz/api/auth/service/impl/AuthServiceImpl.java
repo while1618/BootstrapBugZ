@@ -20,6 +20,7 @@ import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.user.dto.SimpleUserDto;
+import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.RoleName;
@@ -71,11 +72,11 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public SimpleUserDto signUp(SignUpRequest signUpRequest) {
+  public UserDto signUp(SignUpRequest signUpRequest) {
     User user = createUser(signUpRequest);
     String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
-    return userMapper.userToSimpleUserDto(user);
+    return userMapper.userToUserDto(user);
   }
 
   private User createUser(SignUpRequest signUpRequest) {

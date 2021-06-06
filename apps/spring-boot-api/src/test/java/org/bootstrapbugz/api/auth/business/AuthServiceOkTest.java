@@ -3,14 +3,12 @@ package org.bootstrapbugz.api.auth.business;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
@@ -20,7 +18,7 @@ import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.auth.util.JwtPurpose;
 import org.bootstrapbugz.api.auth.util.JwtUtilities;
-import org.bootstrapbugz.api.user.dto.SimpleUserDto;
+import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.RoleName;
@@ -85,7 +83,7 @@ class AuthServiceOkTest {
         new SignUpRequest("User", "User", "user", "user@localhost.com", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(userRole));
     when(userRepository.save(any(User.class))).thenReturn(user);
-    SimpleUserDto createdUser = authService.signUp(signUpRequest);
+    UserDto createdUser = authService.signUp(signUpRequest);
     assertThat(createdUser).isNotNull();
     assertEquals(createdUser.getUsername(), user.getUsername());
     assertEquals(createdUser.getEmail(), user.getEmail());
@@ -94,12 +92,12 @@ class AuthServiceOkTest {
   @Test
   void confirmRegistration_noContent() {
     user.setActivated(false);
-//    LocalDateTime beforeUpdate = user.getUpdatedAt();
+    //    LocalDateTime beforeUpdate = user.getUpdatedAt();
     when(userRepository.findByUsername(null)).thenReturn(Optional.ofNullable(user));
     String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     authService.confirmRegistration(token);
     assertTrue(user.isActivated());
-//    assertNotEquals(beforeUpdate, user.getUpdatedAt());
+    //    assertNotEquals(beforeUpdate, user.getUpdatedAt());
   }
 
   @Test
@@ -123,7 +121,7 @@ class AuthServiceOkTest {
 
   @Test
   void resetPassword_noContent() {
-//    LocalDateTime beforeUpdate = user.getUpdatedAt();
+    //    LocalDateTime beforeUpdate = user.getUpdatedAt();
     when(userRepository.findByUsername(null)).thenReturn(Optional.ofNullable(user));
     String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
     ResetPasswordRequest resetPasswordRequest =
@@ -131,15 +129,15 @@ class AuthServiceOkTest {
     authService.resetPassword(resetPasswordRequest);
     assertTrue(bCryptPasswordEncoder.matches("BlaBla123", user.getPassword()));
     assertFalse(bCryptPasswordEncoder.matches("qwerty123", user.getPassword()));
-//    assertNotEquals(beforeUpdate, user.getUpdatedAt());
+    //    assertNotEquals(beforeUpdate, user.getUpdatedAt());
   }
 
   @Test
   void logout_noContent() {
     authentication();
     when(userRepository.findByUsername("user")).thenReturn(Optional.ofNullable(user));
-//    LocalDateTime lastLogoutBeforeChange = user.getUpdatedAt();
+    //    LocalDateTime lastLogoutBeforeChange = user.getUpdatedAt();
     authService.logout("");
-//    assertNotEquals(lastLogoutBeforeChange, user.getLastLogout());
+    //    assertNotEquals(lastLogoutBeforeChange, user.getLastLogout());
   }
 }

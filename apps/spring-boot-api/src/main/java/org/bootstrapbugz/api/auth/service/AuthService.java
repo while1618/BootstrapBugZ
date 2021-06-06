@@ -7,11 +7,12 @@ import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.user.dto.SimpleUserDto;
+import org.bootstrapbugz.api.user.dto.UserDto;
 
 public interface AuthService {
   RefreshTokenDto refreshToken(RefreshTokenRequest refreshTokenRequest);
 
-  SimpleUserDto signUp(SignUpRequest signUpRequest);
+  UserDto signUp(SignUpRequest signUpRequest);
 
   void confirmRegistration(String token);
 
