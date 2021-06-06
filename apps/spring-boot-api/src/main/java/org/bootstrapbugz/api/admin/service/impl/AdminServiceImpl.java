@@ -78,22 +78,14 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public void unlock(AdminRequest adminRequest) {
     List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
-    users.forEach(
-        user -> {
-          user.setNonLocked(true);
-          userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
-        });
+    users.forEach(user -> user.setNonLocked(true));
     userRepository.saveAll(users);
   }
 
   @Override
   public void activate(AdminRequest adminRequest) {
     List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
-    users.forEach(
-        user -> {
-          user.setActivated(true);
-          userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
-        });
+    users.forEach(user -> user.setActivated(true));
     userRepository.saveAll(users);
   }
 
@@ -112,6 +104,10 @@ public class AdminServiceImpl implements AdminService {
   @Transactional
   public void delete(AdminRequest adminRequest) {
     List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
-    users.forEach(userRepository::delete);
+    users.forEach(
+        user -> {
+          userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
+          userRepository.delete(user);
+        });
   }
 }
