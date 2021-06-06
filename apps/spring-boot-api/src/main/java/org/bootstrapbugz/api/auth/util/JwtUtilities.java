@@ -22,7 +22,7 @@ public class JwtUtilities {
   public static final String BEARER = "Bearer ";
 
   @Value("${jwt.expirationTime}")
-  private int expirationTime; // 1h
+  private int expirationTime; // 15min
 
   @Value("${jwt.serverSecret}")
   private String serverSecret;
