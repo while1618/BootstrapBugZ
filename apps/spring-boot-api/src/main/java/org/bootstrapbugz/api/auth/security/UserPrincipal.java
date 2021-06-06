@@ -19,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserPrincipal implements UserDetails {
   @Serial private static final long serialVersionUID = 5954870422841373076L;
   private final Long id;
+  private final String firstName;
+  private final String lastName;
   private final String username;
   @JsonIgnore private final String email;
   @JsonIgnore private final String password;
@@ -30,6 +32,8 @@ public class UserPrincipal implements UserDetails {
     List<GrantedAuthority> authorities = getAuthorities(user);
     return new UserPrincipal(
         user.getId(),
+        user.getFirstName(),
+        user.getLastName(),
         user.getUsername(),
         user.getEmail(),
         user.getPassword(),
