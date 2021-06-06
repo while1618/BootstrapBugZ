@@ -47,7 +47,7 @@ public class JwtUtilities {
   public String createToken(String username, JwtPurpose purpose) {
     return JWT.create()
         .withSubject(username)
-        .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
+        .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime * 1000L))
         .withIssuedAt(new Date())
         .sign(Algorithm.HMAC512(createSecret(purpose).getBytes()));
   }
