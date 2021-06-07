@@ -13,7 +13,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash(value = "JwtBlacklist", timeToLive = 900)
+@RedisHash(value = "JwtBlacklist", timeToLive = 900) // 15min
 public class JwtBlacklist implements Serializable {
   @Serial private static final long serialVersionUID = 7371548317284111557L;
 
