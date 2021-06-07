@@ -13,13 +13,12 @@ import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
-import org.bootstrapbugz.api.auth.util.AuthUtilities;
+import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtPurpose;
 import org.bootstrapbugz.api.auth.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
-import org.bootstrapbugz.api.user.dto.SimpleUserDto;
 import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
@@ -176,7 +175,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void logoutFromAllDevices() {
-    User user = AuthUtilities.findLoggedUser(userRepository, messageSource);
+    User user = AuthUtil.findLoggedUser(userRepository, messageSource);
     userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
   }
 }

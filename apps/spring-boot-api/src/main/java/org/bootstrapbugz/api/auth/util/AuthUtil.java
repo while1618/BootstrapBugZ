@@ -9,8 +9,8 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class AuthUtilities {
-  private AuthUtilities() {}
+public class AuthUtil {
+  private AuthUtil() {}
 
   public static User findLoggedUser(UserRepository userRepository, MessageSource messageSource) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();

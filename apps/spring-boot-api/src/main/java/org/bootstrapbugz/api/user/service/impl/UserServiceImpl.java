@@ -5,7 +5,7 @@ import java.util.List;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.model.UserBlacklist;
 import org.bootstrapbugz.api.auth.repository.UserBlacklistRepository;
-import org.bootstrapbugz.api.auth.util.AuthUtilities;
+import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtPurpose;
 import org.bootstrapbugz.api.auth.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public SimpleUserDto update(UpdateUserRequest updateUserRequest) {
-    User user = AuthUtilities.findLoggedUser(userRepository, messageSource);
+    User user = AuthUtil.findLoggedUser(userRepository, messageSource);
     user.setFirstName(updateUserRequest.getFirstName());
     user.setLastName(updateUserRequest.getLastName());
     tryToSetUsername(user, updateUserRequest.getUsername());
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void changePassword(ChangePasswordRequest changePasswordRequest) {
-    User user = AuthUtilities.findLoggedUser(userRepository, messageSource);
+    User user = AuthUtil.findLoggedUser(userRepository, messageSource);
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
       throw new BadRequestException(
           messageSource.getMessage("oldPassword.invalid", null, LocaleContextHolder.getLocale()),
