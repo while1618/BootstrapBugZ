@@ -33,8 +33,4 @@ public class JwtUtil {
   public static void isTokenValid(String token, String secret) {
     JWT.require(Algorithm.HMAC512(secret.getBytes())).build().verify(token);
   }
-
-  public static String getSubject(String token) {
-    return JWT.decode(token).getSubject();
-  }
 }

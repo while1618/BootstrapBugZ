@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
+import com.auth0.jwt.JWT;
 import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
@@ -83,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void confirmRegistration(String token) {
-    String username = JwtUtil.getSubject(token);
+    String username = JWT.decode(token).getSubject();
     User user =
         userRepository
             .findByUsername(username)
@@ -138,7 +139,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
-    String username = JwtUtil.getSubject(resetPasswordRequest.getToken());
+    String username = JWT.decode(resetPasswordRequest.getToken()).getSubject();
     User user =
         userRepository
             .findByUsername(username)

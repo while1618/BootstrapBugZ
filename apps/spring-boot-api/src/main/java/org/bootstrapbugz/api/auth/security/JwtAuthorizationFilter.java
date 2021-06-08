@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.auth.security;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -57,7 +58,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   }
 
   private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
-    String username = JwtUtil.getSubject(token);
+    String username = JWT.decode(token).getSubject();
     UserPrincipal userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
     jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
 
