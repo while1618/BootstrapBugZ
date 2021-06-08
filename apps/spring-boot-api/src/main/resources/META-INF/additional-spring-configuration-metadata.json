@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "app.name",
+      "type": "java.lang.String",
+      "description": "Application name."
+    },
+    {
+      "name": "jwt.server-secret",
+      "type": "java.lang.String",
+      "description": "Server secret used to encrypt JWT."
+    },
+    {
+      "name": "jwt.expiration-time-in-secs",
+      "type": "java.lang.String",
+      "description": "JWT expiration time."
+    },
+    {
+      "name": "refresh-token.expiration-time-in-secs",
+      "type": "java.lang.String",
+      "description": "Refresh token expiration time."
+    },
+    {
+      "name": "ui.app.url",
+      "type": "java.lang.String",
+      "description": "UI application URL."
+    }
+  ]
+}

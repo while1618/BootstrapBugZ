@@ -21,13 +21,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JwtServiceImpl implements JwtService {
-  @Value("${jwt.expirationTimeInSecs}")
+  @Value("${jwt.expiration-time-in-secs}")
   private int expirationTimeInSecs; // 15min
 
-  @Value("${refreshToken.expirationTimeInSecs}")
+  @Value("${refresh-token.expiration-time-in-secs}")
   private int refreshTokenExpirationTimeInSecs; // 7 days
 
-  @Value("${jwt.serverSecret}")
+  @Value("${jwt.server-secret}")
   private String serverSecret;
 
   private final JwtBlacklistRepository jwtBlacklistRepository;
