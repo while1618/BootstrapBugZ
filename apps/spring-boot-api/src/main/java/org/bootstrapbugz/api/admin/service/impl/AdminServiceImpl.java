@@ -14,7 +14,6 @@ import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,19 +21,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AdminServiceImpl implements AdminService {
   private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
   private final JwtService jwtService;
   private final MessageService messageService;
   private final UserMapper userMapper;
 
   public AdminServiceImpl(
       UserRepository userRepository,
-      RoleRepository roleRepository,
       JwtService jwtService,
       MessageService messageService,
       UserMapper userMapper) {
     this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
     this.jwtService = jwtService;
     this.messageService = messageService;
     this.userMapper = userMapper;
