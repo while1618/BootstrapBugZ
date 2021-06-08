@@ -2,12 +2,11 @@ drop table if exists user_roles;
 drop table if exists users;
 drop table if exists roles;
 create table roles (
-    role_id INTEGER not null primary key auto_increment,
-    name VARCHAR not null
+    role_name VARCHAR not null primary key
 );
-insert into roles (name)
+insert into roles (role_name)
 values ('USER');
-insert into roles (name)
+insert into roles (role_name)
 values ('ADMIN');
 create table users (
     user_id INTEGER not null primary key auto_increment,
@@ -94,19 +93,19 @@ values (
     );
 create table user_roles (
     user_id INTEGER not null,
-    role_id INTEGER not null
+    role_name INTEGER not null
 );
 ALTER TABLE user_roles
 ADD FOREIGN KEY (user_id) REFERENCES users (user_id);
 ALTER TABLE user_roles
-ADD FOREIGN KEY (role_id) REFERENCES roles (role_id);
-insert into user_roles (user_id, role_id)
-values (1, 1);
-insert into user_roles (user_id, role_id)
-values (1, 2);
-insert into user_roles (user_id, role_id)
-values (2, 1);
-insert into user_roles (user_id, role_id)
-values (3, 1);
-insert into user_roles (user_id, role_id)
-values (4, 1);
+ADD FOREIGN KEY (role_name) REFERENCES roles (role_name);
+insert into user_roles (user_id, role_name)
+values (1, 'USER');
+insert into user_roles (user_id, role_name)
+values (1, 'ADMIN');
+insert into user_roles (user_id, role_name)
+values (2, 'USER');
+insert into user_roles (user_id, role_name)
+values (3, 'USER');
+insert into user_roles (user_id, role_name)
+values (4, 'USER');
