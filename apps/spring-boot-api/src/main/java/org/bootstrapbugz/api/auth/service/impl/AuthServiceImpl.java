@@ -16,6 +16,7 @@ import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
@@ -24,8 +25,6 @@ import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
   private final RoleRepository roleRepository;
   private final JwtService jwtService;
   private final ApplicationEventPublisher eventPublisher;
-  private final MessageSource messageSource;
+  private final MessageService messageService;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final UserMapper userMapper;
 
@@ -44,14 +43,14 @@ public class AuthServiceImpl implements AuthService {
       RoleRepository roleRepository,
       JwtService jwtService,
       ApplicationEventPublisher eventPublisher,
-      MessageSource messageSource,
+      MessageService messageService,
       PasswordEncoder bCryptPasswordEncoder,
       UserMapper userMapper) {
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
     this.jwtService = jwtService;
     this.eventPublisher = eventPublisher;
-    this.messageSource = messageSource;
+    this.messageService = messageService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userMapper = userMapper;
   }
@@ -91,13 +90,9 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(
                 () ->
                     new ForbiddenException(
-                        messageSource.getMessage(
-                            "token.invalid", null, LocaleContextHolder.getLocale()),
-                        ErrorDomain.AUTH));
+                        messageService.getMessage("token.invalid"), ErrorDomain.AUTH));
     if (user.isActivated())
-      throw new ForbiddenException(
-          messageSource.getMessage("user.activated", null, LocaleContextHolder.getLocale()),
-          ErrorDomain.AUTH);
+      throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
     jwtService.checkToken(token, JwtPurpose.CONFIRM_REGISTRATION);
     user.setActivated(true);
     userRepository.save(user);
@@ -111,13 +106,9 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(
                 () ->
                     new ResourceNotFound(
-                        messageSource.getMessage(
-                            "user.notFound", null, LocaleContextHolder.getLocale()),
-                        ErrorDomain.AUTH));
+                        messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
     if (user.isActivated())
-      throw new ForbiddenException(
-          messageSource.getMessage("user.activated", null, LocaleContextHolder.getLocale()),
-          ErrorDomain.AUTH);
+      throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
     String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
@@ -130,9 +121,7 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(
                 () ->
                     new ResourceNotFound(
-                        messageSource.getMessage(
-                            "user.notFound", null, LocaleContextHolder.getLocale()),
-                        ErrorDomain.AUTH));
+                        messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
     String token = jwtService.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.FORGOT_PASSWORD));
   }
@@ -146,9 +135,7 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(
                 () ->
                     new ForbiddenException(
-                        messageSource.getMessage(
-                            "token.invalid", null, LocaleContextHolder.getLocale()),
-                        ErrorDomain.AUTH));
+                        messageService.getMessage("token.invalid"), ErrorDomain.AUTH));
     jwtService.checkToken(resetPasswordRequest.getToken(), JwtPurpose.FORGOT_PASSWORD);
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
     jwtService.invalidateAllTokens(user.getUsername());
@@ -162,7 +149,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void logoutFromAllDevices() {
-    User user = AuthUtil.findLoggedUser(userRepository, messageSource);
+    User user = AuthUtil.findLoggedUser(userRepository, messageService);
     jwtService.invalidateAllTokens(user.getUsername());
   }
 }

@@ -5,8 +5,8 @@ import org.bootstrapbugz.api.auth.security.JwtAuthorizationFilter;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
+import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,17 +39,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final UserDetailsService userDetailsService;
   private final JwtService jwtService;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-  private final MessageSource messageSource;
+  private final MessageService messageService;
 
   public SecurityConfig(
       @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
       JwtService jwtService,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-      MessageSource messageSource) {
+      MessageService messageService) {
     this.userDetailsService = userDetailsService;
     this.jwtService = jwtService;
     this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
-    this.messageSource = messageSource;
+    this.messageService = messageService;
   }
 
   @Override
@@ -77,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtService, messageSource))
+        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtService, messageService))
         .addFilter(
             new JwtAuthorizationFilter(authenticationManager(), jwtService, userDetailsService))
         .exceptionHandling()

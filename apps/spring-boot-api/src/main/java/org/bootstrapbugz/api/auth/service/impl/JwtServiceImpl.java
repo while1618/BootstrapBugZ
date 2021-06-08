@@ -15,9 +15,8 @@ import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
+import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,17 +33,17 @@ public class JwtServiceImpl implements JwtService {
   private final JwtBlacklistRepository jwtBlacklistRepository;
   private final UserBlacklistRepository userBlacklistRepository;
   private final RefreshTokenRepository refreshTokenRepository;
-  private final MessageSource messageSource;
+  private final MessageService messageService;
 
   public JwtServiceImpl(
       JwtBlacklistRepository jwtBlacklistRepository,
       UserBlacklistRepository userBlacklistRepository,
       RefreshTokenRepository refreshTokenRepository,
-      MessageSource messageSource) {
+      MessageService messageService) {
     this.jwtBlacklistRepository = jwtBlacklistRepository;
     this.userBlacklistRepository = userBlacklistRepository;
     this.refreshTokenRepository = refreshTokenRepository;
-    this.messageSource = messageSource;
+    this.messageService = messageService;
   }
 
   private String createSecret(JwtPurpose purpose) {
@@ -65,9 +64,7 @@ public class JwtServiceImpl implements JwtService {
 
   private void isInJwtBlacklist(String token) {
     if (jwtBlacklistRepository.existsById(token))
-      throw new ForbiddenException(
-          messageSource.getMessage("token.invalid", null, LocaleContextHolder.getLocale()),
-          ErrorDomain.AUTH);
+      throw new ForbiddenException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
   }
 
   private void isInUserBlacklist(String token) {
@@ -76,9 +73,7 @@ public class JwtServiceImpl implements JwtService {
         userBlacklistRepository.findById(decodedJwt.getSubject());
     if (userInBlacklist.isPresent()
         && decodedJwt.getIssuedAt().before(userInBlacklist.get().getUpdatedAt()))
-      throw new ForbiddenException(
-          messageSource.getMessage("token.invalid", null, LocaleContextHolder.getLocale()),
-          ErrorDomain.AUTH);
+      throw new ForbiddenException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
   }
 
   @Override
@@ -104,9 +99,7 @@ public class JwtServiceImpl implements JwtService {
   public void checkRefreshToken(String refreshToken) {
     JwtUtil.isTokenValid(refreshToken, createSecret(JwtPurpose.REFRESH_TOKEN));
     if (!refreshTokenRepository.existsById(refreshToken))
-      throw new ForbiddenException(
-          messageSource.getMessage("token.invalid", null, LocaleContextHolder.getLocale()),
-          ErrorDomain.AUTH);
+      throw new ForbiddenException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
   }
 
   @Override

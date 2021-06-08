@@ -8,6 +8,7 @@ import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.dto.SimpleUserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
@@ -16,15 +17,13 @@ import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
 import org.bootstrapbugz.api.user.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
-  private final MessageSource messageSource;
+  private final MessageService messageService;
   private final UserMapper userMapper;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final ApplicationEventPublisher eventPublisher;
@@ -32,13 +31,13 @@ public class UserServiceImpl implements UserService {
 
   public UserServiceImpl(
       UserRepository userRepository,
-      MessageSource messageSource,
+      MessageService messageService,
       UserMapper userMapper,
       PasswordEncoder bCryptPasswordEncoder,
       ApplicationEventPublisher eventPublisher,
       JwtService jwtService) {
     this.userRepository = userRepository;
-    this.messageSource = messageSource;
+    this.messageService = messageService;
     this.userMapper = userMapper;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.eventPublisher = eventPublisher;
@@ -49,9 +48,7 @@ public class UserServiceImpl implements UserService {
   public List<SimpleUserDto> findAll() {
     List<User> users = userRepository.findAll();
     if (users.isEmpty())
-      throw new ResourceNotFound(
-          messageSource.getMessage("users.notFound", null, LocaleContextHolder.getLocale()),
-          ErrorDomain.USER);
+      throw new ResourceNotFound(messageService.getMessage("users.notFound"), ErrorDomain.USER);
     return userMapper.usersToSimpleUserDtos(users);
   }
 
@@ -63,15 +60,13 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(
                 () ->
                     new ResourceNotFound(
-                        messageSource.getMessage(
-                            "user.notFound", null, LocaleContextHolder.getLocale()),
-                        ErrorDomain.USER));
+                        messageService.getMessage("user.notFound"), ErrorDomain.USER));
     return userMapper.userToSimpleUserDto(user);
   }
 
   @Override
   public SimpleUserDto update(UpdateUserRequest updateUserRequest) {
-    User user = AuthUtil.findLoggedUser(userRepository, messageSource);
+    User user = AuthUtil.findLoggedUser(userRepository, messageService);
     user.setFirstName(updateUserRequest.getFirstName());
     user.setLastName(updateUserRequest.getLastName());
     tryToSetUsername(user, updateUserRequest.getUsername());
@@ -82,9 +77,7 @@ public class UserServiceImpl implements UserService {
   private void tryToSetUsername(User user, String username) {
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
-      throw new BadRequestException(
-          messageSource.getMessage("username.exists", null, LocaleContextHolder.getLocale()),
-          ErrorDomain.USER);
+      throw new BadRequestException(messageService.getMessage("username.exists"), ErrorDomain.USER);
 
     user.setUsername(username);
     jwtService.invalidateAllTokens(user.getUsername());
@@ -93,9 +86,7 @@ public class UserServiceImpl implements UserService {
   private void tryToSetEmail(User user, String email) {
     if (user.getEmail().equals(email)) return;
     if (userRepository.existsByEmail(email))
-      throw new BadRequestException(
-          messageSource.getMessage("email.exists", null, LocaleContextHolder.getLocale()),
-          ErrorDomain.USER);
+      throw new BadRequestException(messageService.getMessage("email.exists"), ErrorDomain.USER);
 
     user.setEmail(email);
     user.setActivated(false);
@@ -107,11 +98,10 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void changePassword(ChangePasswordRequest changePasswordRequest) {
-    User user = AuthUtil.findLoggedUser(userRepository, messageSource);
+    User user = AuthUtil.findLoggedUser(userRepository, messageService);
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
       throw new BadRequestException(
-          messageSource.getMessage("oldPassword.invalid", null, LocaleContextHolder.getLocale()),
-          ErrorDomain.USER);
+          messageService.getMessage("oldPassword.invalid"), ErrorDomain.USER);
     changePassword(user, changePasswordRequest.getNewPassword());
   }
 

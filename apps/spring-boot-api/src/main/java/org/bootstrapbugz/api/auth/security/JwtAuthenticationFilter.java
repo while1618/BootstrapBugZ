@@ -16,10 +16,9 @@ import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
+import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.dto.UserDto.RoleDto;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -31,15 +30,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final AuthenticationManager authenticationManager;
   private final JwtService jwtService;
-  private final MessageSource messageSource;
+  private final MessageService messageService;
 
   public JwtAuthenticationFilter(
       AuthenticationManager authenticationManager,
       JwtService jwtService,
-      MessageSource messageSource) {
+      MessageService messageService) {
     this.authenticationManager = authenticationManager;
     this.jwtService = jwtService;
-    this.messageSource = messageSource;
+    this.messageService = messageService;
     this.setFilterProcessesUrl(Path.AUTH + "/login");
   }
 
@@ -60,11 +59,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   }
 
   private String getMessageBasedOnException(Exception e) {
-    if (e instanceof DisabledException)
-      return messageSource.getMessage("user.notActivated", null, LocaleContextHolder.getLocale());
-    else if (e instanceof LockedException)
-      return messageSource.getMessage("user.locked", null, LocaleContextHolder.getLocale());
-    else return messageSource.getMessage("login.invalid", null, LocaleContextHolder.getLocale());
+    if (e instanceof DisabledException) return messageService.getMessage("user.notActivated");
+    else if (e instanceof LockedException) return messageService.getMessage("user.locked");
+    else return messageService.getMessage("login.invalid");
   }
 
   @Override
