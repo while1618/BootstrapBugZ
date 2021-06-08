@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
       @QueryHint(name = org.hibernate.jpa.QueryHints.HINT_PASS_DISTINCT_THROUGH, value = "false"))
   @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles")
   @Nonnull
-  List<User> findAll();
+  List<User> findAllWithRoles();
 
   @Query("SELECT u FROM User u WHERE u.username IN (:usernames)")
   List<User> findAllByUsernameIn(Set<String> usernames);

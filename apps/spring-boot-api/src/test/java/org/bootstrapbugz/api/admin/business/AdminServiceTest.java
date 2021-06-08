@@ -71,7 +71,7 @@ class AdminServiceTest {
 
   @Test
   void findAllUsers_ok() {
-    when(userRepository.findAll()).thenReturn(users);
+    when(userRepository.findAllWithRoles()).thenReturn(users);
     List<UserDto> foundUsers = adminService.findAllUsers();
     assertThat(foundUsers).isNotNull().hasSize(1);
   }

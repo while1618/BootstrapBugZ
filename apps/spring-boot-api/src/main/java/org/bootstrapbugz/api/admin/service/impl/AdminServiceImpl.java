@@ -38,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public List<UserDto> findAllUsers() {
-    List<User> users = userRepository.findAll();
+    List<User> users = userRepository.findAllWithRoles();
     if (users.isEmpty())
       throw new ResourceNotFound(messageService.getMessage("users.notFound"), ErrorDomain.USER);
     return userMapper.usersToUserDtos(users);

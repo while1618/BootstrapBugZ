@@ -4,13 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 
-import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
@@ -27,7 +25,7 @@ class UserDataLayerTest {
 
   @Test
   void findAll() {
-    List<User> users = userRepository.findAll();
+    List<User> users = userRepository.findAllWithRoles();
     assertThat(users).hasSize(4);
   }
 
@@ -106,7 +104,7 @@ class UserDataLayerTest {
             .setPassword("qwerty123");
 //            .setRoles(new HashSet<>(roles));
     userRepository.saveAll(Set.of(user1, user2));
-    List<User> users = userRepository.findAll();
+    List<User> users = userRepository.findAllWithRoles();
     assertThat(users).hasSize(6);
   }
 
@@ -114,7 +112,7 @@ class UserDataLayerTest {
   void deleteAll() {
     List<User> users = userRepository.findAllByUsernameIn(Set.of("user", "not_activated"));
     users.forEach(user -> userRepository.delete(user));
-    assertThat(userRepository.findAll()).hasSize(2);
+    assertThat(userRepository.findAllWithRoles()).hasSize(2);
     assertThat(roleRepository.findAll()).hasSize(2);
   }
 }
