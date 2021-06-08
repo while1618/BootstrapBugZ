@@ -23,7 +23,6 @@ import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +31,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
   private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
   private final JwtService jwtService;
   private final ApplicationEventPublisher eventPublisher;
   private final MessageService messageService;
@@ -41,14 +39,12 @@ public class AuthServiceImpl implements AuthService {
 
   public AuthServiceImpl(
       UserRepository userRepository,
-      RoleRepository roleRepository,
       JwtService jwtService,
       ApplicationEventPublisher eventPublisher,
       MessageService messageService,
       PasswordEncoder bCryptPasswordEncoder,
       UserMapper userMapper) {
     this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
     this.jwtService = jwtService;
     this.eventPublisher = eventPublisher;
     this.messageService = messageService;

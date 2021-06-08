@@ -5,10 +5,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import java.util.Date;
 
 public class JwtUtil {
-  private JwtUtil() {}
-
   public static final String AUTH_HEADER = "Authorization";
   public static final String TOKEN_TYPE = "Bearer ";
+
+  private JwtUtil() {}
 
   public enum JwtPurpose {
     ACCESSING_RESOURCES,
