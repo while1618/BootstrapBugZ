@@ -91,7 +91,8 @@ public class JwtServiceImpl implements JwtService {
     String refreshToken =
         JwtUtil.createToken(
             username, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
-    refreshTokenRepository.save(new RefreshToken(refreshToken, username));
+    refreshTokenRepository.save(
+        new RefreshToken(JwtUtil.removeTokenTypeFromToken(refreshToken), username));
     return refreshToken;
   }
 
@@ -105,7 +106,7 @@ public class JwtServiceImpl implements JwtService {
   @Override
   public String findRefreshToken(String username) {
     Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(username);
-    return refreshToken.map(RefreshToken::getToken).orElse(null);
+    return refreshToken.map(token -> JwtUtil.TOKEN_TYPE + token.getToken()).orElse(null);
   }
 
   @Override
