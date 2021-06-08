@@ -26,7 +26,6 @@ public class MailConfig {
   public JavaMailSender getJavaMailSender() {
     JavaMailSenderImpl mailSender = createMailSender();
     setProperties(mailSender);
-
     return mailSender;
   }
 
@@ -36,7 +35,6 @@ public class MailConfig {
     mailSender.setPort(Integer.parseInt(Objects.requireNonNull(port)));
     mailSender.setUsername(username);
     mailSender.setPassword(password);
-
     return mailSender;
   }
 

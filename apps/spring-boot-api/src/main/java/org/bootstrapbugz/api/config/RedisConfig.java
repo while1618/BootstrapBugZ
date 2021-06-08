@@ -37,7 +37,7 @@ public class RedisConfig {
 
     JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration =
         JedisClientConfiguration.builder();
-    jedisClientConfiguration.connectTimeout(Duration.ofSeconds(timeout)); // 60s connection timeout
+    jedisClientConfiguration.connectTimeout(Duration.ofSeconds(timeout));
 
     return new JedisConnectionFactory(
         redisStandaloneConfiguration, jedisClientConfiguration.build());
