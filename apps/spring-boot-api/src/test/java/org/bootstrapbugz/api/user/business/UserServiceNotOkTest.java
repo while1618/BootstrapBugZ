@@ -66,11 +66,6 @@ class UserServiceNotOkTest {
   }
 
   @Test
-  void findAll_notFound() {
-    assertThrows(ResourceNotFound.class, () -> userService.findAll());
-  }
-
-  @Test
   void findByUsername_notFound() {
     assertThrows(ResourceNotFound.class, () -> userService.findByUsername("user"));
   }

@@ -9,10 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -74,7 +72,7 @@ class AdminServiceTest {
 
   @Test
   void findAllUsers_ok() {
-    when(userRepository.findAllForAdmin()).thenReturn(users);
+    when(userRepository.findAll()).thenReturn(users);
     List<UserDto> foundUsers = adminService.findAllUsers();
     assertThat(foundUsers).isNotNull().hasSize(1);
   }

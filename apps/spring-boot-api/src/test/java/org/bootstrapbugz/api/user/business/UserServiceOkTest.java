@@ -73,13 +73,6 @@ class UserServiceOkTest {
   }
 
   @Test
-  void findAll_ok() {
-    when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
-    List<SimpleUserDto> foundUsers = userService.findAll();
-    assertThat(foundUsers).isNotNull().hasSize(1);
-  }
-
-  @Test
   void findByUsername_ok() {
     when(userRepository.findByUsername("user")).thenReturn(Optional.ofNullable(user));
     SimpleUserDto foundUser = userService.findByUsername("user");
