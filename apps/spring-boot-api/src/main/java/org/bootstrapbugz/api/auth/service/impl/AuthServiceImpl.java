@@ -160,7 +160,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void logout(String token) {
-    jwtService.invalidateToken(JwtUtil.removeBearerFromToken(token));
+    jwtService.invalidateToken(JwtUtil.removeTokenTypeFromToken(token));
   }
 
   @Override

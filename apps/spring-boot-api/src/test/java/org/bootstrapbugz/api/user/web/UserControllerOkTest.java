@@ -53,7 +53,7 @@ class UserControllerOkTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isOk());
-    token = resultActions.andReturn().getResponse().getHeader(JwtUtil.HEADER);
+    token = resultActions.andReturn().getResponse().getHeader(JwtUtil.AUTH_HEADER);
   }
 
   @Test
@@ -69,7 +69,7 @@ class UserControllerOkTest {
         .perform(
             get(Path.USERS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token))
+                .header(JwtUtil.AUTH_HEADER, token))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json"))
         .andExpect(jsonPath("$").isNotEmpty());
@@ -82,7 +82,7 @@ class UserControllerOkTest {
         .perform(
             get(Path.USERS + "/{username}", "user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token))
+                .header(JwtUtil.AUTH_HEADER, token))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json"))
         .andExpect(jsonPath("$.username").value("user"))
@@ -98,7 +98,7 @@ class UserControllerOkTest {
         .perform(
             put(Path.USERS + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token)
+                .header(JwtUtil.AUTH_HEADER, token)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isNoContent());
     login(new LoginRequest("user", changePasswordRequest.getNewPassword()));
@@ -113,7 +113,7 @@ class UserControllerOkTest {
         .perform(
             put(Path.USERS + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token)
+                .header(JwtUtil.AUTH_HEADER, token)
                 .content(objectMapper.writeValueAsString(updateUserRequest)))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json"))
@@ -131,7 +131,7 @@ class UserControllerOkTest {
         .perform(
             put(Path.USERS + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token)
+                .header(JwtUtil.AUTH_HEADER, token)
                 .content(objectMapper.writeValueAsString(updateUserRequest)))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json"))

@@ -55,7 +55,7 @@ class AuthControllerOkTest {
                     objectMapper.writeValueAsString(
                         new LoginRequest("decrescendo807@gmail.com", "qwerty123"))))
         .andExpect(status().isOk())
-        .andExpect(header().exists(JwtUtil.HEADER));
+        .andExpect(header().exists(JwtUtil.AUTH_HEADER));
   }
 
   @Test
@@ -172,7 +172,7 @@ class AuthControllerOkTest {
         .perform(
             get(Path.AUTH + "/logout")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token))
+                .header(JwtUtil.AUTH_HEADER, token))
         .andExpect(status().isNoContent());
   }
 
@@ -184,6 +184,6 @@ class AuthControllerOkTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isOk());
-    return resultActions.andReturn().getResponse().getHeader(JwtUtil.HEADER);
+    return resultActions.andReturn().getResponse().getHeader(JwtUtil.AUTH_HEADER);
   }
 }

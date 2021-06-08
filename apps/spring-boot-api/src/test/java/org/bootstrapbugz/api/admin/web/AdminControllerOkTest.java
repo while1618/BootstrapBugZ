@@ -53,7 +53,7 @@ class AdminControllerOkTest {
             post(Path.AUTH + "/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)));
-    adminToken = resultActions.andReturn().getResponse().getHeader(JwtUtil.HEADER);
+    adminToken = resultActions.andReturn().getResponse().getHeader(JwtUtil.AUTH_HEADER);
   }
 
   @Test
@@ -69,7 +69,7 @@ class AdminControllerOkTest {
         .perform(
             get(Path.ADMIN + "/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, adminToken))
+                .header(JwtUtil.AUTH_HEADER, adminToken))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json"))
         .andExpect(jsonPath("$").isNotEmpty());
@@ -84,7 +84,7 @@ class AdminControllerOkTest {
         .perform(
             put(Path.ADMIN + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, adminToken)
+                .header(JwtUtil.AUTH_HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(changeRoleRequest)))
         .andExpect(status().isNoContent());
   }
@@ -96,7 +96,7 @@ class AdminControllerOkTest {
         .perform(
             put(Path.ADMIN + "/users/lock")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, adminToken)
+                .header(JwtUtil.AUTH_HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
         .andExpect(status().isNoContent());
   }
@@ -108,7 +108,7 @@ class AdminControllerOkTest {
         .perform(
             put(Path.ADMIN + "/users/unlock")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, adminToken)
+                .header(JwtUtil.AUTH_HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
         .andExpect(status().isNoContent());
   }
@@ -120,7 +120,7 @@ class AdminControllerOkTest {
         .perform(
             put(Path.ADMIN + "/users/deactivate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, adminToken)
+                .header(JwtUtil.AUTH_HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
         .andExpect(status().isNoContent());
   }
@@ -132,7 +132,7 @@ class AdminControllerOkTest {
         .perform(
             put(Path.ADMIN + "/users/activate")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, adminToken)
+                .header(JwtUtil.AUTH_HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
         .andExpect(status().isNoContent());
   }
@@ -144,7 +144,7 @@ class AdminControllerOkTest {
         .perform(
             delete(Path.ADMIN + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, adminToken)
+                .header(JwtUtil.AUTH_HEADER, adminToken)
                 .content(objectMapper.writeValueAsString(ADMIN_REQUEST)))
         .andExpect(status().isNoContent());
   }

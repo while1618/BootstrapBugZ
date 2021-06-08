@@ -79,7 +79,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     final LoginDto loginDto =
         new LoginDto()
             .setToken(
-                JwtUtil.BEARER
+                JwtUtil.TOKEN_TYPE
                     + jwtService.createToken(
                         userPrincipal.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
             .setRefreshToken(jwtService.createRefreshToken(userPrincipal.getUsername()))

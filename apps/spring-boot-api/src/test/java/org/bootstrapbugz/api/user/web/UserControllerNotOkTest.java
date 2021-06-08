@@ -44,7 +44,7 @@ class UserControllerNotOkTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isOk());
-    token = resultActions.andReturn().getResponse().getHeader(JwtUtil.HEADER);
+    token = resultActions.andReturn().getResponse().getHeader(JwtUtil.AUTH_HEADER);
   }
 
   @Test
@@ -60,7 +60,7 @@ class UserControllerNotOkTest {
         .perform(
             get(Path.USERS + "/{username}", "test")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token))
+                .header(JwtUtil.AUTH_HEADER, token))
         .andExpect(status().isNotFound());
   }
 
@@ -79,7 +79,7 @@ class UserControllerNotOkTest {
         .perform(
             put(Path.USERS + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token)
+                .header(JwtUtil.AUTH_HEADER, token)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest());
   }
@@ -92,7 +92,7 @@ class UserControllerNotOkTest {
         .perform(
             put(Path.USERS + "/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token)
+                .header(JwtUtil.AUTH_HEADER, token)
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest());
   }
@@ -117,7 +117,7 @@ class UserControllerNotOkTest {
         .perform(
             put(Path.USERS + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token)
+                .header(JwtUtil.AUTH_HEADER, token)
                 .content(objectMapper.writeValueAsString(updateUserRequest)))
         .andExpect(status().isBadRequest());
   }
@@ -130,7 +130,7 @@ class UserControllerNotOkTest {
         .perform(
             put(Path.USERS + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token)
+                .header(JwtUtil.AUTH_HEADER, token)
                 .content(objectMapper.writeValueAsString(updateUserRequest)))
         .andExpect(status().isBadRequest());
   }
@@ -143,7 +143,7 @@ class UserControllerNotOkTest {
         .perform(
             put(Path.USERS + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.HEADER, token)
+                .header(JwtUtil.AUTH_HEADER, token)
                 .content(objectMapper.writeValueAsString(updateUserRequest)))
         .andExpect(status().isBadRequest());
   }

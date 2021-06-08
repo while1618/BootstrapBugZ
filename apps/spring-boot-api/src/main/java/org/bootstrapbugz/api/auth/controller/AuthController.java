@@ -8,6 +8,7 @@ import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
+import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.dto.UserDto;
 import org.springframework.http.HttpStatus;
@@ -69,7 +70,7 @@ public class AuthController {
   }
 
   @GetMapping("/logout")
-  public ResponseEntity<Void> logout(@RequestHeader("authorization") String token) {
+  public ResponseEntity<Void> logout(@RequestHeader(JwtUtil.AUTH_HEADER) String token) {
     authService.logout(token);
     return ResponseEntity.noContent().build();
   }

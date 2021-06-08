@@ -7,8 +7,8 @@ import java.util.Date;
 public class JwtUtil {
   private JwtUtil() {}
 
-  public static final String HEADER = "Authorization";
-  public static final String BEARER = "Bearer ";
+  public static final String AUTH_HEADER = "Authorization";
+  public static final String TOKEN_TYPE = "Bearer ";
 
   public enum JwtPurpose {
     ACCESSING_RESOURCES,
@@ -30,10 +30,10 @@ public class JwtUtil {
   }
 
   public static String getSubject(String token) {
-    return JWT.decode(removeBearerFromToken(token)).getSubject();
+    return JWT.decode(removeTokenTypeFromToken(token)).getSubject();
   }
 
-  public static String removeBearerFromToken(String token) {
-    return token.replace(BEARER, "");
+  public static String removeTokenTypeFromToken(String token) {
+    return token.replace(TOKEN_TYPE, "");
   }
 }
