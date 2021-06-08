@@ -18,11 +18,16 @@ public class JwtUtil {
   }
 
   public static String createToken(String username, int expirationTimeInSecs, String secret) {
-    return JWT.create()
-        .withSubject(username)
-        .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSecs * 1000L))
-        .withIssuedAt(new Date())
-        .sign(Algorithm.HMAC512(secret.getBytes()));
+    return TOKEN_TYPE
+        + JWT.create()
+            .withSubject(username)
+            .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSecs * 1000L))
+            .withIssuedAt(new Date())
+            .sign(Algorithm.HMAC512(secret.getBytes()));
+  }
+
+  public static String removeTokenTypeFromToken(String token) {
+    return token.replace(TOKEN_TYPE, "");
   }
 
   public static void isTokenValid(String token, String secret) {
@@ -30,10 +35,6 @@ public class JwtUtil {
   }
 
   public static String getSubject(String token) {
-    return JWT.decode(removeTokenTypeFromToken(token)).getSubject();
-  }
-
-  public static String removeTokenTypeFromToken(String token) {
-    return token.replace(TOKEN_TYPE, "");
+    return JWT.decode(token).getSubject();
   }
 }

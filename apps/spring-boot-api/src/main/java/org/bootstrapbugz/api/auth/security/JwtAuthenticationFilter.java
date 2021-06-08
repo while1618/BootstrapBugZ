@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.bootstrapbugz.api.auth.dto.LoginDto;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.service.JwtService;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
@@ -79,9 +78,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     final LoginDto loginDto =
         new LoginDto()
             .setToken(
-                JwtUtil.TOKEN_TYPE
-                    + jwtService.createToken(
-                        userPrincipal.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
+                jwtService.createToken(userPrincipal.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
             .setRefreshToken(jwtService.createRefreshToken(userPrincipal.getUsername()))
             .setUser(userPrincipalToUserDto(userPrincipal));
     writeToResponse(response, loginDto);

@@ -58,7 +58,6 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public void checkToken(String token, JwtPurpose purpose) {
-    token = JwtUtil.removeTokenTypeFromToken(token);
     JwtUtil.isTokenValid(token, createSecret(purpose));
     isInJwtBlacklist(token);
     isInUserBlacklist(token);

@@ -43,7 +43,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
       return;
     }
     try {
-      UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(token);
+      UsernamePasswordAuthenticationToken authenticationToken =
+          getAuthenticationToken(JwtUtil.removeTokenTypeFromToken(token));
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     } catch (ResourceNotFound
         | JWTVerificationException
