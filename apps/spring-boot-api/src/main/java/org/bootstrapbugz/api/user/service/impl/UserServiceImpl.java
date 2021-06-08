@@ -102,11 +102,7 @@ public class UserServiceImpl implements UserService {
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
       throw new BadRequestException(
           messageService.getMessage("oldPassword.invalid"), ErrorDomain.USER);
-    changePassword(user, changePasswordRequest.getNewPassword());
-  }
-
-  private void changePassword(User user, String password) {
-    user.setPassword(bCryptPasswordEncoder.encode(password));
+    user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getNewPassword()));
     jwtService.invalidateAllTokens(user.getUsername());
     userRepository.save(user);
   }
