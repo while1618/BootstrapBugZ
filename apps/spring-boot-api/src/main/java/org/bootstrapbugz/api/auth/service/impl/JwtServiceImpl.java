@@ -91,7 +91,7 @@ public class JwtServiceImpl implements JwtService {
     String refreshToken =
         JwtUtil.createToken(
             username, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
-    refreshTokenRepository.save(new RefreshToken(refreshToken));
+    refreshTokenRepository.save(new RefreshToken(refreshToken, username));
     return refreshToken;
   }
 
@@ -100,6 +100,12 @@ public class JwtServiceImpl implements JwtService {
     JwtUtil.isTokenValid(refreshToken, createSecret(JwtPurpose.REFRESH_TOKEN));
     if (!refreshTokenRepository.existsById(refreshToken))
       throw new ForbiddenException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
+  }
+
+  @Override
+  public String findRefreshToken(String username) {
+    Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(username);
+    return refreshToken.map(RefreshToken::getToken).orElse(null);
   }
 
   @Override

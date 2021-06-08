@@ -15,5 +15,7 @@ public interface JwtService {
 
   void checkRefreshToken(String refreshToken);
 
+  String findRefreshToken(String username);
+
   void deleteRefreshToken(String token);
 }

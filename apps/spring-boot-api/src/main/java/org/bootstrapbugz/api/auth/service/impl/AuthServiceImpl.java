@@ -54,7 +54,13 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public RefreshTokenDto refreshToken(RefreshTokenRequest refreshTokenRequest) {
-    return null;
+    String refreshToken = JwtUtil.removeTokenTypeFromToken(refreshTokenRequest.getRefreshToken());
+    jwtService.checkRefreshToken(refreshToken);
+    jwtService.deleteRefreshToken(refreshToken);
+    String username = JWT.decode(refreshToken).getSubject();
+    String accessToken = jwtService.createToken(username, JwtPurpose.ACCESSING_RESOURCES);
+    String newRefreshToken = jwtService.createRefreshToken(username);
+    return new RefreshTokenDto(accessToken, newRefreshToken);
   }
 
   @Override

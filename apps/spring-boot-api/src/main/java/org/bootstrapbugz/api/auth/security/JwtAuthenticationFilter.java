@@ -75,10 +75,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       Authentication auth)
       throws IOException {
     User user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
+    String refreshToken = jwtService.findRefreshToken(user.getUsername());
+    if (refreshToken == null) refreshToken = jwtService.createRefreshToken(user.getUsername());
     final LoginDto loginDto =
         new LoginDto()
             .setToken(jwtService.createToken(user.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
-            .setRefreshToken(jwtService.createRefreshToken(user.getUsername()))
+            .setRefreshToken(refreshToken)
             .setUser(userMapper.userToUserDto(user));
     writeToResponse(response, loginDto);
   }

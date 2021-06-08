@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   };
   private static final String[] AUTH_WHITELIST = {
     Path.AUTH + "/login",
+    Path.AUTH + "/refresh-token",
     Path.AUTH + "/sign-up",
     Path.AUTH + "/confirm-registration",
     Path.AUTH + "/resend-confirmation-email",
