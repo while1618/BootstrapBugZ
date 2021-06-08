@@ -93,11 +93,11 @@ public class AuthServiceImpl implements AuthService {
                         messageSource.getMessage(
                             "token.invalid", null, LocaleContextHolder.getLocale()),
                         ErrorDomain.AUTH));
+    if (user.isActivated())
+      throw new ForbiddenException(
+          messageSource.getMessage("user.activated", null, LocaleContextHolder.getLocale()),
+          ErrorDomain.AUTH);
     jwtService.checkToken(token, JwtPurpose.CONFIRM_REGISTRATION);
-    activateUser(user);
-  }
-
-  private void activateUser(User user) {
     user.setActivated(true);
     userRepository.save(user);
   }
@@ -149,11 +149,7 @@ public class AuthServiceImpl implements AuthService {
                             "token.invalid", null, LocaleContextHolder.getLocale()),
                         ErrorDomain.AUTH));
     jwtService.checkToken(resetPasswordRequest.getToken(), JwtPurpose.FORGOT_PASSWORD);
-    changePassword(user, resetPasswordRequest.getPassword());
-  }
-
-  private void changePassword(User user, String password) {
-    user.setPassword(bCryptPasswordEncoder.encode(password));
+    user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
     jwtService.invalidateAllTokens(user.getUsername());
     userRepository.save(user);
   }
