@@ -2,20 +2,25 @@ package org.bootstrapbugz.api.config;
 
 import java.util.Objects;
 import java.util.Properties;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 public class MailConfig {
-  private final Environment environment;
+  @Value("${spring.mail.host}")
+  private String host;
 
-  public MailConfig(Environment environment) {
-    this.environment = environment;
-  }
+  @Value("${spring.mail.port}")
+  private String port;
+
+  @Value("${spring.mail.username}")
+  private String username;
+
+  @Value("${spring.mail.password}")
+  private String password;
 
   @Bean
   public JavaMailSender getJavaMailSender() {
@@ -27,11 +32,10 @@ public class MailConfig {
 
   private JavaMailSenderImpl createMailSender() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-    mailSender.setHost(environment.getProperty("spring.mail.host"));
-    mailSender.setPort(
-        Integer.parseInt(Objects.requireNonNull(environment.getProperty("spring.mail.port"))));
-    mailSender.setUsername(environment.getProperty("spring.mail.username"));
-    mailSender.setPassword(environment.getProperty("spring.mail.password"));
+    mailSender.setHost(host);
+    mailSender.setPort(Integer.parseInt(Objects.requireNonNull(port)));
+    mailSender.setUsername(username);
+    mailSender.setPassword(password);
 
     return mailSender;
   }
