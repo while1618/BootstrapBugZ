@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDto findByUsername(String username) {
+    User loggedUser = AuthUtil.findLoggedUser();
     User user =
         userRepository
             .findByUsernameWithRoles(username)
@@ -52,6 +53,10 @@ public class UserServiceImpl implements UserService {
                 () ->
                     new ResourceNotFound(
                         messageService.getMessage("user.notFound"), ErrorDomain.USER));
+    if (!loggedUser.getUsername().equals(user.getUsername())) {
+      user.setEmail(null);
+      user.setRoles(null);
+    }
     return userMapper.userToUserDto(user);
   }
 
