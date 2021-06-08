@@ -59,7 +59,7 @@ public class JwtServiceImpl implements JwtService {
   @Override
   public void checkToken(String token, JwtPurpose purpose) {
     token = JwtUtil.removeBearerFromToken(token);
-    JwtUtil.isValid(token, createSecret(purpose));
+    JwtUtil.isTokenValid(token, createSecret(purpose));
     isInJwtBlacklist(token);
     isInUserBlacklist(token);
   }
@@ -95,7 +95,7 @@ public class JwtServiceImpl implements JwtService {
   @Override
   public String createRefreshToken(String username) {
     String refreshToken =
-        JwtUtil.createRefreshToken(
+        JwtUtil.createToken(
             username, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
     refreshTokenRepository.save(new RefreshToken(refreshToken));
     return refreshToken;
@@ -103,7 +103,7 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public void checkRefreshToken(String refreshToken) {
-    JwtUtil.isValid(refreshToken, createSecret(JwtPurpose.REFRESH_TOKEN));
+    JwtUtil.isTokenValid(refreshToken, createSecret(JwtPurpose.REFRESH_TOKEN));
     if (!refreshTokenRepository.existsById(refreshToken))
       throw new ForbiddenException(
           messageSource.getMessage("token.invalid", null, LocaleContextHolder.getLocale()),

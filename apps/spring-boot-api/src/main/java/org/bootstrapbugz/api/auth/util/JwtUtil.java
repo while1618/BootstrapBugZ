@@ -25,15 +25,7 @@ public class JwtUtil {
         .sign(Algorithm.HMAC512(secret.getBytes()));
   }
 
-  public static String createRefreshToken(
-      String username, int expirationTimeInSecs, String secret) {
-    return JWT.create()
-        .withSubject(username)
-        .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSecs * 1000L))
-        .sign(Algorithm.HMAC512(secret.getBytes()));
-  }
-
-  public static void isValid(String token, String secret) {
+  public static void isTokenValid(String token, String secret) {
     JWT.require(Algorithm.HMAC512(secret.getBytes())).build().verify(token);
   }
 
