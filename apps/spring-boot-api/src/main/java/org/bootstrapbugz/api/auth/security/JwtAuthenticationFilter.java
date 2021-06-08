@@ -5,20 +5,20 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.bootstrapbugz.api.auth.dto.LoginDto;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.service.JwtService;
+import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.dto.UserDto;
-import org.bootstrapbugz.api.user.dto.UserDto.RoleDto;
+import org.bootstrapbugz.api.user.mapper.UserMapper;
+import org.bootstrapbugz.api.user.model.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -30,14 +30,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final AuthenticationManager authenticationManager;
   private final JwtService jwtService;
+  private final UserMapper userMapper;
   private final MessageService messageService;
 
   public JwtAuthenticationFilter(
       AuthenticationManager authenticationManager,
       JwtService jwtService,
+      UserMapper userMapper,
       MessageService messageService) {
     this.authenticationManager = authenticationManager;
     this.jwtService = jwtService;
+    this.userMapper = userMapper;
     this.messageService = messageService;
     this.setFilterProcessesUrl(Path.AUTH + "/login");
   }
@@ -71,29 +74,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    final UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+    User user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
     final LoginDto loginDto =
         new LoginDto()
-            .setToken(
-                jwtService.createToken(userPrincipal.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
-            .setRefreshToken(jwtService.createRefreshToken(userPrincipal.getUsername()))
-            .setUser(userPrincipalToUserDto(userPrincipal));
+            .setToken(jwtService.createToken(user.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
+            .setRefreshToken(jwtService.createRefreshToken(user.getUsername()))
+            .setUser(userMapper.userToUserDto(user));
     writeToResponse(response, loginDto);
-  }
-
-  private UserDto userPrincipalToUserDto(UserPrincipal userPrincipal) {
-    return new UserDto()
-        .setId(userPrincipal.getId())
-        .setFirstName(userPrincipal.getFirstName())
-        .setLastName(userPrincipal.getLastName())
-        .setUsername(userPrincipal.getUsername())
-        .setEmail(userPrincipal.getEmail())
-        .setActivated(userPrincipal.isEnabled())
-        .setNonLocked(userPrincipal.isAccountNonLocked())
-        .setRoles(
-            userPrincipal.getAuthorities().stream()
-                .map(authority -> new RoleDto(authority.getAuthority()))
-                .collect(Collectors.toSet()));
   }
 
   private void writeToResponse(HttpServletResponse response, LoginDto loginDto) throws IOException {

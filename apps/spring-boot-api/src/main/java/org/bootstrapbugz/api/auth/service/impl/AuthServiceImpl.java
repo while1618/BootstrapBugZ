@@ -11,6 +11,7 @@ import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.auth.service.JwtService;
+import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
@@ -25,8 +26,6 @@ import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -150,7 +149,6 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void logoutFromAllDevices() {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    jwtService.invalidateAllTokens(auth.getName());
+    jwtService.invalidateAllTokens(AuthUtil.findLoggedUser().getUsername());
   }
 }

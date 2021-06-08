@@ -6,6 +6,7 @@ import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
+import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,16 +39,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   };
   private final UserDetailsService userDetailsService;
   private final JwtService jwtService;
+  private final UserMapper userMapper;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final MessageService messageService;
 
   public SecurityConfig(
       @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
       JwtService jwtService,
+      UserMapper userMapper,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
       MessageService messageService) {
     this.userDetailsService = userDetailsService;
     this.jwtService = jwtService;
+    this.userMapper = userMapper;
     this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     this.messageService = messageService;
   }
@@ -77,7 +81,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtService, messageService))
+        .addFilter(
+            new JwtAuthenticationFilter(
+                authenticationManager(), jwtService, userMapper, messageService))
         .addFilter(
             new JwtAuthorizationFilter(authenticationManager(), jwtService, userDetailsService))
         .exceptionHandling()
