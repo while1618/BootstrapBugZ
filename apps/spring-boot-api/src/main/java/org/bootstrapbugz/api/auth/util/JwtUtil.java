@@ -26,11 +26,11 @@ public class JwtUtil {
             .sign(Algorithm.HMAC512(secret.getBytes()));
   }
 
-  public static String removeTokenTypeFromToken(String token) {
-    return token.replace(TOKEN_TYPE, "");
-  }
-
   public static void isTokenValid(String token, String secret) {
     JWT.require(Algorithm.HMAC512(secret.getBytes())).build().verify(token);
+  }
+
+  public static String removeTokenTypeFromToken(String token) {
+    return token.replace(TOKEN_TYPE, "");
   }
 }
