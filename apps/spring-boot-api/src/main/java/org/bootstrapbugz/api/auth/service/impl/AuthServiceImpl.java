@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.auth.service.impl;
 
 import com.auth0.jwt.JWT;
 import java.util.Collections;
+import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
@@ -53,13 +54,15 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public RefreshTokenDto refreshToken(RefreshTokenRequest refreshTokenRequest) {
+  public RefreshTokenDto refreshToken(
+      RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
     String refreshToken = JwtUtil.removeTokenTypeFromToken(refreshTokenRequest.getRefreshToken());
     jwtService.checkRefreshToken(refreshToken);
     jwtService.deleteRefreshToken(refreshToken);
     String username = JWT.decode(refreshToken).getSubject();
     String accessToken = jwtService.createToken(username, JwtPurpose.ACCESSING_RESOURCES);
-    String newRefreshToken = jwtService.createRefreshToken(username);
+    String newRefreshToken =
+        jwtService.createRefreshToken(username, AuthUtil.getUserIpAddress(request));
     return new RefreshTokenDto(accessToken, newRefreshToken);
   }
 

@@ -1,6 +1,7 @@
 package org.bootstrapbugz.api.auth.util;
 
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -30,5 +31,11 @@ public class AuthUtil {
             userPrincipal.getAuthorities().stream()
                 .map(authority -> new Role(RoleName.valueOf(authority.getAuthority())))
                 .collect(Collectors.toSet()));
+  }
+
+  public static String getUserIpAddress(HttpServletRequest request) {
+    String ipAddress = request.getHeader("x-forwarded-for");
+    if (ipAddress == null || ipAddress.isEmpty()) ipAddress = request.getRemoteAddr();
+    return ipAddress;
   }
 }

@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.auth.service;
 
+import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
@@ -9,7 +10,7 @@ import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.user.dto.UserDto;
 
 public interface AuthService {
-  RefreshTokenDto refreshToken(RefreshTokenRequest refreshTokenRequest);
+  RefreshTokenDto refreshToken(RefreshTokenRequest refreshTokenRequest, HttpServletRequest request);
 
   UserDto signUp(SignUpRequest signUpRequest);
 

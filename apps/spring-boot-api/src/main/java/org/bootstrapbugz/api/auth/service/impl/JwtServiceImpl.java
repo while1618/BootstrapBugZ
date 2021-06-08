@@ -87,12 +87,12 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
-  public String createRefreshToken(String username) {
+  public String createRefreshToken(String username, String ipAddress) {
     String refreshToken =
         JwtUtil.createToken(
             username, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
     refreshTokenRepository.save(
-        new RefreshToken(JwtUtil.removeTokenTypeFromToken(refreshToken), username));
+        new RefreshToken(JwtUtil.removeTokenTypeFromToken(refreshToken), username, ipAddress));
     return refreshToken;
   }
 
@@ -104,8 +104,9 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
-  public String findRefreshToken(String username) {
-    Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(username);
+  public String findRefreshToken(String username, String ipAddress) {
+    Optional<RefreshToken> refreshToken =
+        refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
     return refreshToken.map(token -> JwtUtil.TOKEN_TYPE + token.getToken()).orElse(null);
   }
 

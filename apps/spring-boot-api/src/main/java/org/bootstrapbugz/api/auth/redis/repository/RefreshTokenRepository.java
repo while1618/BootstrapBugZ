@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RefreshTokenRepository extends CrudRepository<RefreshToken, String> {
-  Optional<RefreshToken> findByUsername(String username);
+  Optional<RefreshToken> findByUsernameAndIpAddress(String username, String ipAddress);
 }

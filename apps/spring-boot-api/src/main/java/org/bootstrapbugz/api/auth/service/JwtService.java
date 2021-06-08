@@ -11,11 +11,11 @@ public interface JwtService {
 
   void invalidateAllTokens(String username);
 
-  String createRefreshToken(String username);
+  String createRefreshToken(String username, String ipAddress);
 
   void checkRefreshToken(String refreshToken);
 
-  String findRefreshToken(String username);
+  String findRefreshToken(String username, String ipAddress);
 
   void deleteRefreshToken(String token);
 }
