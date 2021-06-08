@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.user.service.impl;
 
-import java.util.List;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
@@ -42,14 +41,6 @@ public class UserServiceImpl implements UserService {
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.eventPublisher = eventPublisher;
     this.jwtService = jwtService;
-  }
-
-  @Override
-  public List<SimpleUserDto> findAll() {
-    List<User> users = userRepository.findAll();
-    if (users.isEmpty())
-      throw new ResourceNotFound(messageService.getMessage("users.notFound"), ErrorDomain.USER);
-    return userMapper.usersToSimpleUserDtos(users);
   }
 
   @Override

@@ -1,9 +1,6 @@
 package org.bootstrapbugz.api.user.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
-
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.dto.SimpleUserDto;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
@@ -24,11 +21,6 @@ public class UserController {
 
   public UserController(UserService userService) {
     this.userService = userService;
-  }
-
-  @GetMapping
-  public ResponseEntity<List<SimpleUserDto>> findAll() {
-    return ResponseEntity.ok(userService.findAll());
   }
 
   @GetMapping("/{username}")
