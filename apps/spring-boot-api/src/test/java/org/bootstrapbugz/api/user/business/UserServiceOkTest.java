@@ -7,15 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.user.dto.SimpleUserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.model.RoleName;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
@@ -53,7 +51,7 @@ class UserServiceOkTest {
 
   @BeforeEach
   void init() {
-    userRole = new Role(1L, RoleName.USER);
+//    userRole = new Role(1L, RoleName.USER);
     user =
         new User()
             .setId(2L)

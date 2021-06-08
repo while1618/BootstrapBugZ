@@ -9,7 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +20,7 @@ import org.bootstrapbugz.api.admin.service.impl.AdminServiceImpl;
 import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.model.RoleName;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -55,7 +54,7 @@ class AdminServiceTest {
     adminRequest = new AdminRequest(Set.of("user"));
     changeRoleRequest =
         new ChangeRoleRequest(adminRequest.getUsernames(), Set.of(RoleName.USER, RoleName.ADMIN));
-    Role userRole = new Role(1L, RoleName.USER);
+//    Role userRole = new Role(1L, RoleName.USER);
     users =
         Collections.singletonList(
             new User()
@@ -65,9 +64,9 @@ class AdminServiceTest {
                 .setUsername("user")
                 .setEmail("user@localhost.com")
                 .setPassword(bCryptPasswordEncoder.encode("qwerty123"))
-                .setActivated(true)
-                .setRoles(Set.of(userRole)));
-    roles = Arrays.asList(new Role(1L, RoleName.ADMIN), userRole);
+                .setActivated(true));
+//                .setRoles(Set.of(userRole)));
+//    roles = Arrays.asList(new Role(1L, RoleName.ADMIN), userRole);
   }
 
   @Test
@@ -80,7 +79,7 @@ class AdminServiceTest {
   @Test
   void changeRole_noContent() {
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames())).thenReturn(users);
-    when(roleRepository.findAllByNameIn(changeRoleRequest.getRoleNames())).thenReturn(roles);
+//    when(roleRepository.findAllByNameIn(changeRoleRequest.getRoleNames())).thenReturn(roles);
 //    LocalDateTime updatedAtBeforeChange = users.get(0).getUpdatedAt();
     adminService.changeRole(changeRoleRequest);
 //    assertNotEquals(updatedAtBeforeChange, users.get(0).getUpdatedAt());

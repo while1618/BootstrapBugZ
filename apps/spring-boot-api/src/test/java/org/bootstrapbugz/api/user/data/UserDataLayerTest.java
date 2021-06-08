@@ -11,7 +11,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.model.RoleName;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -65,15 +65,15 @@ class UserDataLayerTest {
   @Test
   void save() {
     Set<RoleName> names = Set.of(RoleName.USER, RoleName.ADMIN);
-    List<Role> roles = roleRepository.findAllByNameIn(names);
+//    List<Role> roles = roleRepository.findAllByNameIn(names);
     User user =
         new User()
             .setFirstName("Test")
             .setLastName("Test")
             .setUsername("test")
             .setEmail("test@localhost.com")
-            .setPassword("qwerty123")
-            .setRoles(new HashSet<>(roles));
+            .setPassword("qwerty123");
+//            .setRoles(new HashSet<>(roles));
     userRepository.save(user);
     flushAndClear();
     User userFromDB = userRepository.findByUsername("test").orElseThrow();
@@ -88,23 +88,23 @@ class UserDataLayerTest {
   @Test
   void saveAll() {
     Set<RoleName> names = Set.of(RoleName.USER, RoleName.ADMIN);
-    List<Role> roles = roleRepository.findAllByNameIn(names);
+//    List<Role> roles = roleRepository.findAllByNameIn(names);
     User user1 =
         new User()
             .setFirstName("Test")
             .setLastName("Test")
             .setUsername("test")
             .setEmail("test@localhost.com")
-            .setPassword("qwerty123")
-            .setRoles(new HashSet<>(roles));
+            .setPassword("qwerty123");
+//            .setRoles(new HashSet<>(roles));
     User user2 =
         new User()
             .setFirstName("Test2")
             .setLastName("Test2")
             .setUsername("test2")
             .setEmail("test2@localhost.com")
-            .setPassword("qwerty123")
-            .setRoles(new HashSet<>(roles));
+            .setPassword("qwerty123");
+//            .setRoles(new HashSet<>(roles));
     userRepository.saveAll(Set.of(user1, user2));
     List<User> users = userRepository.findAll();
     assertThat(users).hasSize(6);

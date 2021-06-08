@@ -1,8 +1,9 @@
 package org.bootstrapbugz.api.auth.util;
 
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import java.util.stream.Collectors;
+import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
+import org.bootstrapbugz.api.user.dto.UserDto.RoleDto;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -13,10 +14,17 @@ public class AuthUtil {
 
   public static User findLoggedUser(UserRepository userRepository, MessageService messageService) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    return userRepository
-        .findByUsername(auth.getName())
-        .orElseThrow(
-            () ->
-                new ResourceNotFound(messageService.getMessage("user.notFound"), ErrorDomain.USER));
+    return userPrincipalToUser((UserPrincipal) auth.getPrincipal());
+  }
+
+  public static User userPrincipalToUser(UserPrincipal userPrincipal) {
+    return new User()
+        .setId(userPrincipal.getId())
+        .setFirstName(userPrincipal.getFirstName())
+        .setLastName(userPrincipal.getLastName())
+        .setUsername(userPrincipal.getUsername())
+        .setEmail(userPrincipal.getEmail())
+        .setActivated(userPrincipal.isEnabled())
+        .setNonLocked(userPrincipal.isAccountNonLocked());
   }
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bootstrapbugz.api.shared.constants.Regex;
-import org.bootstrapbugz.api.user.model.RoleName;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 
 @Getter
 @Setter

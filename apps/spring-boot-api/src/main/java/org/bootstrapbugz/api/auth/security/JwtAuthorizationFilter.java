@@ -63,6 +63,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
 
     return new UsernamePasswordAuthenticationToken(
-        userPrincipal.getUsername(), null, userPrincipal.getAuthorities());
+        userPrincipal, null, userPrincipal.getAuthorities());
   }
 }

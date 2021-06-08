@@ -1,6 +1,6 @@
-insert into roles (name)
+insert into roles (role_name)
 values ('USER');
-insert into roles (name)
+insert into roles (role_name)
 values ('ADMIN');
 -- password for user and admin is "qwerty123"
 insert into users (
@@ -39,9 +39,9 @@ values (
                 true,
                 true
         );
-insert into user_roles (user_id, role_id)
-values (1, 1);
-insert into user_roles (user_id, role_id)
-values (1, 2);
-insert into user_roles (user_id, role_id)
-values (2, 1);
+insert into user_roles (user_id, role_name)
+values (1, 'USER');
+insert into user_roles (user_id, role_name)
+values (1, 'ADMIN');
+insert into user_roles (user_id, role_name)
+values (2, 'USER');

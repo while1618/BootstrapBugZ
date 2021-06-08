@@ -10,7 +10,7 @@ import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.model.RoleName;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
@@ -55,8 +55,8 @@ class UserServiceNotOkTest {
             .setUsername("user")
             .setEmail("user@localhost.com")
             .setPassword(bCryptPasswordEncoder.encode("qwerty123"))
-            .setActivated(true)
-            .setRoles(Set.of(new Role(1L, RoleName.USER)));
+            .setActivated(true);
+//            .setRoles(Set.of(new Role(1L, RoleName.USER)));
   }
 
   private void authentication(boolean withUser) {

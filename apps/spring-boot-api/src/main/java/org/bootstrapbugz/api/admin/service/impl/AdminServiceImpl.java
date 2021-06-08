@@ -1,7 +1,8 @@
 package org.bootstrapbugz.api.admin.service.impl;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
@@ -52,8 +53,9 @@ public class AdminServiceImpl implements AdminService {
     List<User> users = userRepository.findAllByUsernameIn(changeRoleRequest.getUsernames());
     users.forEach(
         user -> {
-          List<Role> roles = roleRepository.findAllByNameIn(changeRoleRequest.getRoleNames());
-          user.setRoles(new HashSet<>(roles));
+          Set<Role> roles =
+              changeRoleRequest.getRoleNames().stream().map(Role::new).collect(Collectors.toSet());
+          user.setRoles(roles);
           jwtService.invalidateAllTokens(user.getUsername());
         });
     userRepository.saveAll(users);

@@ -1,6 +1,7 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import com.auth0.jwt.JWT;
+import java.util.Collections;
 import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
@@ -19,7 +20,7 @@ import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.model.RoleName;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -76,9 +77,8 @@ public class AuthServiceImpl implements AuthService {
             .setLastName(signUpRequest.getLastName())
             .setUsername(signUpRequest.getUsername())
             .setEmail(signUpRequest.getEmail())
-            .setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()));
-    Role role = roleRepository.findByName(RoleName.USER).orElse(null);
-    user.addRole(role);
+            .setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()))
+            .setRoles(Collections.singleton(new Role(RoleName.USER)));
     return userRepository.save(user);
   }
 

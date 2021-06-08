@@ -54,23 +54,8 @@ public class User implements Serializable {
   @JoinTable(
       name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "role_id"))
+      inverseJoinColumns = @JoinColumn(name = "role_name"))
   private Set<Role> roles = new HashSet<>();
-
-  public void addRole(Role role) {
-    this.roles.add(role);
-  }
-
-  public boolean isAdmin() {
-    boolean admin = false;
-    for (Role role : this.roles) {
-      if (role.getName().equals(RoleName.ADMIN)) {
-        admin = true;
-        break;
-      }
-    }
-    return admin;
-  }
 
   @Override
   public boolean equals(Object o) {

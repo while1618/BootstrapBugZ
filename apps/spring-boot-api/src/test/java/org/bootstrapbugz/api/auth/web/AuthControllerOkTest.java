@@ -18,8 +18,6 @@ import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.model.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.junit.jupiter.api.MethodOrderer;
@@ -131,8 +129,8 @@ class AuthControllerOkTest {
             .setUsername("generated")
             .setEmail("generated@localhost.com")
             .setPassword("qwerty123");
-    Role role = new Role(1L, RoleName.USER);
-    user.addRole(role);
+//    Role role = new Role(1L, RoleName.USER);
+//    user.addRole(role);
     return userRepository.save(user);
   }
 

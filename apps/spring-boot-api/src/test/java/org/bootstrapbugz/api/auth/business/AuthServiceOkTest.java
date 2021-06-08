@@ -21,7 +21,7 @@ import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.model.RoleName;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -58,7 +58,7 @@ class AuthServiceOkTest {
 
   @BeforeEach
   void init() {
-    userRole = new Role(1L, RoleName.USER);
+//    userRole = new Role(1L, RoleName.USER);
     user =
         new User()
             .setId(1L)
@@ -81,7 +81,7 @@ class AuthServiceOkTest {
   void signUp_created() {
     SignUpRequest signUpRequest =
         new SignUpRequest("User", "User", "user", "user@localhost.com", "qwerty123", "qwerty123");
-    when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(userRole));
+//    when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(userRole));
     when(userRepository.save(any(User.class))).thenReturn(user);
     UserDto createdUser = authService.signUp(signUpRequest);
     assertThat(createdUser).isNotNull();
