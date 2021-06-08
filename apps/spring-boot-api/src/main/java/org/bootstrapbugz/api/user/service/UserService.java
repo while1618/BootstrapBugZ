@@ -1,13 +1,13 @@
 package org.bootstrapbugz.api.user.service;
 
-import org.bootstrapbugz.api.user.dto.SimpleUserDto;
+import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
 
 public interface UserService {
-  SimpleUserDto findByUsername(String username);
+  UserDto findByUsername(String username);
 
-  SimpleUserDto update(UpdateUserRequest updateUserRequest);
+  UserDto update(UpdateUserRequest updateUserRequest);
 
   void changePassword(ChangePasswordRequest changePasswordRequest);
 }

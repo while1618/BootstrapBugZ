@@ -23,6 +23,7 @@ public class AuthUtil {
         .setLastName(userPrincipal.getLastName())
         .setUsername(userPrincipal.getUsername())
         .setEmail(userPrincipal.getEmail())
+        .setPassword(userPrincipal.getPassword())
         .setActivated(userPrincipal.isEnabled())
         .setNonLocked(userPrincipal.isAccountNonLocked())
         .setRoles(

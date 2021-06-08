@@ -8,7 +8,7 @@ import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.dto.SimpleUserDto;
+import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -44,25 +44,25 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public SimpleUserDto findByUsername(String username) {
+  public UserDto findByUsername(String username) {
     User user =
         userRepository
-            .findByUsername(username)
+            .findByUsernameWithRoles(username)
             .orElseThrow(
                 () ->
                     new ResourceNotFound(
                         messageService.getMessage("user.notFound"), ErrorDomain.USER));
-    return userMapper.userToSimpleUserDto(user);
+    return userMapper.userToUserDto(user);
   }
 
   @Override
-  public SimpleUserDto update(UpdateUserRequest updateUserRequest) {
+  public UserDto update(UpdateUserRequest updateUserRequest) {
     User user = AuthUtil.findLoggedUser();
     user.setFirstName(updateUserRequest.getFirstName());
     user.setLastName(updateUserRequest.getLastName());
     tryToSetUsername(user, updateUserRequest.getUsername());
     tryToSetEmail(user, updateUserRequest.getEmail());
-    return userMapper.userToSimpleUserDto(userRepository.save(user));
+    return userMapper.userToUserDto(userRepository.save(user));
   }
 
   private void tryToSetUsername(User user, String username) {
