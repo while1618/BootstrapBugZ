@@ -1,6 +1,6 @@
-package org.bootstrapbugz.api.auth.repository;
+package org.bootstrapbugz.api.auth.redis.repository;
 
-import org.bootstrapbugz.api.auth.model.JwtBlacklist;
+import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

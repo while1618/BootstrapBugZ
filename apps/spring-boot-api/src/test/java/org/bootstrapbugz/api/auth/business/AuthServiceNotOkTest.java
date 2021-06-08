@@ -8,8 +8,8 @@ import java.util.Set;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
+import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
-import org.bootstrapbugz.api.auth.util.JwtUtilities;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
@@ -38,7 +38,7 @@ class AuthServiceNotOkTest {
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
   @Mock private ApplicationEventPublisher eventPublisher;
   @Mock private MessageSource messageSource;
-  @Mock private JwtUtilities jwtUtilities;
+  @Mock private JwtService jwtService;
   @Spy private UserMapperImpl userMapper;
   @Mock private Authentication authentication;
   @Mock private SecurityContext securityContext;

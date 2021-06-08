@@ -9,10 +9,11 @@ import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.bootstrapbugz.api.auth.dto.JwtDto;
+import org.bootstrapbugz.api.auth.dto.LoginDto;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
-import org.bootstrapbugz.api.auth.util.JwtPurpose;
-import org.bootstrapbugz.api.auth.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.service.JwtService;
+import org.bootstrapbugz.api.auth.util.JwtUtil;
+import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
@@ -29,16 +30,16 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-  private final JwtUtilities jwtUtilities;
   private final AuthenticationManager authenticationManager;
+  private final JwtService jwtService;
   private final MessageSource messageSource;
 
   public JwtAuthenticationFilter(
       AuthenticationManager authenticationManager,
-      JwtUtilities jwtUtilities,
+      JwtService jwtService,
       MessageSource messageSource) {
     this.authenticationManager = authenticationManager;
-    this.jwtUtilities = jwtUtilities;
+    this.jwtService = jwtService;
     this.messageSource = messageSource;
     this.setFilterProcessesUrl(Path.AUTH + "/login");
   }
@@ -74,20 +75,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    String token =
-        jwtUtilities.createToken(
-            ((UserPrincipal) auth.getPrincipal()).getUsername(), JwtPurpose.ACCESSING_RESOURCES);
-    JwtDto jwtDto =
-        new JwtDto()
-            .setToken(JwtUtilities.BEARER + token)
-            .setRefreshToken("refreshToken")
-            .setUser(userPrincipalToUserDto((UserPrincipal) auth.getPrincipal()));
-    String jwtDtoJson = new Gson().toJson(jwtDto);
-    PrintWriter out = response.getWriter();
-    response.setContentType("application/json");
-    response.setCharacterEncoding("UTF-8");
-    out.print(jwtDtoJson);
-    out.flush();
+    final UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+    final LoginDto loginDto =
+        new LoginDto()
+            .setToken(
+                JwtUtil.BEARER
+                    + jwtService.createToken(
+                        userPrincipal.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
+            .setRefreshToken(jwtService.createRefreshToken(userPrincipal.getUsername()))
+            .setUser(userPrincipalToUserDto(userPrincipal));
+    writeToResponse(response, loginDto);
   }
 
   private UserDto userPrincipalToUserDto(UserPrincipal userPrincipal) {
@@ -103,5 +100,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             userPrincipal.getAuthorities().stream()
                 .map(authority -> new RoleDto(authority.getAuthority()))
                 .collect(Collectors.toSet()));
+  }
+
+  private void writeToResponse(HttpServletResponse response, LoginDto loginDto) throws IOException {
+    final String jwtDtoJson = new Gson().toJson(loginDto);
+    PrintWriter out = response.getWriter();
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+    out.print(jwtDtoJson);
+    out.flush();
   }
 }

@@ -11,8 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import org.bootstrapbugz.api.auth.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.user.dto.SimpleUserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
@@ -45,7 +44,7 @@ class UserServiceOkTest {
   @Mock private ApplicationEventPublisher eventPublisher;
   @Mock private Authentication authentication;
   @Mock private SecurityContext securityContext;
-  @Mock private JwtUtilities jwtUtilities;
+  @Mock private JwtService jwtService;
 
   @InjectMocks private UserServiceImpl userService;
 

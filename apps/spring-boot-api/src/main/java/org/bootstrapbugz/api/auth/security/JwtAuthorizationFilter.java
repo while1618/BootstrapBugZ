@@ -7,8 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.bootstrapbugz.api.auth.util.JwtPurpose;
-import org.bootstrapbugz.api.auth.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.service.JwtService;
+import org.bootstrapbugz.api.auth.util.JwtUtil;
+import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,15 +21,15 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-  private final JwtUtilities jwtUtilities;
+  private final JwtService jwtService;
   private final UserDetailsService userDetailsService;
 
   public JwtAuthorizationFilter(
       AuthenticationManager authenticationManager,
-      JwtUtilities jwtUtilities,
+      JwtService jwtService,
       @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
     super(authenticationManager);
-    this.jwtUtilities = jwtUtilities;
+    this.jwtService = jwtService;
     this.userDetailsService = userDetailsService;
   }
 
@@ -36,8 +37,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    String token = request.getHeader(JwtUtilities.HEADER);
-    if (token == null || !token.startsWith(JwtUtilities.BEARER)) {
+    String token = request.getHeader(JwtUtil.HEADER);
+    if (token == null || !token.startsWith(JwtUtil.BEARER)) {
       chain.doFilter(request, response);
       return;
     }
@@ -55,9 +56,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   }
 
   private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
-    String username = jwtUtilities.getSubject(token);
+    String username = JwtUtil.getSubject(token);
     UserPrincipal userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
-    jwtUtilities.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
+    jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
 
     return new UsernamePasswordAuthenticationToken(
         userPrincipal.getUsername(), null, userPrincipal.getAuthorities());

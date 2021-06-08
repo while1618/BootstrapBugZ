@@ -14,8 +14,9 @@ import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.util.JwtPurpose;
-import org.bootstrapbugz.api.auth.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.service.JwtService;
+import org.bootstrapbugz.api.auth.util.JwtUtil;
+import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.RoleName;
@@ -41,7 +42,7 @@ class AuthControllerOkTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private UserRepository userRepository;
-  @Autowired private JwtUtilities jwtUtilities;
+  @Autowired private JwtService jwtService;
 
   @Test
   @Order(1)
@@ -54,7 +55,7 @@ class AuthControllerOkTest {
                     objectMapper.writeValueAsString(
                         new LoginRequest("decrescendo807@gmail.com", "qwerty123"))))
         .andExpect(status().isOk())
-        .andExpect(header().exists(JwtUtilities.HEADER));
+        .andExpect(header().exists(JwtUtil.HEADER));
   }
 
   @Test
@@ -100,7 +101,7 @@ class AuthControllerOkTest {
   @Order(4)
   void confirmRegistration_userFromDB_noContent() throws Exception {
     User user = userRepository.findByUsername("test").orElseThrow();
-    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     mockMvc
         .perform(
             get(Path.AUTH + "/confirm-registration")
@@ -113,7 +114,7 @@ class AuthControllerOkTest {
   @Order(5)
   void confirmRegistration_userGeneratedFromJava_noContent() throws Exception {
     User user = createUser();
-    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     mockMvc
         .perform(
             get(Path.AUTH + "/confirm-registration")
@@ -152,7 +153,7 @@ class AuthControllerOkTest {
   @Order(7)
   void resetPassword_noContent() throws Exception {
     User user = userRepository.findByUsername("test").orElseThrow();
-    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
+    String token = jwtService.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
     ResetPasswordRequest resetPasswordRequest =
         new ResetPasswordRequest(token, "BlaBla123", "BlaBla123");
     mockMvc
@@ -171,7 +172,7 @@ class AuthControllerOkTest {
         .perform(
             get(Path.AUTH + "/logout")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtilities.HEADER, token))
+                .header(JwtUtil.HEADER, token))
         .andExpect(status().isNoContent());
   }
 
@@ -183,6 +184,6 @@ class AuthControllerOkTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isOk());
-    return resultActions.andReturn().getResponse().getHeader(JwtUtilities.HEADER);
+    return resultActions.andReturn().getResponse().getHeader(JwtUtil.HEADER);
   }
 }

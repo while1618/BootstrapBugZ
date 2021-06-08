@@ -1,13 +1,10 @@
 package org.bootstrapbugz.api.user.service.impl;
 
-import java.util.Date;
 import java.util.List;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
-import org.bootstrapbugz.api.auth.model.UserBlacklist;
-import org.bootstrapbugz.api.auth.repository.UserBlacklistRepository;
+import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtPurpose;
-import org.bootstrapbugz.api.auth.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
@@ -27,28 +24,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
-  private final UserBlacklistRepository userBlacklistRepository;
   private final MessageSource messageSource;
   private final UserMapper userMapper;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final ApplicationEventPublisher eventPublisher;
-  private final JwtUtilities jwtUtilities;
+  private final JwtService jwtService;
 
   public UserServiceImpl(
       UserRepository userRepository,
-      UserBlacklistRepository userBlacklistRepository,
       MessageSource messageSource,
       UserMapper userMapper,
       PasswordEncoder bCryptPasswordEncoder,
       ApplicationEventPublisher eventPublisher,
-      JwtUtilities jwtUtilities) {
+      JwtService jwtService) {
     this.userRepository = userRepository;
-    this.userBlacklistRepository = userBlacklistRepository;
     this.messageSource = messageSource;
     this.userMapper = userMapper;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.eventPublisher = eventPublisher;
-    this.jwtUtilities = jwtUtilities;
+    this.jwtService = jwtService;
   }
 
   @Override
@@ -93,7 +87,7 @@ public class UserServiceImpl implements UserService {
           ErrorDomain.USER);
 
     user.setUsername(username);
-    userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
+    jwtService.invalidateAllTokens(user.getUsername());
   }
 
   private void tryToSetEmail(User user, String email) {
@@ -105,9 +99,9 @@ public class UserServiceImpl implements UserService {
 
     user.setEmail(email);
     user.setActivated(false);
-    userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
+    jwtService.invalidateAllTokens(user.getUsername());
 
-    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
 
@@ -123,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
   private void changePassword(User user, String password) {
     user.setPassword(bCryptPasswordEncoder.encode(password));
-    userBlacklistRepository.save(new UserBlacklist(user.getUsername(), new Date()));
+    jwtService.invalidateAllTokens(user.getUsername());
     userRepository.save(user);
   }
 }

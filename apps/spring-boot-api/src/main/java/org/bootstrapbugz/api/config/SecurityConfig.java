@@ -2,7 +2,7 @@ package org.bootstrapbugz.api.config;
 
 import org.bootstrapbugz.api.auth.security.JwtAuthenticationFilter;
 import org.bootstrapbugz.api.auth.security.JwtAuthorizationFilter;
-import org.bootstrapbugz.api.auth.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,17 +37,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     Path.AUTH + "/reset-password"
   };
   private final UserDetailsService userDetailsService;
-  private final JwtUtilities jwtUtilities;
+  private final JwtService jwtService;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final MessageSource messageSource;
 
   public SecurityConfig(
       @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-      JwtUtilities jwtUtilities,
+      JwtService jwtService,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
       MessageSource messageSource) {
     this.userDetailsService = userDetailsService;
-    this.jwtUtilities = jwtUtilities;
+    this.jwtService = jwtService;
     this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     this.messageSource = messageSource;
   }
@@ -77,10 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
+        .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtService, messageSource))
         .addFilter(
-            new JwtAuthenticationFilter(authenticationManager(), jwtUtilities, messageSource))
-        .addFilter(
-            new JwtAuthorizationFilter(authenticationManager(), jwtUtilities, userDetailsService))
+            new JwtAuthorizationFilter(authenticationManager(), jwtService, userDetailsService))
         .exceptionHandling()
         .authenticationEntryPoint(customAuthenticationEntryPoint)
         .and()

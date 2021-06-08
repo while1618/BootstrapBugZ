@@ -12,7 +12,7 @@ import org.bootstrapbugz.api.user.dto.UserDto;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class JwtDto {
+public class LoginDto {
   private String token;
   private String refreshToken;
   private UserDto user;

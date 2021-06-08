@@ -15,9 +15,9 @@ import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
+import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
-import org.bootstrapbugz.api.auth.util.JwtPurpose;
-import org.bootstrapbugz.api.auth.util.JwtUtilities;
+import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.user.dto.UserDto;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
@@ -46,7 +46,7 @@ class AuthServiceOkTest {
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
   @Mock private ApplicationEventPublisher eventPublisher;
   @Mock private MessageSource messageSource;
-  @Mock private JwtUtilities jwtUtilities;
+  @Mock private JwtService jwtService;
   @Spy private UserMapperImpl userMapper;
   @Mock private Authentication authentication;
   @Mock private SecurityContext securityContext;
@@ -94,7 +94,7 @@ class AuthServiceOkTest {
     user.setActivated(false);
     //    LocalDateTime beforeUpdate = user.getUpdatedAt();
     when(userRepository.findByUsername(null)).thenReturn(Optional.ofNullable(user));
-    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     authService.confirmRegistration(token);
     assertTrue(user.isActivated());
     //    assertNotEquals(beforeUpdate, user.getUpdatedAt());
@@ -108,7 +108,7 @@ class AuthServiceOkTest {
     ResendConfirmationEmailRequest resendConfirmationEmailRequest =
         new ResendConfirmationEmailRequest("user@localhost.com");
     authService.resendConfirmationEmail(resendConfirmationEmailRequest);
-    verify(jwtUtilities, times(1)).createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+    verify(jwtService, times(1)).createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
   }
 
   @Test
@@ -116,14 +116,14 @@ class AuthServiceOkTest {
     when(userRepository.findByEmail("user@localhost.com")).thenReturn(Optional.ofNullable(user));
     ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("user@localhost.com");
     authService.forgotPassword(forgotPasswordRequest);
-    verify(jwtUtilities, times(1)).createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
+    verify(jwtService, times(1)).createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
   }
 
   @Test
   void resetPassword_noContent() {
     //    LocalDateTime beforeUpdate = user.getUpdatedAt();
     when(userRepository.findByUsername(null)).thenReturn(Optional.ofNullable(user));
-    String token = jwtUtilities.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
+    String token = jwtService.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
     ResetPasswordRequest resetPasswordRequest =
         new ResetPasswordRequest(token, "BlaBla123", "BlaBla123");
     authService.resetPassword(resetPasswordRequest);
