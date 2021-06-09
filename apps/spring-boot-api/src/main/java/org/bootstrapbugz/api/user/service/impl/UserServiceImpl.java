@@ -8,7 +8,7 @@ import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.dto.UserDto;
+import org.bootstrapbugz.api.user.response.UserResponse;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDto findByUsername(String username) {
+  public UserResponse findByUsername(String username) {
     User user =
         userRepository
             .findByUsername(username)
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDto update(UpdateUserRequest updateUserRequest) {
+  public UserResponse update(UpdateUserRequest updateUserRequest) {
     User user = AuthUtil.findLoggedUser();
     user.setFirstName(updateUserRequest.getFirstName());
     user.setLastName(updateUserRequest.getLastName());

@@ -10,7 +10,7 @@ import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.dto.UserDto;
+import org.bootstrapbugz.api.user.response.UserResponse;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.User;
@@ -37,7 +37,7 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public List<UserDto> findAllUsers() {
+  public List<UserResponse> findAllUsers() {
     List<User> users = userRepository.findAllWithRoles();
     if (users.isEmpty())
       throw new ResourceNotFound(messageService.getMessage("users.notFound"), ErrorDomain.USER);

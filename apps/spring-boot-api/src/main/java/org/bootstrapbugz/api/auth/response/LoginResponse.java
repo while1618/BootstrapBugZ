@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.bootstrapbugz.api.user.dto.UserDto;
+import org.bootstrapbugz.api.user.response.UserResponse;
 
 @Getter
 @Setter
@@ -15,5 +15,5 @@ import org.bootstrapbugz.api.user.dto.UserDto;
 public class LoginResponse {
   private String token;
   private String refreshToken;
-  private UserDto user;
+  private UserResponse user;
 }

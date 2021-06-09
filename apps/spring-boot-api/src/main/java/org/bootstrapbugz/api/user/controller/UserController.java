@@ -2,7 +2,7 @@ package org.bootstrapbugz.api.user.controller;
 
 import javax.validation.Valid;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.user.dto.UserDto;
+import org.bootstrapbugz.api.user.response.UserResponse;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
 import org.bootstrapbugz.api.user.service.UserService;
@@ -24,12 +24,12 @@ public class UserController {
   }
 
   @GetMapping("/{username}")
-  public ResponseEntity<UserDto> findByUsername(@PathVariable("username") String username) {
+  public ResponseEntity<UserResponse> findByUsername(@PathVariable("username") String username) {
     return ResponseEntity.ok(userService.findByUsername(username));
   }
 
   @PutMapping("/update")
-  public ResponseEntity<UserDto> update(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
+  public ResponseEntity<UserResponse> update(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
     return ResponseEntity.ok(userService.update(updateUserRequest));
   }
 

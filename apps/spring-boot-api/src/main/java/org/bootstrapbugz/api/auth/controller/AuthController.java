@@ -11,7 +11,7 @@ import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.user.dto.UserDto;
+import org.bootstrapbugz.api.user.response.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +39,7 @@ public class AuthController {
   }
 
   @PostMapping("/sign-up")
-  public ResponseEntity<UserDto> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+  public ResponseEntity<UserResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
     return new ResponseEntity<>(authService.signUp(signUpRequest), HttpStatus.CREATED);
   }
 

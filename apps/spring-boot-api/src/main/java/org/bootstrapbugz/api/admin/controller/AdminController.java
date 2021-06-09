@@ -8,7 +8,7 @@ import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.user.dto.UserDto;
+import org.bootstrapbugz.api.user.response.UserResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +29,7 @@ public class AdminController {
 
   @GetMapping
   @PreAuthorize("hasAuthority('ADMIN')")
-  public ResponseEntity<List<UserDto>> findAllUsers() {
+  public ResponseEntity<List<UserResponse>> findAllUsers() {
     return ResponseEntity.ok(adminService.findAllUsers());
   }
 

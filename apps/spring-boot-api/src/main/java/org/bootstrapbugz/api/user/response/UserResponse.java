@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.user.dto;
+package org.bootstrapbugz.api.user.response;
 
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class UserDto {
+public class UserResponse {
   private Long id;
   private String firstName;
   private String lastName;

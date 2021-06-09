@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
-import org.bootstrapbugz.api.user.dto.UserDto;
+import org.bootstrapbugz.api.user.response.UserResponse;
 
 public interface AdminService {
-  List<UserDto> findAllUsers();
+  List<UserResponse> findAllUsers();
 
   void changeRole(ChangeRoleRequest changeRoleRequest);
 

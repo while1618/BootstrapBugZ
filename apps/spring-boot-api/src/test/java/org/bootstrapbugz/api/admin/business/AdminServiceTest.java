@@ -17,7 +17,7 @@ import java.util.Set;
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.impl.AdminServiceImpl;
-import org.bootstrapbugz.api.user.dto.UserDto;
+import org.bootstrapbugz.api.user.response.UserResponse;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -72,7 +72,7 @@ class AdminServiceTest {
   @Test
   void findAllUsers_ok() {
     when(userRepository.findAllWithRoles()).thenReturn(users);
-    List<UserDto> foundUsers = adminService.findAllUsers();
+    List<UserResponse> foundUsers = adminService.findAllUsers();
     assertThat(foundUsers).isNotNull().hasSize(1);
   }
 

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.service.JwtService;
-import org.bootstrapbugz.api.user.dto.UserDto;
+import org.bootstrapbugz.api.user.response.UserResponse;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.User;
@@ -72,7 +72,7 @@ class UserServiceOkTest {
   @Test
   void findByUsername_ok() {
     when(userRepository.findByUsername("user")).thenReturn(Optional.ofNullable(user));
-    UserDto foundUser = userService.findByUsername("user");
+    UserResponse foundUser = userService.findByUsername("user");
     assertThat(foundUser).isNotNull();
     assertEquals(foundUser.getUsername(), user.getUsername());
   }
@@ -87,7 +87,7 @@ class UserServiceOkTest {
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(false);
     User expectedUser = expectedUser(updateUserRequest);
     when(userRepository.save(any(User.class))).thenReturn(expectedUser);
-    UserDto returnedUser = userService.update(updateUserRequest);
+    UserResponse returnedUser = userService.update(updateUserRequest);
     assertThat(returnedUser).isNotNull();
     assertEquals(returnedUser.getUsername(), user.getUsername());
     assertEquals(returnedUser.getEmail(), user.getEmail());
@@ -112,7 +112,7 @@ class UserServiceOkTest {
         new UpdateUserRequest("User", "User", "user", "user@localhost.com");
     when(userRepository.findByUsername("user")).thenReturn(Optional.ofNullable(user));
     when(userRepository.save(any(User.class))).thenReturn(user);
-    UserDto noChangesUser = userService.update(updateUserRequest);
+    UserResponse noChangesUser = userService.update(updateUserRequest);
     assertThat(noChangesUser).isNotNull();
     assertEquals(noChangesUser.getUsername(), user.getUsername());
     assertEquals(noChangesUser.getEmail(), user.getEmail());
