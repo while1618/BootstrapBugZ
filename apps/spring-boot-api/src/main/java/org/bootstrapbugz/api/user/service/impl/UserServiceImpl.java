@@ -48,15 +48,13 @@ public class UserServiceImpl implements UserService {
     User loggedUser = AuthUtil.findLoggedUser();
     User user =
         userRepository
-            .findByUsernameWithRoles(username)
+            .findByUsername(username)
             .orElseThrow(
                 () ->
                     new ResourceNotFound(
                         messageService.getMessage("user.notFound"), ErrorDomain.USER));
-    if (!loggedUser.getUsername().equals(user.getUsername())) {
-      user.setEmail(null);
-      user.setRoles(null);
-    }
+    user.setRoles(null);
+    if (!loggedUser.getUsername().equals(user.getUsername())) user.setEmail(null);
     return userMapper.userToUserDto(user);
   }
 
