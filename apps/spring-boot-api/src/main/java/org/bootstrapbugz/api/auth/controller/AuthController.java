@@ -2,7 +2,7 @@ package org.bootstrapbugz.api.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.bootstrapbugz.api.auth.dto.RefreshTokenDto;
+import org.bootstrapbugz.api.auth.response.RefreshTokenResponse;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
@@ -33,7 +33,7 @@ public class AuthController {
   }
 
   @PostMapping("/refresh-token")
-  public ResponseEntity<RefreshTokenDto> refreshToken(
+  public ResponseEntity<RefreshTokenResponse> refreshToken(
       @Valid @RequestBody RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
     return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest, request));
   }

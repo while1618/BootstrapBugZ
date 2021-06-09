@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.bootstrapbugz.api.auth.dto.LoginDto;
+import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
@@ -79,16 +79,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     String refreshToken = jwtService.findRefreshToken(user.getUsername(), ipAddress);
     if (refreshToken == null)
       refreshToken = jwtService.createRefreshToken(user.getUsername(), ipAddress);
-    final LoginDto loginDto =
-        new LoginDto()
+    final LoginResponse loginResponse =
+        new LoginResponse()
             .setToken(jwtService.createToken(user.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
             .setRefreshToken(refreshToken)
             .setUser(userMapper.userToUserDto(user));
-    writeToResponse(response, loginDto);
+    writeToResponse(response, loginResponse);
   }
 
-  private void writeToResponse(HttpServletResponse response, LoginDto loginDto) throws IOException {
-    final String jwtDtoJson = new Gson().toJson(loginDto);
+  private void writeToResponse(HttpServletResponse response, LoginResponse loginResponse) throws IOException {
+    final String jwtDtoJson = new Gson().toJson(loginResponse);
     PrintWriter out = response.getWriter();
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");

@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.dto;
+package org.bootstrapbugz.api.auth.response;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import org.bootstrapbugz.api.user.dto.UserDto;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class LoginDto {
+public class LoginResponse {
   private String token;
   private String refreshToken;
   private UserDto user;
