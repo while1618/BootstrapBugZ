@@ -1,8 +1,9 @@
 package org.bootstrapbugz.api.auth.util;
 
+import java.util.Date;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import java.util.Date;
 
 public class JwtUtil {
   public static final String AUTH_HEADER = "Authorization";

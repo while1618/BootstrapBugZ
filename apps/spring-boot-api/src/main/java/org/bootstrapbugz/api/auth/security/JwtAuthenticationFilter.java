@@ -1,15 +1,18 @@
 package org.bootstrapbugz.api.auth.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.bootstrapbugz.api.auth.response.LoginResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+
 import org.bootstrapbugz.api.auth.request.LoginRequest;
+import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
@@ -87,7 +90,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     writeToResponse(response, loginResponse);
   }
 
-  private void writeToResponse(HttpServletResponse response, LoginResponse loginResponse) throws IOException {
+  private void writeToResponse(HttpServletResponse response, LoginResponse loginResponse)
+      throws IOException {
     final String jwtDtoJson = new Gson().toJson(loginResponse);
     PrintWriter out = response.getWriter();
     response.setContentType("application/json");

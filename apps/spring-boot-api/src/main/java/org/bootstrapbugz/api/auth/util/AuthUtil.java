@@ -1,7 +1,9 @@
 package org.bootstrapbugz.api.auth.util;
 
 import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
