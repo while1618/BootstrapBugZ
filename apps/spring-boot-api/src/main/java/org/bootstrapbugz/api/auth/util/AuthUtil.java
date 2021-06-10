@@ -40,4 +40,8 @@ public class AuthUtil {
     if (ipAddress == null || ipAddress.isEmpty()) ipAddress = request.getRemoteAddr();
     return ipAddress;
   }
+
+  public static String getAuthTokenFromRequest(HttpServletRequest request) {
+    return request.getHeader(JwtUtil.AUTH_HEADER);
+  }
 }

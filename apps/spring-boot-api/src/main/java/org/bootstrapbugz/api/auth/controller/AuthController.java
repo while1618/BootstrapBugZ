@@ -10,7 +10,6 @@ import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.response.RefreshTokenResponse;
 import org.bootstrapbugz.api.auth.service.AuthService;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.response.UserResponse;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,8 +70,8 @@ public class AuthController {
   }
 
   @GetMapping("/logout")
-  public ResponseEntity<Void> logout(@RequestHeader(JwtUtil.AUTH_HEADER) String token) {
-    authService.logout(token);
+  public ResponseEntity<Void> logout(HttpServletRequest request) {
+    authService.logout(request);
     return ResponseEntity.noContent().build();
   }
 

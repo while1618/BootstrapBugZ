@@ -147,16 +147,22 @@ public class AuthServiceImpl implements AuthService {
     jwtService.checkToken(resetPasswordRequest.getToken(), JwtPurpose.FORGOT_PASSWORD);
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
     jwtService.invalidateAllTokens(user.getUsername());
+    jwtService.deleteAllRefreshTokensByUser(user.getUsername());
     userRepository.save(user);
   }
 
   @Override
-  public void logout(String token) {
-    jwtService.invalidateToken(JwtUtil.removeTokenTypeFromToken(token));
+  public void logout(HttpServletRequest request) {
+    jwtService.deleteRefreshTokenByUserAndIpAddress(
+        AuthUtil.findLoggedUser().getUsername(), AuthUtil.getUserIpAddress(request));
+    jwtService.invalidateToken(
+        JwtUtil.removeTokenTypeFromToken(AuthUtil.getAuthTokenFromRequest(request)));
   }
 
   @Override
   public void logoutFromAllDevices() {
-    jwtService.invalidateAllTokens(AuthUtil.findLoggedUser().getUsername());
+    String username = AuthUtil.findLoggedUser().getUsername();
+    jwtService.deleteAllRefreshTokensByUser(username);
+    jwtService.invalidateAllTokens(username);
   }
 }

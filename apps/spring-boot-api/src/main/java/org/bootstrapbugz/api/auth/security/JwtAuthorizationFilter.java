@@ -11,6 +11,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
 import org.bootstrapbugz.api.auth.service.JwtService;
+import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
@@ -42,7 +43,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    String token = request.getHeader(JwtUtil.AUTH_HEADER);
+    String token = AuthUtil.getAuthTokenFromRequest(request);
     if (token == null || !token.startsWith(JwtUtil.TOKEN_TYPE)) {
       chain.doFilter(request, response);
       return;

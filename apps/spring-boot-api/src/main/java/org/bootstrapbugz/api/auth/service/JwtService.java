@@ -18,4 +18,8 @@ public interface JwtService {
   String findRefreshToken(String username, String ipAddress);
 
   void deleteRefreshToken(String token);
+
+  void deleteRefreshTokenByUserAndIpAddress(String username, String ipAddress);
+
+  void deleteAllRefreshTokensByUser(String username);
 }

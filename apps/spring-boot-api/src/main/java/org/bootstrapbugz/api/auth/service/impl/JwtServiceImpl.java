@@ -1,6 +1,7 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import com.auth0.jwt.JWT;
@@ -115,5 +116,18 @@ public class JwtServiceImpl implements JwtService {
   @Override
   public void deleteRefreshToken(String token) {
     refreshTokenRepository.deleteById(token);
+  }
+
+  @Override
+  public void deleteRefreshTokenByUserAndIpAddress(String username, String ipAddress) {
+    Optional<RefreshToken> refreshToken =
+      refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
+    refreshToken.ifPresent(refreshTokenRepository::delete);
+  }
+
+  @Override
+  public void deleteAllRefreshTokensByUser(String username) {
+    List<RefreshToken> refreshTokens = refreshTokenRepository.findAllByUsername(username);
+    refreshTokenRepository.deleteAll(refreshTokens);
   }
 }

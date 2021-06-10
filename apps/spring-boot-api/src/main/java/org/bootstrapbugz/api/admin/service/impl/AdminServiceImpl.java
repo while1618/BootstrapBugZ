@@ -54,6 +54,7 @@ public class AdminServiceImpl implements AdminService {
               changeRoleRequest.getRoleNames().stream().map(Role::new).collect(Collectors.toSet());
           user.setRoles(roles);
           jwtService.invalidateAllTokens(user.getUsername());
+          jwtService.deleteAllRefreshTokensByUser(user.getUsername());
         });
     userRepository.saveAll(users);
   }
@@ -65,6 +66,7 @@ public class AdminServiceImpl implements AdminService {
         user -> {
           user.setNonLocked(false);
           jwtService.invalidateAllTokens(user.getUsername());
+          jwtService.deleteAllRefreshTokensByUser(user.getUsername());
         });
     userRepository.saveAll(users);
   }
@@ -90,6 +92,7 @@ public class AdminServiceImpl implements AdminService {
         user -> {
           user.setActivated(false);
           jwtService.invalidateAllTokens(user.getUsername());
+          jwtService.deleteAllRefreshTokensByUser(user.getUsername());
         });
     userRepository.saveAll(users);
   }
@@ -101,6 +104,7 @@ public class AdminServiceImpl implements AdminService {
     users.forEach(
         user -> {
           jwtService.invalidateAllTokens(user.getUsername());
+          jwtService.deleteAllRefreshTokensByUser(user.getUsername());
           userRepository.delete(user);
         });
   }
