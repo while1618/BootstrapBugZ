@@ -33,7 +33,7 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public List<UserResponse> findAllUsers() {
-    return userMapper.usersToUserDtos(userRepository.findAllWithRoles());
+    return userMapper.usersToUserResponses(userRepository.findAllWithRoles());
   }
 
   @Override

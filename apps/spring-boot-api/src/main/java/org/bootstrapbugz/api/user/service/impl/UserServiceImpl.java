@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
                         messageService.getMessage("user.notFound"), ErrorDomain.USER));
     user.setRoles(null);
     if (!AuthUtil.findLoggedUser().getUsername().equals(user.getUsername())) user.setEmail(null);
-    return userMapper.userToUserDto(user);
+    return userMapper.userToUserResponse(user);
   }
 
   @Override
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     user.setLastName(updateUserRequest.getLastName());
     tryToSetUsername(user, updateUserRequest.getUsername());
     tryToSetEmail(user, updateUserRequest.getEmail());
-    return userMapper.userToUserDto(userRepository.save(user));
+    return userMapper.userToUserResponse(userRepository.save(user));
   }
 
   private void tryToSetUsername(User user, String username) {

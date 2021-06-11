@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface UserMapper {
-  UserResponse userToUserDto(User user);
+  UserResponse userToUserResponse(User user);
 
-  List<UserResponse> usersToUserDtos(List<User> users);
+  List<UserResponse> usersToUserResponses(List<User> users);
 }

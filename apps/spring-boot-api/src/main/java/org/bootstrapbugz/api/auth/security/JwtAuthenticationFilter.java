@@ -86,7 +86,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         new LoginResponse()
             .setToken(jwtService.createToken(user.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
             .setRefreshToken(refreshToken)
-            .setUser(userMapper.userToUserDto(user));
+            .setUser(userMapper.userToUserResponse(user));
     writeToResponse(response, loginResponse);
   }
 

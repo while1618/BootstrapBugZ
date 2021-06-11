@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
     User user = createUser(signUpRequest);
     String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
-    return userMapper.userToUserDto(user);
+    return userMapper.userToUserResponse(user);
   }
 
   private User createUser(SignUpRequest signUpRequest) {
