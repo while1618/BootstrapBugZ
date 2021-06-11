@@ -8,9 +8,6 @@ import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
 import org.bootstrapbugz.api.auth.service.JwtService;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
-import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.User;
@@ -23,26 +20,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminServiceImpl implements AdminService {
   private final UserRepository userRepository;
   private final JwtService jwtService;
-  private final MessageService messageService;
   private final UserMapper userMapper;
 
   public AdminServiceImpl(
       UserRepository userRepository,
       JwtService jwtService,
-      MessageService messageService,
       UserMapper userMapper) {
     this.userRepository = userRepository;
     this.jwtService = jwtService;
-    this.messageService = messageService;
     this.userMapper = userMapper;
   }
 
   @Override
   public List<UserResponse> findAllUsers() {
-    List<User> users = userRepository.findAllWithRoles();
-    if (users.isEmpty())
-      throw new ResourceNotFound(messageService.getMessage("users.notFound"), ErrorDomain.USER);
-    return userMapper.usersToUserDtos(users);
+    return userMapper.usersToUserDtos(userRepository.findAllWithRoles());
   }
 
   @Override
