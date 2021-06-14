@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.auth.security;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
@@ -22,6 +23,7 @@ import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -94,8 +96,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       throws IOException {
     final String jwtDtoJson = new Gson().toJson(loginResponse);
     PrintWriter out = response.getWriter();
-    response.setContentType("application/json");
-    response.setCharacterEncoding("UTF-8");
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
     out.print(jwtDtoJson);
     out.flush();
   }
