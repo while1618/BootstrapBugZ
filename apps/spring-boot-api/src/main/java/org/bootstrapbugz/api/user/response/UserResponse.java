@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
 public class UserResponse {
@@ -22,14 +23,14 @@ public class UserResponse {
   private String email;
   private boolean activated;
   private boolean nonLocked;
-  private Set<RoleDto> roles;
+  private Set<RoleResponse> roles;
 
   @Getter
   @Setter
   @NoArgsConstructor
   @AllArgsConstructor
   @EqualsAndHashCode
-  public static final class RoleDto {
+  public static final class RoleResponse {
     private String name;
   }
 }

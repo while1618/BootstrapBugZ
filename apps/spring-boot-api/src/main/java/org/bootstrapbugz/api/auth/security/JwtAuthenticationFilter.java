@@ -94,11 +94,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
   private void writeToResponse(HttpServletResponse response, LoginResponse loginResponse)
       throws IOException {
-    final String jwtDtoJson = new Gson().toJson(loginResponse);
+    final String jsonLoginResponse = new Gson().toJson(loginResponse);
     PrintWriter out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-    out.print(jwtDtoJson);
+    out.print(jsonLoginResponse);
     out.flush();
   }
 }
