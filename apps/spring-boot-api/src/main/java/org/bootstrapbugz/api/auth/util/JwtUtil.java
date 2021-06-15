@@ -6,7 +6,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 public class JwtUtil {
-  public static final String AUTH_HEADER = "Authorization";
   public static final String TOKEN_TYPE = "Bearer ";
 
   private JwtUtil() {}

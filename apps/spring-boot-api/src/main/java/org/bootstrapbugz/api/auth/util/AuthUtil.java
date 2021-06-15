@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtil {
+  public static final String AUTH_HEADER = "Authorization";
+
   private AuthUtil() {}
 
   public static User findLoggedUser() {
@@ -42,6 +44,6 @@ public class AuthUtil {
   }
 
   public static String getAuthTokenFromRequest(HttpServletRequest request) {
-    return request.getHeader(JwtUtil.AUTH_HEADER);
+    return request.getHeader(AUTH_HEADER);
   }
 }
