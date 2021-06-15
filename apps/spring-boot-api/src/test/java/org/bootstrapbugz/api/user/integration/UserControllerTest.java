@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.user.controller;
+package org.bootstrapbugz.api.user.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

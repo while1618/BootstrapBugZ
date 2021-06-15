@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.shared.service;
+package org.bootstrapbugz.api.shared.unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;

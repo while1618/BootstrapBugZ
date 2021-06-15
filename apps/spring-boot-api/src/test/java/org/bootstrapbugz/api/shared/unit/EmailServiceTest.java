@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.shared.service;
+package org.bootstrapbugz.api.shared.unit;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
