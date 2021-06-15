@@ -68,7 +68,7 @@ class UserServiceTest {
 
     password = bCryptPasswordEncoder.encode("qwerty123");
     roles = Collections.singleton(new Role(RoleName.USER));
-    user = new User(1L, "Test", "Test", "test", "test@test.com", password, true, false, roles);
+    user = new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
     setAuth(user);
   }
 
@@ -81,7 +81,7 @@ class UserServiceTest {
   @Test
   void itShouldFindUserByUsername_showEmail() {
     UserResponse expectedUserResponse =
-        new UserResponse(1L, "Test", "Test", "test", "test@test.com", true, false, null);
+        new UserResponse(1L, "Test", "Test", "test", "test@test.com", true, true, null);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
     UserResponse actualUserResponse = userService.findByUsername("test");
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
@@ -90,9 +90,9 @@ class UserServiceTest {
   @Test
   void itShouldFindUserByUsername_hideEmail() {
     UserResponse expectedUserResponse =
-        new UserResponse(1L, "Test", "Test", "test", null, true, false, null);
+        new UserResponse(1L, "Test", "Test", "test", null, true, true, null);
     User loggedUser =
-        new User(2L, "User", "User", "user", "user@user.com", password, true, false, roles);
+        new User(2L, "User", "User", "user", "user@user.com", password, true, true, roles);
     setAuth(loggedUser);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
     UserResponse actualUserResponse = userService.findByUsername("test");
@@ -111,7 +111,7 @@ class UserServiceTest {
   @Test
   void itShouldUpdateUser_newUsernameAndEmail() {
     User expectedUser =
-        new User(1L, "User", "User", "user", "user@user.com", password, false, false, roles);
+        new User(1L, "User", "User", "user", "user@user.com", password, false, true, roles);
     UpdateUserRequest updateUserRequest =
         new UpdateUserRequest("User", "User", "user", "user@user.com");
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
@@ -126,7 +126,7 @@ class UserServiceTest {
   @Test
   void itShouldUpdateUser_sameUsernameAndEmail() {
     User expectedUser =
-      new User(1L, "User", "User", "test", "test@test.com", password, true, false, roles);
+      new User(1L, "User", "User", "test", "test@test.com", password, true, true, roles);
     UpdateUserRequest updateUserRequest =
       new UpdateUserRequest("User", "User", "test", "test@test.com");
     userService.update(updateUserRequest);
