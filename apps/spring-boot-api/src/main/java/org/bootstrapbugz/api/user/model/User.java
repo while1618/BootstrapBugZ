@@ -16,8 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.google.common.base.Objects;
-
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +28,8 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Accessors(chain = true)
 public class User implements Serializable {
   @Serial private static final long serialVersionUID = -7881387078460754905L;
@@ -59,23 +61,4 @@ public class User implements Serializable {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_name"))
   private Set<Role> roles = new HashSet<>();
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof User)) {
-      return false;
-    }
-    User user = (User) o;
-    return Objects.equal(id, user.id)
-        && Objects.equal(username, user.username)
-        && Objects.equal(email, user.email);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(id, username, email);
-  }
 }
