@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+
 import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
@@ -78,7 +79,7 @@ class UserServiceTest {
   }
 
   @Test
-  void itShouldFindUserByUsernameAndDisplayEmail() {
+  void itShouldFindUserByUsername_showEmail() {
     UserResponse expectedUserResponse =
         new UserResponse(1L, "Test", "Test", "test", "test@test.com", true, false, null);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
@@ -87,7 +88,7 @@ class UserServiceTest {
   }
 
   @Test
-  void itShouldFindUserByUsernameAndHideEmail() {
+  void itShouldFindUserByUsername_hideEmail() {
     UserResponse expectedUserResponse =
         new UserResponse(1L, "Test", "Test", "test", null, true, false, null);
     User loggedUser =
@@ -108,7 +109,7 @@ class UserServiceTest {
   }
 
   @Test
-  void itShouldUpdateUserWithNewUsernameAndEmail() {
+  void itShouldUpdateUser_newUsernameAndEmail() {
     User expectedUser =
         new User(1L, "User", "User", "user", "user@user.com", password, false, false, roles);
     UpdateUserRequest updateUserRequest =
@@ -123,7 +124,7 @@ class UserServiceTest {
   }
 
   @Test
-  void itShouldUpdateUserAndKeepOldUsernameAndEmail() {
+  void itShouldUpdateUser_sameUsernameAndEmail() {
     User expectedUser =
       new User(1L, "User", "User", "test", "test@test.com", password, true, false, roles);
     UpdateUserRequest updateUserRequest =
