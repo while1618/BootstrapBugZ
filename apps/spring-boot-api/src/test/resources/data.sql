@@ -93,7 +93,7 @@ values (
     );
 create table user_roles (
     user_id INTEGER not null,
-    role_name INTEGER not null
+    role_name VARCHAR not null
 );
 ALTER TABLE user_roles
 ADD FOREIGN KEY (user_id) REFERENCES users (user_id);
