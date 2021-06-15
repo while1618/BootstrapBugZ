@@ -32,7 +32,7 @@ values (
         'Admin',
         'Admin',
         'admin',
-        'skill.potion21@gmail.com',
+        'admin@localhost.com',
         '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
         true,
         true
@@ -50,7 +50,7 @@ values (
         'User',
         'User',
         'user',
-        'decrescendo807@gmail.com',
+        'user@localhost.com',
         '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
         true,
         true
@@ -67,8 +67,8 @@ insert into users (
 values (
         'Not Activated',
         'Not Activated',
-        'not_activated',
-        'marcellus.hts@gmail.com',
+        'notActivated',
+        'notActivated@localhost.com',
         '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
         false,
         true
@@ -86,10 +86,46 @@ values (
         'Locked',
         'Locked',
         'locked',
-        'uvazeni.potpukovnik.naucnik@gmail.com',
+        'locked@localhost.com',
         '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
         true,
         false
+    );
+insert into users (
+        first_name,
+        last_name,
+        username,
+        email,
+        password,
+        activated,
+        non_locked
+)
+values (
+        'For Update 1',
+        'For Update 1',
+        'forUpdate1',
+        'forUpdate1@localhost.com',
+        '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
+        true,
+        true
+    );
+insert into users (
+        first_name,
+        last_name,
+        username,
+        email,
+        password,
+        activated,
+        non_locked
+)
+values (
+        'For Update 2',
+        'For Update 2',
+        'forUpdate2',
+        'forUpdate2@localhost.com',
+        '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
+        true,
+        true
     );
 create table user_roles (
     user_id INTEGER not null,
@@ -109,3 +145,7 @@ insert into user_roles (user_id, role_name)
 values (3, 'USER');
 insert into user_roles (user_id, role_name)
 values (4, 'USER');
+insert into user_roles (user_id, role_name)
+values (5, 'USER');
+insert into user_roles (user_id, role_name)
+values (6, 'USER');

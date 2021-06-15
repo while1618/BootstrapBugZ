@@ -15,7 +15,7 @@ import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.JwtService;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
+import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.model.User;
@@ -53,7 +53,7 @@ class AuthControllerOkTest {
                     objectMapper.writeValueAsString(
                         new LoginRequest("decrescendo807@gmail.com", "qwerty123"))))
         .andExpect(status().isOk())
-        .andExpect(header().exists(JwtUtil.AUTH_HEADER));
+        .andExpect(header().exists(AuthUtil.AUTH_HEADER));
   }
 
   @Test
@@ -170,7 +170,7 @@ class AuthControllerOkTest {
         .perform(
             get(Path.AUTH + "/logout")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(JwtUtil.AUTH_HEADER, token))
+                .header(AuthUtil.AUTH_HEADER, token))
         .andExpect(status().isNoContent());
   }
 
@@ -182,6 +182,6 @@ class AuthControllerOkTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isOk());
-    return resultActions.andReturn().getResponse().getHeader(JwtUtil.AUTH_HEADER);
+    return resultActions.andReturn().getResponse().getHeader(AuthUtil.AUTH_HEADER);
   }
 }
