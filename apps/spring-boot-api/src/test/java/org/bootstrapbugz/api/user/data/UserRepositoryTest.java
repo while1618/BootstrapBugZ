@@ -19,11 +19,20 @@ import org.springframework.test.context.ActiveProfiles;
 class UserRepositoryTest {
   @Autowired private UserRepository userRepository;
 
+  private final User expectedUser =
+      new User(
+          2L,
+          "User",
+          "User",
+          "user",
+          "user@localhost.com",
+          null,
+          true,
+          true,
+          Collections.singleton(new Role(RoleName.USER)));
+
   @Test
   void itShouldFindAllUsersWithRoles() {
-    Set<Role> roles = Collections.singleton(new Role(RoleName.USER));
-    User expectedUser =
-        new User(2L, "User", "User", "user", "user@localhost.com", null, true, true, roles);
     List<User> actualUsers = userRepository.findAllWithRoles();
     assertThat(actualUsers.size()).isEqualTo(6);
     assertThat(actualUsers.get(1))
@@ -34,12 +43,9 @@ class UserRepositoryTest {
 
   @Test
   void itShouldFindAllUsersByUsernameIn() {
-    Set<Role> roles = Collections.singleton(new Role(RoleName.USER));
-    User expectedUser =
-        new User(2L, "User", "User", "user", "user@localhost.com", null, true, true, roles);
-    List<User> actualUsers = userRepository.findAllByUsernameIn(Collections.singleton("user"));
-    assertThat(actualUsers.size()).isEqualTo(1);
-    assertThat(actualUsers.get(0))
+    List<User> actualUsers = userRepository.findAllByUsernameIn(Set.of("user", "admin"));
+    assertThat(actualUsers.size()).isEqualTo(2);
+    assertThat(actualUsers.get(1))
         .usingRecursiveComparison()
         .ignoringFields("password")
         .isEqualTo(expectedUser);
@@ -47,9 +53,6 @@ class UserRepositoryTest {
 
   @Test
   void itShouldFindUserByEmail() {
-    Set<Role> roles = Collections.singleton(new Role(RoleName.USER));
-    User expectedUser =
-        new User(2L, "User", "User", "user", "user@localhost.com", null, true, true, roles);
     User actualUser = userRepository.findByEmail("user@localhost.com").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
@@ -59,9 +62,6 @@ class UserRepositoryTest {
 
   @Test
   void itShouldFindUserByUsername() {
-    Set<Role> roles = Collections.singleton(new Role(RoleName.USER));
-    User expectedUser =
-        new User(2L, "User", "User", "user", "user@localhost.com", null, true, true, roles);
     User actualUser = userRepository.findByUsername("user").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
@@ -71,9 +71,6 @@ class UserRepositoryTest {
 
   @Test
   void itShouldFindUserByUsernameOrEmail() {
-    Set<Role> roles = Collections.singleton(new Role(RoleName.USER));
-    User expectedUser =
-        new User(2L, "User", "User", "user", "user@localhost.com", null, true, true, roles);
     User actualUser = userRepository.findByUsernameOrEmail("user", "user").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
@@ -83,13 +80,11 @@ class UserRepositoryTest {
 
   @Test
   void userShouldExistsByEmail() {
-    boolean exists = userRepository.existsByEmail("user@localhost.com");
-    assertThat(exists).isTrue();
+    assertThat(userRepository.existsByEmail("user@localhost.com")).isTrue();
   }
 
   @Test
   void userShouldExistsByUsername() {
-    boolean exists = userRepository.existsByUsername("user");
-    assertThat(exists).isTrue();
+    assertThat(userRepository.existsByUsername("user")).isTrue();
   }
 }
