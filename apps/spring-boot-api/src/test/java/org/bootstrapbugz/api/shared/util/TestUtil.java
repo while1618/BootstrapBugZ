@@ -1,17 +1,23 @@
 package org.bootstrapbugz.api.shared.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
+import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
+import org.bootstrapbugz.api.user.model.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -41,5 +47,11 @@ public class TestUtil {
             .andExpect(status().isOk());
     String response = resultActions.andReturn().getResponse().getContentAsString();
     return objectMapper.readValue(response, LoginResponse.class);
+  }
+
+  public static void setAuth(Authentication auth, SecurityContext securityContext, User user) {
+    when(securityContext.getAuthentication()).thenReturn(auth);
+    SecurityContextHolder.setContext(securityContext);
+    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(user));
   }
 }

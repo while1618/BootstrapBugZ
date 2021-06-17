@@ -17,6 +17,7 @@ import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
+import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -40,7 +41,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,13 +69,7 @@ class UserServiceTest {
     password = bCryptPasswordEncoder.encode("qwerty123");
     roles = Collections.singleton(new Role(RoleName.USER));
     user = new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
-    setAuth(user);
-  }
-
-  private void setAuth(User user) {
-    when(securityContext.getAuthentication()).thenReturn(auth);
-    SecurityContextHolder.setContext(securityContext);
-    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(user));
+    TestUtil.setAuth(auth, securityContext, user);
   }
 
   @Test
@@ -93,7 +87,7 @@ class UserServiceTest {
         new UserResponse(1L, "Test", "Test", "test", null, true, true, null);
     User loggedUser =
         new User(2L, "User", "User", "user", "user@user.com", password, true, true, roles);
-    setAuth(loggedUser);
+    TestUtil.setAuth(auth, securityContext, loggedUser);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
     UserResponse actualUserResponse = userService.findByUsername("test");
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
@@ -126,9 +120,9 @@ class UserServiceTest {
   @Test
   void itShouldUpdateUser_sameUsernameAndEmail() {
     User expectedUser =
-      new User(1L, "User", "User", "test", "test@test.com", password, true, true, roles);
+        new User(1L, "User", "User", "test", "test@test.com", password, true, true, roles);
     UpdateUserRequest updateUserRequest =
-      new UpdateUserRequest("User", "User", "test", "test@test.com");
+        new UpdateUserRequest("User", "User", "test", "test@test.com");
     userService.update(updateUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
