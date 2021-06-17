@@ -15,6 +15,7 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
 import org.bootstrapbugz.api.user.response.UserResponse;
@@ -103,7 +104,7 @@ class UserControllerTest {
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate1", "qwerty123"));
     UpdateUserRequest updateUserRequest =
         new UpdateUserRequest("Updated", "Updated", "updated", "updated@localhost.com");
-    Set<RoleResponse> roles = Collections.singleton(new RoleResponse("USER"));
+    Set<RoleResponse> roles = Collections.singleton(new RoleResponse(RoleName.USER.name()));
     UserResponse expectedResponse =
         new UserResponse(
             5L, "Updated", "Updated", "updated", "updated@localhost.com", false, true, roles);
@@ -118,7 +119,7 @@ class UserControllerTest {
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate2", "qwerty123"));
     UpdateUserRequest updateUserRequest =
         new UpdateUserRequest("Updated", "Updated", "forUpdate2", "forUpdate2@localhost.com");
-    Set<RoleResponse> roles = Collections.singleton(new RoleResponse("USER"));
+    Set<RoleResponse> roles = Collections.singleton(new RoleResponse(RoleName.USER.name()));
     UserResponse expectedResponse =
         new UserResponse(
             6L, "Updated", "Updated", "forUpdate2", "forUpdate2@localhost.com", true, true, roles);
