@@ -68,7 +68,7 @@ class AdminServiceTest {
   }
 
   @Test
-  void itShouldChangeUsersRole() {
+  void itShouldChangeUsersRoles() {
     ChangeRoleRequest changeRoleRequest =
         new ChangeRoleRequest(Collections.singleton("test"), Set.of(RoleName.USER, RoleName.ADMIN));
     User expectedUser =
