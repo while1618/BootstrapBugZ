@@ -1,17 +1,27 @@
 package org.bootstrapbugz.api.shared.integration;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Set;
+import org.bootstrapbugz.api.admin.request.AdminRequest;
+import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
+import org.bootstrapbugz.api.auth.request.LoginRequest;
+import org.bootstrapbugz.api.auth.response.LoginResponse;
+import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,5 +77,115 @@ class AccessingResourcesTest {
                     .content(objectMapper.writeValueAsString(changePasswordRequest)))
             .andExpect(status().isForbidden());
     TestUtil.checkErrorMessages(expectedResponse, resultActions);
+  }
+
+  @Test
+  void findAllUsersShouldThrowForbidden_userNotLogged() throws Exception {
+    mockMvc
+        .perform(get(Path.ADMIN + "/users").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void findAllUsersShouldThrowUnauthorized_loggedUserIsNotAdmin() throws Exception {
+    LoginResponse loginResponse =
+        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
+    mockMvc
+        .perform(
+            get(Path.ADMIN + "/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken()))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void changeUsersRolesShouldThrowForbidden_userNotLogged() throws Exception {
+    ChangeRoleRequest changeRoleRequest =
+        new ChangeRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
+    mockMvc
+        .perform(
+            put(Path.ADMIN + "/users/role")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(changeRoleRequest)))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void changeUsersRolesShouldThrowUnauthorized_loggedUserIsNotAdmin() throws Exception {
+    LoginResponse loginResponse =
+        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
+    ChangeRoleRequest changeRoleRequest =
+        new ChangeRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
+    mockMvc
+        .perform(
+            put(Path.ADMIN + "/users/role")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken())
+                .content(objectMapper.writeValueAsString(changeRoleRequest)))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "lock, user",
+    "unlock, locked",
+    "deactivate, forUpdate1",
+    "activate, notActivated",
+  })
+  void lockUnlockDeactivateActivateUsersShouldThrowForbidden_userNotLogged(
+      String path, String username) throws Exception {
+    AdminRequest adminRequest = new AdminRequest(Set.of(username));
+    mockMvc
+        .perform(
+            put(Path.ADMIN + "/users/" + path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(adminRequest)))
+        .andExpect(status().isForbidden());
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "lock, user",
+    "unlock, locked",
+    "deactivate, forUpdate1",
+    "activate, notActivated",
+  })
+  void lockUnlockDeactivateActivateUsersShouldThrowUnauthorized_loggedUserIsNotAdmin(
+      String path, String username) throws Exception {
+    LoginResponse loginResponse =
+        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
+    AdminRequest adminRequest = new AdminRequest(Set.of(username));
+    mockMvc
+        .perform(
+            put(Path.ADMIN + "/users/" + path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken())
+                .content(objectMapper.writeValueAsString(adminRequest)))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void deleteUsersShouldThrowForbidden_userNotLogged() throws Exception {
+    AdminRequest adminRequest = new AdminRequest(Set.of("forUpdate2"));
+    mockMvc
+        .perform(
+            delete(Path.ADMIN + "/users/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(adminRequest)))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void deleteUsersShouldThrowUnauthorized_loggedUserIsNotAdmin() throws Exception {
+    LoginResponse loginResponse =
+        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
+    AdminRequest adminRequest = new AdminRequest(Set.of("forUpdate2"));
+    mockMvc
+        .perform(
+            delete(Path.ADMIN + "/users/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken())
+                .content(objectMapper.writeValueAsString(adminRequest)))
+        .andExpect(status().isUnauthorized());
   }
 }
