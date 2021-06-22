@@ -3,6 +3,7 @@ package org.bootstrapbugz.api.auth.redis.model;
 import java.io.Serial;
 import java.io.Serializable;
 
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @RedisHash(value = "RefreshToken", timeToLive = 604800) // 7 days
 public class RefreshToken implements Serializable {
   @Serial private static final long serialVersionUID = -1997218842142407911L;
