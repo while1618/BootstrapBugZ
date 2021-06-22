@@ -176,7 +176,7 @@ class UserControllerTest {
   @Test
   void itShouldChangePassword() throws Exception {
     LoginResponse loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("admin", "qwerty123"));
+        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate3", "qwerty123"));
     ChangePasswordRequest changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
     performChangePassword(changePasswordRequest, loginResponse.getToken())

@@ -127,6 +127,24 @@ values (
         true,
         true
     );
+insert into users (
+        first_name,
+        last_name,
+        username,
+        email,
+        password,
+        activated,
+        non_locked
+)
+values (
+        'For Update 3',
+        'For Update 3',
+        'forUpdate3',
+        'forUpdate3@localhost.com',
+        '$2a$10$b8zZNzhplNH37WyfR2kQ5uRr2U4ui3BAjjBQy4aNH.mh40Jj3cMV6',
+        true,
+        true
+    );
 create table user_roles (
     user_id INTEGER not null,
     role_name VARCHAR not null

@@ -34,7 +34,7 @@ class UserRepositoryTest {
   @Test
   void itShouldFindAllUsersWithRoles() {
     List<User> actualUsers = userRepository.findAllWithRoles();
-    assertThat(actualUsers.size()).isEqualTo(6);
+    assertThat(actualUsers.size()).isEqualTo(7);
     assertThat(actualUsers.get(1))
         .usingRecursiveComparison()
         .ignoringFields("password")

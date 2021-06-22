@@ -20,9 +20,12 @@ import org.springframework.test.context.ActiveProfiles;
 class RefreshTokenRepositoryTest {
   @Autowired private RefreshTokenRepository refreshTokenRepository;
 
-  private final RefreshToken first = new RefreshToken("token123", "user", "127.0.0.1");
-  private final RefreshToken second = new RefreshToken("token321", "user", "127.0.1.1");
-  private final RefreshToken third = new RefreshToken("token213", "test", "127.0.0.1");
+  private final RefreshToken first =
+      new RefreshToken("token123", "testUserForRefreshToken1", "ip1");
+  private final RefreshToken second =
+      new RefreshToken("token321", "testUserForRefreshToken1", "ip2");
+  private final RefreshToken third =
+      new RefreshToken("token213", "testUserForRefreshToken2", "ip3");
 
   @BeforeAll
   void setUp() {
@@ -36,18 +39,18 @@ class RefreshTokenRepositoryTest {
 
   @Test
   void itShouldFindByUsernameAndIpAddress() {
-    RefreshToken expectedRefreshToken = new RefreshToken("token123", "user", "127.0.0.1");
     RefreshToken actualResponse =
-        refreshTokenRepository.findByUsernameAndIpAddress("user", "127.0.0.1").orElseThrow();
-    assertThat(actualResponse).isEqualTo(expectedRefreshToken);
+        refreshTokenRepository
+            .findByUsernameAndIpAddress("testUserForRefreshToken2", "ip3")
+            .orElseThrow();
+    assertThat(actualResponse).isEqualTo(third);
   }
 
   @Test
   void itShouldFindAllByUsername() {
-    RefreshToken first = new RefreshToken("token123", "user", "127.0.0.1");
-    RefreshToken second = new RefreshToken("token321", "user", "127.0.1.1");
-    List<RefreshToken> actualTokens = refreshTokenRepository.findAllByUsername("user");
-    assertThat(actualTokens)
+    List<RefreshToken> actualResponse =
+        refreshTokenRepository.findAllByUsername("testUserForRefreshToken1");
+    assertThat(actualResponse)
         .usingRecursiveComparison()
         .ignoringCollectionOrder()
         .isEqualTo(List.of(first, second));
