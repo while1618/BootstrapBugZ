@@ -38,8 +38,10 @@ class AccessingResourcesTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
-  private final ErrorResponse expectedResponse =
+  private final ErrorResponse expectedForbiddenResponse =
       new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "Forbidden");
+  private final ErrorResponse expectedUnauthorizedResponse =
+      new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Access is denied");
 
   @Test
   void findUserByUsernameShouldThrowForbidden_userNotLogged() throws Exception {
@@ -48,7 +50,7 @@ class AccessingResourcesTest {
             .perform(
                 get(Path.USERS + "/{username}", "unknown").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
-    TestUtil.checkErrorMessages(expectedResponse, resultActions);
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @Test
@@ -62,7 +64,7 @@ class AccessingResourcesTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(updateUserRequest)))
             .andExpect(status().isForbidden());
-    TestUtil.checkErrorMessages(expectedResponse, resultActions);
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @Test
@@ -76,38 +78,41 @@ class AccessingResourcesTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(changePasswordRequest)))
             .andExpect(status().isForbidden());
-    TestUtil.checkErrorMessages(expectedResponse, resultActions);
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @Test
   void findAllUsersShouldThrowForbidden_userNotLogged() throws Exception {
-    mockMvc
+    ResultActions resultActions = mockMvc
         .perform(get(Path.ADMIN + "/users").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isForbidden());
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @Test
   void findAllUsersShouldThrowUnauthorized_loggedUserIsNotAdmin() throws Exception {
     LoginResponse loginResponse =
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
-    mockMvc
+    ResultActions resultActions = mockMvc
         .perform(
             get(Path.ADMIN + "/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, loginResponse.getToken()))
         .andExpect(status().isUnauthorized());
+    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @Test
   void changeUsersRolesShouldThrowForbidden_userNotLogged() throws Exception {
     ChangeRoleRequest changeRoleRequest =
         new ChangeRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
-    mockMvc
+    ResultActions resultActions = mockMvc
         .perform(
             put(Path.ADMIN + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(changeRoleRequest)))
         .andExpect(status().isForbidden());
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @Test
@@ -116,13 +121,14 @@ class AccessingResourcesTest {
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
     ChangeRoleRequest changeRoleRequest =
         new ChangeRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
-    mockMvc
+    ResultActions resultActions = mockMvc
         .perform(
             put(Path.ADMIN + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, loginResponse.getToken())
                 .content(objectMapper.writeValueAsString(changeRoleRequest)))
         .andExpect(status().isUnauthorized());
+    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @ParameterizedTest
@@ -135,12 +141,13 @@ class AccessingResourcesTest {
   void lockUnlockDeactivateActivateUsersShouldThrowForbidden_userNotLogged(
       String path, String username) throws Exception {
     AdminRequest adminRequest = new AdminRequest(Set.of(username));
-    mockMvc
+    ResultActions resultActions = mockMvc
         .perform(
             put(Path.ADMIN + "/users/" + path)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isForbidden());
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @ParameterizedTest
@@ -155,24 +162,26 @@ class AccessingResourcesTest {
     LoginResponse loginResponse =
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
     AdminRequest adminRequest = new AdminRequest(Set.of(username));
-    mockMvc
+    ResultActions resultActions = mockMvc
         .perform(
             put(Path.ADMIN + "/users/" + path)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, loginResponse.getToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isUnauthorized());
+    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @Test
   void deleteUsersShouldThrowForbidden_userNotLogged() throws Exception {
     AdminRequest adminRequest = new AdminRequest(Set.of("forUpdate2"));
-    mockMvc
+    ResultActions resultActions = mockMvc
         .perform(
             delete(Path.ADMIN + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isForbidden());
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @Test
@@ -180,12 +189,31 @@ class AccessingResourcesTest {
     LoginResponse loginResponse =
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
     AdminRequest adminRequest = new AdminRequest(Set.of("forUpdate2"));
-    mockMvc
+    ResultActions resultActions = mockMvc
         .perform(
             delete(Path.ADMIN + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, loginResponse.getToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isUnauthorized());
+    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+  }
+
+  @Test
+  void logoutShouldThrowForbidden_userNotLogged() throws Exception {
+    ResultActions resultActions =
+        mockMvc
+            .perform(get(Path.AUTH + "/logout").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
+  }
+
+  @Test
+  void logoutFromAllDevicesShouldThrowForbidden_userNotLogged() throws Exception {
+    ResultActions resultActions =
+      mockMvc
+        .perform(get(Path.AUTH + "/logout-from-all-devices").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isForbidden());
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 }
