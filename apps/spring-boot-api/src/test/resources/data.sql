@@ -167,3 +167,5 @@ insert into user_roles (user_id, role_name)
 values (5, 'USER');
 insert into user_roles (user_id, role_name)
 values (6, 'USER');
+insert into user_roles (user_id, role_name)
+values (7, 'USER');
