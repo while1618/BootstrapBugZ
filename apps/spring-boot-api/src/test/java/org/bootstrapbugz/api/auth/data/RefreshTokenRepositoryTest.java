@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
+import org.bootstrapbugz.api.shared.config.RedisTestConfig;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,20 +13,21 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @DataRedisTest
+@DirtiesContext
 @ActiveProfiles("test")
+@Import(RedisTestConfig.class)
 @TestInstance(Lifecycle.PER_CLASS)
 class RefreshTokenRepositoryTest {
   @Autowired private RefreshTokenRepository refreshTokenRepository;
 
-  private final RefreshToken first =
-      new RefreshToken("token123", "testUserForRefreshToken1", "ip1");
-  private final RefreshToken second =
-      new RefreshToken("token321", "testUserForRefreshToken1", "ip2");
-  private final RefreshToken third =
-      new RefreshToken("token213", "testUserForRefreshToken2", "ip3");
+  private final RefreshToken first = new RefreshToken("token123", "user", "ip1");
+  private final RefreshToken second = new RefreshToken("token321", "user", "ip2");
+  private final RefreshToken third = new RefreshToken("token213", "test", "ip3");
 
   @BeforeAll
   void setUp() {
@@ -40,16 +42,13 @@ class RefreshTokenRepositoryTest {
   @Test
   void itShouldFindByUsernameAndIpAddress() {
     RefreshToken actualResponse =
-        refreshTokenRepository
-            .findByUsernameAndIpAddress("testUserForRefreshToken2", "ip3")
-            .orElseThrow();
+        refreshTokenRepository.findByUsernameAndIpAddress("test", "ip3").orElseThrow();
     assertThat(actualResponse).isEqualTo(third);
   }
 
   @Test
   void itShouldFindAllByUsername() {
-    List<RefreshToken> actualResponse =
-        refreshTokenRepository.findAllByUsername("testUserForRefreshToken1");
+    List<RefreshToken> actualResponse = refreshTokenRepository.findAllByUsername("user");
     assertThat(actualResponse)
         .usingRecursiveComparison()
         .ignoringCollectionOrder()

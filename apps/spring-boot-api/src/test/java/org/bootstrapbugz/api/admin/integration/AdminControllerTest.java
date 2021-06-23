@@ -11,16 +11,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
-import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
-import org.bootstrapbugz.api.auth.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
+import org.bootstrapbugz.api.shared.config.RedisTestConfig;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -31,33 +28,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
+@DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
+@SpringBootTest(classes = RedisTestConfig.class)
 class AdminControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  @Autowired private RefreshTokenRepository refreshTokenRepository;
-  @Autowired private UserBlacklistRepository userBlacklistRepository;
 
   private LoginResponse loginResponse;
 
   @BeforeAll
   void setUp() throws Exception {
     loginResponse = TestUtil.login(mockMvc, objectMapper, new LoginRequest("admin", "qwerty123"));
-  }
-
-  @AfterAll
-  void cleanUp() {
-    refreshTokenRepository.deleteById(
-        JwtUtil.removeTokenTypeFromToken(loginResponse.getRefreshToken()));
-    userBlacklistRepository.deleteById("user");
-    userBlacklistRepository.deleteById("forUpdate1");
-    userBlacklistRepository.deleteById("forUpdate2");
   }
 
   @Test
