@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.shared.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
+import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.RedisTestConfig;
@@ -208,6 +210,19 @@ class AccessingResourcesTest {
                     .content(objectMapper.writeValueAsString(adminRequest)))
             .andExpect(status().isUnauthorized());
     TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+  }
+
+  @Test
+  void refreshTokenShouldThrowForbidden_userNotLogged() throws Exception {
+    RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest("token123");
+    ResultActions resultActions =
+        mockMvc
+            .perform(
+                post(Path.AUTH + "/refresh-token")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(refreshTokenRequest)))
+            .andExpect(status().isForbidden());
+    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @Test
