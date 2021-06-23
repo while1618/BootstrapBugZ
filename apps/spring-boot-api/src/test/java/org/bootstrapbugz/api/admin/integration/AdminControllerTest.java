@@ -11,13 +11,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
+import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
+import org.bootstrapbugz.api.auth.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
+import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +37,31 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@TestInstance(Lifecycle.PER_CLASS)
 class AdminControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
+  @Autowired private RefreshTokenRepository refreshTokenRepository;
+  @Autowired private UserBlacklistRepository userBlacklistRepository;
+
+  private LoginResponse loginResponse;
+
+  @BeforeAll
+  void setUp() throws Exception {
+    loginResponse = TestUtil.login(mockMvc, objectMapper, new LoginRequest("admin", "qwerty123"));
+  }
+
+  @AfterAll
+  void cleanUp() {
+    refreshTokenRepository.deleteById(
+        JwtUtil.removeTokenTypeFromToken(loginResponse.getRefreshToken()));
+    userBlacklistRepository.deleteById("user");
+    userBlacklistRepository.deleteById("forUpdate1");
+    userBlacklistRepository.deleteById("forUpdate2");
+  }
 
   @Test
   void itShouldFindAllUsers() throws Exception {
-    LoginResponse loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("admin", "qwerty123"));
     mockMvc
         .perform(
             get(Path.ADMIN + "/users")
@@ -50,8 +74,6 @@ class AdminControllerTest {
 
   @Test
   void itShouldChangeUsersRoles() throws Exception {
-    LoginResponse loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("admin", "qwerty123"));
     ChangeRoleRequest changeRoleRequest =
         new ChangeRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
@@ -71,8 +93,6 @@ class AdminControllerTest {
     "activate, notActivated",
   })
   void itShouldLockUnlockDeactivateActivateUsers(String path, String username) throws Exception {
-    LoginResponse loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("admin", "qwerty123"));
     AdminRequest adminRequest = new AdminRequest(Set.of(username));
     mockMvc
         .perform(
@@ -85,8 +105,6 @@ class AdminControllerTest {
 
   @Test
   void itShouldDeleteUsers() throws Exception {
-    LoginResponse loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("admin", "qwerty123"));
     AdminRequest adminRequest = new AdminRequest(Set.of("forUpdate2"));
     mockMvc
         .perform(
