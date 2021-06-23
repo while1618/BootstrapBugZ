@@ -97,7 +97,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     final String jsonLoginResponse = new Gson().toJson(loginResponse);
     PrintWriter out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
     out.print(jsonLoginResponse);
     out.flush();
   }
