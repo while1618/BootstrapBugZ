@@ -2,7 +2,6 @@ package org.bootstrapbugz.api.auth.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,18 +35,8 @@ class JwtAuthenticationFilterTest {
 
   @Test
   void itShouldLogin() throws Exception {
-    LoginRequest loginRequest = new LoginRequest("user", "qwerty123");
-    ResultActions resultActions =
-        mockMvc
-            .perform(
-                post(Path.AUTH + "/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(loginRequest)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     LoginResponse loginResponse =
-        objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(), LoginResponse.class);
+        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
     assertThat(loginResponse.getUser().getUsername()).isEqualTo("user");
     assertThat(loginResponse.getToken()).isNotNull();
     assertThat(loginResponse.getRefreshToken()).isNotNull();

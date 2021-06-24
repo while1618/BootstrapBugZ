@@ -45,8 +45,8 @@ public class TestUtil {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isOk());
-    String response = resultActions.andReturn().getResponse().getContentAsString();
-    return objectMapper.readValue(response, LoginResponse.class);
+    return objectMapper.readValue(
+        resultActions.andReturn().getResponse().getContentAsString(), LoginResponse.class);
   }
 
   public static void setAuth(Authentication auth, SecurityContext securityContext, User user) {
