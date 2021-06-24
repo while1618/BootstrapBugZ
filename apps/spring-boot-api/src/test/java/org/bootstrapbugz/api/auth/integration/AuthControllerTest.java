@@ -29,10 +29,7 @@ import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.response.UserResponse;
 import org.bootstrapbugz.api.user.response.UserResponse.RoleResponse;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,18 +43,11 @@ import org.springframework.test.web.servlet.ResultActions;
 @DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@TestMethodOrder(OrderAnnotation.class)
 @SpringBootTest(classes = RedisTestConfig.class)
 class AuthControllerTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private JwtServiceImpl jwtService;
-
-  @Test
-  @Order(1)
-  void dummyTestForIdea() {
-    assertThat(true).isTrue();
-  }
 
   @Test
   void itShouldSignUp() throws Exception {
@@ -142,7 +132,6 @@ class AuthControllerTest {
   }
 
   @Test
-  @Order(2)
   void itShouldResendConfirmationEmail() throws Exception {
     ResendConfirmationEmailRequest resendConfirmationEmailRequest =
         new ResendConfirmationEmailRequest("notActivated");
