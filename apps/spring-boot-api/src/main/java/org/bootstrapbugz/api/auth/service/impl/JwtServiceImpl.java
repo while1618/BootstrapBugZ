@@ -80,12 +80,12 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public void invalidateToken(String token) {
-    jwtBlacklistRepository.save(new JwtBlacklist(token));
+    jwtBlacklistRepository.save(new JwtBlacklist(token, expirationTimeInSecs));
   }
 
   @Override
   public void invalidateAllTokens(String username) {
-    userBlacklistRepository.save(new UserBlacklist(username, Instant.now()));
+    userBlacklistRepository.save(new UserBlacklist(username, Instant.now(), expirationTimeInSecs));
   }
 
   @Override
@@ -94,7 +94,11 @@ public class JwtServiceImpl implements JwtService {
         JwtUtil.createToken(
             username, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
     refreshTokenRepository.save(
-        new RefreshToken(JwtUtil.removeTokenTypeFromToken(refreshToken), username, ipAddress));
+        new RefreshToken(
+            JwtUtil.removeTokenTypeFromToken(refreshToken),
+            username,
+            ipAddress,
+            refreshTokenExpirationTimeInSecs));
     return refreshToken;
   }
 

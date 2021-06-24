@@ -25,9 +25,9 @@ import org.springframework.test.context.ActiveProfiles;
 class RefreshTokenRepositoryTest {
   @Autowired private RefreshTokenRepository refreshTokenRepository;
 
-  private final RefreshToken first = new RefreshToken("token123", "user", "ip1");
-  private final RefreshToken second = new RefreshToken("token321", "user", "ip2");
-  private final RefreshToken third = new RefreshToken("token213", "test", "ip3");
+  private final RefreshToken first = new RefreshToken("token123", "user", "ip1", 1000);
+  private final RefreshToken second = new RefreshToken("token321", "user", "ip2", 1000);
+  private final RefreshToken third = new RefreshToken("token213", "test", "ip3", 1000);
 
   @BeforeAll
   void setUp() {
