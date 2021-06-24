@@ -2,15 +2,13 @@ package org.bootstrapbugz.api.auth.redis.model;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
-
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @Setter
@@ -22,5 +20,5 @@ public class UserBlacklist implements Serializable {
 
   @Id private String username;
 
-  private Date updatedAt;
+  private Instant updatedAt;
 }

@@ -1,12 +1,10 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.redis.model.UserBlacklist;
@@ -75,7 +73,8 @@ public class JwtServiceImpl implements JwtService {
     Optional<UserBlacklist> userInBlacklist =
         userBlacklistRepository.findById(decodedJwt.getSubject());
     if (userInBlacklist.isPresent()
-        && decodedJwt.getIssuedAt().before(userInBlacklist.get().getUpdatedAt()))
+        && Instant.parse(decodedJwt.getClaim("issuedAt").asString())
+            .isBefore(userInBlacklist.get().getUpdatedAt()))
       throw new ForbiddenException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
   }
 
@@ -86,7 +85,7 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public void invalidateAllTokens(String username) {
-    userBlacklistRepository.save(new UserBlacklist(username, new Date()));
+    userBlacklistRepository.save(new UserBlacklist(username, Instant.now()));
   }
 
   @Override
@@ -121,7 +120,7 @@ public class JwtServiceImpl implements JwtService {
   @Override
   public void deleteRefreshTokenByUserAndIpAddress(String username, String ipAddress) {
     Optional<RefreshToken> refreshToken =
-      refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
+        refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
     refreshToken.ifPresent(refreshTokenRepository::delete);
   }
 

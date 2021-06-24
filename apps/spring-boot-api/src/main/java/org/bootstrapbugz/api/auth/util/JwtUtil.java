@@ -1,9 +1,9 @@
 package org.bootstrapbugz.api.auth.util;
 
-import java.util.Date;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import java.time.Instant;
+import java.util.Date;
 
 public class JwtUtil {
   public static final String TOKEN_TYPE = "Bearer ";
@@ -21,8 +21,8 @@ public class JwtUtil {
     return TOKEN_TYPE
         + JWT.create()
             .withSubject(username)
+            .withClaim("issuedAt", Instant.now().toString())
             .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSecs * 1000L))
-            .withIssuedAt(new Date())
             .sign(Algorithm.HMAC512(secret.getBytes()));
   }
 
