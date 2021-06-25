@@ -29,8 +29,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 
 @ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
@@ -38,8 +36,6 @@ class JwtServiceTest {
   @Mock private UserBlacklistRepository userBlacklistRepository;
   @Mock private RefreshTokenRepository refreshTokenRepository;
   @Mock private MessageService messageService;
-  @Mock private Authentication auth;
-  @Mock private SecurityContext securityContext;
 
   @InjectMocks private JwtServiceImpl jwtService;
 
@@ -88,8 +84,10 @@ class JwtServiceTest {
         JwtUtil.removeTokenTypeFromToken(
             jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES));
     when(jwtBlacklistRepository.existsById(token)).thenReturn(true);
+    when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES))
-        .isInstanceOf(ForbiddenException.class);
+        .isInstanceOf(ForbiddenException.class)
+        .hasMessage("Invalid token.");
   }
 
   @Test
@@ -100,8 +98,10 @@ class JwtServiceTest {
     UserBlacklist userBlacklist = new UserBlacklist("user", Instant.now(), 1000);
     when(jwtBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById("user")).thenReturn(Optional.of(userBlacklist));
+    when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES))
-        .isInstanceOf(ForbiddenException.class);
+        .isInstanceOf(ForbiddenException.class)
+        .hasMessage("Invalid token.");
   }
 
   @Test
@@ -160,8 +160,10 @@ class JwtServiceTest {
     String refreshToken =
         JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken("user", "ip1"));
     when(refreshTokenRepository.existsById(refreshToken)).thenReturn(false);
+    when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkRefreshToken(refreshToken))
-        .isInstanceOf(ForbiddenException.class);
+        .isInstanceOf(ForbiddenException.class)
+        .hasMessage("Invalid token.");
   }
 
   @Test
