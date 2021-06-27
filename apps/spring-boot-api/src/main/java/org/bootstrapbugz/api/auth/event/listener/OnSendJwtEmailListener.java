@@ -1,21 +1,12 @@
 package org.bootstrapbugz.api.auth.event.listener;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import com.google.common.io.Files;
-
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.event.email.JwtEmailSupplier;
 import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Component
 public class OnSendJwtEmailListener implements ApplicationListener<OnSendJwtEmail> {
   @Value("${ui.app.url}")
@@ -32,25 +23,8 @@ public class OnSendJwtEmailListener implements ApplicationListener<OnSendJwtEmai
 
   @Override
   public void onApplicationEvent(OnSendJwtEmail event) {
-    switch (event.getPurpose()) {
-      case CONFIRM_REGISTRATION -> sendEmail(event, "Confirm Registration", "confirm-registration");
-      case FORGOT_PASSWORD -> sendEmail(event, "Reset Password", "reset-password");
-      default -> log.error("Unknown JWT purpose");
-    }
-  }
-
-  private void sendEmail(OnSendJwtEmail event, String subject, String path) {
-    try {
-      File template = new ClassPathResource("templates/email/" + path + ".html").getFile();
-      String body = Files.asCharSource(template, StandardCharsets.UTF_8).read();
-      String link = uiAppUrl + "/" + path + "?token=" + event.getToken();
-      body =
-          body.replace("$name", event.getUser().getUsername())
-              .replace("$link", link)
-              .replace("$appName", appName);
-      emailService.sendHtmlEmail(event.getUser().getEmail(), subject, body);
-    } catch (IOException e) {
-      log.error(e.getMessage());
-    }
+    new JwtEmailSupplier()
+        .supplyEmail(event.getPurpose())
+        .sendEmail(emailService, event.getUser(), event.getToken(), uiAppUrl, appName);
   }
 }
