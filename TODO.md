@@ -1,6 +1,7 @@
 # Spring API
 - [x] Refactor code
-- [ ] Refactor tests
+- [x] Refactor tests
+- [ ] Format code
 - [ ] Update dependencies
 - [ ] Add final?
 - [ ] Use var?
