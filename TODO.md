@@ -1,0 +1,13 @@
+# Spring API
+- [x] Refactor code
+- [ ] Refactor tests
+- [ ] Update dependencies
+- [ ] Add final?
+- [ ] Use var?
+- [ ] Change username - doesn't require logout
+- [ ] Change email - doesn't require logout
+- [ ] Two-Factor Auth
+- [ ] Email on sensitive changes and revert option
+- [ ] Logging
+- [ ] Rate Limiter
+- [ ] Linter
