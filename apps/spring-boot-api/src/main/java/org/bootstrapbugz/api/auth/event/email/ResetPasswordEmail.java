@@ -19,11 +19,11 @@ public class ResetPasswordEmail implements JwtEmail {
     try {
       File template = new ClassPathResource("templates/email/reset-password.html").getFile();
       String body = Files.asCharSource(template, StandardCharsets.UTF_8).read();
-      String link = environment.getProperty("uiAppUrl") + "/reset-password?token=" + token;
+      String link = environment.getProperty("ui.app.url") + "/reset-password?token=" + token;
       body =
           body.replace("$name", user.getUsername())
               .replace("$link", link)
-              .replace("$appName", Objects.requireNonNull(environment.getProperty("appName")));
+              .replace("$appName", Objects.requireNonNull(environment.getProperty("app.name")));
       emailService.sendHtmlEmail(user.getEmail(), "Reset Password", body);
     } catch (IOException e) {
       log.error(e.getMessage());
