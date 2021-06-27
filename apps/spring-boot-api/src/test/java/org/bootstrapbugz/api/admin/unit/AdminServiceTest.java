@@ -19,7 +19,7 @@ import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.response.UserResponse;
-import org.bootstrapbugz.api.user.response.UserResponse.RoleResponse;
+import org.bootstrapbugz.api.user.response.RoleResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

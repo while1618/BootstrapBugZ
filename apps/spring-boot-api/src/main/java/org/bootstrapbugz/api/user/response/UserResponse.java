@@ -24,13 +24,4 @@ public class UserResponse {
   private boolean activated;
   private boolean nonLocked;
   private Set<RoleResponse> roles;
-
-  @Getter
-  @Setter
-  @NoArgsConstructor
-  @AllArgsConstructor
-  @EqualsAndHashCode
-  public static final class RoleResponse {
-    private String name;
-  }
 }

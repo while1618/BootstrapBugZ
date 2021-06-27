@@ -20,7 +20,7 @@ import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;
 import org.bootstrapbugz.api.user.response.UserResponse;
-import org.bootstrapbugz.api.user.response.UserResponse.RoleResponse;
+import org.bootstrapbugz.api.user.response.RoleResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
