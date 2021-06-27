@@ -1,7 +1,7 @@
 package org.bootstrapbugz.api.auth.security;
 
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -28,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             .findByUsernameOrEmail(username, username)
             .orElseThrow(
                 () ->
-                    new ResourceNotFound(
+                    new ResourceNotFoundException(
                         messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
     return UserPrincipal.create(user);
   }

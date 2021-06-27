@@ -11,7 +11,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -60,8 +60,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
   }
 
-  @ExceptionHandler({ResourceNotFound.class})
-  public ResponseEntity<Object> resourceNotFound(ResourceNotFound ex) {
+  @ExceptionHandler({ResourceNotFoundException.class})
+  public ResponseEntity<Object> resourceNotFound(ResourceNotFoundException ex) {
     return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.NOT_FOUND);
   }
 

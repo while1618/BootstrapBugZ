@@ -26,7 +26,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
@@ -170,7 +170,7 @@ class AuthServiceTest {
         new ResendConfirmationEmailRequest("test");
     when(messageService.getMessage("user.notFound")).thenReturn("User not found.");
     assertThatThrownBy(() -> authService.resendConfirmationEmail(resendConfirmationEmailRequest))
-        .isInstanceOf(ResourceNotFound.class)
+        .isInstanceOf(ResourceNotFoundException.class)
         .hasMessage("User not found.");
   }
 
@@ -199,7 +199,7 @@ class AuthServiceTest {
     ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("test@test.com");
     when(messageService.getMessage("user.notFound")).thenReturn("User not found.");
     assertThatThrownBy(() -> authService.forgotPassword(forgotPasswordRequest))
-        .isInstanceOf(ResourceNotFound.class)
+        .isInstanceOf(ResourceNotFoundException.class)
         .hasMessage("User not found.");
   }
 

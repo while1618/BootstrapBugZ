@@ -20,7 +20,7 @@ import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
@@ -113,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
             .findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
             .orElseThrow(
                 () ->
-                    new ResourceNotFound(
+                    new ResourceNotFoundException(
                         messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
     if (user.isActivated())
       throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
@@ -128,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
             .findByEmail(forgotPasswordRequest.getEmail())
             .orElseThrow(
                 () ->
-                    new ResourceNotFound(
+                    new ResourceNotFoundException(
                         messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
     String token = jwtService.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.FORGOT_PASSWORD));

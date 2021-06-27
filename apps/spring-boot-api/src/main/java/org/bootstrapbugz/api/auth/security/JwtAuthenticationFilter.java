@@ -2,7 +2,6 @@ package org.bootstrapbugz.api.auth.security;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
@@ -18,7 +17,7 @@ import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
@@ -60,7 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
           new UsernamePasswordAuthenticationToken(
               loginRequest.getUsernameOrEmail(), loginRequest.getPassword(), new ArrayList<>());
       return authenticationManager.authenticate(authenticationToken);
-    } catch (IOException | AuthenticationException | ResourceNotFound e) {
+    } catch (IOException | AuthenticationException | ResourceNotFoundException e) {
       CustomFilterExceptionHandler.handleException(response, getMessageBasedOnException(e));
     }
     return null;

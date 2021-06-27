@@ -6,7 +6,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
             .findByUsername(username)
             .orElseThrow(
                 () ->
-                    new ResourceNotFound(
+                    new ResourceNotFoundException(
                         messageService.getMessage("user.notFound"), ErrorDomain.USER));
     user.setRoles(null);
     if (!AuthUtil.findLoggedUser().getUsername().equals(user.getUsername())) user.setEmail(null);

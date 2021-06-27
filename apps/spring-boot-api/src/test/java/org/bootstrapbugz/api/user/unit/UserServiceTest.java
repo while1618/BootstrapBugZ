@@ -10,12 +10,11 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
@@ -98,7 +97,7 @@ class UserServiceTest {
   void findUserByUsernameShouldThrowResourceNotFound() {
     when(messageService.getMessage("user.notFound")).thenReturn("User not found.");
     assertThatThrownBy(() -> userService.findByUsername("test"))
-        .isInstanceOf(ResourceNotFound.class)
+        .isInstanceOf(ResourceNotFoundException.class)
         .hasMessage("User not found.");
   }
 

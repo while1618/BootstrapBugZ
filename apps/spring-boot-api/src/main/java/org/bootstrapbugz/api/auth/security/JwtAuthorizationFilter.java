@@ -15,7 +15,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFound;
+import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,7 +52,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
       UsernamePasswordAuthenticationToken authenticationToken =
           getAuthenticationToken(JwtUtil.removeTokenTypeFromToken(token));
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-    } catch (ResourceNotFound
+    } catch (ResourceNotFoundException
         | JWTVerificationException
         | IllegalArgumentException
         | ForbiddenException e) {
