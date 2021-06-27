@@ -213,19 +213,6 @@ class AccessingResourcesTest {
   }
 
   @Test
-  void refreshTokenShouldThrowForbidden_userNotLogged() throws Exception {
-    RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest("token123");
-    ResultActions resultActions =
-        mockMvc
-            .perform(
-                post(Path.AUTH + "/refresh-token")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(refreshTokenRequest)))
-            .andExpect(status().isForbidden());
-    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
-  }
-
-  @Test
   void logoutShouldThrowForbidden_userNotLogged() throws Exception {
     ResultActions resultActions =
         mockMvc
