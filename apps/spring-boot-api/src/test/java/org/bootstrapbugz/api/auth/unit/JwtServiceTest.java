@@ -7,10 +7,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+
+import com.auth0.jwt.exceptions.TokenExpiredException;
+
 import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.redis.model.UserBlacklist;

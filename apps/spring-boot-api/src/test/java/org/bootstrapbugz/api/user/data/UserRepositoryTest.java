@@ -1,10 +1,11 @@
 package org.bootstrapbugz.api.user.data;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;

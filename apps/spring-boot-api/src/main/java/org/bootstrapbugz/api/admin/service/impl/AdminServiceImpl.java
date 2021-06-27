@@ -23,9 +23,7 @@ public class AdminServiceImpl implements AdminService {
   private final UserMapper userMapper;
 
   public AdminServiceImpl(
-      UserRepository userRepository,
-      JwtService jwtService,
-      UserMapper userMapper) {
+      UserRepository userRepository, JwtService jwtService, UserMapper userMapper) {
     this.userRepository = userRepository;
     this.jwtService = jwtService;
     this.userMapper = userMapper;

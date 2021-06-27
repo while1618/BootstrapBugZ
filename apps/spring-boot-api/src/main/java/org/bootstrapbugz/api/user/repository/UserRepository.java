@@ -3,8 +3,10 @@ package org.bootstrapbugz.api.user.repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.persistence.QueryHint;
+
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

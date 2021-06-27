@@ -3,6 +3,7 @@ package org.bootstrapbugz.api.auth.data;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
 import org.bootstrapbugz.api.shared.config.RedisTestConfig;

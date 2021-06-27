@@ -1,9 +1,10 @@
 package org.bootstrapbugz.api.auth.util;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import java.time.Instant;
 import java.util.Date;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 
 public class JwtUtil {
   public static final String TOKEN_TYPE = "Bearer ";

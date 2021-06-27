@@ -1,10 +1,12 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.redis.model.UserBlacklist;

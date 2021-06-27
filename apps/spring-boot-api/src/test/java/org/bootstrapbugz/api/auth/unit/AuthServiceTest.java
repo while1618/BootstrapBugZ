@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import java.util.Set;
+
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.redis.repository.JwtBlacklistRepository;
 import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
@@ -34,8 +35,8 @@ import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import org.bootstrapbugz.api.user.response.UserResponse;
 import org.bootstrapbugz.api.user.response.RoleResponse;
+import org.bootstrapbugz.api.user.response.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
