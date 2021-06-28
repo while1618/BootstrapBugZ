@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.admin.service.impl;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bootstrapbugz.api.admin.request.AdminRequest;
@@ -10,7 +9,6 @@ import org.bootstrapbugz.api.admin.service.AdminService;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.response.UserResponse;
 import org.springframework.stereotype.Service;
@@ -36,10 +34,10 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void changeRole(ChangeRoleRequest changeRoleRequest) {
-    List<User> users = userRepository.findAllByUsernameIn(changeRoleRequest.getUsernames());
+    var users = userRepository.findAllByUsernameIn(changeRoleRequest.getUsernames());
     users.forEach(
         user -> {
-          Set<Role> roles =
+          var roles =
               changeRoleRequest.getRoleNames().stream().map(Role::new).collect(Collectors.toSet());
           user.setRoles(roles);
           jwtService.invalidateAllTokens(user.getUsername());
@@ -50,7 +48,7 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void lock(AdminRequest adminRequest) {
-    List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(
         user -> {
           user.setNonLocked(false);
@@ -62,21 +60,21 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void unlock(AdminRequest adminRequest) {
-    List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(user -> user.setNonLocked(true));
     userRepository.saveAll(users);
   }
 
   @Override
   public void activate(AdminRequest adminRequest) {
-    List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(user -> user.setActivated(true));
     userRepository.saveAll(users);
   }
 
   @Override
   public void deactivate(AdminRequest adminRequest) {
-    List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(
         user -> {
           user.setActivated(false);
@@ -89,7 +87,7 @@ public class AdminServiceImpl implements AdminService {
   @Override
   @Transactional
   public void delete(AdminRequest adminRequest) {
-    List<User> users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(
         user -> {
           jwtService.invalidateAllTokens(user.getUsername());

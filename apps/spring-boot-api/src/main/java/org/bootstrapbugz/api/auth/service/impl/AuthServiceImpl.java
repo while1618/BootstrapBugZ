@@ -71,14 +71,14 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserResponse signUp(SignUpRequest signUpRequest) {
-    User user = createUser(signUpRequest);
+    var user = createUser(signUpRequest);
     String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
     return userMapper.userToUserResponse(user);
   }
 
   private User createUser(SignUpRequest signUpRequest) {
-    User user =
+    var user =
         new User()
             .setFirstName(signUpRequest.getFirstName())
             .setLastName(signUpRequest.getLastName())
@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void confirmRegistration(String token) {
     String username = JWT.decode(token).getSubject();
-    User user =
+    var user =
         userRepository
             .findByUsername(username)
             .orElseThrow(
@@ -108,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void resendConfirmationEmail(ResendConfirmationEmailRequest request) {
-    User user =
+    var user =
         userRepository
             .findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
             .orElseThrow(
@@ -123,7 +123,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
-    User user =
+    var user =
         userRepository
             .findByEmail(forgotPasswordRequest.getEmail())
             .orElseThrow(
@@ -137,7 +137,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
     String username = JWT.decode(resetPasswordRequest.getToken()).getSubject();
-    User user =
+    var user =
         userRepository
             .findByUsername(username)
             .orElseThrow(

@@ -3,7 +3,6 @@ package org.bootstrapbugz.api.shared.email.service.impl;
 import java.nio.charset.StandardCharsets;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 
 import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,8 +23,8 @@ public class EmailServiceImpl implements EmailService {
   @Override
   public void sendHtmlEmail(String to, String subject, String body) {
     try {
-      MimeMessage mimeMessage = mailSender.createMimeMessage();
-      MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
+      var mimeMessage = mailSender.createMimeMessage();
+      var helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
       helper.setTo(to);
       helper.setSubject(subject);
       helper.setText(body, true);

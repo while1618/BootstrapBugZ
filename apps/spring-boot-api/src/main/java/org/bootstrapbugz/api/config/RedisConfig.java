@@ -35,15 +35,14 @@ public class RedisConfig {
 
   @Bean
   JedisConnectionFactory jedisConnectionFactory() {
-    RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+    var redisStandaloneConfiguration = new RedisStandaloneConfiguration();
     redisStandaloneConfiguration.setHostName(host);
     redisStandaloneConfiguration.setPort(port);
     redisStandaloneConfiguration.setDatabase(database);
     redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
 
-    JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration =
-        JedisClientConfiguration.builder();
-    jedisClientConfiguration.connectTimeout(Duration.ofSeconds(timeout));
+    var jedisClientConfiguration =
+        JedisClientConfiguration.builder().connectTimeout(Duration.ofSeconds(timeout));
 
     return new JedisConnectionFactory(
         redisStandaloneConfiguration, jedisClientConfiguration.build());
@@ -51,7 +50,7 @@ public class RedisConfig {
 
   @Bean
   public RedisTemplate<String, Object> redisTemplate() {
-    RedisTemplate<String, Object> template = new RedisTemplate<>();
+    var template = new RedisTemplate<String, Object>();
     template.setConnectionFactory(jedisConnectionFactory());
     return template;
   }

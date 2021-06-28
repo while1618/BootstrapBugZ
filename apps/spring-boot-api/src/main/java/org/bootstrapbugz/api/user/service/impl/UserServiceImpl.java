@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse findByUsername(String username) {
-    User user =
+    var user =
         userRepository
             .findByUsername(username)
             .orElseThrow(
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse update(UpdateUserRequest updateUserRequest) {
-    User user = AuthUtil.findLoggedUser();
+    var user = AuthUtil.findLoggedUser();
     user.setFirstName(updateUserRequest.getFirstName());
     user.setLastName(updateUserRequest.getLastName());
     tryToSetUsername(user, updateUserRequest.getUsername());
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void changePassword(ChangePasswordRequest changePasswordRequest) {
-    User user = AuthUtil.findLoggedUser();
+    var user = AuthUtil.findLoggedUser();
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
       throw new BadRequestException(
           messageService.getMessage("oldPassword.invalid"), ErrorDomain.USER);

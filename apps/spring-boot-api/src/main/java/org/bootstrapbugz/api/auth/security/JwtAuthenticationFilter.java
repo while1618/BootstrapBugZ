@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.auth.security;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
@@ -21,7 +20,6 @@ import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
-import org.bootstrapbugz.api.user.model.User;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -53,12 +51,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   public Authentication attemptAuthentication(
       HttpServletRequest request, HttpServletResponse response) {
     try {
-      LoginRequest loginRequest =
-          new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
-      UsernamePasswordAuthenticationToken authenticationToken =
+      var loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+      var authToken =
           new UsernamePasswordAuthenticationToken(
               loginRequest.getUsernameOrEmail(), loginRequest.getPassword(), new ArrayList<>());
-      return authenticationManager.authenticate(authenticationToken);
+      return authenticationManager.authenticate(authToken);
     } catch (IOException | AuthenticationException | ResourceNotFoundException e) {
       CustomFilterExceptionHandler.handleException(response, getMessageBasedOnException(e));
     }
@@ -78,12 +75,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    User user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
+    var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
     String ipAddress = AuthUtil.getUserIpAddress(request);
     String refreshToken = jwtService.findRefreshToken(user.getUsername(), ipAddress);
     if (refreshToken == null)
       refreshToken = jwtService.createRefreshToken(user.getUsername(), ipAddress);
-    final LoginResponse loginResponse =
+    final var loginResponse =
         new LoginResponse()
             .setToken(jwtService.createToken(user.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
             .setRefreshToken(refreshToken)
@@ -94,7 +91,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   private void writeToResponse(HttpServletResponse response, LoginResponse loginResponse)
       throws IOException {
     final String jsonLoginResponse = new Gson().toJson(loginResponse);
-    PrintWriter out = response.getWriter();
+    var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     out.print(jsonLoginResponse);
     out.flush();

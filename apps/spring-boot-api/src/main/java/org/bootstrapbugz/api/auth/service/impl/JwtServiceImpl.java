@@ -1,11 +1,8 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 
 import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
@@ -71,9 +68,8 @@ public class JwtServiceImpl implements JwtService {
   }
 
   private void isInUserBlacklist(String token) {
-    DecodedJWT decodedJwt = JWT.decode(token);
-    Optional<UserBlacklist> userInBlacklist =
-        userBlacklistRepository.findById(decodedJwt.getSubject());
+    var decodedJwt = JWT.decode(token);
+    var userInBlacklist = userBlacklistRepository.findById(decodedJwt.getSubject());
     if (userInBlacklist.isPresent()
         && Instant.parse(decodedJwt.getClaim("issuedAt").asString())
             .isBefore(userInBlacklist.get().getUpdatedAt()))
@@ -113,8 +109,7 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public String findRefreshToken(String username, String ipAddress) {
-    Optional<RefreshToken> refreshToken =
-        refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
+    var refreshToken = refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
     return refreshToken.map(token -> JwtUtil.TOKEN_TYPE + token.getToken()).orElse(null);
   }
 
@@ -125,14 +120,13 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public void deleteRefreshTokenByUserAndIpAddress(String username, String ipAddress) {
-    Optional<RefreshToken> refreshToken =
-        refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
+    var refreshToken = refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
     refreshToken.ifPresent(refreshTokenRepository::delete);
   }
 
   @Override
   public void deleteAllRefreshTokensByUser(String username) {
-    List<RefreshToken> refreshTokens = refreshTokenRepository.findAllByUsername(username);
+    var refreshTokens = refreshTokenRepository.findAllByUsername(username);
     refreshTokenRepository.deleteAll(refreshTokens);
   }
 }

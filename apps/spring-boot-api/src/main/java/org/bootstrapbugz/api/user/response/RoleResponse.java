@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public final class RoleResponse {
+public class RoleResponse {
   private String name;
 }

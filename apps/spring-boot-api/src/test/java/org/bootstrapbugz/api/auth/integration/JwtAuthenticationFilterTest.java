@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.bootstrapbugz.api.auth.request.LoginRequest;
-import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.shared.config.RedisTestConfig;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
@@ -24,7 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext
 @AutoConfigureMockMvc
@@ -36,7 +34,7 @@ class JwtAuthenticationFilterTest {
 
   @Test
   void itShouldLogin() throws Exception {
-    LoginResponse loginResponse =
+    var loginResponse =
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
     assertThat(loginResponse.getUser().getUsername()).isEqualTo("user");
     assertThat(loginResponse.getToken()).isNotNull();
@@ -51,16 +49,16 @@ class JwtAuthenticationFilterTest {
   })
   void loginShouldThrowUnauthorized_wrongCredentialsUserLockedUserNotActivated(
       String username, String message) throws Exception {
-    LoginRequest loginRequest = new LoginRequest(username, "qwerty123");
-    ErrorResponse expectedResponse =
+    var loginRequest = new LoginRequest(username, "qwerty123");
+    var expectedErrorResponse =
         new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, message);
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/login")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedResponse, resultActions);
+    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 }

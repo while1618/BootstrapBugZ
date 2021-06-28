@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
-import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.RedisTestConfig;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -33,7 +32,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext
 @AutoConfigureMockMvc
@@ -50,7 +48,7 @@ class AccessingResourcesTest {
 
   @Test
   void findUserByUsernameShouldThrowForbidden_userNotLogged() throws Exception {
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(
                 get(Path.USERS + "/{username}", "unknown").contentType(MediaType.APPLICATION_JSON))
@@ -60,9 +58,9 @@ class AccessingResourcesTest {
 
   @Test
   void updateUserShouldThrowForbidden_userNotLogged() throws Exception {
-    UpdateUserRequest updateUserRequest =
+    var updateUserRequest =
         new UpdateUserRequest("Updated", "Updated", "forUpdate2", "forUpdate2@localhost.com");
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(
                 put(Path.USERS + "/update")
@@ -74,9 +72,8 @@ class AccessingResourcesTest {
 
   @Test
   void changePasswordShouldThrowForbidden_userNotLogged() throws Exception {
-    ChangePasswordRequest changePasswordRequest =
-        new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
-    ResultActions resultActions =
+    var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
+    var resultActions =
         mockMvc
             .perform(
                 put(Path.USERS + "/change-password")
@@ -88,7 +85,7 @@ class AccessingResourcesTest {
 
   @Test
   void findAllUsersShouldThrowForbidden_userNotLogged() throws Exception {
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(get(Path.ADMIN + "/users").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
@@ -97,9 +94,9 @@ class AccessingResourcesTest {
 
   @Test
   void findAllUsersShouldThrowUnauthorized_loggedUserIsNotAdmin() throws Exception {
-    LoginResponse loginResponse =
+    var loginResponse =
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(
                 get(Path.ADMIN + "/users")
@@ -111,9 +108,9 @@ class AccessingResourcesTest {
 
   @Test
   void changeUsersRolesShouldThrowForbidden_userNotLogged() throws Exception {
-    ChangeRoleRequest changeRoleRequest =
+    var changeRoleRequest =
         new ChangeRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(
                 put(Path.ADMIN + "/users/role")
@@ -125,11 +122,11 @@ class AccessingResourcesTest {
 
   @Test
   void changeUsersRolesShouldThrowUnauthorized_loggedUserIsNotAdmin() throws Exception {
-    LoginResponse loginResponse =
+    var loginResponse =
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
-    ChangeRoleRequest changeRoleRequest =
+    var changeRoleRequest =
         new ChangeRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(
                 put(Path.ADMIN + "/users/role")
@@ -149,8 +146,8 @@ class AccessingResourcesTest {
   })
   void lockUnlockDeactivateActivateUsersShouldThrowForbidden_userNotLogged(
       String path, String username) throws Exception {
-    AdminRequest adminRequest = new AdminRequest(Set.of(username));
-    ResultActions resultActions =
+    var adminRequest = new AdminRequest(Set.of(username));
+    var resultActions =
         mockMvc
             .perform(
                 put(Path.ADMIN + "/users/" + path)
@@ -169,10 +166,10 @@ class AccessingResourcesTest {
   })
   void lockUnlockDeactivateActivateUsersShouldThrowUnauthorized_loggedUserIsNotAdmin(
       String path, String username) throws Exception {
-    LoginResponse loginResponse =
+    var loginResponse =
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
-    AdminRequest adminRequest = new AdminRequest(Set.of(username));
-    ResultActions resultActions =
+    var adminRequest = new AdminRequest(Set.of(username));
+    var resultActions =
         mockMvc
             .perform(
                 put(Path.ADMIN + "/users/" + path)
@@ -185,8 +182,8 @@ class AccessingResourcesTest {
 
   @Test
   void deleteUsersShouldThrowForbidden_userNotLogged() throws Exception {
-    AdminRequest adminRequest = new AdminRequest(Set.of("forUpdate2"));
-    ResultActions resultActions =
+    var adminRequest = new AdminRequest(Set.of("forUpdate2"));
+    var resultActions =
         mockMvc
             .perform(
                 delete(Path.ADMIN + "/users/delete")
@@ -198,10 +195,10 @@ class AccessingResourcesTest {
 
   @Test
   void deleteUsersShouldThrowUnauthorized_loggedUserIsNotAdmin() throws Exception {
-    LoginResponse loginResponse =
+    var loginResponse =
         TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
-    AdminRequest adminRequest = new AdminRequest(Set.of("forUpdate2"));
-    ResultActions resultActions =
+    var adminRequest = new AdminRequest(Set.of("forUpdate2"));
+    var resultActions =
         mockMvc
             .perform(
                 delete(Path.ADMIN + "/users/delete")
@@ -214,7 +211,7 @@ class AccessingResourcesTest {
 
   @Test
   void logoutShouldThrowForbidden_userNotLogged() throws Exception {
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(get(Path.AUTH + "/logout").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
@@ -223,7 +220,7 @@ class AccessingResourcesTest {
 
   @Test
   void logoutFromAllDevicesShouldThrowForbidden_userNotLogged() throws Exception {
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(
                 get(Path.AUTH + "/logout-from-all-devices").contentType(MediaType.APPLICATION_JSON))

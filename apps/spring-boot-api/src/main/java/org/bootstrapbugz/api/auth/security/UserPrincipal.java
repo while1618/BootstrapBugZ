@@ -32,7 +32,6 @@ public class UserPrincipal implements UserDetails {
   private final Collection<? extends GrantedAuthority> authorities;
 
   public static UserPrincipal create(User user) {
-    List<GrantedAuthority> authorities = getAuthorities(user);
     return new UserPrincipal(
         user.getId(),
         user.getFirstName(),
@@ -42,7 +41,7 @@ public class UserPrincipal implements UserDetails {
         user.getPassword(),
         user.isActivated(),
         user.isNonLocked(),
-        authorities);
+        getAuthorities(user));
   }
 
   private static List<GrantedAuthority> getAuthorities(User user) {

@@ -45,7 +45,7 @@ public class ErrorResponse {
 
   @Override
   public String toString() {
-    Gson gson =
+    var gson =
         new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(

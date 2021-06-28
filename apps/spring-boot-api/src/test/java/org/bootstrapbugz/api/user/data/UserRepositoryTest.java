@@ -3,7 +3,6 @@ package org.bootstrapbugz.api.user.data;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import org.bootstrapbugz.api.user.model.Role;
@@ -34,7 +33,7 @@ class UserRepositoryTest {
 
   @Test
   void itShouldFindAllUsersWithRoles() {
-    List<User> actualUsers = userRepository.findAllWithRoles();
+    var actualUsers = userRepository.findAllWithRoles();
     assertThat(actualUsers.size()).isEqualTo(7);
     assertThat(actualUsers.get(1))
         .usingRecursiveComparison()
@@ -44,7 +43,7 @@ class UserRepositoryTest {
 
   @Test
   void itShouldFindAllUsersByUsernameIn() {
-    List<User> actualUsers = userRepository.findAllByUsernameIn(Set.of("user", "admin"));
+    var actualUsers = userRepository.findAllByUsernameIn(Set.of("user", "admin"));
     assertThat(actualUsers.size()).isEqualTo(2);
     assertThat(actualUsers.get(1))
         .usingRecursiveComparison()
@@ -54,7 +53,7 @@ class UserRepositoryTest {
 
   @Test
   void itShouldFindUserByEmail() {
-    User actualUser = userRepository.findByEmail("user@localhost.com").orElseThrow();
+    var actualUser = userRepository.findByEmail("user@localhost.com").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
         .ignoringFields("password")
@@ -63,7 +62,7 @@ class UserRepositoryTest {
 
   @Test
   void itShouldFindUserByUsername() {
-    User actualUser = userRepository.findByUsername("user").orElseThrow();
+    var actualUser = userRepository.findByUsername("user").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
         .ignoringFields("password")
@@ -72,7 +71,7 @@ class UserRepositoryTest {
 
   @Test
   void itShouldFindUserByUsernameOrEmail() {
-    User actualUser = userRepository.findByUsernameOrEmail("user", "user").orElseThrow();
+    var actualUser = userRepository.findByUsernameOrEmail("user", "user").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
         .ignoringFields("password")

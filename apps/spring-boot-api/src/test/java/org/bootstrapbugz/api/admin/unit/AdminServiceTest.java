@@ -55,24 +55,25 @@ class AdminServiceTest {
 
   @Test
   void itShouldFindAllUsersWithRoles() {
-    Set<RoleResponse> userRoles = Set.of(new RoleResponse(RoleName.USER.name()));
-    Set<RoleResponse> adminRoles =
+    var userRoleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var adminRoleResponses =
         Set.of(new RoleResponse(RoleName.USER.name()), new RoleResponse(RoleName.ADMIN.name()));
-    List<UserResponse> expectedResponse =
+    var expectedUserResponses =
         List.of(
             new UserResponse(
-                1L, "Admin", "Admin", "admin", "admin@admin.com", true, true, adminRoles),
-            new UserResponse(2L, "Test", "Test", "test", "test@test.com", true, true, userRoles));
+                1L, "Admin", "Admin", "admin", "admin@admin.com", true, true, adminRoleResponses),
+            new UserResponse(
+                2L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses));
     when(userRepository.findAllWithRoles()).thenReturn(List.of(admin, user));
-    List<UserResponse> actualResponse = adminService.findAllUsers();
-    assertThat(actualResponse).isEqualTo(expectedResponse);
+    var actualUserResponses = adminService.findAllUsers();
+    assertThat(actualUserResponses).isEqualTo(expectedUserResponses);
   }
 
   @Test
   void itShouldChangeUsersRoles() {
-    ChangeRoleRequest changeRoleRequest =
+    var changeRoleRequest =
         new ChangeRoleRequest(Collections.singleton("test"), Set.of(RoleName.USER, RoleName.ADMIN));
-    User expectedUser =
+    var expectedUser =
         new User(2L, "Test", "Test", "test", "test@test.com", null, true, true, adminRoles);
     when(userRepository.findAllByUsernameIn(changeRoleRequest.getUsernames()))
         .thenReturn(List.of(user));
@@ -83,8 +84,8 @@ class AdminServiceTest {
 
   @Test
   void itShouldLockUsers() {
-    AdminRequest adminRequest = new AdminRequest(Collections.singleton("test"));
-    User expectedUser =
+    var adminRequest = new AdminRequest(Collections.singleton("test"));
+    var expectedUser =
         new User(2L, "Test", "Test", "test", "test@test.com", null, true, false, userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames())).thenReturn(List.of(user));
     adminService.lock(adminRequest);
@@ -94,8 +95,8 @@ class AdminServiceTest {
 
   @Test
   void itShouldUnlockUsers() {
-    AdminRequest adminRequest = new AdminRequest(Collections.singleton("test2"));
-    User expectedUser =
+    var adminRequest = new AdminRequest(Collections.singleton("test2"));
+    var expectedUser =
         new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, false, true, userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
         .thenReturn(List.of(restricted));
@@ -106,8 +107,8 @@ class AdminServiceTest {
 
   @Test
   void itShouldActivateUsers() {
-    AdminRequest adminRequest = new AdminRequest(Collections.singleton("test2"));
-    User expectedUser =
+    var adminRequest = new AdminRequest(Collections.singleton("test2"));
+    var expectedUser =
         new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, true, false, userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
         .thenReturn(List.of(restricted));
@@ -118,8 +119,8 @@ class AdminServiceTest {
 
   @Test
   void itShouldDeactivateUsers() {
-    AdminRequest adminRequest = new AdminRequest(Collections.singleton("test"));
-    User expectedUser =
+    var adminRequest = new AdminRequest(Collections.singleton("test"));
+    var expectedUser =
         new User(2L, "Test", "Test", "test", "test@test.com", null, false, true, userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames())).thenReturn(List.of(user));
     adminService.deactivate(adminRequest);
@@ -129,7 +130,7 @@ class AdminServiceTest {
 
   @Test
   void itShouldDeleteUsers() {
-    AdminRequest adminRequest = new AdminRequest(Set.of("admin", "test", "test2"));
+    var adminRequest = new AdminRequest(Set.of("admin", "test", "test2"));
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
         .thenReturn(List.of(admin, user, restricted));
     adminService.delete(adminRequest);

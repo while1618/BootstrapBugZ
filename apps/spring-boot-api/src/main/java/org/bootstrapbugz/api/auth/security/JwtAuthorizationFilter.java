@@ -49,9 +49,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
       return;
     }
     try {
-      UsernamePasswordAuthenticationToken authenticationToken =
-          getAuthenticationToken(JwtUtil.removeTokenTypeFromToken(token));
-      SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+      var authToken = getAuthenticationToken(JwtUtil.removeTokenTypeFromToken(token));
+      SecurityContextHolder.getContext().setAuthentication(authToken);
     } catch (ResourceNotFoundException
         | JWTVerificationException
         | IllegalArgumentException
@@ -64,7 +63,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
   private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
     String username = JWT.decode(token).getSubject();
-    UserPrincipal userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
+    var userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
     jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
 
     return new UsernamePasswordAuthenticationToken(

@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -37,8 +36,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatus status,
       @Nonnull WebRequest request) {
-    ErrorResponse errorResponse = new ErrorResponse(status);
-    BindingResult result = ex.getBindingResult();
+    var errorResponse = new ErrorResponse(status);
+    var result = ex.getBindingResult();
     result
         .getFieldErrors()
         .forEach(error -> errorResponse.addError(error.getField(), error.getDefaultMessage()));
@@ -46,7 +45,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         .getGlobalErrors()
         .forEach(
             error -> {
-              Object errorObject = Objects.requireNonNull(error.getArguments())[1];
+              var errorObject = Objects.requireNonNull(error.getArguments())[1];
               errorResponse.addError(
                   (errorObject == null) ? ErrorDomain.GLOBAL.getValue() : errorObject.toString(),
                   error.getDefaultMessage());
@@ -56,7 +55,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   private ResponseEntity<Object> createErrorResponseEntity(
       ErrorDomain domain, String message, HttpStatus status) {
-    ErrorResponse errorResponse = new ErrorResponse(status, domain, message);
+    var errorResponse = new ErrorResponse(status, domain, message);
     return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
   }
 
@@ -114,7 +113,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatus status,
       @Nonnull WebRequest request) {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     builder.append(ex.getMethod());
     builder.append(" method is not supported for this request. Supported methods are ");
     Objects.requireNonNull(ex.getSupportedHttpMethods())

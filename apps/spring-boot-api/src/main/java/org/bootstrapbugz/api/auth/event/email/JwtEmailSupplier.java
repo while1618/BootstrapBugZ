@@ -16,8 +16,9 @@ public class JwtEmailSupplier {
   }
 
   public JwtEmail supplyEmail(JwtPurpose jwtPurpose) {
-    Supplier<JwtEmail> email = emailType.get(jwtPurpose);
-    if (email == null) throw new IllegalArgumentException("Invalid player type: " + jwtPurpose);
-    return email.get();
+    var emailSupplier = emailType.get(jwtPurpose);
+    if (emailSupplier == null)
+      throw new IllegalArgumentException("Invalid player type: " + jwtPurpose);
+    return emailSupplier.get();
   }
 }

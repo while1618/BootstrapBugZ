@@ -64,7 +64,7 @@ class AdminControllerTest {
 
   @Test
   void itShouldChangeUsersRoles() throws Exception {
-    ChangeRoleRequest changeRoleRequest =
+    var changeRoleRequest =
         new ChangeRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
         .perform(
@@ -83,7 +83,7 @@ class AdminControllerTest {
     "activate, notActivated",
   })
   void itShouldLockUnlockDeactivateActivateUsers(String path, String username) throws Exception {
-    AdminRequest adminRequest = new AdminRequest(Set.of(username));
+    var adminRequest = new AdminRequest(Set.of(username));
     mockMvc
         .perform(
             put(Path.ADMIN + "/users/" + path)
@@ -95,7 +95,7 @@ class AdminControllerTest {
 
   @Test
   void itShouldDeleteUsers() throws Exception {
-    AdminRequest adminRequest = new AdminRequest(Set.of("forUpdate2"));
+    var adminRequest = new AdminRequest(Set.of("forUpdate2"));
     mockMvc
         .perform(
             delete(Path.ADMIN + "/users/delete")

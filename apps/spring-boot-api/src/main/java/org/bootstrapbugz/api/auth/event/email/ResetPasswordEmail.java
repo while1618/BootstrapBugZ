@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.auth.event.email;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -20,7 +19,7 @@ public class ResetPasswordEmail implements JwtEmail {
   public void sendEmail(
       EmailService emailService, Environment environment, User user, String token) {
     try {
-      File template = new ClassPathResource("templates/email/reset-password.html").getFile();
+      var template = new ClassPathResource("templates/email/reset-password.html").getFile();
       String body = Files.asCharSource(template, StandardCharsets.UTF_8).read();
       String link = environment.getProperty("ui.app.url") + "/reset-password?token=" + token;
       body =

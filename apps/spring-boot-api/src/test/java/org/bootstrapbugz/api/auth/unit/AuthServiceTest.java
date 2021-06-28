@@ -20,7 +20,6 @@ import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.response.RefreshTokenResponse;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
@@ -95,33 +94,32 @@ class AuthServiceTest {
 
   @Test
   void itShouldRefreshToken() {
-    MockHttpServletRequest request = new MockHttpServletRequest();
+    var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
     String token = jwtService.createRefreshToken("user", "ip1");
     when(refreshTokenRepository.existsById(JwtUtil.removeTokenTypeFromToken(token)))
         .thenReturn(true);
-    RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(token);
-    RefreshTokenResponse refreshTokenResponse =
-        authService.refreshToken(refreshTokenRequest, request);
+    var refreshTokenRequest = new RefreshTokenRequest(token);
+    var refreshTokenResponse = authService.refreshToken(refreshTokenRequest, request);
     assertThat(refreshTokenResponse.getToken()).isNotNull().startsWith(JwtUtil.TOKEN_TYPE);
     assertThat(refreshTokenResponse.getRefreshToken()).isNotNull().startsWith(JwtUtil.TOKEN_TYPE);
   }
 
   @Test
   void itShouldSignUp() {
-    Set<RoleResponse> roles = Set.of(new RoleResponse(RoleName.USER.name()));
-    UserResponse expectedUserResponse =
-        new UserResponse(1L, "Test", "Test", "test", "test@test.com", false, true, roles);
-    SignUpRequest signUpRequest =
+    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var expectedUserResponse =
+        new UserResponse(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
+    var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@test.com", "qwerty123", "qwerty123");
     when(userRepository.save(any(User.class))).thenReturn(user);
-    UserResponse actualUserResponse = authService.signUp(signUpRequest);
+    var actualUserResponse = authService.signUp(signUpRequest);
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
   }
 
   @Test
   void itShouldConfirmRegistration() {
-    User expectedUser =
+    var expectedUser =
         new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
     String token =
         JwtUtil.removeTokenTypeFromToken(
@@ -158,8 +156,7 @@ class AuthServiceTest {
 
   @Test
   void itShouldResendConfirmationEmail() {
-    ResendConfirmationEmailRequest resendConfirmationEmailRequest =
-        new ResendConfirmationEmailRequest("test");
+    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
     when(userRepository.findByUsernameOrEmail("test", "test")).thenReturn(Optional.of(user));
     authService.resendConfirmationEmail(resendConfirmationEmailRequest);
     verify(eventPublisher, times(1)).publishEvent(any(OnSendJwtEmail.class));
@@ -167,8 +164,7 @@ class AuthServiceTest {
 
   @Test
   void resendConfirmationEmailShouldThrowResourceNotFound_userNotFound() {
-    ResendConfirmationEmailRequest resendConfirmationEmailRequest =
-        new ResendConfirmationEmailRequest("test");
+    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
     when(messageService.getMessage("user.notFound")).thenReturn("User not found.");
     assertThatThrownBy(() -> authService.resendConfirmationEmail(resendConfirmationEmailRequest))
         .isInstanceOf(ResourceNotFoundException.class)
@@ -177,8 +173,7 @@ class AuthServiceTest {
 
   @Test
   void resendConfirmationEmailShouldThrowForbidden_userAlreadyActivated() {
-    ResendConfirmationEmailRequest resendConfirmationEmailRequest =
-        new ResendConfirmationEmailRequest("test");
+    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     user.setActivated(true);
     when(userRepository.findByUsernameOrEmail("test", "test")).thenReturn(Optional.of(user));
@@ -189,7 +184,7 @@ class AuthServiceTest {
 
   @Test
   void itShouldForgotPassword() {
-    ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("test@test.com");
+    var forgotPasswordRequest = new ForgotPasswordRequest("test@test.com");
     when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
     authService.forgotPassword(forgotPasswordRequest);
     verify(eventPublisher, times(1)).publishEvent(any(OnSendJwtEmail.class));
@@ -197,7 +192,7 @@ class AuthServiceTest {
 
   @Test
   void forgotPasswordShouldThrowResourceNotFound_userNotFound() {
-    ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest("test@test.com");
+    var forgotPasswordRequest = new ForgotPasswordRequest("test@test.com");
     when(messageService.getMessage("user.notFound")).thenReturn("User not found.");
     assertThatThrownBy(() -> authService.forgotPassword(forgotPasswordRequest))
         .isInstanceOf(ResourceNotFoundException.class)
@@ -209,8 +204,7 @@ class AuthServiceTest {
     String token =
         JwtUtil.removeTokenTypeFromToken(
             jwtService.createToken("test", JwtPurpose.FORGOT_PASSWORD));
-    ResetPasswordRequest resetPasswordRequest =
-        new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
+    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
     authService.resetPassword(resetPasswordRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
@@ -225,8 +219,7 @@ class AuthServiceTest {
     String token =
         JwtUtil.removeTokenTypeFromToken(
             jwtService.createToken("test", JwtPurpose.FORGOT_PASSWORD));
-    ResetPasswordRequest resetPasswordRequest =
-        new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
+    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.resetPassword(resetPasswordRequest))
         .isInstanceOf(ForbiddenException.class)
@@ -237,7 +230,7 @@ class AuthServiceTest {
   void itShouldLogout() {
     TestUtil.setAuth(auth, securityContext, user);
     String token = jwtService.createToken("test", JwtPurpose.ACCESSING_RESOURCES);
-    MockHttpServletRequest request = new MockHttpServletRequest();
+    var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
     request.addHeader(AuthUtil.AUTH_HEADER, token);
     assertDoesNotThrow(() -> authService.logout(request));

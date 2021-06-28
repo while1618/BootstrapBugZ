@@ -19,7 +19,7 @@ public final class CustomFilterExceptionHandler {
 
   public static void handleException(HttpServletResponse response, String message) {
     try {
-      final ErrorResponse errorResponse =
+      final var errorResponse =
           new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, message);
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
       response.setStatus(HttpStatus.UNAUTHORIZED.value());

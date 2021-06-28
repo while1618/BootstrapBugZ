@@ -27,7 +27,7 @@ public class TestUtil {
 
   public static void checkErrorMessages(ErrorResponse expectedResponse, ResultActions resultActions)
       throws Exception {
-    JSONObject actualResponse =
+    var actualResponse =
         new JSONObject(resultActions.andReturn().getResponse().getContentAsString());
     assertThat(actualResponse.getInt("status")).isEqualTo(expectedResponse.getStatus());
     assertThat(actualResponse.getString("error")).isEqualTo(expectedResponse.getError());
@@ -39,7 +39,7 @@ public class TestUtil {
 
   public static LoginResponse login(
       MockMvc mockMvc, ObjectMapper objectMapper, LoginRequest loginRequest) throws Exception {
-    ResultActions resultActions =
+    var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/login")

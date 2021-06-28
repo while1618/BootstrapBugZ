@@ -63,7 +63,7 @@ class JwtServiceTest {
 
   @Test
   void itShouldCheckToken_userInBlacklistButTokenIsIssuedAfter() {
-    UserBlacklist userBlacklist = new UserBlacklist("user", Instant.now(), 1000);
+    var userBlacklist = new UserBlacklist("user", Instant.now(), 1000);
     String token =
         JwtUtil.removeTokenTypeFromToken(
             jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES));
@@ -97,7 +97,7 @@ class JwtServiceTest {
     String token =
         JwtUtil.removeTokenTypeFromToken(
             jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES));
-    UserBlacklist userBlacklist = new UserBlacklist("user", Instant.now(), 1000);
+    var userBlacklist = new UserBlacklist("user", Instant.now(), 1000);
     when(jwtBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById("user")).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
@@ -111,7 +111,7 @@ class JwtServiceTest {
     String token =
         JwtUtil.removeTokenTypeFromToken(
             jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES));
-    JwtBlacklist expectedJwtBlacklist = new JwtBlacklist(token, 1000);
+    var expectedJwtBlacklist = new JwtBlacklist(token, 1000);
     jwtService.invalidateToken(token);
     verify(jwtBlacklistRepository, times(1)).save(jwtBlacklistArgumentCaptor.capture());
     assertThat(jwtBlacklistArgumentCaptor.getValue().getToken())
@@ -120,7 +120,7 @@ class JwtServiceTest {
 
   @Test
   void itShouldInvalidateAllTokens() {
-    UserBlacklist expectedUserBlacklist = new UserBlacklist("user", Instant.now(), 1000);
+    var expectedUserBlacklist = new UserBlacklist("user", Instant.now(), 1000);
     jwtService.invalidateAllTokens("user");
     verify(userBlacklistRepository, times(1)).save(userBlacklistArgumentCaptor.capture());
     assertThat(userBlacklistArgumentCaptor.getValue().getUsername())
@@ -131,7 +131,7 @@ class JwtServiceTest {
   void itShouldCreateRefreshToken() {
     String actualRefreshToken =
         JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken("user", "ip1"));
-    RefreshToken expectedRefreshToken = new RefreshToken(actualRefreshToken, "user", "ip1", 1000);
+    var expectedRefreshToken = new RefreshToken(actualRefreshToken, "user", "ip1", 1000);
     verify(refreshTokenRepository, times(1)).save(refreshTokenArgumentCaptor.capture());
     assertThat(refreshTokenArgumentCaptor.getValue().getToken())
         .isEqualTo(expectedRefreshToken.getToken());
@@ -170,7 +170,7 @@ class JwtServiceTest {
 
   @Test
   void itShouldFindRefreshToken() {
-    RefreshToken refreshToken = new RefreshToken("token123", "user", "ip1", 1000);
+    var refreshToken = new RefreshToken("token123", "user", "ip1", 1000);
     when(refreshTokenRepository.findByUsernameAndIpAddress("user", "ip1"))
         .thenReturn(Optional.of(refreshToken));
     String token = jwtService.findRefreshToken("user", "ip1");
@@ -187,7 +187,7 @@ class JwtServiceTest {
 
   @Test
   void itShouldDeleteRefreshTokenByUserAndIpAddress() {
-    RefreshToken refreshToken = new RefreshToken("token123", "user", "ip1", 1000);
+    var refreshToken = new RefreshToken("token123", "user", "ip1", 1000);
     when(refreshTokenRepository.findByUsernameAndIpAddress("user", "ip1"))
         .thenReturn(Optional.of(refreshToken));
     jwtService.deleteRefreshTokenByUserAndIpAddress("user", "ip1");
@@ -196,8 +196,8 @@ class JwtServiceTest {
 
   @Test
   void itShouldDeleteAllRefreshTokensByUser() {
-    RefreshToken refreshToken1 = new RefreshToken("token123", "user", "ip1", 1000);
-    RefreshToken refreshToken2 = new RefreshToken("token321", "user", "ip2", 1000);
+    var refreshToken1 = new RefreshToken("token123", "user", "ip1", 1000);
+    var refreshToken2 = new RefreshToken("token321", "user", "ip2", 1000);
     when(refreshTokenRepository.findAllByUsername("user"))
         .thenReturn(List.of(refreshToken1, refreshToken2));
     jwtService.deleteAllRefreshTokensByUser("user");

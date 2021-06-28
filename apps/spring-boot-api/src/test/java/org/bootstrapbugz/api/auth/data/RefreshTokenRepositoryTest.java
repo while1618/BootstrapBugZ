@@ -42,15 +42,15 @@ class RefreshTokenRepositoryTest {
 
   @Test
   void itShouldFindByUsernameAndIpAddress() {
-    RefreshToken actualResponse =
+    var refreshToken =
         refreshTokenRepository.findByUsernameAndIpAddress("test", "ip3").orElseThrow();
-    assertThat(actualResponse).isEqualTo(third);
+    assertThat(refreshToken).isEqualTo(third);
   }
 
   @Test
   void itShouldFindAllByUsername() {
-    List<RefreshToken> actualResponse = refreshTokenRepository.findAllByUsername("user");
-    assertThat(actualResponse)
+    var refreshTokens = refreshTokenRepository.findAllByUsername("user");
+    assertThat(refreshTokens)
         .usingRecursiveComparison()
         .ignoringCollectionOrder()
         .isEqualTo(List.of(first, second));

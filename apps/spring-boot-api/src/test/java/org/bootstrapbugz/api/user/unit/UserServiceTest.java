@@ -73,22 +73,21 @@ class UserServiceTest {
 
   @Test
   void itShouldFindUserByUsername_showEmail() {
-    UserResponse expectedUserResponse =
+    var expectedUserResponse =
         new UserResponse(1L, "Test", "Test", "test", "test@test.com", true, true, null);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
-    UserResponse actualUserResponse = userService.findByUsername("test");
+    var actualUserResponse = userService.findByUsername("test");
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
   }
 
   @Test
   void itShouldFindUserByUsername_hideEmail() {
-    UserResponse expectedUserResponse =
-        new UserResponse(1L, "Test", "Test", "test", null, true, true, null);
-    User loggedUser =
+    var expectedUserResponse = new UserResponse(1L, "Test", "Test", "test", null, true, true, null);
+    var loggedUser =
         new User(2L, "User", "User", "user", "user@user.com", password, true, true, roles);
     TestUtil.setAuth(auth, securityContext, loggedUser);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
-    UserResponse actualUserResponse = userService.findByUsername("test");
+    var actualUserResponse = userService.findByUsername("test");
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
   }
 
@@ -103,10 +102,9 @@ class UserServiceTest {
 
   @Test
   void itShouldUpdateUser_newUsernameAndEmail() {
-    User expectedUser =
+    var expectedUser =
         new User(1L, "User", "User", "user", "user@user.com", password, false, true, roles);
-    UpdateUserRequest updateUserRequest =
-        new UpdateUserRequest("User", "User", "user", "user@user.com");
+    var updateUserRequest = new UpdateUserRequest("User", "User", "user", "user@user.com");
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(false);
     when(jwtService.createToken(updateUserRequest.getUsername(), JwtPurpose.CONFIRM_REGISTRATION))
@@ -118,10 +116,9 @@ class UserServiceTest {
 
   @Test
   void itShouldUpdateUser_sameUsernameAndEmail() {
-    User expectedUser =
+    var expectedUser =
         new User(1L, "User", "User", "test", "test@test.com", password, true, true, roles);
-    UpdateUserRequest updateUserRequest =
-        new UpdateUserRequest("User", "User", "test", "test@test.com");
+    var updateUserRequest = new UpdateUserRequest("User", "User", "test", "test@test.com");
     userService.update(updateUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
@@ -129,8 +126,7 @@ class UserServiceTest {
 
   @Test
   void updateUserShouldThrowBadRequest_usernameExists() {
-    UpdateUserRequest updateUserRequest =
-        new UpdateUserRequest("User", "User", "user", "user@user.com");
+    var updateUserRequest = new UpdateUserRequest("User", "User", "user", "user@user.com");
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> userService.update(updateUserRequest))
@@ -140,8 +136,7 @@ class UserServiceTest {
 
   @Test
   void updateUserShouldThrowBadRequest_emailExists() {
-    UpdateUserRequest updateUserRequest =
-        new UpdateUserRequest("User", "User", "user", "user@user.com");
+    var updateUserRequest = new UpdateUserRequest("User", "User", "user", "user@user.com");
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
@@ -152,8 +147,7 @@ class UserServiceTest {
 
   @Test
   void itShouldChangePassword() {
-    ChangePasswordRequest changePasswordRequest =
-        new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
+    var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
     userService.changePassword(changePasswordRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(
@@ -166,7 +160,7 @@ class UserServiceTest {
   @Test
   void changePasswordShouldThrownBadRequest_wrongOldPassword() {
     when(messageService.getMessage("oldPassword.invalid")).thenReturn("Wrong old password.");
-    ChangePasswordRequest changePasswordRequest =
+    var changePasswordRequest =
         new ChangePasswordRequest("qwerty123456", "qwerty1234", "qwerty1234");
     assertThatThrownBy(() -> userService.changePassword(changePasswordRequest))
         .isInstanceOf(BadRequestException.class)

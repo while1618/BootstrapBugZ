@@ -6,7 +6,7 @@
 - [ ] Check application.properties files
 - [ ] Move to postgres
 - [ ] Add final?
-- [ ] Use var?
+- [x] Use var
 - [ ] Change username - doesn't require logout
 - [ ] Change email - doesn't require logout
 - [ ] Two-Factor Auth

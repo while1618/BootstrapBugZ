@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
   public void commence(
       HttpServletRequest request, HttpServletResponse response, AuthenticationException e) {
     try {
-      final ErrorResponse errorResponse =
+      final var errorResponse =
           new ErrorResponse(
               HttpStatus.FORBIDDEN, ErrorDomain.AUTH, HttpStatus.FORBIDDEN.getReasonPhrase());
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);

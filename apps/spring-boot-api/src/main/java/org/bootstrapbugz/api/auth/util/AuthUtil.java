@@ -8,7 +8,6 @@ import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtil {
@@ -17,7 +16,7 @@ public class AuthUtil {
   private AuthUtil() {}
 
   public static User findLoggedUser() {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    var auth = SecurityContextHolder.getContext().getAuthentication();
     return userPrincipalToUser((UserPrincipal) auth.getPrincipal());
   }
 
