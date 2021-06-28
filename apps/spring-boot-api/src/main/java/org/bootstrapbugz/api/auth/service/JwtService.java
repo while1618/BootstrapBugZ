@@ -1,5 +1,8 @@
 package org.bootstrapbugz.api.auth.service;
 
+import java.util.Optional;
+
+import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 
 public interface JwtService {
@@ -15,7 +18,7 @@ public interface JwtService {
 
   void checkRefreshToken(String refreshToken);
 
-  String findRefreshToken(String username, String ipAddress);
+  Optional<RefreshToken> findRefreshToken(String username, String ipAddress);
 
   void deleteRefreshToken(String token);
 

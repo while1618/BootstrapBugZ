@@ -45,7 +45,7 @@ public class ErrorResponse {
 
   @Override
   public String toString() {
-    var gson =
+    final var gson =
         new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(
@@ -56,7 +56,6 @@ public class ErrorResponse {
                             localDateTime.format(
                                 DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"))))
             .create();
-
     return gson.toJson(this);
   }
 

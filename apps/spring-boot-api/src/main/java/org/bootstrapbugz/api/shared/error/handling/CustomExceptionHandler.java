@@ -36,8 +36,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatus status,
       @Nonnull WebRequest request) {
-    var errorResponse = new ErrorResponse(status);
-    var result = ex.getBindingResult();
+    final var errorResponse = new ErrorResponse(status);
+    final var result = ex.getBindingResult();
     result
         .getFieldErrors()
         .forEach(error -> errorResponse.addError(error.getField(), error.getDefaultMessage()));
@@ -45,7 +45,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         .getGlobalErrors()
         .forEach(
             error -> {
-              var errorObject = Objects.requireNonNull(error.getArguments())[1];
+              final var errorObject = Objects.requireNonNull(error.getArguments())[1];
               errorResponse.addError(
                   (errorObject == null) ? ErrorDomain.GLOBAL.getValue() : errorObject.toString(),
                   error.getDefaultMessage());
@@ -55,7 +55,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   private ResponseEntity<Object> createErrorResponseEntity(
       ErrorDomain domain, String message, HttpStatus status) {
-    var errorResponse = new ErrorResponse(status, domain, message);
+    final var errorResponse = new ErrorResponse(status, domain, message);
     return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
   }
 
@@ -113,7 +113,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatus status,
       @Nonnull WebRequest request) {
-    var builder = new StringBuilder();
+    final var builder = new StringBuilder();
     builder.append(ex.getMethod());
     builder.append(" method is not supported for this request. Supported methods are ");
     Objects.requireNonNull(ex.getSupportedHttpMethods())

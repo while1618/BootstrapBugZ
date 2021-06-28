@@ -59,26 +59,28 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public RefreshTokenResponse refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
-    String refreshToken = JwtUtil.removeTokenTypeFromToken(refreshTokenRequest.getRefreshToken());
+    final String refreshToken =
+        JwtUtil.removeTokenTypeFromToken(refreshTokenRequest.getRefreshToken());
     jwtService.checkRefreshToken(refreshToken);
     jwtService.deleteRefreshToken(refreshToken);
-    String username = JWT.decode(refreshToken).getSubject();
-    String accessToken = jwtService.createToken(username, JwtPurpose.ACCESSING_RESOURCES);
-    String newRefreshToken =
+    final String username = JWT.decode(refreshToken).getSubject();
+    final String accessToken = jwtService.createToken(username, JwtPurpose.ACCESSING_RESOURCES);
+    final String newRefreshToken =
         jwtService.createRefreshToken(username, AuthUtil.getUserIpAddress(request));
     return new RefreshTokenResponse(accessToken, newRefreshToken);
   }
 
   @Override
   public UserResponse signUp(SignUpRequest signUpRequest) {
-    var user = createUser(signUpRequest);
-    String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+    final var user = createUser(signUpRequest);
+    final String token =
+        jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
     return userMapper.userToUserResponse(user);
   }
 
   private User createUser(SignUpRequest signUpRequest) {
-    var user =
+    final var user =
         new User()
             .setFirstName(signUpRequest.getFirstName())
             .setLastName(signUpRequest.getLastName())
@@ -91,8 +93,8 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void confirmRegistration(String token) {
-    String username = JWT.decode(token).getSubject();
-    var user =
+    final String username = JWT.decode(token).getSubject();
+    final var user =
         userRepository
             .findByUsername(username)
             .orElseThrow(
@@ -108,7 +110,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void resendConfirmationEmail(ResendConfirmationEmailRequest request) {
-    var user =
+    final var user =
         userRepository
             .findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
             .orElseThrow(
@@ -117,27 +119,28 @@ public class AuthServiceImpl implements AuthService {
                         messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
     if (user.isActivated())
       throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
-    String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+    final String token =
+        jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
 
   @Override
   public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
-    var user =
+    final var user =
         userRepository
             .findByEmail(forgotPasswordRequest.getEmail())
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException(
                         messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
-    String token = jwtService.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
+    final String token = jwtService.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.FORGOT_PASSWORD));
   }
 
   @Override
   public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
-    String username = JWT.decode(resetPasswordRequest.getToken()).getSubject();
-    var user =
+    final String username = JWT.decode(resetPasswordRequest.getToken()).getSubject();
+    final var user =
         userRepository
             .findByUsername(username)
             .orElseThrow(
@@ -161,7 +164,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void logoutFromAllDevices() {
-    String username = AuthUtil.findLoggedUser().getUsername();
+    final String username = AuthUtil.findLoggedUser().getUsername();
     jwtService.deleteAllRefreshTokensByUser(username);
     jwtService.invalidateAllTokens(username);
   }

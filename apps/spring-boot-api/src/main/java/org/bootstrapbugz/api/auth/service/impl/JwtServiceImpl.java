@@ -1,6 +1,7 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import com.auth0.jwt.JWT;
 
@@ -68,8 +69,8 @@ public class JwtServiceImpl implements JwtService {
   }
 
   private void isInUserBlacklist(String token) {
-    var decodedJwt = JWT.decode(token);
-    var userInBlacklist = userBlacklistRepository.findById(decodedJwt.getSubject());
+    final var decodedJwt = JWT.decode(token);
+    final var userInBlacklist = userBlacklistRepository.findById(decodedJwt.getSubject());
     if (userInBlacklist.isPresent()
         && Instant.parse(decodedJwt.getClaim("issuedAt").asString())
             .isBefore(userInBlacklist.get().getUpdatedAt()))
@@ -88,7 +89,7 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public String createRefreshToken(String username, String ipAddress) {
-    String refreshToken =
+    final String refreshToken =
         JwtUtil.createToken(
             username, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
     refreshTokenRepository.save(
@@ -108,9 +109,8 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
-  public String findRefreshToken(String username, String ipAddress) {
-    var refreshToken = refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
-    return refreshToken.map(token -> JwtUtil.TOKEN_TYPE + token.getToken()).orElse(null);
+  public Optional<RefreshToken> findRefreshToken(String username, String ipAddress) {
+    return refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
   }
 
   @Override

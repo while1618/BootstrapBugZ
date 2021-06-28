@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String username) {
-    var user =
+    final var user =
         userRepository
             .findByUsernameOrEmail(username, username)
             .orElseThrow(

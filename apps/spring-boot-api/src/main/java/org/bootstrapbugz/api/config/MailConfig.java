@@ -24,13 +24,13 @@ public class MailConfig {
 
   @Bean
   public JavaMailSender getJavaMailSender() {
-    var mailSender = createMailSender();
+    final var mailSender = createMailSender();
     setProperties(mailSender);
     return mailSender;
   }
 
   private JavaMailSenderImpl createMailSender() {
-    var mailSender = new JavaMailSenderImpl();
+    final var mailSender = new JavaMailSenderImpl();
     mailSender.setHost(host);
     mailSender.setPort(Integer.parseInt(Objects.requireNonNull(port)));
     mailSender.setUsername(username);
@@ -39,7 +39,7 @@ public class MailConfig {
   }
 
   private void setProperties(JavaMailSenderImpl mailSender) {
-    var props = mailSender.getJavaMailProperties();
+    final var props = mailSender.getJavaMailProperties();
     props.put("mail.transport.protocol", "smtp");
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.starttls.enable", "true");

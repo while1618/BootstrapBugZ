@@ -14,6 +14,7 @@ import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
+import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
@@ -51,8 +52,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   public Authentication attemptAuthentication(
       HttpServletRequest request, HttpServletResponse response) {
     try {
-      var loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
-      var authToken =
+      final var loginRequest =
+          new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+      final var authToken =
           new UsernamePasswordAuthenticationToken(
               loginRequest.getUsernameOrEmail(), loginRequest.getPassword(), new ArrayList<>());
       return authenticationManager.authenticate(authToken);
@@ -75,11 +77,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
-    String ipAddress = AuthUtil.getUserIpAddress(request);
-    String refreshToken = jwtService.findRefreshToken(user.getUsername(), ipAddress);
-    if (refreshToken == null)
-      refreshToken = jwtService.createRefreshToken(user.getUsername(), ipAddress);
+    final var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
+    final String ipAddress = AuthUtil.getUserIpAddress(request);
+    final String refreshToken =
+        jwtService
+            .findRefreshToken(user.getUsername(), ipAddress)
+            .map(token -> JwtUtil.TOKEN_TYPE + token.getToken())
+            .orElse(jwtService.createRefreshToken(user.getUsername(), ipAddress));
     final var loginResponse =
         new LoginResponse()
             .setToken(jwtService.createToken(user.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
@@ -91,7 +95,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   private void writeToResponse(HttpServletResponse response, LoginResponse loginResponse)
       throws IOException {
     final String jsonLoginResponse = new Gson().toJson(loginResponse);
-    var out = response.getWriter();
+    final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     out.print(jsonLoginResponse);
     out.flush();

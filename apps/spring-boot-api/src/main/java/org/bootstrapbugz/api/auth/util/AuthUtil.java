@@ -16,7 +16,7 @@ public class AuthUtil {
   private AuthUtil() {}
 
   public static User findLoggedUser() {
-    var auth = SecurityContextHolder.getContext().getAuthentication();
+    final var auth = SecurityContextHolder.getContext().getAuthentication();
     return userPrincipalToUser((UserPrincipal) auth.getPrincipal());
   }
 

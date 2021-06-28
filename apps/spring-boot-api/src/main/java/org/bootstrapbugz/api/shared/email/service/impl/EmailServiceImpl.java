@@ -23,8 +23,8 @@ public class EmailServiceImpl implements EmailService {
   @Override
   public void sendHtmlEmail(String to, String subject, String body) {
     try {
-      var mimeMessage = mailSender.createMimeMessage();
-      var helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
+      final var mimeMessage = mailSender.createMimeMessage();
+      final var helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
       helper.setTo(to);
       helper.setSubject(subject);
       helper.setText(body, true);

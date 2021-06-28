@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse findByUsername(String username) {
-    var user =
+    final var user =
         userRepository
             .findByUsername(username)
             .orElseThrow(
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse update(UpdateUserRequest updateUserRequest) {
-    var user = AuthUtil.findLoggedUser();
+    final var user = AuthUtil.findLoggedUser();
     user.setFirstName(updateUserRequest.getFirstName());
     user.setLastName(updateUserRequest.getLastName());
     tryToSetUsername(user, updateUserRequest.getUsername());
@@ -87,13 +87,14 @@ public class UserServiceImpl implements UserService {
     jwtService.invalidateAllTokens(user.getUsername());
     jwtService.deleteAllRefreshTokensByUser(user.getUsername());
 
-    String token = jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+    final String token =
+        jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
 
   @Override
   public void changePassword(ChangePasswordRequest changePasswordRequest) {
-    var user = AuthUtil.findLoggedUser();
+    final var user = AuthUtil.findLoggedUser();
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
       throw new BadRequestException(
           messageService.getMessage("oldPassword.invalid"), ErrorDomain.USER);

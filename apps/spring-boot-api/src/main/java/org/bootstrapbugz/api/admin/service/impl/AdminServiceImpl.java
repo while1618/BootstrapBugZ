@@ -34,10 +34,10 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void changeRole(ChangeRoleRequest changeRoleRequest) {
-    var users = userRepository.findAllByUsernameIn(changeRoleRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(changeRoleRequest.getUsernames());
     users.forEach(
         user -> {
-          var roles =
+          final var roles =
               changeRoleRequest.getRoleNames().stream().map(Role::new).collect(Collectors.toSet());
           user.setRoles(roles);
           jwtService.invalidateAllTokens(user.getUsername());
@@ -48,7 +48,7 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void lock(AdminRequest adminRequest) {
-    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(
         user -> {
           user.setNonLocked(false);
@@ -60,21 +60,21 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void unlock(AdminRequest adminRequest) {
-    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(user -> user.setNonLocked(true));
     userRepository.saveAll(users);
   }
 
   @Override
   public void activate(AdminRequest adminRequest) {
-    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(user -> user.setActivated(true));
     userRepository.saveAll(users);
   }
 
   @Override
   public void deactivate(AdminRequest adminRequest) {
-    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(
         user -> {
           user.setActivated(false);
@@ -87,7 +87,7 @@ public class AdminServiceImpl implements AdminService {
   @Override
   @Transactional
   public void delete(AdminRequest adminRequest) {
-    var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(
         user -> {
           jwtService.invalidateAllTokens(user.getUsername());

@@ -173,7 +173,11 @@ class JwtServiceTest {
     var refreshToken = new RefreshToken("token123", "user", "ip1", 1000);
     when(refreshTokenRepository.findByUsernameAndIpAddress("user", "ip1"))
         .thenReturn(Optional.of(refreshToken));
-    String token = jwtService.findRefreshToken("user", "ip1");
+    String token =
+        jwtService
+            .findRefreshToken("user", "ip1")
+            .map(t -> JwtUtil.TOKEN_TYPE + t.getToken())
+            .orElseThrow();
     assertThat(token).isNotNull();
   }
 

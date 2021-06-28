@@ -43,13 +43,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    String token = AuthUtil.getAuthTokenFromRequest(request);
+    final String token = AuthUtil.getAuthTokenFromRequest(request);
     if (token == null || !token.startsWith(JwtUtil.TOKEN_TYPE)) {
       chain.doFilter(request, response);
       return;
     }
     try {
-      var authToken = getAuthenticationToken(JwtUtil.removeTokenTypeFromToken(token));
+      final var authToken = getAuthenticationToken(JwtUtil.removeTokenTypeFromToken(token));
       SecurityContextHolder.getContext().setAuthentication(authToken);
     } catch (ResourceNotFoundException
         | JWTVerificationException
@@ -62,8 +62,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   }
 
   private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
-    String username = JWT.decode(token).getSubject();
-    var userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
+    final String username = JWT.decode(token).getSubject();
+    final var userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
     jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
 
     return new UsernamePasswordAuthenticationToken(
