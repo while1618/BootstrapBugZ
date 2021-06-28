@@ -11,6 +11,7 @@
 - [ ] Change email - doesn't require logout
 - [ ] Two-Factor Auth
 - [ ] Email on sensitive changes and revert option
+- [ ] Logged in devices
 - [ ] Logging
 - [ ] Rate Limiter
 - [ ] Linter
