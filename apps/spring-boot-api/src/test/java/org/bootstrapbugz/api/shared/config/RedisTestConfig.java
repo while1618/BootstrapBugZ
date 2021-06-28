@@ -15,11 +15,19 @@ public class RedisTestConfig {
   @Value("${spring.redis.port}")
   private int port;
 
+  @Value("${spring.redis.password}")
+  private String password;
+
   private RedisServer redisServer;
 
   @PostConstruct
   public void startRedis() {
-    redisServer = RedisServer.builder().port(port).setting("maxmemory 128M").build();
+    redisServer =
+        RedisServer.builder()
+            .port(port)
+            .setting("requirepass " + password)
+            .setting("maxmemory 128M")
+            .build();
     redisServer.start();
   }
 

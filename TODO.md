@@ -2,7 +2,9 @@
 - [x] Refactor code
 - [x] Refactor tests
 - [x] Format code
-- [ ] Update dependencies
+- [x] Update dependencies
+- [ ] Check application.properties files
+- [ ] Move to postgres
 - [ ] Add final?
 - [ ] Use var?
 - [ ] Change username - doesn't require logout
