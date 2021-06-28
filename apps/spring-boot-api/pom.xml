@@ -22,12 +22,12 @@
     <guava.version>30.1.1-jre</guava.version>
     <jwt.version>3.17.0</jwt.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
-    <beanutils.version>1.9.4</beanutils.version>
-    <commonsValidator.version>1.7</commonsValidator.version>
+    <commons-beanutils.version>1.9.4</commons-beanutils.version>
+    <commons-validator.version>1.7</commons-validator.version>
     <springfox.version>3.0.0</springfox.version>
     <jacoco.version>0.8.7</jacoco.version>
     <jedis.version>3.6.1</jedis.version>
-    <embedded.redis.version>0.7.2</embedded.redis.version>
+    <embedded-redis.version>0.7.2</embedded-redis.version>
   </properties>
 
   <dependencies>
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>it.ozimov</groupId>
       <artifactId>embedded-redis</artifactId>
-      <version>${embedded.redis.version}</version>
+      <version>${embedded-redis.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -122,12 +122,12 @@
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
-      <version>${beanutils.version}</version>
+      <version>${commons-beanutils.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-validator</groupId>
       <artifactId>commons-validator</artifactId>
-      <version>${commonsValidator.version}</version>
+      <version>${commons-validator.version}</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
@@ -141,10 +141,12 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${project.parent.version}</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
