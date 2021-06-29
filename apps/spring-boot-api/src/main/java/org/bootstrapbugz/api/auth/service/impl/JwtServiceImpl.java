@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import java.time.Instant;
-import java.util.Optional;
 
 import com.auth0.jwt.JWT;
 
@@ -109,8 +108,9 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
-  public Optional<RefreshToken> findRefreshToken(String username, String ipAddress) {
-    return refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
+  public String findRefreshToken(String username, String ipAddress) {
+    final var refreshToken = refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
+    return refreshToken.map(token -> JwtUtil.TOKEN_TYPE + token.getToken()).orElse(null);
   }
 
   @Override

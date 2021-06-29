@@ -14,7 +14,6 @@ import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
@@ -79,17 +78,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       throws IOException {
     final var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
     final String ipAddress = AuthUtil.getUserIpAddress(request);
-    final String refreshToken =
-        jwtService
-            .findRefreshToken(user.getUsername(), ipAddress)
-            .map(token -> JwtUtil.TOKEN_TYPE + token.getToken())
-            .orElse(jwtService.createRefreshToken(user.getUsername(), ipAddress));
+    final String refreshToken = findRefreshToken(user.getUsername(), ipAddress);
     final var loginResponse =
         new LoginResponse()
             .setToken(jwtService.createToken(user.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
             .setRefreshToken(refreshToken)
             .setUser(userMapper.userToUserResponse(user));
     writeToResponse(response, loginResponse);
+  }
+
+  private String findRefreshToken(String username, String ipAddress) {
+    final String refreshToken = jwtService.findRefreshToken(username, ipAddress);
+    if (refreshToken == null)
+      return jwtService.createRefreshToken(username, ipAddress);
+    return refreshToken;
   }
 
   private void writeToResponse(HttpServletResponse response, LoginResponse loginResponse)
