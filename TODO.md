@@ -9,6 +9,7 @@
 - [x] Use var
 - [ ] Change username - doesn't require logout
 - [ ] Change email - doesn't require logout
+- [ ] Add profile picture  
 - [ ] Two-Factor Auth
 - [ ] Email on sensitive changes and revert option
 - [ ] Logged in devices
