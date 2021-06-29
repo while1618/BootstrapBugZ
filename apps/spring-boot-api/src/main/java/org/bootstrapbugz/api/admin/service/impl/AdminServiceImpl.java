@@ -29,7 +29,9 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public List<UserResponse> findAllUsers() {
-    return userMapper.usersToUserResponses(userRepository.findAllWithRoles());
+    return userRepository.findAllWithRoles().stream()
+        .map(userMapper::userToUserResponse)
+        .collect(Collectors.toList());
   }
 
   @Override
