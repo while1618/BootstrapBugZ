@@ -28,6 +28,7 @@
     <jacoco.version>0.8.7</jacoco.version>
     <jedis.version>3.6.1</jedis.version>
     <embedded-redis.version>0.7.2</embedded-redis.version>
+    <testcontainers.version>1.15.3</testcontainers.version>
   </properties>
 
   <dependencies>
@@ -51,9 +52,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>runtime</scope>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

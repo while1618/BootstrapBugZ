@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.bootstrapbugz.api.auth.request.LoginRequest;
+import org.bootstrapbugz.api.shared.config.PostgresConfig;
 import org.bootstrapbugz.api.shared.config.RedisTestConfig;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
@@ -28,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @SpringBootTest(classes = RedisTestConfig.class)
-class JwtAuthenticationFilterTest {
+class JwtAuthenticationFilterTest extends PostgresConfig {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 

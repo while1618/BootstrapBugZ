@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
+import org.bootstrapbugz.api.shared.config.PostgresConfig;
 import org.bootstrapbugz.api.shared.config.RedisTestConfig;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,7 +25,8 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @Import(RedisTestConfig.class)
 @TestInstance(Lifecycle.PER_CLASS)
-class RefreshTokenRepositoryTest {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+class RefreshTokenRepositoryTest extends PostgresConfig {
   @Autowired private RefreshTokenRepository refreshTokenRepository;
 
   private final RefreshToken first = new RefreshToken("token123", "user", "ip1", 1000);
