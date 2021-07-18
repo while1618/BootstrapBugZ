@@ -1,8 +1,8 @@
 package org.bootstrapbugz.api.config;
 
-import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
 import org.bootstrapbugz.api.auth.security.JwtAuthenticationFilter;
 import org.bootstrapbugz.api.auth.security.JwtAuthorizationFilter;
+import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;

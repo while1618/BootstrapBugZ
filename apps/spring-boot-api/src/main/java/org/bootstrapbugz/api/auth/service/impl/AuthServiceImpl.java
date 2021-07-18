@@ -4,8 +4,6 @@ import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.auth0.jwt.JWT;
-
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
