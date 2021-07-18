@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
+import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
@@ -78,19 +79,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       throws IOException {
     final var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
     final String ipAddress = AuthUtil.getUserIpAddress(request);
-    final String refreshToken = findRefreshToken(user.getUsername(), ipAddress);
+    final String refreshToken = findRefreshToken(user.getId(), ipAddress);
     final var loginResponse =
         new LoginResponse()
-            .setToken(jwtService.createToken(user.getUsername(), JwtPurpose.ACCESSING_RESOURCES))
+            .setToken(jwtService.createToken(user.getId(), JwtPurpose.ACCESSING_RESOURCES))
             .setRefreshToken(refreshToken)
             .setUser(userMapper.userToUserResponse(user));
     writeToResponse(response, loginResponse);
   }
 
-  private String findRefreshToken(String username, String ipAddress) {
-    final String refreshToken = jwtService.findRefreshToken(username, ipAddress);
+  private String findRefreshToken(Long userId, String ipAddress) {
+    final String refreshToken = jwtService.findRefreshToken(userId, ipAddress);
     if (refreshToken == null)
-      return jwtService.createRefreshToken(username, ipAddress);
+      return jwtService.createRefreshToken(userId, ipAddress);
     return refreshToken;
   }
 

@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.security;
+package org.bootstrapbugz.api.auth.security.user.details;
 
 import java.io.Serial;
 import java.util.Collection;

@@ -21,7 +21,7 @@ import lombok.Setter;
 public class UserBlacklist implements Serializable {
   @Serial private static final long serialVersionUID = 8334740937644612692L;
 
-  @Id private String username;
+  @Id private Long userId;
 
   private Instant updatedAt;
 

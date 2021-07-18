@@ -25,7 +25,7 @@ public class RefreshToken implements Serializable {
 
   @Id private String token;
 
-  @Indexed private String username;
+  @Indexed private Long userId;
 
   @Indexed private String ipAddress;
 

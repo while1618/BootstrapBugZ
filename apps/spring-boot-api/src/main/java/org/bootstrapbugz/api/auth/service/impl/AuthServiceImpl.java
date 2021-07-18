@@ -63,10 +63,10 @@ public class AuthServiceImpl implements AuthService {
         JwtUtil.removeTokenTypeFromToken(refreshTokenRequest.getRefreshToken());
     jwtService.checkRefreshToken(refreshToken);
     jwtService.deleteRefreshToken(refreshToken);
-    final String username = JWT.decode(refreshToken).getSubject();
-    final String accessToken = jwtService.createToken(username, JwtPurpose.ACCESSING_RESOURCES);
+    final Long userId = JwtUtil.getUserId(refreshToken);
+    final String accessToken = jwtService.createToken(userId, JwtPurpose.ACCESSING_RESOURCES);
     final String newRefreshToken =
-        jwtService.createRefreshToken(username, AuthUtil.getUserIpAddress(request));
+        jwtService.createRefreshToken(userId, AuthUtil.getUserIpAddress(request));
     return new RefreshTokenResponse(accessToken, newRefreshToken);
   }
 
@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
   public UserResponse signUp(SignUpRequest signUpRequest) {
     final var user = createUser(signUpRequest);
     final String token =
-        jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+        jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
     return userMapper.userToUserResponse(user);
   }
@@ -93,10 +93,9 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void confirmRegistration(String token) {
-    final String username = JWT.decode(token).getSubject();
     final var user =
         userRepository
-            .findByUsername(username)
+            .findById(JwtUtil.getUserId(token))
             .orElseThrow(
                 () ->
                     new ForbiddenException(
@@ -120,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
     if (user.isActivated())
       throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
     final String token =
-        jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+        jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
 
@@ -133,39 +132,38 @@ public class AuthServiceImpl implements AuthService {
                 () ->
                     new ResourceNotFoundException(
                         messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
-    final String token = jwtService.createToken(user.getUsername(), JwtPurpose.FORGOT_PASSWORD);
+    final String token = jwtService.createToken(user.getId(), JwtPurpose.FORGOT_PASSWORD);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.FORGOT_PASSWORD));
   }
 
   @Override
   public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
-    final String username = JWT.decode(resetPasswordRequest.getToken()).getSubject();
     final var user =
         userRepository
-            .findByUsername(username)
+            .findById(JwtUtil.getUserId(resetPasswordRequest.getToken()))
             .orElseThrow(
                 () ->
                     new ForbiddenException(
                         messageService.getMessage("token.invalid"), ErrorDomain.AUTH));
     jwtService.checkToken(resetPasswordRequest.getToken(), JwtPurpose.FORGOT_PASSWORD);
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
-    jwtService.invalidateAllTokens(user.getUsername());
-    jwtService.deleteAllRefreshTokensByUser(user.getUsername());
+    jwtService.invalidateAllTokens(user.getId());
+    jwtService.deleteAllRefreshTokensByUser(user.getId());
     userRepository.save(user);
   }
 
   @Override
   public void logout(HttpServletRequest request) {
     jwtService.deleteRefreshTokenByUserAndIpAddress(
-        AuthUtil.findLoggedUser().getUsername(), AuthUtil.getUserIpAddress(request));
+        AuthUtil.findLoggedUser().getId(), AuthUtil.getUserIpAddress(request));
     jwtService.invalidateToken(
         JwtUtil.removeTokenTypeFromToken(AuthUtil.getAuthTokenFromRequest(request)));
   }
 
   @Override
   public void logoutFromAllDevices() {
-    final String username = AuthUtil.findLoggedUser().getUsername();
-    jwtService.deleteAllRefreshTokensByUser(username);
-    jwtService.invalidateAllTokens(username);
+    final Long userId = AuthUtil.findLoggedUser().getId();
+    jwtService.deleteAllRefreshTokensByUser(userId);
+    jwtService.invalidateAllTokens(userId);
   }
 }

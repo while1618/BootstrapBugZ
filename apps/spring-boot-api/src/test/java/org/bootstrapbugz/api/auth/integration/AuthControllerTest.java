@@ -93,7 +93,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldConfirmRegistration() throws Exception {
-    String token = jwtService.createToken("notActivated", JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtService.createToken(3L, JwtPurpose.CONFIRM_REGISTRATION); // notActivated
     mockMvc
         .perform(
             get(Path.AUTH + "/confirm-registration")
@@ -104,7 +104,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_invalidToken() throws Exception {
-    String token = jwtService.createToken("unknown", JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtService.createToken(10L, JwtPurpose.CONFIRM_REGISTRATION);  // unknown
     var resultActions =
         mockMvc
             .perform(
@@ -119,7 +119,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() throws Exception {
-    String token = jwtService.createToken("user", JwtPurpose.CONFIRM_REGISTRATION);
+    String token = jwtService.createToken(2L, JwtPurpose.CONFIRM_REGISTRATION); // user
     var resultActions =
         mockMvc
             .perform(
@@ -201,7 +201,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldResetPassword() throws Exception {
-    String token = jwtService.createToken("forUpdate1", JwtPurpose.FORGOT_PASSWORD);
+    String token = jwtService.createToken(5L, JwtPurpose.FORGOT_PASSWORD);  // forUpdate1
     var resetPasswordRequest =
         new ResetPasswordRequest(
             JwtUtil.removeTokenTypeFromToken(token), "qwerty1234", "qwerty1234");
@@ -216,7 +216,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    String token = jwtService.createToken("forUpdate2", JwtPurpose.FORGOT_PASSWORD);
+    String token = jwtService.createToken(6L, JwtPurpose.FORGOT_PASSWORD);  // forUpdate2
     var resetPasswordRequest =
         new ResetPasswordRequest(
             JwtUtil.removeTokenTypeFromToken(token), "qwerty123", "qwerty1234");
@@ -234,7 +234,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowForbidden_invalidToken() throws Exception {
-    String token = jwtService.createToken("unknown", JwtPurpose.FORGOT_PASSWORD);
+    String token = jwtService.createToken(10L, JwtPurpose.FORGOT_PASSWORD); // unknown
     var resetPasswordRequest =
         new ResetPasswordRequest(
             JwtUtil.removeTokenTypeFromToken(token), "qwerty1234", "qwerty1234");

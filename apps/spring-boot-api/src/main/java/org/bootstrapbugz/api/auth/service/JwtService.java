@@ -3,23 +3,23 @@ package org.bootstrapbugz.api.auth.service;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 
 public interface JwtService {
-  String createToken(String username, JwtPurpose purpose);
+  String createToken(Long userId, JwtPurpose purpose);
 
   void checkToken(String token, JwtPurpose purpose);
 
   void invalidateToken(String token);
 
-  void invalidateAllTokens(String username);
+  void invalidateAllTokens(Long userId);
 
-  String createRefreshToken(String username, String ipAddress);
+  String createRefreshToken(Long userId, String ipAddress);
 
   void checkRefreshToken(String refreshToken);
 
-  String findRefreshToken(String username, String ipAddress);
+  String findRefreshToken(Long userId, String ipAddress);
 
   void deleteRefreshToken(String token);
 
-  void deleteRefreshTokenByUserAndIpAddress(String username, String ipAddress);
+  void deleteRefreshTokenByUserAndIpAddress(Long userId, String ipAddress);
 
-  void deleteAllRefreshTokensByUser(String username);
+  void deleteAllRefreshTokensByUser(Long userId);
 }

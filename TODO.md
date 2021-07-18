@@ -7,7 +7,7 @@
 - [x] Move to postgres
 - [x] Add final
 - [x] Use var
-- [ ] Change username - doesn't require logout
+- [x] Change username - doesn't require logout
 - [ ] Change email - doesn't require logout
 - [ ] Add profile picture
 - [ ] Two-Factor Auth

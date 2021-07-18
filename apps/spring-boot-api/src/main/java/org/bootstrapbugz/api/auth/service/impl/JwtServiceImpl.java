@@ -51,8 +51,8 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
-  public String createToken(String username, JwtPurpose purpose) {
-    return JwtUtil.createToken(username, expirationTimeInSecs, createSecret(purpose));
+  public String createToken(Long userId, JwtPurpose purpose) {
+    return JwtUtil.createToken(userId, expirationTimeInSecs, createSecret(purpose));
   }
 
   @Override
@@ -68,10 +68,9 @@ public class JwtServiceImpl implements JwtService {
   }
 
   private void isInUserBlacklist(String token) {
-    final var decodedJwt = JWT.decode(token);
-    final var userInBlacklist = userBlacklistRepository.findById(decodedJwt.getSubject());
+    final var userInBlacklist = userBlacklistRepository.findById(JwtUtil.getUserId(token));
     if (userInBlacklist.isPresent()
-        && Instant.parse(decodedJwt.getClaim("issuedAt").asString())
+        && Instant.parse(JwtUtil.getIssuedAt(token))
             .isBefore(userInBlacklist.get().getUpdatedAt()))
       throw new ForbiddenException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
   }
@@ -82,19 +81,19 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
-  public void invalidateAllTokens(String username) {
-    userBlacklistRepository.save(new UserBlacklist(username, Instant.now(), expirationTimeInSecs));
+  public void invalidateAllTokens(Long userId) {
+    userBlacklistRepository.save(new UserBlacklist(userId, Instant.now(), expirationTimeInSecs));
   }
 
   @Override
-  public String createRefreshToken(String username, String ipAddress) {
+  public String createRefreshToken(Long userId, String ipAddress) {
     final String refreshToken =
         JwtUtil.createToken(
-            username, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
+            userId, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
     refreshTokenRepository.save(
         new RefreshToken(
             JwtUtil.removeTokenTypeFromToken(refreshToken),
-            username,
+            userId,
             ipAddress,
             refreshTokenExpirationTimeInSecs));
     return refreshToken;
@@ -108,8 +107,8 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
-  public String findRefreshToken(String username, String ipAddress) {
-    final var refreshToken = refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
+  public String findRefreshToken(Long userId, String ipAddress) {
+    final var refreshToken = refreshTokenRepository.findByUserIdAndIpAddress(userId, ipAddress);
     return refreshToken.map(token -> JwtUtil.TOKEN_TYPE + token.getToken()).orElse(null);
   }
 
@@ -119,14 +118,14 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
-  public void deleteRefreshTokenByUserAndIpAddress(String username, String ipAddress) {
-    var refreshToken = refreshTokenRepository.findByUsernameAndIpAddress(username, ipAddress);
+  public void deleteRefreshTokenByUserAndIpAddress(Long userId, String ipAddress) {
+    var refreshToken = refreshTokenRepository.findByUserIdAndIpAddress(userId, ipAddress);
     refreshToken.ifPresent(refreshTokenRepository::delete);
   }
 
   @Override
-  public void deleteAllRefreshTokensByUser(String username) {
-    var refreshTokens = refreshTokenRepository.findAllByUsername(username);
+  public void deleteAllRefreshTokensByUser(Long userId) {
+    var refreshTokens = refreshTokenRepository.findAllByUserId(userId);
     refreshTokenRepository.deleteAll(refreshTokens);
   }
 }

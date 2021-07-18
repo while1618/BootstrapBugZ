@@ -96,7 +96,7 @@ class AuthServiceTest {
   void itShouldRefreshToken() {
     var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
-    String token = jwtService.createRefreshToken("user", "ip1");
+    String token = jwtService.createRefreshToken(1L, "ip1");
     when(refreshTokenRepository.existsById(JwtUtil.removeTokenTypeFromToken(token)))
         .thenReturn(true);
     var refreshTokenRequest = new RefreshTokenRequest(token);
@@ -123,8 +123,8 @@ class AuthServiceTest {
         new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("test", JwtPurpose.CONFIRM_REGISTRATION));
-    when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+            jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION));
+    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.confirmRegistration(token);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
@@ -134,7 +134,7 @@ class AuthServiceTest {
   void confirmRegistrationShouldThrowForbidden_invalid() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("test", JwtPurpose.CONFIRM_REGISTRATION));
+            jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.confirmRegistration(token))
         .isInstanceOf(ForbiddenException.class)
@@ -145,10 +145,10 @@ class AuthServiceTest {
   void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("test", JwtPurpose.CONFIRM_REGISTRATION));
+            jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION));
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     user.setActivated(true);
-    when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     assertThatThrownBy(() -> authService.confirmRegistration(token))
         .isInstanceOf(ForbiddenException.class)
         .hasMessage("User already activated.");
@@ -203,9 +203,9 @@ class AuthServiceTest {
   void itShouldResetPassword() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("test", JwtPurpose.FORGOT_PASSWORD));
+            jwtService.createToken(1L, JwtPurpose.FORGOT_PASSWORD));
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
-    when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
+    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.resetPassword(resetPasswordRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(
@@ -218,7 +218,7 @@ class AuthServiceTest {
   void resetPasswordShouldThrowForbidden_invalid() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("test", JwtPurpose.FORGOT_PASSWORD));
+            jwtService.createToken(1L, JwtPurpose.FORGOT_PASSWORD));
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.resetPassword(resetPasswordRequest))
@@ -229,7 +229,7 @@ class AuthServiceTest {
   @Test
   void itShouldLogout() {
     TestUtil.setAuth(auth, securityContext, user);
-    String token = jwtService.createToken("test", JwtPurpose.ACCESSING_RESOURCES);
+    String token = jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES);
     var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
     request.addHeader(AuthUtil.AUTH_HEADER, token);

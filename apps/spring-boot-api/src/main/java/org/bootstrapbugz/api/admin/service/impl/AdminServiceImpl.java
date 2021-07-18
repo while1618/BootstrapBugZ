@@ -42,8 +42,8 @@ public class AdminServiceImpl implements AdminService {
           final var roles =
               changeRoleRequest.getRoleNames().stream().map(Role::new).collect(Collectors.toSet());
           user.setRoles(roles);
-          jwtService.invalidateAllTokens(user.getUsername());
-          jwtService.deleteAllRefreshTokensByUser(user.getUsername());
+          jwtService.invalidateAllTokens(user.getId());
+          jwtService.deleteAllRefreshTokensByUser(user.getId());
         });
     userRepository.saveAll(users);
   }
@@ -54,8 +54,8 @@ public class AdminServiceImpl implements AdminService {
     users.forEach(
         user -> {
           user.setNonLocked(false);
-          jwtService.invalidateAllTokens(user.getUsername());
-          jwtService.deleteAllRefreshTokensByUser(user.getUsername());
+          jwtService.invalidateAllTokens(user.getId());
+          jwtService.deleteAllRefreshTokensByUser(user.getId());
         });
     userRepository.saveAll(users);
   }
@@ -80,8 +80,8 @@ public class AdminServiceImpl implements AdminService {
     users.forEach(
         user -> {
           user.setActivated(false);
-          jwtService.invalidateAllTokens(user.getUsername());
-          jwtService.deleteAllRefreshTokensByUser(user.getUsername());
+          jwtService.invalidateAllTokens(user.getId());
+          jwtService.deleteAllRefreshTokensByUser(user.getId());
         });
     userRepository.saveAll(users);
   }
@@ -92,8 +92,8 @@ public class AdminServiceImpl implements AdminService {
     final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(
         user -> {
-          jwtService.invalidateAllTokens(user.getUsername());
-          jwtService.deleteAllRefreshTokensByUser(user.getUsername());
+          jwtService.invalidateAllTokens(user.getId());
+          jwtService.deleteAllRefreshTokensByUser(user.getId());
           userRepository.delete(user);
         });
   }

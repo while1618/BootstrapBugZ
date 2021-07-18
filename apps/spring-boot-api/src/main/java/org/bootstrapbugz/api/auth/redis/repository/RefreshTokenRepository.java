@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RefreshTokenRepository extends CrudRepository<RefreshToken, String> {
-  Optional<RefreshToken> findByUsernameAndIpAddress(String username, String ipAddress);
+  Optional<RefreshToken> findByUserIdAndIpAddress(Long userId, String ipAddress);
 
-  List<RefreshToken> findAllByUsername(String username);
+  List<RefreshToken> findAllByUserId(Long userId);
 }

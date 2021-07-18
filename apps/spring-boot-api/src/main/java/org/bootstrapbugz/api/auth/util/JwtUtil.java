@@ -18,10 +18,10 @@ public class JwtUtil {
     FORGOT_PASSWORD
   }
 
-  public static String createToken(String username, int expirationTimeInSecs, String secret) {
+  public static String createToken(Long userId, int expirationTimeInSecs, String secret) {
     return TOKEN_TYPE
         + JWT.create()
-            .withSubject(username)
+            .withClaim("userId", userId)
             .withClaim("issuedAt", Instant.now().toString())
             .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSecs * 1000L))
             .sign(Algorithm.HMAC512(secret.getBytes()));
@@ -33,5 +33,13 @@ public class JwtUtil {
 
   public static String removeTokenTypeFromToken(String token) {
     return token.replace(TOKEN_TYPE, "");
+  }
+
+  public static Long getUserId(String token) {
+    return JWT.decode(token).getClaim("userId").asLong();
+  }
+
+  public static String getIssuedAt(String token) {
+    return JWT.decode(token).getClaim("issuedAt").asString();
   }
 }

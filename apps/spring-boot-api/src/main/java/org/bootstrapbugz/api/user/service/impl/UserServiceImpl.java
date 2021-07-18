@@ -73,8 +73,6 @@ public class UserServiceImpl implements UserService {
       throw new BadRequestException(messageService.getMessage("username.exists"), ErrorDomain.USER);
 
     user.setUsername(username);
-    jwtService.invalidateAllTokens(user.getUsername());
-    jwtService.deleteAllRefreshTokensByUser(user.getUsername());
   }
 
   private void tryToSetEmail(User user, String email) {
@@ -84,11 +82,11 @@ public class UserServiceImpl implements UserService {
 
     user.setEmail(email);
     user.setActivated(false);
-    jwtService.invalidateAllTokens(user.getUsername());
-    jwtService.deleteAllRefreshTokensByUser(user.getUsername());
+    jwtService.invalidateAllTokens(user.getId());
+    jwtService.deleteAllRefreshTokensByUser(user.getId());
 
     final String token =
-        jwtService.createToken(user.getUsername(), JwtPurpose.CONFIRM_REGISTRATION);
+        jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
 
@@ -99,8 +97,8 @@ public class UserServiceImpl implements UserService {
       throw new BadRequestException(
           messageService.getMessage("oldPassword.invalid"), ErrorDomain.USER);
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getNewPassword()));
-    jwtService.invalidateAllTokens(user.getUsername());
-    jwtService.deleteAllRefreshTokensByUser(user.getUsername());
+    jwtService.invalidateAllTokens(user.getId());
+    jwtService.deleteAllRefreshTokensByUser(user.getId());
     userRepository.save(user);
   }
 }

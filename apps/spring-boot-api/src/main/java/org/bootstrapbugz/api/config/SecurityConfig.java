@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.config;
 
+import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
 import org.bootstrapbugz.api.auth.security.JwtAuthenticationFilter;
 import org.bootstrapbugz.api.auth.security.JwtAuthorizationFilter;
 import org.bootstrapbugz.api.auth.service.JwtService;
@@ -7,7 +8,6 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +18,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -38,14 +37,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     Path.AUTH + "/forgot-password",
     Path.AUTH + "/reset-password"
   };
-  private final UserDetailsService userDetailsService;
+  private final CustomUserDetailsService userDetailsService;
   private final JwtService jwtService;
   private final UserMapper userMapper;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final MessageService messageService;
 
   public SecurityConfig(
-      @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+      CustomUserDetailsService userDetailsService,
       JwtService jwtService,
       UserMapper userMapper,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint,

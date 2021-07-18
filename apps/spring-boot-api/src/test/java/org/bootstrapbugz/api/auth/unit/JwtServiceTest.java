@@ -47,7 +47,7 @@ class JwtServiceTest {
 
   @Test
   void itShouldCreateToken() {
-    String token = jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES);
+    String token = jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES);
     assertThat(token).isNotNull().startsWith(JwtUtil.TOKEN_TYPE);
   }
 
@@ -55,20 +55,20 @@ class JwtServiceTest {
   void itShouldCheckToken_userNotInBlacklist() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES));
+            jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES));
     when(jwtBlacklistRepository.existsById(token)).thenReturn(false);
-    when(userBlacklistRepository.findById("user")).thenReturn(Optional.empty());
+    when(userBlacklistRepository.findById(1L)).thenReturn(Optional.empty());
     jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
   }
 
   @Test
   void itShouldCheckToken_userInBlacklistButTokenIsIssuedAfter() {
-    var userBlacklist = new UserBlacklist("user", Instant.now(), 1000);
+    var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES));
+            jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES));
     when(jwtBlacklistRepository.existsById(token)).thenReturn(false);
-    when(userBlacklistRepository.findById("user")).thenReturn(Optional.of(userBlacklist));
+    when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
   }
 
@@ -84,7 +84,7 @@ class JwtServiceTest {
   void checkTokenShouldThrowForbidden_tokenInvalidated() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES));
+            jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES));
     when(jwtBlacklistRepository.existsById(token)).thenReturn(true);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES))
@@ -96,10 +96,10 @@ class JwtServiceTest {
   void checkTokenShouldThrowForbidden_userInBlacklist() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES));
-    var userBlacklist = new UserBlacklist("user", Instant.now(), 1000);
+            jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES));
+    var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
     when(jwtBlacklistRepository.existsById(token)).thenReturn(false);
-    when(userBlacklistRepository.findById("user")).thenReturn(Optional.of(userBlacklist));
+    when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES))
         .isInstanceOf(ForbiddenException.class)
@@ -110,7 +110,7 @@ class JwtServiceTest {
   void itShouldInvalidateToken() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken("user", JwtPurpose.ACCESSING_RESOURCES));
+            jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES));
     var expectedJwtBlacklist = new JwtBlacklist(token, 1000);
     jwtService.invalidateToken(token);
     verify(jwtBlacklistRepository, times(1)).save(jwtBlacklistArgumentCaptor.capture());
@@ -120,23 +120,23 @@ class JwtServiceTest {
 
   @Test
   void itShouldInvalidateAllTokens() {
-    var expectedUserBlacklist = new UserBlacklist("user", Instant.now(), 1000);
-    jwtService.invalidateAllTokens("user");
+    var expectedUserBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    jwtService.invalidateAllTokens(1L);
     verify(userBlacklistRepository, times(1)).save(userBlacklistArgumentCaptor.capture());
-    assertThat(userBlacklistArgumentCaptor.getValue().getUsername())
-        .isEqualTo(expectedUserBlacklist.getUsername());
+    assertThat(userBlacklistArgumentCaptor.getValue().getUserId())
+        .isEqualTo(expectedUserBlacklist.getUserId());
   }
 
   @Test
   void itShouldCreateRefreshToken() {
     String actualRefreshToken =
-        JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken("user", "ip1"));
-    var expectedRefreshToken = new RefreshToken(actualRefreshToken, "user", "ip1", 1000);
+        JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken(1L, "ip1"));
+    var expectedRefreshToken = new RefreshToken(actualRefreshToken, 1L, "ip1", 1000);
     verify(refreshTokenRepository, times(1)).save(refreshTokenArgumentCaptor.capture());
     assertThat(refreshTokenArgumentCaptor.getValue().getToken())
         .isEqualTo(expectedRefreshToken.getToken());
-    assertThat(refreshTokenArgumentCaptor.getValue().getUsername())
-        .isEqualTo(expectedRefreshToken.getUsername());
+    assertThat(refreshTokenArgumentCaptor.getValue().getUserId())
+        .isEqualTo(expectedRefreshToken.getUserId());
     assertThat(refreshTokenArgumentCaptor.getValue().getIpAddress())
         .isEqualTo(expectedRefreshToken.getIpAddress());
   }
@@ -144,7 +144,7 @@ class JwtServiceTest {
   @Test
   void itShouldCheckRefreshToken() {
     String refreshToken =
-        JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken("user", "ip1"));
+        JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken(1L, "ip1"));
     when(refreshTokenRepository.existsById(refreshToken)).thenReturn(true);
     jwtService.checkRefreshToken(refreshToken);
   }
@@ -160,7 +160,7 @@ class JwtServiceTest {
   @Test
   void checkRefreshTokenShouldThrowForbidden_refreshTokenNotInRedis() {
     String refreshToken =
-        JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken("user", "ip1"));
+        JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken(1L, "ip1"));
     when(refreshTokenRepository.existsById(refreshToken)).thenReturn(false);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkRefreshToken(refreshToken))
@@ -170,37 +170,37 @@ class JwtServiceTest {
 
   @Test
   void itShouldFindRefreshToken() {
-    var refreshToken = new RefreshToken("token123", "user", "ip1", 1000);
-    when(refreshTokenRepository.findByUsernameAndIpAddress("user", "ip1"))
+    var refreshToken = new RefreshToken("token123", 1L, "ip1", 1000);
+    when(refreshTokenRepository.findByUserIdAndIpAddress(1L, "ip1"))
         .thenReturn(Optional.of(refreshToken));
-    String token = jwtService.findRefreshToken("user", "ip1");
+    String token = jwtService.findRefreshToken(1L, "ip1");
     assertThat(token).isNotNull();
   }
 
   @Test
   void itShouldDeleteRefreshToken() {
     String refreshToken =
-        JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken("user", "ip1"));
+        JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken(1L, "ip1"));
     jwtService.deleteRefreshToken(refreshToken);
     verify(refreshTokenRepository, times(1)).deleteById(any(String.class));
   }
 
   @Test
   void itShouldDeleteRefreshTokenByUserAndIpAddress() {
-    var refreshToken = new RefreshToken("token123", "user", "ip1", 1000);
-    when(refreshTokenRepository.findByUsernameAndIpAddress("user", "ip1"))
+    var refreshToken = new RefreshToken("token123", 1L, "ip1", 1000);
+    when(refreshTokenRepository.findByUserIdAndIpAddress(1L, "ip1"))
         .thenReturn(Optional.of(refreshToken));
-    jwtService.deleteRefreshTokenByUserAndIpAddress("user", "ip1");
+    jwtService.deleteRefreshTokenByUserAndIpAddress(1L, "ip1");
     verify(refreshTokenRepository, times(1)).delete(any(RefreshToken.class));
   }
 
   @Test
   void itShouldDeleteAllRefreshTokensByUser() {
-    var refreshToken1 = new RefreshToken("token123", "user", "ip1", 1000);
-    var refreshToken2 = new RefreshToken("token321", "user", "ip2", 1000);
-    when(refreshTokenRepository.findAllByUsername("user"))
+    var refreshToken1 = new RefreshToken("token123", 1L, "ip1", 1000);
+    var refreshToken2 = new RefreshToken("token321", 1L, "ip2", 1000);
+    when(refreshTokenRepository.findAllByUserId(1L))
         .thenReturn(List.of(refreshToken1, refreshToken2));
-    jwtService.deleteAllRefreshTokensByUser("user");
+    jwtService.deleteAllRefreshTokensByUser(1L);
     verify(refreshTokenRepository, times(1)).deleteAll(List.of(refreshToken1, refreshToken2));
   }
 }

@@ -26,9 +26,9 @@ import org.springframework.test.context.ActiveProfiles;
 class RefreshTokenRepositoryTest extends DatabaseContainers {
   @Autowired private RefreshTokenRepository refreshTokenRepository;
 
-  private final RefreshToken first = new RefreshToken("token123", "dataRedisTest1", "ip1", 1000);
-  private final RefreshToken second = new RefreshToken("token321", "dataRedisTest1", "ip2", 1000);
-  private final RefreshToken third = new RefreshToken("token213", "dataRedisTest2", "ip3", 1000);
+  private final RefreshToken first = new RefreshToken("token123", 22L, "ip1", 1000);
+  private final RefreshToken second = new RefreshToken("token321", 22L, "ip2", 1000);
+  private final RefreshToken third = new RefreshToken("token213", 23L, "ip3", 1000);
 
   @BeforeAll
   void setUp() {
@@ -41,15 +41,15 @@ class RefreshTokenRepositoryTest extends DatabaseContainers {
   }
 
   @Test
-  void itShouldFindByUsernameAndIpAddress() {
+  void itShouldFindByUserIdAndIpAddress() {
     var refreshToken =
-        refreshTokenRepository.findByUsernameAndIpAddress("dataRedisTest2", "ip3").orElseThrow();
+        refreshTokenRepository.findByUserIdAndIpAddress(23L, "ip3").orElseThrow();
     assertThat(refreshToken).isEqualTo(third);
   }
 
   @Test
-  void itShouldFindAllByUsername() {
-    var refreshTokens = refreshTokenRepository.findAllByUsername("dataRedisTest1");
+  void itShouldFindAllByUserId() {
+    var refreshTokens = refreshTokenRepository.findAllByUserId(22L);
     assertThat(refreshTokens)
         .usingRecursiveComparison()
         .ignoringCollectionOrder()
