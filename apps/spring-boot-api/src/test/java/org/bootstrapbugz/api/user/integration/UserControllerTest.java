@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.shared.config.RedisTestConfig;
+import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
@@ -35,8 +35,8 @@ import org.springframework.test.web.servlet.ResultActions;
 @DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@SpringBootTest(classes = RedisTestConfig.class)
-class UserControllerTest {
+@SpringBootTest
+class UserControllerTest extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
