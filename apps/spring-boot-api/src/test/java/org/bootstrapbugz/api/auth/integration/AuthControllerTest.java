@@ -22,7 +22,7 @@ import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
-import org.bootstrapbugz.api.shared.config.RedisTestConfig;
+import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
@@ -43,8 +43,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@SpringBootTest(classes = RedisTestConfig.class)
-class AuthControllerTest {
+@SpringBootTest
+class AuthControllerTest extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private JwtServiceImpl jwtService;

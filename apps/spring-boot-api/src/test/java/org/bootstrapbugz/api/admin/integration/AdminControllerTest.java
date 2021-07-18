@@ -16,7 +16,7 @@ import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.shared.config.RedisTestConfig;
+import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -38,8 +38,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
-@SpringBootTest(classes = RedisTestConfig.class)
-class AdminControllerTest {
+@SpringBootTest
+class AdminControllerTest extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 

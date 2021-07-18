@@ -13,7 +13,7 @@ import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.shared.config.RedisTestConfig;
+import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
@@ -36,8 +36,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@SpringBootTest(classes = RedisTestConfig.class)
-class AccessingResourcesTest {
+@SpringBootTest
+class AccessingResourcesTest extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
