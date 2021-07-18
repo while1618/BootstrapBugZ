@@ -7,10 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Set;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.util.Set;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
@@ -22,8 +20,7 @@ import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
-import org.bootstrapbugz.api.shared.config.PostgresConfig;
-import org.bootstrapbugz.api.shared.config.RedisTestConfig;
+import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
@@ -44,8 +41,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@SpringBootTest(classes = RedisTestConfig.class)
-class AuthControllerTest extends PostgresConfig {
+@SpringBootTest
+class AuthControllerTest extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private JwtServiceImpl jwtService;

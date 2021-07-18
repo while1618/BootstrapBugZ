@@ -5,7 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.util.Collections;
 import java.util.Set;
 
-import org.bootstrapbugz.api.shared.config.PostgresConfig;
+import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserRepositoryTest extends PostgresConfig {
+class UserRepositoryTest extends DatabaseContainers {
   @Autowired private UserRepository userRepository;
 
   private final User expectedUser =

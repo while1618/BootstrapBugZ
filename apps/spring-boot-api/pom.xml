@@ -27,7 +27,6 @@
     <springfox.version>3.0.0</springfox.version>
     <jacoco.version>0.8.7</jacoco.version>
     <jedis.version>3.6.1</jedis.version>
-    <embedded-redis.version>0.7.2</embedded-redis.version>
     <testcontainers.version>1.15.3</testcontainers.version>
   </properties>
 
@@ -44,12 +43,6 @@
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
       <version>${jedis.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>it.ozimov</groupId>
-      <artifactId>embedded-redis</artifactId>
-      <version>${embedded-redis.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
