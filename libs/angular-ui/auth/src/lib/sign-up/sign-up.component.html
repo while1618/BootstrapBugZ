@@ -1,0 +1,24 @@
+<form (ngSubmit)="onSignUp()">
+  <input
+    type="text"
+    [(ngModel)]="signUpRequest.firstName"
+    placeholder="First Name"
+    name="firstName"
+  />
+  <input type="text" [(ngModel)]="signUpRequest.lastName" placeholder="Last Name" name="lastName" />
+  <input type="text" [(ngModel)]="signUpRequest.username" placeholder="Username" name="username" />
+  <input type="email" [(ngModel)]="signUpRequest.email" placeholder="Email" name="email" />
+  <input
+    type="password"
+    [(ngModel)]="signUpRequest.password"
+    placeholder="Password"
+    name="password"
+  />
+  <input
+    type="password"
+    [(ngModel)]="signUpRequest.confirmPassword"
+    placeholder="Confirm Password"
+    name="confirmPassword"
+  />
+  <button type="submit">Sign Up</button>
+</form>

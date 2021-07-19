@@ -4,6 +4,7 @@ export interface AdminRequest {
   usernames: string[];
 }
 
-export interface ChangeRoleRequest extends AdminRequest {
+export interface ChangeRoleRequest {
+  usernames: string[];
   roleNames: RoleName[];
 }

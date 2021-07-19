@@ -1,10 +1,3 @@
-export interface SimpleUser {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-}
-
 export enum RoleName {
   USER,
   ADMIN,
@@ -14,10 +7,12 @@ export interface Role {
   name: RoleName;
 }
 
-export interface User extends SimpleUser {
+export interface User {
   id: number;
-  updatedAt: Date;
-  lastLogout: Date;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
   activated: boolean;
   nonLocked: boolean;
   roles: Role[];

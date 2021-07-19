@@ -1,37 +1,38 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   ForgotPasswordRequest,
   LoginRequest,
+  LoginResponse,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
   ResendConfirmationEmailRequest,
   ResetPasswordRequest,
   SignUpRequest,
-  SimpleUser,
+  UserResponse,
 } from '@bootstrapbugz/shared';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  API_URL = 'localhost:8181/v1.0/auth';
+  API_URL = 'http://localhost:8181/v1.0/auth';
 
   constructor(private http: HttpClient) {}
 
   login(loginRequest: LoginRequest) {
-    return this.http.post<void>(`${this.API_URL}/login`, loginRequest, { observe: 'response' });
+    return this.http.post<LoginResponse>(`${this.API_URL}/login`, loginRequest);
   }
 
-  logout() {
-    return this.http.get<void>(`${this.API_URL}/logout`);
+  refreshToken(refreshTokenRequest: RefreshTokenRequest) {
+    return this.http.post<RefreshTokenResponse>(
+      `${this.API_URL}/refresh-token`,
+      refreshTokenRequest
+    );
   }
 
   signUp(signUpRequest: SignUpRequest) {
-    return this.http.post<SimpleUser>(`${this.API_URL}/sign-up`, signUpRequest);
-  }
-
-  confirmRegistration(token: string) {
-    const params = new HttpParams().set('token', token);
-    return this.http.get<void>(`${this.API_URL}/confirm-registration`, { params });
+    return this.http.post<UserResponse>(`${this.API_URL}/sign-up`, signUpRequest);
   }
 
   resendConfirmationEmail(resendConfirmationEmailRequest: ResendConfirmationEmailRequest) {
@@ -47,5 +48,13 @@ export class AuthService {
 
   resetPassword(resetPasswordRequest: ResetPasswordRequest) {
     return this.http.put<void>(`${this.API_URL}/reset-password`, resetPasswordRequest);
+  }
+
+  logout() {
+    return this.http.get<void>(`${this.API_URL}/logout`);
+  }
+
+  logoutFromAllDevices() {
+    return this.http.get<void>(`${this.API_URL}/logout-from-all-devices`);
   }
 }
