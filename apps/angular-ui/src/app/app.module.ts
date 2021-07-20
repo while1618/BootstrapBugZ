@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AngularUiAuthModule } from '@bootstrapbugz/angular-ui/auth';
+import { AngularUiSharedModule } from '@bootstrapbugz/angular-ui/shared';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -17,6 +18,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     HttpClientModule,
     AngularUiAuthModule,
+    AngularUiSharedModule,
     RouterModule.forRoot([], { initialNavigation: 'enabled' }),
     StoreModule.forRoot({}),
     EffectsModule.forRoot(),
