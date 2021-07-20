@@ -1,4 +1,4 @@
-import { UserResponse } from '../user/user.responses';
+import { User } from '../user/user.models';
 
 export interface RefreshTokenResponse {
   token: string;
@@ -6,7 +6,7 @@ export interface RefreshTokenResponse {
 }
 
 export interface LoginResponse {
-  user: UserResponse;
   token: string;
   refreshToken: string;
+  user: User;
 }

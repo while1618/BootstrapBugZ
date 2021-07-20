@@ -1,4 +1,4 @@
-import { UserResponse } from '@bootstrapbugz/shared';
+import { User } from '@bootstrapbugz/shared';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as AuthActions from './auth.actions';
 
@@ -7,7 +7,7 @@ export const AUTH_FEATURE_KEY = 'auth';
 export interface AuthState {
   token: string;
   refreshToken: string;
-  user: UserResponse;
+  user: User;
   error: Error;
 }
 
@@ -54,7 +54,7 @@ const authReducer = createReducer(
   on(AuthActions.signUp, (state, action) => ({ ...state })),
   on(AuthActions.signUpSuccess, (state, action) => ({
     ...state,
-    user: action.userResponse,
+    user: action.user,
     error: null,
   })),
   on(AuthActions.signUpFailure, (state, action) => ({ ...state, user: null, error: action.error })),

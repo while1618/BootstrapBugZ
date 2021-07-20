@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ChangePasswordRequest, UpdateUserRequest, UserResponse } from '@bootstrapbugz/shared';
+import { ChangePasswordRequest, UpdateUserRequest, User } from '@bootstrapbugz/shared';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   findByUsername(username: string) {
-    return this.http.get<UserResponse>(`${this.API_URL}/users/${username}`);
+    return this.http.get<User>(`${this.API_URL}/users/${username}`);
   }
 
   changePassword(changePasswordRequest: ChangePasswordRequest) {
@@ -19,6 +19,6 @@ export class UserService {
   }
 
   updateUser(updateUser: UpdateUserRequest) {
-    return this.http.put<UserResponse>(`${this.API_URL}/users/update`, updateUser);
+    return this.http.put<User>(`${this.API_URL}/users/update`, updateUser);
   }
 }

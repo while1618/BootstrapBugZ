@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginRequest, UserResponse } from '@bootstrapbugz/shared';
+import { LoginRequest, User } from '@bootstrapbugz/shared';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as AuthActions from '../+state/auth.actions';
@@ -11,7 +11,7 @@ import { AuthState } from '../+state/auth.reducer';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  user$: Observable<UserResponse>;
+  user$: Observable<User>;
   token$: Observable<string>;
   refreshToken$: Observable<string>;
   error$: Observable<Error>;

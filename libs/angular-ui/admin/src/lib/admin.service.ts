@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AdminRequest, ChangeRoleRequest, UserResponse } from '@bootstrapbugz/shared';
+import { AdminRequest, ChangeRoleRequest, User } from '@bootstrapbugz/shared';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   findAllUsers() {
-    return this.http.get<UserResponse>(`${this.API_URL}/users`);
+    return this.http.get<User>(`${this.API_URL}/users`);
   }
 
   activate(adminRequest: AdminRequest) {

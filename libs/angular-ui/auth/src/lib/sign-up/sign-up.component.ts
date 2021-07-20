@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SignUpRequest, UserResponse } from '@bootstrapbugz/shared';
+import { SignUpRequest, User } from '@bootstrapbugz/shared';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as AuthActions from '../+state/auth.actions';
@@ -11,7 +11,7 @@ import { AuthState } from '../+state/auth.reducer';
   styleUrls: ['./sign-up.component.scss'],
 })
 export class SignUpComponent implements OnInit {
-  user$: Observable<UserResponse>;
+  user$: Observable<User>;
   error$: Observable<Error>;
   signUpRequest: SignUpRequest = {
     firstName: '',

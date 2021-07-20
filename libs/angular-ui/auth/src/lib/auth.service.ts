@@ -9,7 +9,7 @@ import {
   ResendConfirmationEmailRequest,
   ResetPasswordRequest,
   SignUpRequest,
-  UserResponse,
+  User,
 } from '@bootstrapbugz/shared';
 
 @Injectable({
@@ -32,7 +32,7 @@ export class AuthService {
   }
 
   signUp(signUpRequest: SignUpRequest) {
-    return this.http.post<UserResponse>(`${this.API_URL}/sign-up`, signUpRequest);
+    return this.http.post<User>(`${this.API_URL}/sign-up`, signUpRequest);
   }
 
   resendConfirmationEmail(resendConfirmationEmailRequest: ResendConfirmationEmailRequest) {
