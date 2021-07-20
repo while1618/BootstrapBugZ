@@ -5,6 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { AuthEffects } from './+state/auth.effects';
 import * as fromAuth from './+state/auth.reducer';
+import { AngularUiAuthRoutingModule } from './angular-ui-auth-routing.module';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 
@@ -14,8 +15,9 @@ import { SignUpComponent } from './sign-up/sign-up.component';
     StoreModule.forFeature(fromAuth.AUTH_FEATURE_KEY, fromAuth.reducer),
     EffectsModule.forFeature([AuthEffects]),
     FormsModule,
+    AngularUiAuthRoutingModule,
   ],
-  exports: [LoginComponent, SignUpComponent],
   declarations: [LoginComponent, SignUpComponent],
+  exports: [AngularUiAuthRoutingModule],
 })
 export class AngularUiAuthModule {}
