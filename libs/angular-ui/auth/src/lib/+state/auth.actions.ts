@@ -39,22 +39,19 @@ const LOGOUT_FROM_ALL_DEVICES = '[Auth] Logout From All Devices';
 const LOGOUT_FROM_ALL_DEVICES_SUCCESS = '[Auth] Logout From All Devices Success';
 const LOGOUT_FROM_ALL_DEVICES_FAILURE = '[Auth] Logout From All Devices Failure';
 
-export const login = createAction(LOGIN, props<{ loginRequest: LoginRequest }>());
-export const loginSuccess = createAction(LOGIN_SUCCESS, props<{ loginResponse: LoginResponse }>());
+export const login = createAction(LOGIN, props<{ request: LoginRequest }>());
+export const loginSuccess = createAction(LOGIN_SUCCESS, props<{ response: LoginResponse }>());
 export const loginFailure = createAction(LOGIN_FAILURE, props<{ error: Error }>());
 
-export const refreshToken = createAction(
-  REFRESH_TOKEN,
-  props<{ refreshTokenRequest: RefreshTokenRequest }>()
-);
+export const refreshToken = createAction(REFRESH_TOKEN, props<{ request: RefreshTokenRequest }>());
 export const refreshTokenSuccess = createAction(
   REFRESH_TOKEN_SUCCESS,
-  props<{ refreshTokenResponse: RefreshTokenResponse }>()
+  props<{ response: RefreshTokenResponse }>()
 );
 export const refreshTokenFailure = createAction(REFRESH_TOKEN_FAILURE, props<{ error: Error }>());
 
-export const signUp = createAction(SIGN_UP, props<{ signUpRequest: SignUpRequest }>());
-export const signUpSuccess = createAction(SIGN_UP_SUCCESS, props<{ user: User }>());
+export const signUp = createAction(SIGN_UP, props<{ request: SignUpRequest }>());
+export const signUpSuccess = createAction(SIGN_UP_SUCCESS, props<{ response: User }>());
 export const signUpFailure = createAction(SIGN_UP_FAILURE, props<{ error: Error }>());
 
 export const confirmRegistration = createAction(CONFIRM_REGISTRATION);
@@ -66,7 +63,7 @@ export const confirmRegistrationFailure = createAction(
 
 export const resendConfirmationEmail = createAction(
   RESEND_CONFIRMATION_EMAIL,
-  props<{ resendConfirmationEmailRequest: ResendConfirmationEmailRequest }>()
+  props<{ request: ResendConfirmationEmailRequest }>()
 );
 export const resendConfirmationEmailSuccess = createAction(RESEND_CONFIRMATION_EMAIL_SUCCESS);
 export const resendConfirmationEmailFailure = createAction(
@@ -76,7 +73,7 @@ export const resendConfirmationEmailFailure = createAction(
 
 export const forgotPassword = createAction(
   FORGOT_PASSWORD,
-  props<{ forgotPasswordRequest: ForgotPasswordRequest }>()
+  props<{ request: ForgotPasswordRequest }>()
 );
 export const forgotPasswordSuccess = createAction(FORGOT_PASSWORD_SUCCESS);
 export const forgotPasswordFailure = createAction(
@@ -86,7 +83,7 @@ export const forgotPasswordFailure = createAction(
 
 export const resetPassword = createAction(
   RESET_PASSWORD,
-  props<{ resetPasswordRequest: ResetPasswordRequest }>()
+  props<{ request: ResetPasswordRequest }>()
 );
 export const resetPasswordSuccess = createAction(RESET_PASSWORD_SUCCESS);
 export const resetPasswordFailure = createAction(RESET_PASSWORD_FAILURE, props<{ error: Error }>());

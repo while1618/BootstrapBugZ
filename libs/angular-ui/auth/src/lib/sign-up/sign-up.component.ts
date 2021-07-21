@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { SignUpRequest, User } from '@bootstrapbugz/shared';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { SignUpRequest } from '@bootstrapbugz/shared';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import * as AuthActions from '../+state/auth.actions';
+import { signUp } from '../+state/auth.actions';
 import { AuthState } from '../+state/auth.reducer';
 
 @Component({
@@ -10,34 +10,20 @@ import { AuthState } from '../+state/auth.reducer';
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
 })
-export class SignUpComponent implements OnInit {
-  user$: Observable<User>;
-  error$: Observable<Error>;
-  signUpRequest: SignUpRequest = {
-    firstName: '',
-    lastName: '',
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  };
+export class SignUpComponent {
+  signUpForm = new FormGroup({
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
+    username: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required),
+    confirmPassword: new FormControl('', Validators.required),
+  });
 
   constructor(private store: Store<AuthState>) {}
 
-  ngOnInit(): void {
-    this.user$ = this.store.select((store) => store.user);
-    this.error$ = this.store.select((store) => store.error);
-  }
-
   onSignUp() {
-    this.store.dispatch(AuthActions.signUp({ signUpRequest: this.signUpRequest }));
-    this.signUpRequest = {
-      firstName: '',
-      lastName: '',
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    };
+    const request = this.signUpForm.value as SignUpRequest;
+    this.store.dispatch(signUp({ request }));
   }
 }

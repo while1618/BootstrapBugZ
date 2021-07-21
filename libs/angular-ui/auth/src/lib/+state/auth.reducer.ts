@@ -24,9 +24,9 @@ const authReducer = createReducer(
   on(AuthActions.login, (state, action) => ({ ...state })),
   on(AuthActions.loginSuccess, (state, action) => ({
     ...state,
-    user: action.loginResponse.user,
-    token: action.loginResponse.token,
-    refreshToken: action.loginResponse.refreshToken,
+    user: action.response.user,
+    token: action.response.token,
+    refreshToken: action.response.refreshToken,
     error: null,
   })),
   on(AuthActions.loginFailure, (state, action) => ({
@@ -40,8 +40,8 @@ const authReducer = createReducer(
   on(AuthActions.refreshToken, (state, action) => ({ ...state })),
   on(AuthActions.refreshTokenSuccess, (state, action) => ({
     ...state,
-    token: action.refreshTokenResponse.token,
-    refreshToken: action.refreshTokenResponse.refreshToken,
+    token: action.response.token,
+    refreshToken: action.response.refreshToken,
     error: null,
   })),
   on(AuthActions.refreshTokenFailure, (state, action) => ({
@@ -54,7 +54,7 @@ const authReducer = createReducer(
   on(AuthActions.signUp, (state, action) => ({ ...state })),
   on(AuthActions.signUpSuccess, (state, action) => ({
     ...state,
-    user: action.user,
+    user: action.response,
     error: null,
   })),
   on(AuthActions.signUpFailure, (state, action) => ({ ...state, user: null, error: action.error })),

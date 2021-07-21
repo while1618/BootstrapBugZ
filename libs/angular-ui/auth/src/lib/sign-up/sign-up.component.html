@@ -1,30 +1,30 @@
 <mat-card>
   <mat-card-content>
-    <form (ngSubmit)="onSignUp()">
+    <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
       <h2>Sign Up</h2>
       <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
-        <input matInput type="text" [(ngModel)]="signUpRequest.firstName" name="firstName" />
+        <input matInput type="text" [formControl]="signUpForm.get('firstName')" />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Last Name</mat-label>
-        <input matInput type="text" [(ngModel)]="signUpRequest.lastName" name="lastName" />
+        <input matInput type="text" [formControl]="signUpForm.get('lastName')" />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Username</mat-label>
-        <input matInput type="text" [(ngModel)]="signUpRequest.username" name="username" />
+        <input matInput type="text" [formControl]="signUpForm.get('username')" />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
-        <input matInput type="email" [(ngModel)]="signUpRequest.email" name="email" />
+        <input matInput type="email" [formControl]="signUpForm.get('email')" />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
-        <input matInput type="password" [(ngModel)]="signUpRequest.password" name="password" />
+        <input matInput type="password" [formControl]="signUpForm.get('password')" />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Confirm Password</mat-label>
-        <input matInput type="password" [(ngModel)]="signUpRequest.password" name="password" />
+        <input matInput type="password" [formControl]="signUpForm.get('confirmPassword')" />
       </mat-form-field>
       <button mat-raised-button color="primary" type="submit">Sign Up</button>
     </form>

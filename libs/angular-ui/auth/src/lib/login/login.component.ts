@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { LoginRequest, User } from '@bootstrapbugz/shared';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { LoginRequest } from '@bootstrapbugz/shared';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import * as AuthActions from '../+state/auth.actions';
+import { login } from '../+state/auth.actions';
 import { AuthState } from '../+state/auth.reducer';
 
 @Component({
@@ -10,24 +10,16 @@ import { AuthState } from '../+state/auth.reducer';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
-  user$: Observable<User>;
-  token$: Observable<string>;
-  refreshToken$: Observable<string>;
-  error$: Observable<Error>;
-  loginRequest: LoginRequest = { usernameOrEmail: '', password: '' };
+export class LoginComponent {
+  loginForm = new FormGroup({
+    usernameOrEmail: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
+  });
 
   constructor(private store: Store<AuthState>) {}
 
-  ngOnInit(): void {
-    this.user$ = this.store.select((store) => store.user);
-    this.token$ = this.store.select((store) => store.token);
-    this.refreshToken$ = this.store.select((store) => store.refreshToken);
-    this.error$ = this.store.select((store) => store.error);
-  }
-
   onLogin() {
-    this.store.dispatch(AuthActions.login({ loginRequest: this.loginRequest }));
-    this.loginRequest = { usernameOrEmail: '', password: '' };
+    const request = this.loginForm.value as LoginRequest;
+    this.store.dispatch(login({ request }));
   }
 }

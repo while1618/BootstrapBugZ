@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +18,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
     CommonModule,
     StoreModule.forFeature(fromAuth.AUTH_FEATURE_KEY, fromAuth.reducer),
     EffectsModule.forFeature([AuthEffects]),
-    FormsModule,
+    ReactiveFormsModule,
     AngularUiAuthRoutingModule,
     MatCardModule,
     MatFormFieldModule,
