@@ -1,15 +1,21 @@
-<form (ngSubmit)="onLogin()">
-  <input
-    type="text"
-    [(ngModel)]="loginRequest.usernameOrEmail"
-    placeholder="Username/Email"
-    name="usernameOrEmail"
-  />
-  <input
-    type="password"
-    [(ngModel)]="loginRequest.password"
-    placeholder="Password"
-    name="password"
-  />
-  <button type="submit">Login</button>
-</form>
+<mat-card>
+  <mat-card-content>
+    <form (ngSubmit)="onLogin()">
+      <h2>Log In</h2>
+      <mat-form-field appearance="outline">
+        <mat-label>Username or Email</mat-label>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="loginRequest.usernameOrEmail"
+          name="usernameOrEmail"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [(ngModel)]="loginRequest.password" name="password" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Login</button>
+    </form>
+  </mat-card-content>
+</mat-card>

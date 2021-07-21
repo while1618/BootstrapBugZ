@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { AuthEffects } from './+state/auth.effects';
@@ -16,6 +20,10 @@ import { SignUpComponent } from './sign-up/sign-up.component';
     EffectsModule.forFeature([AuthEffects]),
     FormsModule,
     AngularUiAuthRoutingModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
   ],
   declarations: [LoginComponent, SignUpComponent],
   exports: [AngularUiAuthRoutingModule],
