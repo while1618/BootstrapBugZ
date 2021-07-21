@@ -18,7 +18,7 @@ export class LoginComponent {
 
   constructor(private store: Store<AuthState>) {}
 
-  onLogin() {
+  onSubmit() {
     const request = this.loginForm.value as LoginRequest;
     this.store.dispatch(login({ request }));
   }

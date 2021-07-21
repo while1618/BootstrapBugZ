@@ -22,7 +22,7 @@ export class SignUpComponent {
 
   constructor(private store: Store<AuthState>) {}
 
-  onSignUp() {
+  onSubmit() {
     const request = this.signUpForm.value as SignUpRequest;
     this.store.dispatch(signUp({ request }));
   }

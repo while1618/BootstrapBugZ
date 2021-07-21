@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-content>
-    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <h2>Log In</h2>
       <mat-form-field appearance="outline">
         <mat-label>Username or Email</mat-label>
@@ -10,6 +10,7 @@
         <mat-label>Password</mat-label>
         <input matInput type="password" [formControl]="loginForm.get('password')" />
       </mat-form-field>
+      <a mat-button routerLink="/auth/forgot-password">Forgot password?</a>
       <button mat-raised-button color="primary" type="submit">Login</button>
     </form>
   </mat-card-content>

@@ -10,6 +10,7 @@ import { StoreModule } from '@ngrx/store';
 import { AuthEffects } from './+state/auth.effects';
 import * as fromAuth from './+state/auth.reducer';
 import { AngularUiAuthRoutingModule } from './angular-ui-auth-routing.module';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 
@@ -25,7 +26,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
     MatInputModule,
     MatButtonModule,
   ],
-  declarations: [LoginComponent, SignUpComponent],
+  declarations: [LoginComponent, SignUpComponent, ForgotPasswordComponent],
   exports: [AngularUiAuthRoutingModule],
 })
 export class AngularUiAuthModule {}
