@@ -2,7 +2,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AngularUiAuthModule } from '@bootstrapbugz/angular-ui/auth';
 import { AngularUiSharedModule } from '@bootstrapbugz/angular-ui/shared';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -18,7 +17,6 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
   imports: [
     BrowserModule,
     HttpClientModule,
-    AngularUiAuthModule,
     AngularUiSharedModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot(),

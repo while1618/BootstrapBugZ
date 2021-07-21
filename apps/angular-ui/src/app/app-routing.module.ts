@@ -7,6 +7,11 @@ const routes: Routes = [
     path: '',
     component: LandingPageComponent,
   },
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('@bootstrapbugz/angular-ui/auth').then((mod) => mod.AngularUiAuthModule),
+  },
 ];
 
 @NgModule({

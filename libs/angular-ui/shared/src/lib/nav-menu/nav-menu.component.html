@@ -4,8 +4,8 @@
   </a>
   <span class="spacer"></span>
   <div fxShow="true" fxHide.lt-md="true">
-    <a mat-button routerLink="/login">Login</a>
-    <a mat-button routerLink="/sign-up">Sign Up</a>
+    <a mat-button routerLink="/auth/login">Login</a>
+    <a mat-button routerLink="/auth/sign-up">Sign Up</a>
   </div>
   <div fxShow="true" fxHide.gt-sm="true">
     <button mat-icon-button (click)="drawer.toggle()">
@@ -17,8 +17,8 @@
 <mat-drawer-container autosize fxFlexFill>
   <mat-drawer #drawer fxLayout="column" class="sidenav" mode="over" position="end">
     <div fxLayout="column">
-      <a mat-button routerLink="/login" (click)="drawer.toggle()">Login</a>
-      <a mat-button routerLink="/sign-up" (click)="drawer.toggle()">Sign Up</a>
+      <a mat-button routerLink="/auth/login" (click)="drawer.toggle()">Login</a>
+      <a mat-button routerLink="/auth/sign-up" (click)="drawer.toggle()">Sign Up</a>
     </div>
   </mat-drawer>
   <mat-drawer-content>
