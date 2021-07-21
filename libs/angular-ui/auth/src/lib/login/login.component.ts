@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoginRequest } from '@bootstrapbugz/shared';
+import { LoginRequest, ResendConfirmationEmailRequest } from '@bootstrapbugz/shared';
 import { Store } from '@ngrx/store';
-import { login } from '../+state/auth.actions';
+import { login, resendConfirmationEmail } from '../+state/auth.actions';
 import { AuthState } from '../+state/auth.reducer';
 
 @Component({
@@ -21,5 +21,12 @@ export class LoginComponent {
   onSubmit() {
     const request = this.loginForm.value as LoginRequest;
     this.store.dispatch(login({ request }));
+  }
+
+  resendConfirmationEmail() {
+    const request: ResendConfirmationEmailRequest = {
+      usernameOrEmail: this.loginForm.controls.usernameOrEmail.value,
+    };
+    this.store.dispatch(resendConfirmationEmail({ request }));
   }
 }

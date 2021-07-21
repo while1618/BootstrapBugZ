@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import * as AuthActions from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
-  constructor(private actions$: Actions, private authService: AuthService) {}
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -15,6 +20,7 @@ export class AuthEffects {
       switchMap((action) =>
         this.authService.login(action.request).pipe(
           map((response) => AuthActions.loginSuccess({ response })),
+          tap(() => this.router.navigate(['/home'])),
           catchError((error) => of(AuthActions.loginFailure(error)))
         )
       )
@@ -39,6 +45,7 @@ export class AuthEffects {
       switchMap((action) =>
         this.authService.signUp(action.request).pipe(
           map((response) => AuthActions.signUpSuccess({ response })),
+          tap(() => this.router.navigate(['/auth/login'])),
           catchError((error) => of(AuthActions.signUpFailure(error)))
         )
       )
@@ -63,6 +70,7 @@ export class AuthEffects {
       switchMap((action) =>
         this.authService.forgotPassword(action.request).pipe(
           map(() => AuthActions.forgotPasswordSuccess()),
+          tap(() => this.router.navigate(['/auth/login'])),
           catchError((error) => of(AuthActions.forgotPasswordFailure(error)))
         )
       )
@@ -75,6 +83,7 @@ export class AuthEffects {
       switchMap((action) =>
         this.authService.resetPassword(action.request).pipe(
           map(() => AuthActions.resetPasswordSuccess()),
+          tap(() => this.router.navigate(['/auth/login'])),
           catchError((error) => of(AuthActions.resetPasswordFailure(error)))
         )
       )
@@ -87,6 +96,7 @@ export class AuthEffects {
       switchMap(() =>
         this.authService.logout().pipe(
           map(() => AuthActions.logoutSuccess()),
+          tap(() => this.router.navigate(['/'])),
           catchError((error) => of(AuthActions.logoutFailure(error)))
         )
       )
@@ -99,6 +109,7 @@ export class AuthEffects {
       switchMap(() =>
         this.authService.logoutFromAllDevices().pipe(
           map(() => AuthActions.logoutFromAllDevicesSuccess()),
+          tap(() => this.router.navigate(['/'])),
           catchError((error) => of(AuthActions.logoutFromAllDevicesFailure(error)))
         )
       )

@@ -11,6 +11,9 @@
         <input matInput type="password" [formControl]="loginForm.get('password')" />
       </mat-form-field>
       <a mat-button routerLink="/auth/forgot-password">Forgot password?</a>
+      <button type="button" mat-button (click)="resendConfirmationEmail()">
+        Resend confirmation email
+      </button>
       <button mat-raised-button color="primary" type="submit">Login</button>
     </form>
   </mat-card-content>
