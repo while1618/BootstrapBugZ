@@ -12,6 +12,7 @@ import * as fromAuth from './+state/auth.reducer';
 import { AngularUiAuthRoutingModule } from './angular-ui-auth-routing.module';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 
 @NgModule({
@@ -26,7 +27,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
     MatInputModule,
     MatButtonModule,
   ],
-  declarations: [LoginComponent, SignUpComponent, ForgotPasswordComponent],
+  declarations: [LoginComponent, SignUpComponent, ForgotPasswordComponent, ResetPasswordComponent],
   exports: [AngularUiAuthRoutingModule],
 })
 export class AngularUiAuthModule {}
