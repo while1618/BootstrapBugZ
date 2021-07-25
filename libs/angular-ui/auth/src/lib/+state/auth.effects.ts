@@ -39,6 +39,18 @@ export class AuthEffects {
     )
   );
 
+  saveTokenAndRefreshToken$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.loginSuccess, AuthActions.refreshTokenSuccess),
+        tap((action) => {
+          localStorage.setItem('token', action.response.token);
+          localStorage.setItem('refreshToken', action.response.refreshToken);
+        })
+      ),
+    { dispatch: false }
+  );
+
   signUp$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.signUp),

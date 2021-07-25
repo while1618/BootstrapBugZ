@@ -5,15 +5,13 @@ import * as AuthActions from './auth.actions';
 export const AUTH_FEATURE_KEY = 'auth';
 
 export interface AuthState {
-  token: string;
-  refreshToken: string;
+  isAuthenticated: boolean;
   user: User;
   error: Error;
 }
 
 export const initialState: AuthState = {
-  token: null,
-  refreshToken: null,
+  isAuthenticated: false,
   user: null,
   error: null,
 };
@@ -24,30 +22,24 @@ const authReducer = createReducer(
   on(AuthActions.login, (state, action) => ({ ...state })),
   on(AuthActions.loginSuccess, (state, action) => ({
     ...state,
+    isAuthenticated: true,
     user: action.response.user,
-    token: action.response.token,
-    refreshToken: action.response.refreshToken,
     error: null,
   })),
   on(AuthActions.loginFailure, (state, action) => ({
     ...state,
+    isAuthenticated: false,
     user: null,
-    token: null,
-    refreshToken: null,
     error: action.error,
   })),
 
   on(AuthActions.refreshToken, (state, action) => ({ ...state })),
   on(AuthActions.refreshTokenSuccess, (state, action) => ({
     ...state,
-    token: action.response.token,
-    refreshToken: action.response.refreshToken,
     error: null,
   })),
   on(AuthActions.refreshTokenFailure, (state, action) => ({
     ...state,
-    token: null,
-    refreshToken: null,
     error: action.error,
   })),
 
