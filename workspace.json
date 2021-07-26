@@ -1,61 +1,6 @@
 {
   "version": 2,
   "projects": {
-    "spring-boot-api": {
-      "root": "apps/spring-boot-api",
-      "sourceRoot": "apps/spring-boot-api/src",
-      "projectType": "application",
-      "targets": {
-        "run": {
-          "executor": "@nxrocks/nx-spring-boot:run",
-          "options": {
-            "root": "apps/spring-boot-api"
-          }
-        },
-        "serve": {
-          "executor": "@nxrocks/nx-spring-boot:serve",
-          "options": {
-            "root": "apps/spring-boot-api"
-          }
-        },
-        "test": {
-          "executor": "@nxrocks/nx-spring-boot:test",
-          "options": {
-            "root": "apps/spring-boot-api"
-          }
-        },
-        "clean": {
-          "executor": "@nxrocks/nx-spring-boot:clean",
-          "options": {
-            "root": "apps/spring-boot-api"
-          }
-        },
-        "buildJar": {
-          "executor": "@nxrocks/nx-spring-boot:buildJar",
-          "options": {
-            "root": "apps/spring-boot-api"
-          }
-        },
-        "buildWar": {
-          "executor": "@nxrocks/nx-spring-boot:buildWar",
-          "options": {
-            "root": "apps/spring-boot-api"
-          }
-        },
-        "buildImage": {
-          "executor": "@nxrocks/nx-spring-boot:buildImage",
-          "options": {
-            "root": "apps/spring-boot-api"
-          }
-        },
-        "buildInfo": {
-          "executor": "@nxrocks/nx-spring-boot:buildInfo",
-          "options": {
-            "root": "apps/spring-boot-api"
-          }
-        }
-      }
-    },
     "angular-ui": {
       "projectType": "application",
       "root": "apps/angular-ui",
@@ -71,10 +16,7 @@
             "polyfills": "apps/angular-ui/src/polyfills.ts",
             "tsConfig": "apps/angular-ui/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "apps/angular-ui/src/favicon.ico",
-              "apps/angular-ui/src/assets"
-            ],
+            "assets": ["apps/angular-ui/src/favicon.ico", "apps/angular-ui/src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "apps/angular-ui/src/styles.scss"
@@ -135,20 +77,65 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/angular-ui/src/**/*.ts",
-              "apps/angular-ui/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/angular-ui/src/**/*.ts", "apps/angular-ui/src/**/*.html"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/angular-ui"
-          ],
+          "outputs": ["coverage/apps/angular-ui"],
           "options": {
             "jestConfig": "apps/angular-ui/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "angular-ui-admin": {
+      "projectType": "library",
+      "root": "libs/angular-ui/admin",
+      "sourceRoot": "libs/angular-ui/admin/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/angular-ui/admin"],
+          "options": {
+            "jestConfig": "libs/angular-ui/admin/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/admin/src/**/*.ts",
+              "libs/angular-ui/admin/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "angular-ui-auth": {
+      "projectType": "library",
+      "root": "libs/angular-ui/auth",
+      "sourceRoot": "libs/angular-ui/auth/src",
+      "prefix": "bootstrapbugz",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/angular-ui/auth"],
+          "options": {
+            "jestConfig": "libs/angular-ui/auth/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/angular-ui/auth/src/**/*.ts",
+              "libs/angular-ui/auth/src/**/*.html"
+            ]
           }
         }
       }
@@ -174,34 +161,7 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/angular-ui-e2e/**/*.{js,ts}"
-            ]
-          }
-        }
-      }
-    },
-    "shared": {
-      "root": "libs/shared",
-      "sourceRoot": "libs/shared/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/shared/**/*.ts"
-            ]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/shared"
-          ],
-          "options": {
-            "jestConfig": "libs/shared/jest.config.js",
-            "passWithNoTests": true
+            "lintFilePatterns": ["apps/angular-ui-e2e/**/*.{js,ts}"]
           }
         }
       }
@@ -214,9 +174,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/shared"
-          ],
+          "outputs": ["coverage/libs/angular-ui/shared"],
           "options": {
             "jestConfig": "libs/angular-ui/shared/jest.config.js",
             "passWithNoTests": true
@@ -233,60 +191,6 @@
         }
       }
     },
-    "angular-ui-admin": {
-      "projectType": "library",
-      "root": "libs/angular-ui/admin",
-      "sourceRoot": "libs/angular-ui/admin/src",
-      "prefix": "bootstrapbugz",
-      "targets": {
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/admin"
-          ],
-          "options": {
-            "jestConfig": "libs/angular-ui/admin/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/angular-ui/admin/src/**/*.ts",
-              "libs/angular-ui/admin/src/**/*.html"
-            ]
-          }
-        }
-      }
-    },
-    "angular-ui-auth": {
-      "projectType": "library",
-      "root": "libs/angular-ui/auth",
-      "sourceRoot": "libs/angular-ui/auth/src",
-      "prefix": "bootstrapbugz",
-      "targets": {
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/auth"
-          ],
-          "options": {
-            "jestConfig": "libs/angular-ui/auth/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/angular-ui/auth/src/**/*.ts",
-              "libs/angular-ui/auth/src/**/*.html"
-            ]
-          }
-        }
-      }
-    },
     "angular-ui-user": {
       "projectType": "library",
       "root": "libs/angular-ui/user",
@@ -295,9 +199,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/libs/angular-ui/user"
-          ],
+          "outputs": ["coverage/libs/angular-ui/user"],
           "options": {
             "jestConfig": "libs/angular-ui/user/jest.config.js",
             "passWithNoTests": true
@@ -310,6 +212,61 @@
               "libs/angular-ui/user/src/**/*.ts",
               "libs/angular-ui/user/src/**/*.html"
             ]
+          }
+        }
+      }
+    },
+    "spring-boot-api": {
+      "root": "apps/spring-boot-api",
+      "sourceRoot": "apps/spring-boot-api/src",
+      "projectType": "application",
+      "targets": {
+        "run": {
+          "executor": "@nxrocks/nx-spring-boot:run",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "serve": {
+          "executor": "@nxrocks/nx-spring-boot:serve",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "test": {
+          "executor": "@nxrocks/nx-spring-boot:test",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "clean": {
+          "executor": "@nxrocks/nx-spring-boot:clean",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "buildJar": {
+          "executor": "@nxrocks/nx-spring-boot:buildJar",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "buildWar": {
+          "executor": "@nxrocks/nx-spring-boot:buildWar",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "buildImage": {
+          "executor": "@nxrocks/nx-spring-boot:buildImage",
+          "options": {
+            "root": "apps/spring-boot-api"
+          }
+        },
+        "buildInfo": {
+          "executor": "@nxrocks/nx-spring-boot:buildInfo",
+          "options": {
+            "root": "apps/spring-boot-api"
           }
         }
       }

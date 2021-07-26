@@ -19,20 +19,7 @@
     }
   },
   "projects": {
-    "spring-boot-api": {
-      "tags": []
-    },
     "angular-ui": {
-      "tags": []
-    },
-    "angular-ui-e2e": {
-      "tags": [],
-      "implicitDependencies": ["angular-ui"]
-    },
-    "shared": {
-      "tags": []
-    },
-    "angular-ui-shared": {
       "tags": []
     },
     "angular-ui-admin": {
@@ -41,7 +28,17 @@
     "angular-ui-auth": {
       "tags": []
     },
+    "angular-ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["angular-ui"]
+    },
+    "angular-ui-shared": {
+      "tags": []
+    },
     "angular-ui-user": {
+      "tags": []
+    },
+    "spring-boot-api": {
       "tags": []
     }
   }
