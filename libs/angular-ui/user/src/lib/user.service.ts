@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ChangePasswordRequest, UpdateUserRequest, User } from '@bootstrapbugz/shared';
+import { ChangePasswordRequest, UpdateUserRequest } from './user.requests';
+import { User } from './user.models';
 
 @Injectable({
   providedIn: 'root',

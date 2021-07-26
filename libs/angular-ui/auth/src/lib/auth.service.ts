@@ -1,16 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { User } from '@bootstrapbugz/angular-ui/user';
 import {
   ForgotPasswordRequest,
   LoginRequest,
-  LoginResponse,
   RefreshTokenRequest,
-  RefreshTokenResponse,
   ResendConfirmationEmailRequest,
   ResetPasswordRequest,
   SignUpRequest,
-  User,
-} from '@bootstrapbugz/shared';
+} from './auth.requests';
+import { LoginResponse, RefreshTokenResponse } from './auth.responses';
 
 @Injectable({
   providedIn: 'root',

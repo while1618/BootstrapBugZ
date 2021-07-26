@@ -1,4 +1,4 @@
-import { User } from '../user/user.models';
+import { User } from '@bootstrapbugz/angular-ui/user';
 
 export interface RefreshTokenResponse {
   token: string;

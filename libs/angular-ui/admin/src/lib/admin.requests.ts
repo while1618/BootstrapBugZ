@@ -1,4 +1,4 @@
-import { RoleName } from '../user/user.models';
+import { RoleName } from '@bootstrapbugz/angular-ui/user';
 
 export interface AdminRequest {
   usernames: string[];

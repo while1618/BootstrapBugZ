@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AdminRequest, ChangeRoleRequest, User } from '@bootstrapbugz/shared';
+import { User } from '@bootstrapbugz/angular-ui/user';
+import { AdminRequest, ChangeRoleRequest } from './admin.requests';
 
 @Injectable({
   providedIn: 'root',
