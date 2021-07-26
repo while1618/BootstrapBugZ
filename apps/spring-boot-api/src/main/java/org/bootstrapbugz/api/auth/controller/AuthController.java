@@ -80,4 +80,14 @@ public class AuthController {
     authService.logoutFromAllDevices();
     return ResponseEntity.noContent().build();
   }
+
+  @GetMapping("/username-availability")
+  public ResponseEntity<Boolean> isUsernameAvailable(@RequestParam("username") String username) {
+    return ResponseEntity.ok(authService.isUsernameAvailable(username));
+  }
+
+  @GetMapping("/email-availability")
+  public ResponseEntity<Boolean> isEmailAvailable(@RequestParam("email") String email) {
+    return ResponseEntity.ok(authService.isEmailAvailable(email));
+  }
 }

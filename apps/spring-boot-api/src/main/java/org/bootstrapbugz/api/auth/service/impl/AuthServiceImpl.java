@@ -164,4 +164,14 @@ public class AuthServiceImpl implements AuthService {
     jwtService.deleteAllRefreshTokensByUser(userId);
     jwtService.invalidateAllTokens(userId);
   }
+
+  @Override
+  public boolean isUsernameAvailable(String username) {
+    return !userRepository.existsByUsername(username);
+  }
+
+  @Override
+  public boolean isEmailAvailable(String email) {
+    return !userRepository.existsByEmail(email);
+  }
 }

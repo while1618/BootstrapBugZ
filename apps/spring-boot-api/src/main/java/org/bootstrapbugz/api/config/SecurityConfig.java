@@ -35,7 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     Path.AUTH + "/confirm-registration",
     Path.AUTH + "/resend-confirmation-email",
     Path.AUTH + "/forgot-password",
-    Path.AUTH + "/reset-password"
+    Path.AUTH + "/reset-password",
+    Path.AUTH + "/username-availability",
+    Path.AUTH + "/email-availability"
   };
   private final CustomUserDetailsService userDetailsService;
   private final JwtService jwtService;

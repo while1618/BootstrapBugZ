@@ -241,4 +241,16 @@ class AuthServiceTest {
     TestUtil.setAuth(auth, securityContext, user);
     assertDoesNotThrow(() -> authService.logoutFromAllDevices());
   }
+
+  @Test
+  void itShouldCheckUsernameAvailability() {
+    when(userRepository.existsByUsername("user")).thenReturn(true);
+    assertThat(authService.isUsernameAvailable("user")).isFalse();
+  }
+
+  @Test
+  void itShouldCheckEmailAvailability() {
+    when(userRepository.existsByEmail("available@localhost.com")).thenReturn(false);
+    assertThat(authService.isEmailAvailable("available@localhost.com")).isTrue();
+  }
 }

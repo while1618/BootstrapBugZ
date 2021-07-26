@@ -27,4 +27,8 @@ public interface AuthService {
   void logout(HttpServletRequest request);
 
   void logoutFromAllDevices();
+
+  boolean isUsernameAvailable(String username);
+
+  boolean isEmailAvailable(String email);
 }

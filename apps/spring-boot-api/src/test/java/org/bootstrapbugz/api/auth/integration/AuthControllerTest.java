@@ -104,7 +104,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_invalidToken() throws Exception {
-    String token = jwtService.createToken(10L, JwtPurpose.CONFIRM_REGISTRATION);  // unknown
+    String token = jwtService.createToken(10L, JwtPurpose.CONFIRM_REGISTRATION); // unknown
     var resultActions =
         mockMvc
             .perform(
@@ -201,7 +201,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldResetPassword() throws Exception {
-    String token = jwtService.createToken(5L, JwtPurpose.FORGOT_PASSWORD);  // forUpdate1
+    String token = jwtService.createToken(5L, JwtPurpose.FORGOT_PASSWORD); // forUpdate1
     var resetPasswordRequest =
         new ResetPasswordRequest(
             JwtUtil.removeTokenTypeFromToken(token), "qwerty1234", "qwerty1234");
@@ -216,7 +216,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    String token = jwtService.createToken(6L, JwtPurpose.FORGOT_PASSWORD);  // forUpdate2
+    String token = jwtService.createToken(6L, JwtPurpose.FORGOT_PASSWORD); // forUpdate2
     var resetPasswordRequest =
         new ResetPasswordRequest(
             JwtUtil.removeTokenTypeFromToken(token), "qwerty123", "qwerty1234");
@@ -325,5 +325,27 @@ class AuthControllerTest extends DatabaseContainers {
         .andExpect(status().isNoContent());
     jwtShouldBeInvalid(loginResponse.getToken());
     refreshTokenShouldBeInvalid(loginResponse.getRefreshToken());
+  }
+
+  @Test
+  void itShouldCheckUsernameAvailability() throws Exception {
+    mockMvc.perform(
+        get(Path.AUTH + "/username-availability")
+            .param("username", "user")
+            .contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(content().string("false"));
+  }
+
+  @Test
+  void itShouldCheckEmailAvailability() throws Exception {
+    mockMvc.perform(
+      get(Path.AUTH + "/email-availability")
+        .param("email", "available@localhost.com")
+        .contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+      .andExpect(content().string("true"));
   }
 }
