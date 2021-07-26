@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ForgotPasswordRequest } from '@bootstrapbugz/shared';
 import { Store } from '@ngrx/store';
 import { forgotPassword } from '../+state/auth.actions';
 import { AuthState } from '../+state/auth.reducer';
+import { ForgotPasswordRequest } from '../auth.requests';
 
 @Component({
   selector: 'bootstrapbugz-forgot-password',

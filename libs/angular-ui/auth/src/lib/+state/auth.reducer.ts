@@ -1,4 +1,4 @@
-import { User } from '@bootstrapbugz/shared';
+import { User } from '@bootstrapbugz/angular-ui/user';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as AuthActions from './auth.actions';
 

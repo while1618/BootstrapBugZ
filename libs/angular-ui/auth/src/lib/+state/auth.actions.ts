@@ -1,15 +1,14 @@
+import { User } from '@bootstrapbugz/angular-ui/user';
+import { createAction, props } from '@ngrx/store';
 import {
   ForgotPasswordRequest,
   LoginRequest,
-  LoginResponse,
   RefreshTokenRequest,
-  RefreshTokenResponse,
   ResendConfirmationEmailRequest,
   ResetPasswordRequest,
   SignUpRequest,
-  User,
-} from '@bootstrapbugz/shared';
-import { createAction, props } from '@ngrx/store';
+} from '../auth.requests';
+import { LoginResponse, RefreshTokenResponse } from '../auth.responses';
 
 const LOGIN = '[Auth] Login';
 const LOGIN_SUCCESS = '[Auth] Login Success';

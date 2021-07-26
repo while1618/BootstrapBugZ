@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SignUpRequest } from '@bootstrapbugz/shared';
 import { Store } from '@ngrx/store';
 import { signUp } from '../+state/auth.actions';
 import { AuthState } from '../+state/auth.reducer';
+import { SignUpRequest } from '../auth.requests';
 
 @Component({
   selector: 'bootstrapbugz-sign-up',
