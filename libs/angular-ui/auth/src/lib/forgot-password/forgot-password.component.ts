@@ -12,12 +12,14 @@ import { ForgotPasswordRequest } from '../auth.requests';
 })
 export class ForgotPasswordComponent {
   forgotPasswordForm = new FormGroup({
-    email: new FormControl('', Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
   });
 
   constructor(private store: Store<AuthState>) {}
 
   onSubmit() {
+    if (!this.forgotPasswordForm.valid) return;
+
     const request = this.forgotPasswordForm.value as ForgotPasswordRequest;
     this.store.dispatch(forgotPassword({ request }));
   }
