@@ -3,8 +3,10 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { CustomErrorStateMatcher } from '@bootstrapbugz/angular-ui/shared';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { AuthEffects } from './+state/auth.effects';
@@ -29,5 +31,11 @@ import { SignUpComponent } from './sign-up/sign-up.component';
   ],
   declarations: [LoginComponent, SignUpComponent, ForgotPasswordComponent, ResetPasswordComponent],
   exports: [AngularUiAuthRoutingModule],
+  providers: [
+    {
+      provide: ErrorStateMatcher,
+      useClass: CustomErrorStateMatcher,
+    },
+  ],
 })
 export class AngularUiAuthModule {}

@@ -5,26 +5,60 @@
       <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input matInput type="text" formControlName="firstName" />
+        <mat-error *ngIf="signUpForm.controls.firstName.errors?.required">
+          First name is required.
+        </mat-error>
+        <mat-error *ngIf="signUpForm.controls.firstName.errors?.pattern">
+          Invalid first name.
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Last Name</mat-label>
         <input matInput type="text" formControlName="lastName" />
+        <mat-error *ngIf="signUpForm.controls.lastName.errors?.required">
+          Last name is required.
+        </mat-error>
+        <mat-error *ngIf="signUpForm.controls.lastName.errors?.pattern">
+          Invalid last name.
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Username</mat-label>
         <input matInput type="text" formControlName="username" />
+        <mat-error *ngIf="signUpForm.controls.username.errors?.required">
+          Username is required.
+        </mat-error>
+        <mat-error *ngIf="signUpForm.controls.username.errors?.pattern">
+          Invalid username.
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" />
+        <mat-error *ngIf="signUpForm.controls.email.errors?.required">
+          Email is required.
+        </mat-error>
+        <mat-error *ngIf="signUpForm.controls.email.errors?.email"> Invalid email. </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
         <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="signUpForm.controls.password.errors?.required">
+          Password is required.
+        </mat-error>
+        <mat-error *ngIf="signUpForm.controls.password.errors?.pattern">
+          Invalid password.
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Confirm Password</mat-label>
         <input matInput type="password" formControlName="confirmPassword" />
+        <mat-error *ngIf="signUpForm.controls.confirmPassword.errors?.required">
+          Confirm password is required.
+        </mat-error>
+        <mat-error *ngIf="signUpForm.controls.confirmPassword.errors?.pattern">
+          Invalid confirm password.
+        </mat-error>
       </mat-form-field>
       <button mat-raised-button color="primary" type="submit">Sign Up</button>
     </form>
