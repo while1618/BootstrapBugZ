@@ -5,7 +5,7 @@ import { PASSWORD_REGEX } from '@bootstrapbugz/angular-ui/shared';
 import { Store } from '@ngrx/store';
 import { resetPassword } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
-import { ResetPasswordRequest } from '../../model/auth.requests';
+import { ResetPasswordRequest } from '../../models/auth.requests';
 
 @Component({
   selector: 'bootstrapbugz-reset-password',

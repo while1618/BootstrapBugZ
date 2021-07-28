@@ -4,7 +4,7 @@ import { NAME_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '@bootstrapbugz/angul
 import { Store } from '@ngrx/store';
 import { signUp } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
-import { SignUpRequest } from '../../model/auth.requests';
+import { SignUpRequest } from '../../models/auth.requests';
 
 @Component({
   selector: 'bootstrapbugz-sign-up',
