@@ -3,9 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { PASSWORD_REGEX } from '@bootstrapbugz/angular-ui/shared';
 import { Store } from '@ngrx/store';
-import { resetPassword } from '../+state/auth.actions';
-import { AuthState } from '../+state/auth.reducer';
-import { ResetPasswordRequest } from '../model/auth.requests';
+import { resetPassword } from '../../+state/auth.actions';
+import { AuthState } from '../../+state/auth.reducer';
+import { ResetPasswordRequest } from '../../model/auth.requests';
 
 @Component({
   selector: 'bootstrapbugz-reset-password',

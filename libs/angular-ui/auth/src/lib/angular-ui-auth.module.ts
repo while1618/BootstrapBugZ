@@ -12,10 +12,10 @@ import { StoreModule } from '@ngrx/store';
 import { AuthEffects } from './+state/auth.effects';
 import * as fromAuth from './+state/auth.reducer';
 import { AngularUiAuthRoutingModule } from './angular-ui-auth-routing.module';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { LoginComponent } from './login/login.component';
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { LoginComponent } from './components/login/login.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { SignUpComponent } from './components/sign-up/sign-up.component';
 
 @NgModule({
   imports: [
