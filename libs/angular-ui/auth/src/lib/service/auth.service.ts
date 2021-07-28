@@ -8,8 +8,8 @@ import {
   ResendConfirmationEmailRequest,
   ResetPasswordRequest,
   SignUpRequest,
-} from './auth.requests';
-import { LoginResponse, RefreshTokenResponse } from './auth.responses';
+} from '../model/auth.requests';
+import { LoginResponse, RefreshTokenResponse } from '../model/auth.responses';
 
 @Injectable({
   providedIn: 'root',

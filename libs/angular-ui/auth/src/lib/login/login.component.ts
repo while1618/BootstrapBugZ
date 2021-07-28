@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { login, resendConfirmationEmail } from '../+state/auth.actions';
 import { AuthState } from '../+state/auth.reducer';
-import { LoginRequest, ResendConfirmationEmailRequest } from '../auth.requests';
+import { LoginRequest, ResendConfirmationEmailRequest } from '../model/auth.requests';
 
 @Component({
   selector: 'bootstrapbugz-login',

@@ -7,8 +7,8 @@ import {
   ResendConfirmationEmailRequest,
   ResetPasswordRequest,
   SignUpRequest,
-} from '../auth.requests';
-import { LoginResponse, RefreshTokenResponse } from '../auth.responses';
+} from '../model/auth.requests';
+import { LoginResponse, RefreshTokenResponse } from '../model/auth.responses';
 
 const LOGIN = '[Auth] Login';
 const LOGIN_SUCCESS = '[Auth] Login Success';
