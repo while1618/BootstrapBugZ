@@ -60,6 +60,15 @@
           Invalid confirm password.
         </mat-error>
       </mat-form-field>
+      <mat-error
+        *ngIf="
+          signUpForm.controls.password.touched &&
+          signUpForm.controls.confirmPassword.touched &&
+          signUpForm.hasError('passwordsDoNotMatch')
+        "
+      >
+        Passwords do not match.
+      </mat-error>
       <button mat-raised-button color="primary" type="submit">Sign Up</button>
     </form>
   </mat-card-content>
