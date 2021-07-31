@@ -31,6 +31,9 @@
         <mat-error *ngIf="signUpForm.controls.username.errors?.pattern">
           Invalid username.
         </mat-error>
+        <mat-error *ngIf="signUpForm.controls.username.errors?.nonUniqueUsername">
+          Username taken.
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
