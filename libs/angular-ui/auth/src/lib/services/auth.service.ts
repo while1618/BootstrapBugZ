@@ -56,4 +56,16 @@ export class AuthService {
   logoutFromAllDevices() {
     return this.http.get<void>(`${this.API_URL}/logout-from-all-devices`);
   }
+
+  usernameAvailability(username: string) {
+    return this.http.get<boolean>(`${this.API_URL}/username-availability`, {
+      params: { username },
+    });
+  }
+
+  emailAvailability(email: string) {
+    return this.http.get<boolean>(`${this.API_URL}/email-availability`, {
+      params: { email },
+    });
+  }
 }
