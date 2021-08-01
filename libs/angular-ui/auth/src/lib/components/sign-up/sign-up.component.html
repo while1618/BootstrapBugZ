@@ -42,6 +42,9 @@
           Email is required.
         </mat-error>
         <mat-error *ngIf="signUpForm.controls.email.errors?.email"> Invalid email. </mat-error>
+        <mat-error *ngIf="signUpForm.controls.email.errors?.nonUniqueEmail">
+          Email taken.
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>

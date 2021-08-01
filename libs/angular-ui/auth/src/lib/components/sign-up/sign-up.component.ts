@@ -6,6 +6,7 @@ import { signUp } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
 import { SignUpRequest } from '../../models/auth.requests';
 import { MatchPassword } from '../../validators/match-password';
+import { UniqueEmail } from '../../validators/unique-email';
 import { UniqueUsername } from '../../validators/unique-username';
 
 @Component({
@@ -23,7 +24,11 @@ export class SignUpComponent {
         [Validators.required, Validators.pattern(USERNAME_REGEX)],
         [this.uniqueUsername.validate]
       ),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl(
+        '',
+        [Validators.required, Validators.email],
+        [this.uniqueEmail.validate]
+      ),
       password: new FormControl('', [Validators.required, Validators.pattern(PASSWORD_REGEX)]),
       confirmPassword: new FormControl('', [
         Validators.required,
@@ -38,7 +43,8 @@ export class SignUpComponent {
   constructor(
     private store: Store<AuthState>,
     private matchPassword: MatchPassword,
-    private uniqueUsername: UniqueUsername
+    private uniqueUsername: UniqueUsername,
+    private uniqueEmail: UniqueEmail
   ) {}
 
   onSubmit() {
