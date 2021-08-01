@@ -21,5 +21,8 @@
       "@bootstrapbugz/angular-ui/user": ["libs/angular-ui/user/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp"],
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  }
 }
