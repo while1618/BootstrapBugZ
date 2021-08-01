@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.config;
+package org.bootstrapbugz.api.shared.config;
 
 import java.util.Objects;
 

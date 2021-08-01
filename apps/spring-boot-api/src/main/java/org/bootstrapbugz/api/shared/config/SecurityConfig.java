@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.config;
+package org.bootstrapbugz.api.shared.config;
 
 import org.bootstrapbugz.api.auth.security.JwtAuthenticationFilter;
 import org.bootstrapbugz.api.auth.security.JwtAuthorizationFilter;

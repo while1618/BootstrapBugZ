@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.config;
+package org.bootstrapbugz.api.shared.config;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
