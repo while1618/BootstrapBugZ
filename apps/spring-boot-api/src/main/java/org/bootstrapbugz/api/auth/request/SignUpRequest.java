@@ -5,9 +5,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 import org.bootstrapbugz.api.shared.constants.Regex;
-import org.bootstrapbugz.api.shared.validator.EmailExist;
-import org.bootstrapbugz.api.shared.validator.FieldMatch;
-import org.bootstrapbugz.api.shared.validator.UsernameExist;
+import org.bootstrapbugz.api.auth.validator.EmailExist;
+import org.bootstrapbugz.api.auth.validator.FieldMatch;
+import org.bootstrapbugz.api.auth.validator.UsernameExist;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

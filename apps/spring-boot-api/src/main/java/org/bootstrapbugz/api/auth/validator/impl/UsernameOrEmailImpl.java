@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.shared.validator.impl;
+package org.bootstrapbugz.api.auth.validator.impl;
 
 import java.util.regex.Pattern;
 
@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.bootstrapbugz.api.shared.constants.Regex;
-import org.bootstrapbugz.api.shared.validator.UsernameOrEmail;
+import org.bootstrapbugz.api.auth.validator.UsernameOrEmail;
 
 public class UsernameOrEmailImpl implements ConstraintValidator<UsernameOrEmail, String> {
   public boolean isValid(String usernameOrEmail, ConstraintValidatorContext context) {

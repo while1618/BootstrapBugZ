@@ -1,9 +1,9 @@
-package org.bootstrapbugz.api.shared.validator.impl;
+package org.bootstrapbugz.api.auth.validator.impl;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.bootstrapbugz.api.shared.validator.EmailExist;
+import org.bootstrapbugz.api.auth.validator.EmailExist;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 
 public class EmailExistImpl implements ConstraintValidator<EmailExist, String> {

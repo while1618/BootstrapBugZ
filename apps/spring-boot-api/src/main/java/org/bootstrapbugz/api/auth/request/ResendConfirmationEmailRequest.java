@@ -1,6 +1,6 @@
 package org.bootstrapbugz.api.auth.request;
 
-import org.bootstrapbugz.api.shared.validator.UsernameOrEmail;
+import org.bootstrapbugz.api.auth.validator.UsernameOrEmail;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

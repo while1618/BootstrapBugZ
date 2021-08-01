@@ -3,7 +3,7 @@ package org.bootstrapbugz.api.auth.request;
 import javax.validation.constraints.Pattern;
 
 import org.bootstrapbugz.api.shared.constants.Regex;
-import org.bootstrapbugz.api.shared.validator.UsernameOrEmail;
+import org.bootstrapbugz.api.auth.validator.UsernameOrEmail;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
