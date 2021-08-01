@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { MatchPassword, PASSWORD_REGEX } from '@bootstrapbugz/angular-ui/shared';
+import { PASSWORD_REGEX } from '@bootstrapbugz/angular-ui/shared';
 import { Store } from '@ngrx/store';
 import { resetPassword } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
 import { ResetPasswordRequest } from '../../models/auth.requests';
+import { MatchPassword } from '../../validators/match-password';
 
 @Component({
   selector: 'bootstrapbugz-reset-password',

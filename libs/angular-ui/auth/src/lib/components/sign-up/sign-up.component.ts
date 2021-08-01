@@ -1,15 +1,11 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-  MatchPassword,
-  NAME_REGEX,
-  PASSWORD_REGEX,
-  USERNAME_REGEX,
-} from '@bootstrapbugz/angular-ui/shared';
+import { NAME_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '@bootstrapbugz/angular-ui/shared';
 import { Store } from '@ngrx/store';
 import { signUp } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
 import { SignUpRequest } from '../../models/auth.requests';
+import { MatchPassword } from '../../validators/match-password';
 import { UniqueUsername } from '../../validators/unique-username';
 
 @Component({
