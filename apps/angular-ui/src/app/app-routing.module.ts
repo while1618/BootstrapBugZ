@@ -10,8 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () =>
-      import('@bootstrapbugz/angular-ui/auth').then((mod) => mod.AngularUiAuthModule),
+    loadChildren: () => import('./auth/auth.module').then((mod) => mod.AuthModule),
   },
   {
     path: 'home',

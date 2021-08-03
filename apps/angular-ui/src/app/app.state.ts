@@ -1,4 +1,4 @@
-import { AuthState } from '@bootstrapbugz/angular-ui/auth';
+import { AuthState } from './auth/+state/auth.reducer';
 
 export interface AppState {
   auth: AuthState;

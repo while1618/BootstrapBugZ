@@ -2,7 +2,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AngularUiSharedModule } from '@bootstrapbugz/angular-ui/shared';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -12,13 +11,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent, LandingPageComponent, HomeComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
-    AngularUiSharedModule,
+    SharedModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot(),
     BrowserAnimationsModule,
