@@ -12,11 +12,18 @@ import * as fromAuth from './+state/auth.reducer';
 import { AuthRoutingModule } from './auth-routing.module';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { LoginComponent } from './components/login/login.component';
+import { LogoutComponent } from './components/logout/logout.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 
 @NgModule({
-  declarations: [LoginComponent, SignUpComponent, ForgotPasswordComponent, ResetPasswordComponent],
+  declarations: [
+    LoginComponent,
+    SignUpComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    LogoutComponent,
+  ],
   imports: [
     CommonModule,
     StoreModule.forFeature(fromAuth.AUTH_FEATURE_KEY, fromAuth.reducer),

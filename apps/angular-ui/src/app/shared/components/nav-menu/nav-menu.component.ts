@@ -1,8 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { AuthState } from '../../../auth/+state/auth.reducer';
 
 @Component({
   selector: 'bootstrapbugz-nav-menu',
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.scss'],
 })
-export class NavMenuComponent {}
+export class NavMenuComponent implements OnInit {
+  isAuthenticated$: Observable<boolean>;
+
+  constructor(private store: Store<AuthState>) {}
+
+  ngOnInit(): void {
+    this.isAuthenticated$ = this.store.select((store) => store.isAuthenticated);
+  }
+}
