@@ -288,28 +288,28 @@ class AuthControllerTest extends DatabaseContainers {
 
   private void jwtShouldBeInvalid(String token) throws Exception {
     var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "Forbidden");
+        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Unauthorized");
     var resultActions =
         mockMvc
             .perform(
                 get(Path.USERS + "/{username}", "user")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(AuthUtil.AUTH_HEADER, token))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isUnauthorized());
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   private void refreshTokenShouldBeInvalid(String refreshToken) throws Exception {
     var refreshTokenRequest = new RefreshTokenRequest(refreshToken);
     var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "Invalid token.");
+        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Invalid token.");
     var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/refresh-token")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(refreshTokenRequest)))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isUnauthorized());
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 

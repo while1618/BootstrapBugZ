@@ -24,9 +24,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     try {
       final var errorResponse =
           new ErrorResponse(
-              HttpStatus.FORBIDDEN, ErrorDomain.AUTH, HttpStatus.FORBIDDEN.getReasonPhrase());
+              HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, HttpStatus.UNAUTHORIZED.getReasonPhrase());
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-      response.setStatus(HttpStatus.FORBIDDEN.value());
+      response.setStatus(HttpStatus.UNAUTHORIZED.value());
       response.getOutputStream().println(errorResponse.toString());
     } catch (IOException ex) {
       log.error(ex.getMessage());

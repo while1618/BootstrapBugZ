@@ -4,14 +4,11 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
+import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -74,25 +71,19 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.FORBIDDEN);
   }
 
-  @ExceptionHandler({
-    JWTCreationException.class,
-    JWTVerificationException.class,
-    JWTDecodeException.class,
-    IllegalArgumentException.class
-  })
-  public ResponseEntity<Object> jwt() {
-    return createErrorResponseEntity(
-        ErrorDomain.AUTH, HttpStatus.FORBIDDEN.getReasonPhrase(), HttpStatus.FORBIDDEN);
+  @ExceptionHandler({AccessDeniedException.class})
+  public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+    return createErrorResponseEntity(ErrorDomain.AUTH, ex.getMessage(), HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler({UnauthorizedException.class})
+  public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
+    return createErrorResponseEntity(ErrorDomain.AUTH, ex.getMessage(), HttpStatus.UNAUTHORIZED);
   }
 
   @ExceptionHandler({Exception.class})
   public ResponseEntity<Object> exception(Exception ex) {
     return createErrorResponseEntity(ErrorDomain.GLOBAL, ex.getMessage(), HttpStatus.BAD_REQUEST);
-  }
-
-  @ExceptionHandler({AccessDeniedException.class})
-  public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
-    return createErrorResponseEntity(ErrorDomain.AUTH, ex.getMessage(), HttpStatus.UNAUTHORIZED);
   }
 
   @Override

@@ -23,6 +23,7 @@ import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
+import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,19 +82,19 @@ class JwtServiceTest {
   }
 
   @Test
-  void checkTokenShouldThrowForbidden_tokenInvalidated() {
+  void checkTokenShouldThrowUnauthorized_tokenInvalidated() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
             jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES));
     when(jwtBlacklistRepository.existsById(token)).thenReturn(true);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES))
-        .isInstanceOf(ForbiddenException.class)
+        .isInstanceOf(UnauthorizedException.class)
         .hasMessage("Invalid token.");
   }
 
   @Test
-  void checkTokenShouldThrowForbidden_userInBlacklist() {
+  void checkTokenShouldThrowUnauthorized_userInBlacklist() {
     String token =
         JwtUtil.removeTokenTypeFromToken(
             jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES));
@@ -102,7 +103,7 @@ class JwtServiceTest {
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES))
-        .isInstanceOf(ForbiddenException.class)
+        .isInstanceOf(UnauthorizedException.class)
         .hasMessage("Invalid token.");
   }
 
@@ -158,13 +159,13 @@ class JwtServiceTest {
   }
 
   @Test
-  void checkRefreshTokenShouldThrowForbidden_refreshTokenNotInRedis() {
+  void checkRefreshTokenShouldThrowUnauthorized_refreshTokenNotInRedis() {
     String refreshToken =
         JwtUtil.removeTokenTypeFromToken(jwtService.createRefreshToken(1L, "ip1"));
     when(refreshTokenRepository.existsById(refreshToken)).thenReturn(false);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkRefreshToken(refreshToken))
-        .isInstanceOf(ForbiddenException.class)
+        .isInstanceOf(UnauthorizedException.class)
         .hasMessage("Invalid token.");
   }
 

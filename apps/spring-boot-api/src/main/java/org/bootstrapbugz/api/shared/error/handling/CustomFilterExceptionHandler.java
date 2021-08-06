@@ -17,12 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 public final class CustomFilterExceptionHandler {
   private CustomFilterExceptionHandler() {}
 
-  public static void handleException(HttpServletResponse response, String message) {
+  public static void handleException(HttpServletResponse response, String message, HttpStatus status) {
     try {
-      final var errorResponse =
-          new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, message);
+      final var errorResponse = new ErrorResponse(status, ErrorDomain.AUTH, message);
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-      response.setStatus(HttpStatus.UNAUTHORIZED.value());
+      response.setStatus(status.value());
       response.getOutputStream().println(errorResponse.toString());
     } catch (IOException e) {
       log.error(e.getMessage());

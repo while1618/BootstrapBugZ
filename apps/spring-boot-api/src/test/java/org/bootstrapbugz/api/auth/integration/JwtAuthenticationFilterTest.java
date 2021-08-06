@@ -41,17 +41,11 @@ class JwtAuthenticationFilterTest extends DatabaseContainers {
     assertThat(loginResponse.getRefreshToken()).isNotNull();
   }
 
-  @ParameterizedTest
-  @CsvSource({
-    "wrong, Wrong username or password.",
-    "locked, User locked.",
-    "notActivated, User not activated.",
-  })
-  void loginShouldThrowUnauthorized_wrongCredentialsUserLockedUserNotActivated(
-      String username, String message) throws Exception {
-    var loginRequest = new LoginRequest(username, "qwerty123");
+  @Test
+  void loginShouldThrowUnauthorized_wrongCredentials() throws Exception {
+    var loginRequest = new LoginRequest("wrong", "qwerty123");
     var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, message);
+        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Wrong username or password.");
     var resultActions =
         mockMvc
             .perform(
@@ -59,6 +53,26 @@ class JwtAuthenticationFilterTest extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isUnauthorized());
+    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "locked, User locked.",
+    "notActivated, User not activated.",
+  })
+  void loginShouldThrowForbidden_userLockedAndUserNotActivated(
+      String username, String message) throws Exception {
+    var loginRequest = new LoginRequest(username, "qwerty123");
+    var expectedErrorResponse =
+        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, message);
+    var resultActions =
+        mockMvc
+            .perform(
+                post(Path.AUTH + "/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(loginRequest)))
+            .andExpect(status().isForbidden());
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 }

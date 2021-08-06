@@ -21,6 +21,7 @@ import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -59,15 +60,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
               loginRequest.getUsernameOrEmail(), loginRequest.getPassword(), new ArrayList<>());
       return authenticationManager.authenticate(authToken);
     } catch (IOException | AuthenticationException | ResourceNotFoundException e) {
-      CustomFilterExceptionHandler.handleException(response, getMessageBasedOnException(e));
+      handleException(response, e);
     }
     return null;
   }
 
-  private String getMessageBasedOnException(Exception e) {
-    if (e instanceof DisabledException) return messageService.getMessage("user.notActivated");
-    else if (e instanceof LockedException) return messageService.getMessage("user.locked");
-    else return messageService.getMessage("login.invalid");
+  private void handleException(HttpServletResponse response, Exception e) {
+    if (e instanceof DisabledException)
+      CustomFilterExceptionHandler.handleException(
+          response, messageService.getMessage("user.notActivated"), HttpStatus.FORBIDDEN);
+    else if (e instanceof LockedException)
+      CustomFilterExceptionHandler.handleException(
+          response, messageService.getMessage("user.locked"), HttpStatus.FORBIDDEN);
+    else
+      CustomFilterExceptionHandler.handleException(
+          response, messageService.getMessage("login.invalid"), HttpStatus.UNAUTHORIZED);
   }
 
   @Override

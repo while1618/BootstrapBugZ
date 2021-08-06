@@ -31,7 +31,7 @@ public class AdminServiceImpl implements AdminService {
   public List<UserResponse> findAllUsers() {
     return userRepository.findAllWithRoles().stream()
         .map(userMapper::userToUserResponse)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   @Override
