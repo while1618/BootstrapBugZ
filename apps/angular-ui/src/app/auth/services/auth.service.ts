@@ -68,4 +68,8 @@ export class AuthService {
       params: { email },
     });
   }
+
+  getToken() {
+    return localStorage.getItem('token');
+  }
 }
