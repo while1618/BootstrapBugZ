@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
       {
         path: 'logout',
         component: LogoutComponent,
+        canActivate: [AuthGuard],
       },
       {
         path: 'sign-up',
