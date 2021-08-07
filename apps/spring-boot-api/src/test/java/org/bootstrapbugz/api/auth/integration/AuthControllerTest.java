@@ -20,7 +20,6 @@ import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.response.RefreshTokenResponse;
 import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -97,7 +96,7 @@ class AuthControllerTest extends DatabaseContainers {
     mockMvc
         .perform(
             get(Path.AUTH + "/confirm-registration")
-                .param("token", JwtUtil.removeTokenTypeFromToken(token))
+                .param("token", token)
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent());
   }
@@ -109,7 +108,7 @@ class AuthControllerTest extends DatabaseContainers {
         mockMvc
             .perform(
                 get(Path.AUTH + "/confirm-registration")
-                    .param("token", JwtUtil.removeTokenTypeFromToken(token))
+                    .param("token", token)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     var expectedErrorResponse =
@@ -124,7 +123,7 @@ class AuthControllerTest extends DatabaseContainers {
         mockMvc
             .perform(
                 get(Path.AUTH + "/confirm-registration")
-                    .param("token", JwtUtil.removeTokenTypeFromToken(token))
+                    .param("token", token)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     var expectedErrorResponse =
@@ -202,9 +201,7 @@ class AuthControllerTest extends DatabaseContainers {
   @Test
   void itShouldResetPassword() throws Exception {
     String token = jwtService.createToken(5L, JwtPurpose.FORGOT_PASSWORD); // forUpdate1
-    var resetPasswordRequest =
-        new ResetPasswordRequest(
-            JwtUtil.removeTokenTypeFromToken(token), "qwerty1234", "qwerty1234");
+    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
             put(Path.AUTH + "/reset-password")
@@ -217,9 +214,7 @@ class AuthControllerTest extends DatabaseContainers {
   @Test
   void resetPasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
     String token = jwtService.createToken(6L, JwtPurpose.FORGOT_PASSWORD); // forUpdate2
-    var resetPasswordRequest =
-        new ResetPasswordRequest(
-            JwtUtil.removeTokenTypeFromToken(token), "qwerty123", "qwerty1234");
+    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty123", "qwerty1234");
     var resultActions =
         mockMvc
             .perform(
@@ -235,9 +230,7 @@ class AuthControllerTest extends DatabaseContainers {
   @Test
   void resetPasswordShouldThrowForbidden_invalidToken() throws Exception {
     String token = jwtService.createToken(10L, JwtPurpose.FORGOT_PASSWORD); // unknown
-    var resetPasswordRequest =
-        new ResetPasswordRequest(
-            JwtUtil.removeTokenTypeFromToken(token), "qwerty1234", "qwerty1234");
+    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     var resultActions =
         mockMvc
             .perform(
@@ -329,23 +322,25 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldCheckUsernameAvailability() throws Exception {
-    mockMvc.perform(
-        get(Path.AUTH + "/username-availability")
-            .param("username", "user")
-            .contentType(MediaType.APPLICATION_JSON))
-      .andExpect(status().isOk())
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-      .andExpect(content().string("false"));
+    mockMvc
+        .perform(
+            get(Path.AUTH + "/username-availability")
+                .param("username", "user")
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string("false"));
   }
 
   @Test
   void itShouldCheckEmailAvailability() throws Exception {
-    mockMvc.perform(
-      get(Path.AUTH + "/email-availability")
-        .param("email", "available@localhost.com")
-        .contentType(MediaType.APPLICATION_JSON))
-      .andExpect(status().isOk())
-      .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-      .andExpect(content().string("true"));
+    mockMvc
+        .perform(
+            get(Path.AUTH + "/email-availability")
+                .param("email", "available@localhost.com")
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string("true"));
   }
 }

@@ -68,8 +68,7 @@ public class JwtServiceImpl implements JwtService {
   private void isInUserBlacklist(String token) {
     final var userInBlacklist = userBlacklistRepository.findById(JwtUtil.getUserId(token));
     if (userInBlacklist.isPresent()
-        && Instant.parse(JwtUtil.getIssuedAt(token))
-            .isBefore(userInBlacklist.get().getUpdatedAt()))
+        && Instant.parse(JwtUtil.getIssuedAt(token)).isBefore(userInBlacklist.get().getUpdatedAt()))
       throw new UnauthorizedException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
   }
 
@@ -89,11 +88,7 @@ public class JwtServiceImpl implements JwtService {
         JwtUtil.createToken(
             userId, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
     refreshTokenRepository.save(
-        new RefreshToken(
-            JwtUtil.removeTokenTypeFromToken(refreshToken),
-            userId,
-            ipAddress,
-            refreshTokenExpirationTimeInSecs));
+        new RefreshToken(refreshToken, userId, ipAddress, refreshTokenExpirationTimeInSecs));
     return refreshToken;
   }
 
@@ -107,7 +102,7 @@ public class JwtServiceImpl implements JwtService {
   @Override
   public String findRefreshToken(Long userId, String ipAddress) {
     final var refreshToken = refreshTokenRepository.findByUserIdAndIpAddress(userId, ipAddress);
-    return refreshToken.map(token -> JwtUtil.TOKEN_TYPE + token.getToken()).orElse(null);
+    return refreshToken.map(RefreshToken::getToken).orElse(null);
   }
 
   @Override

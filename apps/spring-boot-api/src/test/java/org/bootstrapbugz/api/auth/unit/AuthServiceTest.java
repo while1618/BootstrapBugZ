@@ -23,7 +23,6 @@ import org.bootstrapbugz.api.auth.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
@@ -97,12 +96,11 @@ class AuthServiceTest {
     var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
     String token = jwtService.createRefreshToken(1L, "ip1");
-    when(refreshTokenRepository.existsById(JwtUtil.removeTokenTypeFromToken(token)))
-        .thenReturn(true);
+    when(refreshTokenRepository.existsById(token)).thenReturn(true);
     var refreshTokenRequest = new RefreshTokenRequest(token);
     var refreshTokenResponse = authService.refreshToken(refreshTokenRequest, request);
-    assertThat(refreshTokenResponse.getToken()).isNotNull().startsWith(JwtUtil.TOKEN_TYPE);
-    assertThat(refreshTokenResponse.getRefreshToken()).isNotNull().startsWith(JwtUtil.TOKEN_TYPE);
+    assertThat(refreshTokenResponse.getToken()).isNotNull();
+    assertThat(refreshTokenResponse.getRefreshToken()).isNotNull();
   }
 
   @Test
@@ -121,9 +119,7 @@ class AuthServiceTest {
   void itShouldConfirmRegistration() {
     var expectedUser =
         new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
-    String token =
-        JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION));
+    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.confirmRegistration(token);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
@@ -132,9 +128,7 @@ class AuthServiceTest {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_invalid() {
-    String token =
-        JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION));
+    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.confirmRegistration(token))
         .isInstanceOf(ForbiddenException.class)
@@ -143,9 +137,7 @@ class AuthServiceTest {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() {
-    String token =
-        JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION));
+    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     user.setActivated(true);
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -201,9 +193,7 @@ class AuthServiceTest {
 
   @Test
   void itShouldResetPassword() {
-    String token =
-        JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken(1L, JwtPurpose.FORGOT_PASSWORD));
+    String token = jwtService.createToken(1L, JwtPurpose.FORGOT_PASSWORD);
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.resetPassword(resetPasswordRequest);
@@ -216,9 +206,7 @@ class AuthServiceTest {
 
   @Test
   void resetPasswordShouldThrowForbidden_invalid() {
-    String token =
-        JwtUtil.removeTokenTypeFromToken(
-            jwtService.createToken(1L, JwtPurpose.FORGOT_PASSWORD));
+    String token = jwtService.createToken(1L, JwtPurpose.FORGOT_PASSWORD);
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.resetPassword(resetPasswordRequest))

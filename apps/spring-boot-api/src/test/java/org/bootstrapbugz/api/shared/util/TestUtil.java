@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
+import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.user.model.User;
@@ -46,8 +47,11 @@ public class TestUtil {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isOk());
-    return objectMapper.readValue(
-        resultActions.andReturn().getResponse().getContentAsString(), LoginResponse.class);
+    var loginResponse =
+        objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsString(), LoginResponse.class);
+    loginResponse.setToken(JwtUtil.TOKEN_TYPE + loginResponse.getToken());
+    return loginResponse;
   }
 
   public static void setAuth(Authentication auth, SecurityContext securityContext, User user) {

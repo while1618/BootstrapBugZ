@@ -2,7 +2,6 @@ package org.bootstrapbugz.api.auth.event;
 
 import java.io.Serial;
 
-import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.context.ApplicationEvent;
@@ -19,7 +18,7 @@ public class OnSendJwtEmail extends ApplicationEvent {
   public OnSendJwtEmail(User user, String token, JwtPurpose purpose) {
     super(user);
     this.user = user;
-    this.token = JwtUtil.removeTokenTypeFromToken(token);
+    this.token = token;
     this.purpose = purpose;
   }
 }

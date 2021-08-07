@@ -19,8 +19,7 @@ public class JwtUtil {
   }
 
   public static String createToken(Long userId, int expirationTimeInSecs, String secret) {
-    return TOKEN_TYPE
-        + JWT.create()
+    return JWT.create()
             .withClaim("userId", userId)
             .withClaim("issuedAt", Instant.now().toString())
             .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeInSecs * 1000L))

@@ -108,8 +108,7 @@ class UserServiceTest {
     var updateUserRequest = new UpdateUserRequest("User", "User", "user", "user@user.com");
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(false);
-    when(jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION))
-        .thenReturn(JwtUtil.TOKEN_TYPE + "token");
+    when(jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION)).thenReturn("token");
     userService.update(updateUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
