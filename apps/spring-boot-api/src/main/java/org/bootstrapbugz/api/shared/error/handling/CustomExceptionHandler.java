@@ -57,17 +57,17 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({ResourceNotFoundException.class})
-  public ResponseEntity<Object> resourceNotFound(ResourceNotFoundException ex) {
+  public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
     return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler({BadRequestException.class})
-  public ResponseEntity<Object> badRequest(BadRequestException ex) {
+  public ResponseEntity<Object> handleBadRequestException(BadRequestException ex) {
     return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler({ForbiddenException.class})
-  public ResponseEntity<Object> forbidden(ForbiddenException ex) {
+  public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex) {
     return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.FORBIDDEN);
   }
 
@@ -82,8 +82,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({Exception.class})
-  public ResponseEntity<Object> exception(Exception ex) {
-    return createErrorResponseEntity(ErrorDomain.GLOBAL, ex.getMessage(), HttpStatus.BAD_REQUEST);
+  public ResponseEntity<Object> handleGlobalException(Exception ex) {
+    return createErrorResponseEntity(
+        ErrorDomain.GLOBAL, ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @Override
