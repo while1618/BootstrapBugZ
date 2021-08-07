@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.auth.request;
 
 import javax.validation.constraints.NotBlank;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

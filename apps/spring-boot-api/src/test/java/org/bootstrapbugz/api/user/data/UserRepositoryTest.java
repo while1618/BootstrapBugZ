@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.Collections;
 import java.util.Set;
-
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -20,8 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryTest extends DatabaseContainers {
-  @Autowired private UserRepository userRepository;
-
   private final User expectedUser =
       new User(
           2L,
@@ -33,6 +30,8 @@ class UserRepositoryTest extends DatabaseContainers {
           true,
           true,
           Collections.singleton(new Role(RoleName.USER)));
+
+  @Autowired private UserRepository userRepository;
 
   @Test
   void itShouldFindAllUsersWithRoles() {

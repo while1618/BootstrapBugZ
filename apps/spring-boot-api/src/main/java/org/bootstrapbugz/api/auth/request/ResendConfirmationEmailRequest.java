@@ -1,11 +1,10 @@
 package org.bootstrapbugz.api.auth.request;
 
-import org.bootstrapbugz.api.auth.validator.UsernameOrEmail;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bootstrapbugz.api.auth.validator.UsernameOrEmail;
 
 @Getter
 @Setter

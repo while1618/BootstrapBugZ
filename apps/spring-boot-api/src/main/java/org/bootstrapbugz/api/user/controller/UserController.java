@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.user.controller;
 
 import javax.validation.Valid;
-
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.request.UpdateUserRequest;

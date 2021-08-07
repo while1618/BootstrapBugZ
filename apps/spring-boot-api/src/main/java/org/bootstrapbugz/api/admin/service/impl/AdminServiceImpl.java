@@ -2,7 +2,6 @@ package org.bootstrapbugz.api.admin.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
@@ -29,9 +28,7 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public List<UserResponse> findAllUsers() {
-    return userRepository.findAllWithRoles().stream()
-        .map(userMapper::userToUserResponse)
-        .toList();
+    return userRepository.findAllWithRoles().stream().map(userMapper::userToUserResponse).toList();
   }
 
   @Override

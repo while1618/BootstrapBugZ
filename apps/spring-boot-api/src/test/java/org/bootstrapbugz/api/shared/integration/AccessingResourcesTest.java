@@ -5,10 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Set;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.util.Set;
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.auth.request.LoginRequest;
@@ -38,13 +36,13 @@ import org.springframework.test.web.servlet.MockMvc;
 @ActiveProfiles("test")
 @SpringBootTest
 class AccessingResourcesTest extends DatabaseContainers {
-  @Autowired private MockMvc mockMvc;
-  @Autowired private ObjectMapper objectMapper;
-
   private final ErrorResponse expectedForbiddenResponse =
       new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "Access is denied");
   private final ErrorResponse expectedUnauthorizedResponse =
       new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Unauthorized");
+
+  @Autowired private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
 
   @Test
   void findUserByUsernameShouldThrowUnauthorized_userNotLogged() throws Exception {

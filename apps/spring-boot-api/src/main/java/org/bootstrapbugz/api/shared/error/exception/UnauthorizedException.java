@@ -1,11 +1,9 @@
 package org.bootstrapbugz.api.shared.error.exception;
 
 import java.io.Serial;
-
+import lombok.Getter;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.springframework.http.HttpStatus;
-
-import lombok.Getter;
 
 @Getter
 public class UnauthorizedException extends RuntimeException {

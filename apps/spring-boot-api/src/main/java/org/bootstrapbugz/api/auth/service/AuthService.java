@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.auth.service;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.request.ResendConfirmationEmailRequest;

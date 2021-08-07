@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import java.util.Set;
-
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.redis.repository.JwtBlacklistRepository;
 import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;

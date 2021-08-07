@@ -1,15 +1,12 @@
 package org.bootstrapbugz.api.auth.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.auth.response.LoginResponse;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
@@ -97,8 +94,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
   private String findRefreshToken(Long userId, String ipAddress) {
     final String refreshToken = jwtService.findRefreshToken(userId, ipAddress);
-    if (refreshToken == null)
-      return jwtService.createRefreshToken(userId, ipAddress);
+    if (refreshToken == null) return jwtService.createRefreshToken(userId, ipAddress);
     return refreshToken;
   }
 

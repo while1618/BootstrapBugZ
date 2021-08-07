@@ -1,9 +1,7 @@
 package org.bootstrapbugz.api.shared.generic.crud.request;
 
 import java.util.Set;
-
 import javax.validation.constraints.NotEmpty;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

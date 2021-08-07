@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import java.time.Instant;
-
 import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.redis.model.UserBlacklist;
@@ -19,19 +18,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JwtServiceImpl implements JwtService {
-  @Value("${jwt.expiration-time-in-secs}")
-  private int expirationTimeInSecs; // 15min
-
-  @Value("${refresh-token.expiration-time-in-secs}")
-  private int refreshTokenExpirationTimeInSecs; // 7 days
-
-  @Value("${jwt.server-secret}")
-  private String serverSecret;
-
   private final JwtBlacklistRepository jwtBlacklistRepository;
   private final UserBlacklistRepository userBlacklistRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final MessageService messageService;
+
+  @Value("${jwt.expiration-time-in-secs}")
+  private int expirationTimeInSecs; // 15min
+  @Value("${refresh-token.expiration-time-in-secs}")
+  private int refreshTokenExpirationTimeInSecs; // 7 days
+  @Value("${jwt.server-secret}")
+  private String serverSecret;
 
   public JwtServiceImpl(
       JwtBlacklistRepository jwtBlacklistRepository,

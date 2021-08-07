@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.impl.AdminServiceImpl;
@@ -34,14 +33,6 @@ import org.springframework.security.core.context.SecurityContext;
 
 @ExtendWith(MockitoExtension.class)
 class AdminServiceTest {
-  @Mock private UserRepository userRepository;
-  @Mock private JwtService jwtService;
-  @Spy private UserMapperImpl userMapper;
-  @Mock private Authentication auth;
-  @Mock private SecurityContext securityContext;
-
-  @InjectMocks private AdminServiceImpl adminService;
-
   private final Set<Role> userRoles = Set.of(new Role(RoleName.USER));
   private final Set<Role> adminRoles = Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN));
   private final User admin =
@@ -51,6 +42,12 @@ class AdminServiceTest {
   private final User restricted =
       new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, false, false, userRoles);
 
+  @Mock private UserRepository userRepository;
+  @Mock private JwtService jwtService;
+  @Spy private UserMapperImpl userMapper;
+  @Mock private Authentication auth;
+  @Mock private SecurityContext securityContext;
+  @InjectMocks private AdminServiceImpl adminService;
   @Captor private ArgumentCaptor<Iterable<User>> userArgumentCaptor;
 
   @Test

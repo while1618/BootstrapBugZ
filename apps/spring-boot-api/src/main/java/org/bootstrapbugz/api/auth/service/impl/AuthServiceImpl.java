@@ -1,9 +1,7 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import java.util.Collections;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.request.RefreshTokenRequest;
@@ -71,8 +69,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public UserResponse signUp(SignUpRequest signUpRequest) {
     final var user = createUser(signUpRequest);
-    final String token =
-        jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
+    final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
     return userMapper.userToUserResponse(user);
   }
@@ -116,8 +113,7 @@ public class AuthServiceImpl implements AuthService {
                         messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
     if (user.isActivated())
       throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
-    final String token =
-        jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
+    final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
 

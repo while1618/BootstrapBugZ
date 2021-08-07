@@ -1,21 +1,18 @@
 package org.bootstrapbugz.api.shared.error.response;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
-
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
-import org.springframework.http.HttpStatus;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.bootstrapbugz.api.shared.error.ErrorDomain;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public class ErrorResponse {

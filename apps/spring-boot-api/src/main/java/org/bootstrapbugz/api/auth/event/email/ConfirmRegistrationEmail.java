@@ -1,17 +1,14 @@
 package org.bootstrapbugz.api.auth.event.email;
 
+import com.google.common.io.Files;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-
-import com.google.common.io.Files;
-
+import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ConfirmRegistrationEmail implements JwtEmail {

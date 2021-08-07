@@ -22,12 +22,12 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
   @Transactional
   public UserDetails loadUserByUserId(Long userId) {
     final var user =
-      userRepository
-        .findById(userId)
-        .orElseThrow(
-          () ->
-            new ResourceNotFoundException(
-              messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
+        userRepository
+            .findById(userId)
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
     return UserPrincipal.create(user);
   }
 

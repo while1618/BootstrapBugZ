@@ -1,9 +1,7 @@
 package org.bootstrapbugz.api.shared.error.handling;
 
 import java.util.Objects;
-
 import javax.annotation.Nonnull;
-
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;

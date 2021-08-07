@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.bootstrapbugz.api.auth.request.LoginRequest;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -61,11 +60,10 @@ class JwtAuthenticationFilterTest extends DatabaseContainers {
     "locked, User locked.",
     "notActivated, User not activated.",
   })
-  void loginShouldThrowForbidden_userLockedAndUserNotActivated(
-      String username, String message) throws Exception {
+  void loginShouldThrowForbidden_userLockedAndUserNotActivated(String username, String message)
+      throws Exception {
     var loginRequest = new LoginRequest(username, "qwerty123");
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, message);
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, message);
     var resultActions =
         mockMvc
             .perform(

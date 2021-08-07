@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.admin.service;
 
 import java.util.List;
-
 import org.bootstrapbugz.api.admin.request.AdminRequest;
 import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.user.response.UserResponse;

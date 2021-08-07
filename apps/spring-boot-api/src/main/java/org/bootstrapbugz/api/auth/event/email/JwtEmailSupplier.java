@@ -3,7 +3,6 @@ package org.bootstrapbugz.api.auth.event.email;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Supplier;
-
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 
 public class JwtEmailSupplier {

@@ -3,7 +3,6 @@ package org.bootstrapbugz.api.auth.data;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
@@ -24,11 +23,11 @@ import org.springframework.test.context.ActiveProfiles;
 @TestInstance(Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class RefreshTokenRepositoryTest extends DatabaseContainers {
-  @Autowired private RefreshTokenRepository refreshTokenRepository;
-
   private final RefreshToken first = new RefreshToken("token123", 22L, "ip1", 1000);
   private final RefreshToken second = new RefreshToken("token321", 22L, "ip2", 1000);
   private final RefreshToken third = new RefreshToken("token213", 23L, "ip3", 1000);
+
+  @Autowired private RefreshTokenRepository refreshTokenRepository;
 
   @BeforeAll
   void setUp() {
@@ -42,8 +41,7 @@ class RefreshTokenRepositoryTest extends DatabaseContainers {
 
   @Test
   void itShouldFindByUserIdAndIpAddress() {
-    var refreshToken =
-        refreshTokenRepository.findByUserIdAndIpAddress(23L, "ip3").orElseThrow();
+    var refreshToken = refreshTokenRepository.findByUserIdAndIpAddress(23L, "ip3").orElseThrow();
     assertThat(refreshToken).isEqualTo(third);
   }
 
