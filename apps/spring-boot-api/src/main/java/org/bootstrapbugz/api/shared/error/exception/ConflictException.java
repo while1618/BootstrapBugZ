@@ -8,14 +8,14 @@ import org.springframework.http.HttpStatus;
 import lombok.Getter;
 
 @Getter
-public class ForbiddenException extends RuntimeException {
-  @Serial private static final long serialVersionUID = 6438756026918720197L;
+public class ConflictException extends RuntimeException {
+  @Serial private static final long serialVersionUID = 8841655774286844538L;
   private final ErrorDomain domain;
   private final HttpStatus status;
 
-  public ForbiddenException(String message, ErrorDomain domain) {
+  public ConflictException(String message, ErrorDomain domain) {
     super(message);
     this.domain = domain;
-    this.status = HttpStatus.FORBIDDEN;
+    this.status = HttpStatus.CONFLICT;
   }
 }

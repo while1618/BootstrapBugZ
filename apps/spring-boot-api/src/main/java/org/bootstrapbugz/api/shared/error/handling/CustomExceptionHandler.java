@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
+import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
@@ -56,19 +57,19 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
   }
 
-  @ExceptionHandler({ResourceNotFoundException.class})
-  public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
-    return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.NOT_FOUND);
-  }
-
   @ExceptionHandler({BadRequestException.class})
   public ResponseEntity<Object> handleBadRequestException(BadRequestException ex) {
-    return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), ex.getStatus());
+  }
+
+  @ExceptionHandler({UnauthorizedException.class})
+  public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
+    return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), ex.getStatus());
   }
 
   @ExceptionHandler({ForbiddenException.class})
   public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex) {
-    return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), HttpStatus.FORBIDDEN);
+    return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), ex.getStatus());
   }
 
   @ExceptionHandler({AccessDeniedException.class})
@@ -76,9 +77,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return createErrorResponseEntity(ErrorDomain.AUTH, ex.getMessage(), HttpStatus.FORBIDDEN);
   }
 
-  @ExceptionHandler({UnauthorizedException.class})
-  public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
-    return createErrorResponseEntity(ErrorDomain.AUTH, ex.getMessage(), HttpStatus.UNAUTHORIZED);
+  @ExceptionHandler({ResourceNotFoundException.class})
+  public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
+    return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), ex.getStatus());
+  }
+
+  @ExceptionHandler({ConflictException.class})
+  public ResponseEntity<Object> handleConflictException(ConflictException ex) {
+    return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), ex.getStatus());
   }
 
   @ExceptionHandler({Exception.class})
