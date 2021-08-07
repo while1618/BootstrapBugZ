@@ -6,6 +6,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
+import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService {
   private void tryToSetUsername(User user, String username) {
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
-      throw new BadRequestException(messageService.getMessage("username.exists"), ErrorDomain.USER);
+      throw new ConflictException(messageService.getMessage("username.exists"), ErrorDomain.USER);
 
     user.setUsername(username);
   }
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
   private void tryToSetEmail(User user, String email) {
     if (user.getEmail().equals(email)) return;
     if (userRepository.existsByEmail(email))
-      throw new BadRequestException(messageService.getMessage("email.exists"), ErrorDomain.USER);
+      throw new ConflictException(messageService.getMessage("email.exists"), ErrorDomain.USER);
 
     user.setEmail(email);
     user.setActivated(false);

@@ -14,6 +14,7 @@ import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
+import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.shared.util.TestUtil;
@@ -130,7 +131,7 @@ class UserServiceTest {
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> userService.update(updateUserRequest))
-        .isInstanceOf(BadRequestException.class)
+        .isInstanceOf(ConflictException.class)
         .hasMessage("Username already exists.");
   }
 
@@ -141,7 +142,7 @@ class UserServiceTest {
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> userService.update(updateUserRequest))
-        .isInstanceOf(BadRequestException.class)
+        .isInstanceOf(ConflictException.class)
         .hasMessage("Email already exists.");
   }
 

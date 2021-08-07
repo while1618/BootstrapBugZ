@@ -153,9 +153,9 @@ class UserControllerTest extends DatabaseContainers {
         new UpdateUserRequest("Updated", "Updated", "user", "forUpdate2@localhost.com");
     var resultActions =
         performUpdateUser(updateUserRequest, loginResponse.getToken())
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isConflict());
     var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.BAD_REQUEST, ErrorDomain.USER, "Username already exists.");
+        new ErrorResponse(HttpStatus.CONFLICT, ErrorDomain.USER, "Username already exists.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -167,9 +167,9 @@ class UserControllerTest extends DatabaseContainers {
         new UpdateUserRequest("Updated", "Updated", "forUpdate2", "user@localhost.com");
     var resultActions =
         performUpdateUser(updateUserRequest, loginResponse.getToken())
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isConflict());
     var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.BAD_REQUEST, ErrorDomain.USER, "Email already exists.");
+        new ErrorResponse(HttpStatus.CONFLICT, ErrorDomain.USER, "Email already exists.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
