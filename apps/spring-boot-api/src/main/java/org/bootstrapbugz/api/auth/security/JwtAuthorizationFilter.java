@@ -7,17 +7,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-
 import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
-import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
-import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,10 +46,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     try {
       final var authToken = getAuthenticationToken(JwtUtil.removeTokenTypeFromToken(token));
       SecurityContextHolder.getContext().setAuthentication(authToken);
-    } catch (ResourceNotFoundException
-        | JWTVerificationException
-        | IllegalArgumentException
-        | UnauthorizedException e) {
+    } catch (RuntimeException e) {
       log.error(e.getMessage());
     } finally {
       chain.doFilter(request, response);
