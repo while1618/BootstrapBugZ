@@ -1,10 +1,10 @@
 <mat-card>
   <mat-card-content>
-    <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" [formGroup]="signUpForm">
       <h2>Sign Up</h2>
       <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
-        <input matInput type="text" formControlName="firstName" />
+        <input formControlName="firstName" matInput type="text" />
         <mat-error *ngIf="signUpForm.controls.firstName.errors?.required">
           First name is required.
         </mat-error>
@@ -14,7 +14,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Last Name</mat-label>
-        <input matInput type="text" formControlName="lastName" />
+        <input formControlName="lastName" matInput type="text" />
         <mat-error *ngIf="signUpForm.controls.lastName.errors?.required">
           Last name is required.
         </mat-error>
@@ -24,7 +24,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Username</mat-label>
-        <input matInput type="text" formControlName="username" />
+        <input formControlName="username" matInput type="text" />
         <mat-error *ngIf="signUpForm.controls.username.errors?.required">
           Username is required.
         </mat-error>
@@ -37,18 +37,18 @@
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" />
+        <input formControlName="email" matInput type="email" />
         <mat-error *ngIf="signUpForm.controls.email.errors?.required">
           Email is required.
         </mat-error>
-        <mat-error *ngIf="signUpForm.controls.email.errors?.email"> Invalid email. </mat-error>
+        <mat-error *ngIf="signUpForm.controls.email.errors?.email"> Invalid email.</mat-error>
         <mat-error *ngIf="signUpForm.controls.email.errors?.nonUniqueEmail">
           Email taken.
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
-        <input matInput type="password" formControlName="password" />
+        <input formControlName="password" matInput type="password" />
         <mat-error *ngIf="signUpForm.controls.password.errors?.required">
           Password is required.
         </mat-error>
@@ -58,7 +58,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Confirm Password</mat-label>
-        <input matInput type="password" formControlName="confirmPassword" />
+        <input formControlName="confirmPassword" matInput type="password" />
         <mat-error *ngIf="signUpForm.controls.confirmPassword.errors?.required">
           Confirm password is required.
         </mat-error>
@@ -75,7 +75,7 @@
       >
         Passwords do not match.
       </mat-error>
-      <button mat-raised-button color="primary" type="submit">Sign Up</button>
+      <button color="primary" mat-raised-button type="submit">Sign Up</button>
     </form>
   </mat-card-content>
 </mat-card>
