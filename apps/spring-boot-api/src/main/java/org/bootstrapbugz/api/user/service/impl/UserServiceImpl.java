@@ -86,8 +86,7 @@ public class UserServiceImpl implements UserService {
     jwtService.invalidateAllTokens(user.getId());
     jwtService.deleteAllRefreshTokensByUser(user.getId());
 
-    final String token =
-        jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
+    final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
 

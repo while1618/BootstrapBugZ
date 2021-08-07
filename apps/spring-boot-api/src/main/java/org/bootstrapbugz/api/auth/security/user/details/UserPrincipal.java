@@ -3,7 +3,6 @@ package org.bootstrapbugz.api.auth.security.user.details;
 import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

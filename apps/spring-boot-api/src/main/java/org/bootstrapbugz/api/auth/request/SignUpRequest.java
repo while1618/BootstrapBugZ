@@ -4,10 +4,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-import org.bootstrapbugz.api.shared.constants.Regex;
 import org.bootstrapbugz.api.auth.validator.EmailExist;
 import org.bootstrapbugz.api.auth.validator.FieldMatch;
 import org.bootstrapbugz.api.auth.validator.UsernameExist;
+import org.bootstrapbugz.api.shared.constants.Regex;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
