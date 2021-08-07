@@ -7,8 +7,10 @@
 - [x] Move to postgres
 - [x] Add final
 - [x] Use var
+- [x] Tests with testcontainers
 - [x] Change username - doesn't require logout
 - [ ] Change email - doesn't require logout
+- [ ] Role - add ID
 - [ ] Add profile picture
 - [ ] Two-Factor Auth
 - [ ] Email on sensitive changes and revert option
