@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
@@ -94,7 +95,7 @@ class AuthServiceTest {
   void itShouldRefreshToken() {
     var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
-    String token = jwtService.createRefreshToken(1L, "ip1");
+    String token = jwtService.createRefreshToken(1L, Collections.emptySet(), "ip1");
     when(refreshTokenRepository.existsById(token)).thenReturn(true);
     var refreshTokenRequest = new RefreshTokenRequest(token);
     var refreshTokenResponse = authService.refreshToken(refreshTokenRequest, request);

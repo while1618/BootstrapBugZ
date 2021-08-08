@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
@@ -117,7 +118,7 @@ class JwtServiceTest {
 
   @Test
   void itShouldCreateRefreshToken() {
-    String actualRefreshToken = jwtService.createRefreshToken(1L, "ip1");
+    String actualRefreshToken = jwtService.createRefreshToken(1L, Collections.emptySet(), "ip1");
     var expectedRefreshToken = new RefreshToken(actualRefreshToken, 1L, "ip1", 1000);
     verify(refreshTokenRepository, times(1)).save(refreshTokenArgumentCaptor.capture());
     assertThat(refreshTokenArgumentCaptor.getValue().getToken())
@@ -130,7 +131,7 @@ class JwtServiceTest {
 
   @Test
   void itShouldCheckRefreshToken() {
-    String refreshToken = jwtService.createRefreshToken(1L, "ip1");
+    String refreshToken = jwtService.createRefreshToken(1L, Collections.emptySet(), "ip1");
     when(refreshTokenRepository.existsById(refreshToken)).thenReturn(true);
     jwtService.checkRefreshToken(refreshToken);
   }
@@ -145,7 +146,7 @@ class JwtServiceTest {
 
   @Test
   void checkRefreshTokenShouldThrowUnauthorized_refreshTokenNotInRedis() {
-    String refreshToken = jwtService.createRefreshToken(1L, "ip1");
+    String refreshToken = jwtService.createRefreshToken(1L, Collections.emptySet(), "ip1");
     when(refreshTokenRepository.existsById(refreshToken)).thenReturn(false);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> jwtService.checkRefreshToken(refreshToken))
@@ -164,7 +165,7 @@ class JwtServiceTest {
 
   @Test
   void itShouldDeleteRefreshToken() {
-    String refreshToken = jwtService.createRefreshToken(1L, "ip1");
+    String refreshToken = jwtService.createRefreshToken(1L, Collections.emptySet(), "ip1");
     jwtService.deleteRefreshToken(refreshToken);
     verify(refreshTokenRepository, times(1)).deleteById(any(String.class));
   }

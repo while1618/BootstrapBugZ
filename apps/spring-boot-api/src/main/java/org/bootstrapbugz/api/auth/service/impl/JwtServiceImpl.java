@@ -1,6 +1,7 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import java.time.Instant;
+import java.util.Set;
 import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
 import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
 import org.bootstrapbugz.api.auth.redis.model.UserBlacklist;
@@ -13,6 +14,7 @@ import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
+import org.bootstrapbugz.api.user.model.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +55,11 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
+  public String createToken(Long userId, Set<Role> roles, JwtPurpose purpose) {
+    return JwtUtil.createToken(userId, roles, expirationTimeInSecs, createSecret(purpose));
+  }
+
+  @Override
   public void checkToken(String token, JwtPurpose purpose) {
     JwtUtil.isTokenValid(token, createSecret(purpose));
     isInJwtBlacklist(token);
@@ -82,10 +89,13 @@ public class JwtServiceImpl implements JwtService {
   }
 
   @Override
-  public String createRefreshToken(Long userId, String ipAddress) {
+  public String createRefreshToken(Long userId, Set<Role> roles, String ipAddress) {
     final String refreshToken =
         JwtUtil.createToken(
-            userId, refreshTokenExpirationTimeInSecs, createSecret(JwtPurpose.REFRESH_TOKEN));
+            userId,
+            roles,
+            refreshTokenExpirationTimeInSecs,
+            createSecret(JwtPurpose.REFRESH_TOKEN));
     refreshTokenRepository.save(
         new RefreshToken(refreshToken, userId, ipAddress, refreshTokenExpirationTimeInSecs));
     return refreshToken;

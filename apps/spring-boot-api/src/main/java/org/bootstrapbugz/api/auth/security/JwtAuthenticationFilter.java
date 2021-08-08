@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
+import org.bootstrapbugz.api.user.model.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,18 +85,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       throws IOException {
     final var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
     final String ipAddress = AuthUtil.getUserIpAddress(request);
-    final String refreshToken = findRefreshToken(user.getId(), ipAddress);
+    final String refreshToken = findRefreshToken(user.getId(), user.getRoles(), ipAddress);
     final var loginResponse =
         new LoginResponse()
-            .setToken(jwtService.createToken(user.getId(), JwtPurpose.ACCESSING_RESOURCES))
+            .setToken(
+                jwtService.createToken(
+                    user.getId(), user.getRoles(), JwtPurpose.ACCESSING_RESOURCES))
             .setRefreshToken(refreshToken)
             .setUser(userMapper.userToUserResponse(user));
     writeToResponse(response, loginResponse);
   }
 
-  private String findRefreshToken(Long userId, String ipAddress) {
+  private String findRefreshToken(Long userId, Set<Role> roles, String ipAddress) {
     final String refreshToken = jwtService.findRefreshToken(userId, ipAddress);
-    if (refreshToken == null) return jwtService.createRefreshToken(userId, ipAddress);
+    if (refreshToken == null) return jwtService.createRefreshToken(userId, roles, ipAddress);
     return refreshToken;
   }
 

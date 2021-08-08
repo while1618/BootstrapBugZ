@@ -1,6 +1,8 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.request.ForgotPasswordRequest;
@@ -60,9 +62,14 @@ public class AuthServiceImpl implements AuthService {
     jwtService.checkRefreshToken(refreshToken);
     jwtService.deleteRefreshToken(refreshToken);
     final Long userId = JwtUtil.getUserId(refreshToken);
-    final String accessToken = jwtService.createToken(userId, JwtPurpose.ACCESSING_RESOURCES);
+    final Set<Role> roles =
+        JwtUtil.getRoles(refreshToken).stream()
+            .map(role -> new Role(RoleName.valueOf(role)))
+            .collect(Collectors.toSet());
+    final String accessToken =
+        jwtService.createToken(userId, roles, JwtPurpose.ACCESSING_RESOURCES);
     final String newRefreshToken =
-        jwtService.createRefreshToken(userId, AuthUtil.getUserIpAddress(request));
+        jwtService.createRefreshToken(userId, roles, AuthUtil.getUserIpAddress(request));
     return new RefreshTokenResponse(accessToken, newRefreshToken);
   }
 
