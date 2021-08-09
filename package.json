@@ -5,7 +5,6 @@
   "scripts": {
     "nx": "nx",
     "start": "nx serve",
-    "start:angular-ui": "npm start angular-ui",
     "build": "nx build",
     "test": "nx test",
     "lint": "nx workspace-lint && nx lint",
@@ -43,7 +42,7 @@
     "@angular/platform-browser": "12.1.2",
     "@angular/platform-browser-dynamic": "12.1.2",
     "@angular/router": "12.1.2",
-    "@auth0/angular-jwt": "^5.0.2",
+    "@auth0/angular-jwt": "5.0.2",
     "@ngrx/component-store": "12.2.0",
     "@ngrx/effects": "12.2.0",
     "@ngrx/entity": "12.2.0",
