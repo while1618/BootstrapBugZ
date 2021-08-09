@@ -15,14 +15,14 @@ import { AuthService } from '../services/auth.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate, CanLoad {
+export class AdminGuard implements CanActivate, CanLoad {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    if (!this.authService.isLoggedIn()) return this.router.navigateByUrl('/auth/login');
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    if (!this.authService.isAdminLoggedIn()) return this.router.navigateByUrl('/auth/login');
     return true;
   }
 
@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate, CanLoad {
     route: Route,
     segments: UrlSegment[]
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (!this.authService.isLoggedIn()) return this.router.navigateByUrl('/auth/login');
+    if (!this.authService.isAdminLoggedIn()) return this.router.navigateByUrl('/auth/login');
     return true;
   }
 }

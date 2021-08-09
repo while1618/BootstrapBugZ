@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { User } from '../../user/models/user.models';
 import {
   ForgotPasswordRequest,
@@ -16,8 +17,11 @@ import { LoginResponse, RefreshTokenResponse } from '../models/auth.responses';
 })
 export class AuthService {
   API_URL = 'http://localhost:8181/v1.0/auth';
+  private jwtHelper: JwtHelperService;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.jwtHelper = new JwtHelperService();
+  }
 
   login(loginRequest: LoginRequest) {
     return this.http.post<LoginResponse>(`${this.API_URL}/login`, loginRequest);
@@ -71,5 +75,28 @@ export class AuthService {
 
   getToken() {
     return localStorage.getItem('token');
+  }
+
+  isLoggedIn() {
+    const token = this.getToken();
+    if (!token) return false;
+    try {
+      this.jwtHelper.decodeToken(token);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  isAdminLoggedIn() {
+    const token = this.getToken();
+    if (!token) return false;
+    try {
+      const decoded = this.jwtHelper.decodeToken(token);
+      if (!decoded?.roles.includes('ADMIN')) return false;
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 }
