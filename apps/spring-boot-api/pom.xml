@@ -26,7 +26,7 @@
     <commons-validator.version>1.7</commons-validator.version>
     <springfox.version>3.0.0</springfox.version>
     <jacoco.version>0.8.7</jacoco.version>
-    <jedis.version>3.6.2</jedis.version>
+    <jedis.version>3.6.3</jedis.version>
     <testcontainers.version>1.15.3</testcontainers.version>
   </properties>
 
