@@ -127,4 +127,16 @@ export class AuthEffects {
       )
     )
   );
+
+  removeTokenAndRefreshToken$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.logoutSuccess, AuthActions.logoutFromAllDevicesSuccess),
+        tap((action) => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
+        })
+      ),
+    { dispatch: false }
+  );
 }
