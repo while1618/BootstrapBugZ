@@ -73,14 +73,22 @@ const authReducer = createReducer(
   })),
   // LOGOUT
   on(AuthActions.logout, (state, action) => ({ ...state })),
-  on(AuthActions.logoutSuccess, (state, action) => ({ ...state })),
+  on(AuthActions.logoutSuccess, (state, action) => ({
+    ...state,
+    isAuthenticated: false,
+    user: null,
+  })),
   on(AuthActions.logoutFailure, (state, action) => ({
     ...state,
     error: action.error,
   })),
   // LOGOUT FROM ALL DEVICES
   on(AuthActions.logoutFromAllDevices, (state, action) => ({ ...state })),
-  on(AuthActions.logoutFromAllDevicesSuccess, (state, action) => ({ ...state })),
+  on(AuthActions.logoutFromAllDevicesSuccess, (state, action) => ({
+    ...state,
+    isAuthenticated: false,
+    user: null,
+  })),
   on(AuthActions.logoutFromAllDevicesFailure, (state, action) => ({
     ...state,
     error: action.error,

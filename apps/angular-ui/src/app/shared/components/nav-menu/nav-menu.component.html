@@ -3,10 +3,10 @@
     <span>BootstrapBugZ</span>
   </a>
   <span class="spacer"></span>
-  <ng-container *ngIf="isAuthenticated$ | async; else elseTemplate">
+  <ng-container *ngIf="isAuthenticated$ | async; else noAuth">
     <a mat-button routerLink="/auth/logout">Logout</a>
   </ng-container>
-  <ng-template #elseTemplate>
+  <ng-template #noAuth>
     <a mat-button routerLink="/auth/login">Login</a>
     <a mat-button routerLink="/auth/sign-up">Sign Up</a>
   </ng-template>
