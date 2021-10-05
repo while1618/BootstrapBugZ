@@ -10,6 +10,8 @@ import org.bootstrapbugz.api.auth.response.RefreshTokenResponse;
 import org.bootstrapbugz.api.user.response.UserResponse;
 
 public interface AuthService {
+  UserResponse getLoggedInUser();
+
   RefreshTokenResponse refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request);
 
