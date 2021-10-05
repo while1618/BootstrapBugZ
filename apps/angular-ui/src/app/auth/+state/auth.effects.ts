@@ -8,12 +8,6 @@ import * as AuthActions from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
-  constructor(
-    private actions$: Actions,
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
@@ -67,6 +61,18 @@ export class AuthEffects {
           map((response) => AuthActions.signUpSuccess({ response })),
           tap(() => this.router.navigate(['/auth/login'])),
           catchError((error) => of(AuthActions.signUpFailure(error)))
+        )
+      )
+    )
+  );
+  confirmRegistration$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.confirmRegistration),
+      switchMap((action) =>
+        this.authService.confirmRegistration(action.request).pipe(
+          map(() => AuthActions.confirmRegistrationSuccess()),
+          tap(() => this.router.navigate(['/auth/login'])),
+          catchError((error) => of(AuthActions.confirmRegistrationFailure(error)))
         )
       )
     )
@@ -141,4 +147,10 @@ export class AuthEffects {
       ),
     { dispatch: false }
   );
+
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 }

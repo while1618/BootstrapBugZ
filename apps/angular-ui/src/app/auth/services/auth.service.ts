@@ -42,6 +42,12 @@ export class AuthService {
     return this.http.post<User>(`${this.API_URL}/sign-up`, signUpRequest);
   }
 
+  confirmRegistration(token: string) {
+    return this.http.get<void>(`${this.API_URL}/confirm-registration`, {
+      params: { token },
+    });
+  }
+
   resendConfirmationEmail(resendConfirmationEmailRequest: ResendConfirmationEmailRequest) {
     return this.http.post<void>(
       `${this.API_URL}/resend-confirmation-email`,

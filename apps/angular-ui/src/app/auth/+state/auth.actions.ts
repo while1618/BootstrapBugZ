@@ -45,7 +45,10 @@ export const signUp = createAction('[Auth] SignUp', props<{ request: SignUpReque
 export const signUpSuccess = createAction('[Auth] SignUp Success', props<{ response: User }>());
 export const signUpFailure = createAction('[Auth] SignUp Failure', props<{ error: Error }>());
 // CONFIRM REGISTRATION
-export const confirmRegistration = createAction('[Auth] Confirm Registration');
+export const confirmRegistration = createAction(
+  '[Auth] Confirm Registration',
+  props<{ request: string }>()
+);
 export const confirmRegistrationSuccess = createAction('[Auth] Confirm Registration Success');
 export const confirmRegistrationFailure = createAction(
   '[Auth] Confirm Registration Failure',

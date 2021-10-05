@@ -64,6 +64,13 @@ const authReducer = createReducer(
     error: null,
   })),
   on(AuthActions.signUpFailure, (state, action) => ({ ...state, user: null, error: action.error })),
+  // CONFIRM REGISTRATION
+  on(AuthActions.confirmRegistration, (state, action) => ({ ...state })),
+  on(AuthActions.confirmRegistrationSuccess, (state, action) => ({ ...state, error: null })),
+  on(AuthActions.confirmRegistrationFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+  })),
   // RESEND CONFIRMATION EMAIL
   on(AuthActions.resendConfirmationEmail, (state, action) => ({ ...state })),
   on(AuthActions.resendConfirmationEmailSuccess, (state, action) => ({ ...state })),
