@@ -208,6 +208,15 @@ class AccessingResourcesTest extends DatabaseContainers {
   }
 
   @Test
+  void getLoggedUserShouldThrowUnauthorized_userNotLogged() throws Exception {
+    var resultActions =
+        mockMvc
+            .perform(get(Path.AUTH + "/logged-in-user").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized());
+    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+  }
+
+  @Test
   void logoutShouldThrowUnauthorized_userNotLogged() throws Exception {
     var resultActions =
         mockMvc

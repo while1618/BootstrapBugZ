@@ -47,6 +47,28 @@ class AuthControllerTest extends DatabaseContainers {
   @Autowired private JwtServiceImpl jwtService;
 
   @Test
+  void itShouldGetLoggedInUser() throws Exception {
+    var loginResponse =
+        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
+    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var expectedUserResponse =
+        new UserResponse(
+            2L, "User", "User", "user", "user@localhost.com", true, true, roleResponses);
+    var resultActions =
+        mockMvc
+            .perform(
+                get(Path.AUTH + "/logged-in-user")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(AuthUtil.AUTH_HEADER, loginResponse.getToken()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    var actualUserResponse =
+        objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsString(), UserResponse.class);
+    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
+  }
+
+  @Test
   void itShouldSignUp() throws Exception {
     var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@localhost.com", "qwerty123", "qwerty123");
