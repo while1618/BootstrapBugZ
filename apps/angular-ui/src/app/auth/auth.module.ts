@@ -11,6 +11,7 @@ import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
+import { LogoutFromAllDevicesComponent } from './components/logout-from-all-devices/logout-from-all-devices.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
     ForgotPasswordComponent,
     ResetPasswordComponent,
     LogoutComponent,
+    LogoutFromAllDevicesComponent,
   ],
   imports: [
     CommonModule,
