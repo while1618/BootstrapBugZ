@@ -17,7 +17,12 @@
         </mat-error>
       </mat-form-field>
       <a mat-button routerLink="/auth/forgot-password">Forgot password?</a>
-      <button (click)="resendConfirmationEmail()" mat-button type="button">
+      <button
+        (click)="resendConfirmationEmail()"
+        [disabled]="disableResendButton"
+        mat-button
+        type="button"
+      >
         Resend confirmation email
       </button>
       <button color="primary" mat-raised-button type="submit">Login</button>

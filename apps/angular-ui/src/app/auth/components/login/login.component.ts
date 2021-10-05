@@ -11,6 +11,9 @@ import { LoginRequest, ResendConfirmationEmailRequest } from '../../models/auth.
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
+  disableResendButton = false;
+  private resendCounter = 0;
+
   loginForm = new FormGroup({
     usernameOrEmail: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -26,6 +29,8 @@ export class LoginComponent {
   }
 
   resendConfirmationEmail() {
+    this.resendCounter++;
+    if (this.resendCounter >= 3) this.disableResendButton = true;
     const request: ResendConfirmationEmailRequest = {
       usernameOrEmail: this.loginForm.controls.usernameOrEmail.value,
     };
