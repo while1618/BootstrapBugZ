@@ -24,6 +24,7 @@ module.exports = {
         'prefer-destructuring': ['error', { object: true, array: false }],
         'no-underscore-dangle': ['error', { allowAfterThis: true }],
         '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
+        'no-plusplus': 'off',
         '@nrwl/nx/enforce-module-boundaries': [
           'error',
           {
