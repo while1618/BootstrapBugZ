@@ -1,5 +1,5 @@
-import { Component, DoCheck } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AuthState } from '../../../auth/+state/auth.reducer';
 import { getIsAuthenticated } from '../../../auth/+state/auth.selectors';
@@ -9,12 +9,12 @@ import { getIsAuthenticated } from '../../../auth/+state/auth.selectors';
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.scss'],
 })
-export class NavMenuComponent implements DoCheck {
+export class NavMenuComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
 
   constructor(private store: Store<AuthState>) {}
 
-  ngDoCheck() {
-    this.isAuthenticated$ = this.store.pipe(select(getIsAuthenticated));
+  ngOnInit(): void {
+    this.isAuthenticated$ = this.store.select(getIsAuthenticated);
   }
 }
