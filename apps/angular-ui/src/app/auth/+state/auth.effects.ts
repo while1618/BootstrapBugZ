@@ -26,7 +26,17 @@ export class AuthEffects {
       )
     )
   );
-
+  checkAuth$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.checkAuth),
+      switchMap((action) =>
+        this.authService.getLoggedInUser().pipe(
+          map((response) => AuthActions.checkAuthSuccess({ response })),
+          catchError((error) => of(AuthActions.checkAuthFailure(error)))
+        )
+      )
+    )
+  );
   refreshToken$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.refreshToken),
@@ -38,7 +48,6 @@ export class AuthEffects {
       )
     )
   );
-
   saveTokenAndRefreshToken$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -50,7 +59,6 @@ export class AuthEffects {
       ),
     { dispatch: false }
   );
-
   signUp$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.signUp),
@@ -63,7 +71,6 @@ export class AuthEffects {
       )
     )
   );
-
   resendConfirmationEmail$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.resendConfirmationEmail),
@@ -75,7 +82,6 @@ export class AuthEffects {
       )
     )
   );
-
   forgotPassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.forgotPassword),
@@ -88,7 +94,6 @@ export class AuthEffects {
       )
     )
   );
-
   resetPassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.resetPassword),
@@ -101,7 +106,6 @@ export class AuthEffects {
       )
     )
   );
-
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.logout),
@@ -114,7 +118,6 @@ export class AuthEffects {
       )
     )
   );
-
   logoutFromAllDevices$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.logoutFromAllDevices),
@@ -127,7 +130,6 @@ export class AuthEffects {
       )
     )
   );
-
   removeTokenAndRefreshToken$ = createEffect(
     () =>
       this.actions$.pipe(

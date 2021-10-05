@@ -32,6 +32,20 @@ const authReducer = createReducer(
     user: null,
     error: action.error,
   })),
+  // CHECK AUTH
+  on(AuthActions.checkAuth, (state, action) => ({ ...state })),
+  on(AuthActions.checkAuthSuccess, (state, action) => ({
+    ...state,
+    isAuthenticated: true,
+    user: action.response,
+    error: null,
+  })),
+  on(AuthActions.checkAuthFailure, (state, action) => ({
+    ...state,
+    isAuthenticated: false,
+    user: null,
+    error: action.error,
+  })),
   // REFRESH TOKEN
   on(AuthActions.refreshToken, (state, action) => ({ ...state })),
   on(AuthActions.refreshTokenSuccess, (state, action) => ({

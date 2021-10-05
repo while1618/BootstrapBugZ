@@ -23,6 +23,10 @@ export class AuthService {
     this.jwtHelper = new JwtHelperService();
   }
 
+  getLoggedInUser() {
+    return this.http.get<User>(`${this.API_URL}/logged-in-user`);
+  }
+
   login(loginRequest: LoginRequest) {
     return this.http.post<LoginResponse>(`${this.API_URL}/login`, loginRequest);
   }
@@ -81,11 +85,10 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return false;
     try {
-      this.jwtHelper.decodeToken(token);
+      return !this.jwtHelper.isTokenExpired(token);
     } catch (e) {
       return false;
     }
-    return true;
   }
 
   isAdminLoggedIn() {
@@ -94,9 +97,9 @@ export class AuthService {
     try {
       const decoded = this.jwtHelper.decodeToken(token);
       if (!decoded?.roles.includes('ADMIN')) return false;
+      return !this.jwtHelper.isTokenExpired(token);
     } catch (e) {
       return false;
     }
-    return true;
   }
 }

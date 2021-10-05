@@ -17,6 +17,16 @@ export const loginSuccess = createAction(
   props<{ response: LoginResponse }>()
 );
 export const loginFailure = createAction('[Auth] Login Failure', props<{ error: Error }>());
+// CHECK AUTH
+export const checkAuth = createAction('[Auth] Check Auth');
+export const checkAuthSuccess = createAction(
+  '[Auth] Check Auth Success',
+  props<{ response: User }>()
+);
+export const checkAuthFailure = createAction(
+  '[Auth] Check Auth Failure',
+  props<{ error: Error }>()
+);
 // REFRESH TOKEN
 export const refreshToken = createAction(
   '[Auth] Refresh Token',
