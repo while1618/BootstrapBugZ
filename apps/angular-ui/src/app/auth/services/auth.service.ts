@@ -81,11 +81,16 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  getRefreshToken() {
+    return localStorage.getItem('refreshToken');
+  }
+
   isLoggedIn() {
     const token = this.getToken();
-    if (!token) return false;
+    const refreshToken = this.getRefreshToken();
+    if (!token || !refreshToken) return false;
     try {
-      return !this.jwtHelper.isTokenExpired(token);
+      return !this.jwtHelper.isTokenExpired(token) || !this.jwtHelper.isTokenExpired(refreshToken);
     } catch (e) {
       return false;
     }
@@ -93,11 +98,12 @@ export class AuthService {
 
   isAdminLoggedIn() {
     const token = this.getToken();
-    if (!token) return false;
+    const refreshToken = this.getRefreshToken();
+    if (!token || !refreshToken) return false;
     try {
       const decoded = this.jwtHelper.decodeToken(token);
       if (!decoded?.roles.includes('ADMIN')) return false;
-      return !this.jwtHelper.isTokenExpired(token);
+      return !this.jwtHelper.isTokenExpired(token) || !this.jwtHelper.isTokenExpired(refreshToken);
     } catch (e) {
       return false;
     }
