@@ -17,7 +17,8 @@ public class ResetPasswordEmail implements JwtEmail {
       EmailService emailService, Environment environment, User user, String token) {
     try {
       final var template = new ClassPathResource("templates/email/reset-password.html").getFile();
-      final String link = environment.getProperty("ui.app.url") + "/reset-password?token=" + token;
+      final String link =
+          environment.getProperty("ui.app.url") + "/auth/reset-password?token=" + token;
       final String body =
           Files.asCharSource(template, StandardCharsets.UTF_8)
               .read()
