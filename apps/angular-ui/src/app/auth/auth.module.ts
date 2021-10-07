@@ -13,6 +13,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { LogoutFromAllDevicesComponent } from './components/logout-from-all-devices/logout-from-all-devices.component';
 import { ConfirmRegistrationComponent } from './components/confirm-registration/confirm-registration.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ConfirmRegistrationComponent } from './components/confirm-registration/
     MatInputModule,
     MatButtonModule,
     AuthRoutingModule,
+    SharedModule,
   ],
 })
 export class AuthModule {}
