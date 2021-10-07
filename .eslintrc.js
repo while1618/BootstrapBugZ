@@ -7,7 +7,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
   },
-  plugins: ['@nrwl/nx'],
+  plugins: ['@nrwl/nx', 'import'],
   overrides: [
     {
       files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
