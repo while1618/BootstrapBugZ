@@ -23,6 +23,10 @@ export class AuthService {
     this.jwtHelper = new JwtHelperService();
   }
 
+  getLoggedInUser() {
+    return this.http.get<User>(`${this.API_URL}/logged-in-user`);
+  }
+
   login(loginRequest: LoginRequest) {
     return this.http.post<LoginResponse>(`${this.API_URL}/login`, loginRequest);
   }
@@ -36,6 +40,12 @@ export class AuthService {
 
   signUp(signUpRequest: SignUpRequest) {
     return this.http.post<User>(`${this.API_URL}/sign-up`, signUpRequest);
+  }
+
+  confirmRegistration(token: string) {
+    return this.http.get<void>(`${this.API_URL}/confirm-registration`, {
+      params: { token },
+    });
   }
 
   resendConfirmationEmail(resendConfirmationEmailRequest: ResendConfirmationEmailRequest) {
@@ -77,26 +87,31 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  getRefreshToken() {
+    return localStorage.getItem('refreshToken');
+  }
+
   isLoggedIn() {
     const token = this.getToken();
-    if (!token) return false;
+    const refreshToken = this.getRefreshToken();
+    if (!token || !refreshToken) return false;
     try {
-      this.jwtHelper.decodeToken(token);
+      return !this.jwtHelper.isTokenExpired(token) || !this.jwtHelper.isTokenExpired(refreshToken);
     } catch (e) {
       return false;
     }
-    return true;
   }
 
   isAdminLoggedIn() {
     const token = this.getToken();
-    if (!token) return false;
+    const refreshToken = this.getRefreshToken();
+    if (!token || !refreshToken) return false;
     try {
       const decoded = this.jwtHelper.decodeToken(token);
       if (!decoded?.roles.includes('ADMIN')) return false;
+      return !this.jwtHelper.isTokenExpired(token) || !this.jwtHelper.isTokenExpired(refreshToken);
     } catch (e) {
       return false;
     }
-    return true;
   }
 }

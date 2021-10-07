@@ -30,6 +30,11 @@ public class AuthController {
     this.authService = authService;
   }
 
+  @GetMapping("/logged-in-user")
+  public ResponseEntity<UserResponse> getLoggedInUser() {
+    return ResponseEntity.ok(authService.getLoggedInUser());
+  }
+
   @PostMapping("/refresh-token")
   public ResponseEntity<RefreshTokenResponse> refreshToken(
       @Valid @RequestBody RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {

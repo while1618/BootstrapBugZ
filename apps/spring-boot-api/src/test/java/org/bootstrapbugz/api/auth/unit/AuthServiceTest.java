@@ -92,6 +92,16 @@ class AuthServiceTest {
   }
 
   @Test
+  void itShouldGetLoggedInUser() {
+    TestUtil.setAuth(auth, securityContext, user);
+    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var expectedUserResponse =
+        new UserResponse(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
+    var actualUserResponse = authService.getLoggedInUser();
+    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
+  }
+
+  @Test
   void itShouldRefreshToken() {
     var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");

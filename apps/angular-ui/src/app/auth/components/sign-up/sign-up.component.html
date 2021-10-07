@@ -1,81 +1,86 @@
-<mat-card>
-  <mat-card-content>
-    <form (ngSubmit)="onSubmit()" [formGroup]="signUpForm">
-      <h2>Sign Up</h2>
-      <mat-form-field appearance="outline">
-        <mat-label>First Name</mat-label>
-        <input formControlName="firstName" matInput type="text" />
-        <mat-error *ngIf="signUpForm.controls.firstName.errors?.required">
-          First name is required.
+<ng-container *ngIf="loading$ | async; else noLoading">
+  <bootstrapbugz-loader></bootstrapbugz-loader>
+</ng-container>
+<ng-template #noLoading>
+  <mat-card>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" [formGroup]="signUpForm">
+        <h2>Sign Up</h2>
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input formControlName="firstName" matInput type="text" />
+          <mat-error *ngIf="signUpForm.controls.firstName.errors?.required">
+            First name is required.
+          </mat-error>
+          <mat-error *ngIf="signUpForm.controls.firstName.errors?.pattern">
+            Invalid first name.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input formControlName="lastName" matInput type="text" />
+          <mat-error *ngIf="signUpForm.controls.lastName.errors?.required">
+            Last name is required.
+          </mat-error>
+          <mat-error *ngIf="signUpForm.controls.lastName.errors?.pattern">
+            Invalid last name.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input formControlName="username" matInput type="text" />
+          <mat-error *ngIf="signUpForm.controls.username.errors?.required">
+            Username is required.
+          </mat-error>
+          <mat-error *ngIf="signUpForm.controls.username.errors?.pattern">
+            Invalid username.
+          </mat-error>
+          <mat-error *ngIf="signUpForm.controls.username.errors?.nonUniqueUsername">
+            Username taken.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input formControlName="email" matInput type="email" />
+          <mat-error *ngIf="signUpForm.controls.email.errors?.required">
+            Email is required.
+          </mat-error>
+          <mat-error *ngIf="signUpForm.controls.email.errors?.email"> Invalid email.</mat-error>
+          <mat-error *ngIf="signUpForm.controls.email.errors?.nonUniqueEmail">
+            Email taken.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input formControlName="password" matInput type="password" />
+          <mat-error *ngIf="signUpForm.controls.password.errors?.required">
+            Password is required.
+          </mat-error>
+          <mat-error *ngIf="signUpForm.controls.password.errors?.pattern">
+            Invalid password.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm Password</mat-label>
+          <input formControlName="confirmPassword" matInput type="password" />
+          <mat-error *ngIf="signUpForm.controls.confirmPassword.errors?.required">
+            Confirm password is required.
+          </mat-error>
+          <mat-error *ngIf="signUpForm.controls.confirmPassword.errors?.pattern">
+            Invalid confirm password.
+          </mat-error>
+        </mat-form-field>
+        <mat-error
+          *ngIf="
+            signUpForm.controls.password.touched &&
+            signUpForm.controls.confirmPassword.touched &&
+            signUpForm.hasError('passwordsDoNotMatch')
+          "
+        >
+          Passwords do not match.
         </mat-error>
-        <mat-error *ngIf="signUpForm.controls.firstName.errors?.pattern">
-          Invalid first name.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Last Name</mat-label>
-        <input formControlName="lastName" matInput type="text" />
-        <mat-error *ngIf="signUpForm.controls.lastName.errors?.required">
-          Last name is required.
-        </mat-error>
-        <mat-error *ngIf="signUpForm.controls.lastName.errors?.pattern">
-          Invalid last name.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Username</mat-label>
-        <input formControlName="username" matInput type="text" />
-        <mat-error *ngIf="signUpForm.controls.username.errors?.required">
-          Username is required.
-        </mat-error>
-        <mat-error *ngIf="signUpForm.controls.username.errors?.pattern">
-          Invalid username.
-        </mat-error>
-        <mat-error *ngIf="signUpForm.controls.username.errors?.nonUniqueUsername">
-          Username taken.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input formControlName="email" matInput type="email" />
-        <mat-error *ngIf="signUpForm.controls.email.errors?.required">
-          Email is required.
-        </mat-error>
-        <mat-error *ngIf="signUpForm.controls.email.errors?.email"> Invalid email.</mat-error>
-        <mat-error *ngIf="signUpForm.controls.email.errors?.nonUniqueEmail">
-          Email taken.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input formControlName="password" matInput type="password" />
-        <mat-error *ngIf="signUpForm.controls.password.errors?.required">
-          Password is required.
-        </mat-error>
-        <mat-error *ngIf="signUpForm.controls.password.errors?.pattern">
-          Invalid password.
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Confirm Password</mat-label>
-        <input formControlName="confirmPassword" matInput type="password" />
-        <mat-error *ngIf="signUpForm.controls.confirmPassword.errors?.required">
-          Confirm password is required.
-        </mat-error>
-        <mat-error *ngIf="signUpForm.controls.confirmPassword.errors?.pattern">
-          Invalid confirm password.
-        </mat-error>
-      </mat-form-field>
-      <mat-error
-        *ngIf="
-          signUpForm.controls.password.touched &&
-          signUpForm.controls.confirmPassword.touched &&
-          signUpForm.hasError('passwordsDoNotMatch')
-        "
-      >
-        Passwords do not match.
-      </mat-error>
-      <button color="primary" mat-raised-button type="submit">Sign Up</button>
-    </form>
-  </mat-card-content>
-</mat-card>
+        <button color="primary" mat-raised-button type="submit">Sign Up</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

@@ -8,25 +8,29 @@ import * as AuthActions from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
-  constructor(
-    private actions$: Actions,
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
       switchMap((action) =>
         this.authService.login(action.request).pipe(
           map((response) => AuthActions.loginSuccess({ response })),
-          tap(() => this.router.navigate(['/home'])),
+          tap(() => this.router.navigate(['/'])),
           catchError((error) => of(AuthActions.loginFailure(error)))
         )
       )
     )
   );
-
+  checkAuth$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.checkAuth),
+      switchMap((action) =>
+        this.authService.getLoggedInUser().pipe(
+          map((response) => AuthActions.checkAuthSuccess({ response })),
+          catchError((error) => of(AuthActions.checkAuthFailure(error)))
+        )
+      )
+    )
+  );
   refreshToken$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.refreshToken),
@@ -38,7 +42,6 @@ export class AuthEffects {
       )
     )
   );
-
   saveTokenAndRefreshToken$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -50,7 +53,6 @@ export class AuthEffects {
       ),
     { dispatch: false }
   );
-
   signUp$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.signUp),
@@ -63,7 +65,18 @@ export class AuthEffects {
       )
     )
   );
-
+  confirmRegistration$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.confirmRegistration),
+      switchMap((action) =>
+        this.authService.confirmRegistration(action.request).pipe(
+          map(() => AuthActions.confirmRegistrationSuccess()),
+          tap(() => this.router.navigate(['/auth/login'])),
+          catchError((error) => of(AuthActions.confirmRegistrationFailure(error)))
+        )
+      )
+    )
+  );
   resendConfirmationEmail$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.resendConfirmationEmail),
@@ -75,7 +88,6 @@ export class AuthEffects {
       )
     )
   );
-
   forgotPassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.forgotPassword),
@@ -88,7 +100,6 @@ export class AuthEffects {
       )
     )
   );
-
   resetPassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.resetPassword),
@@ -101,7 +112,6 @@ export class AuthEffects {
       )
     )
   );
-
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.logout),
@@ -114,7 +124,6 @@ export class AuthEffects {
       )
     )
   );
-
   logoutFromAllDevices$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.logoutFromAllDevices),
@@ -127,4 +136,21 @@ export class AuthEffects {
       )
     )
   );
+  removeTokenAndRefreshToken$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.logoutSuccess, AuthActions.logoutFromAllDevicesSuccess),
+        tap((action) => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
+        })
+      ),
+    { dispatch: false }
+  );
+
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 }
