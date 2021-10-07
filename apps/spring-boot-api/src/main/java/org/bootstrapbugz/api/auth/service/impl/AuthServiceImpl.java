@@ -55,6 +55,11 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
+  public UserResponse getLoggedInUser() {
+    return userMapper.userToUserResponse(AuthUtil.findLoggedUser());
+  }
+
+  @Override
   public RefreshTokenResponse refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
     final String refreshToken =

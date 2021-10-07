@@ -10,90 +10,90 @@ import {
 } from '../models/auth.requests';
 import { LoginResponse, RefreshTokenResponse } from '../models/auth.responses';
 
-const LOGIN = '[Auth] Login';
-const LOGIN_SUCCESS = '[Auth] Login Success';
-const LOGIN_FAILURE = '[Auth] Login Failure';
-const REFRESH_TOKEN = '[Auth] Refresh Token';
-const REFRESH_TOKEN_SUCCESS = '[Auth] Refresh Token Success';
-const REFRESH_TOKEN_FAILURE = '[Auth] Refresh Token Failure';
-const SIGN_UP = '[Auth] SignUp';
-const SIGN_UP_SUCCESS = '[Auth] SignUp Success';
-const SIGN_UP_FAILURE = '[Auth] SignUp Failure';
-const CONFIRM_REGISTRATION = '[Auth] Confirm Registration';
-const CONFIRM_REGISTRATION_SUCCESS = '[Auth] Confirm Registration Success';
-const CONFIRM_REGISTRATION_FAILURE = '[Auth] Confirm Registration Failure';
-const RESEND_CONFIRMATION_EMAIL = '[Auth] Resend Confirmation Email';
-const RESEND_CONFIRMATION_EMAIL_SUCCESS = '[Auth] Resend Confirmation Email Success';
-const RESEND_CONFIRMATION_EMAIL_FAILURE = '[Auth] Resend Confirmation Email Failure';
-const FORGOT_PASSWORD = '[Auth] Forgot Password';
-const FORGOT_PASSWORD_SUCCESS = '[Auth] Forgot Password Success';
-const FORGOT_PASSWORD_FAILURE = '[Auth] Forgot Password Failure';
-const RESET_PASSWORD = '[Auth] Reset Password';
-const RESET_PASSWORD_SUCCESS = '[Auth] Reset Password Success';
-const RESET_PASSWORD_FAILURE = '[Auth] Reset Password Failure';
-const LOGOUT = '[Auth] Logout';
-const LOGOUT_SUCCESS = '[Auth] Logout Success';
-const LOGOUT_FAILURE = '[Auth] Logout Failure';
-const LOGOUT_FROM_ALL_DEVICES = '[Auth] Logout From All Devices';
-const LOGOUT_FROM_ALL_DEVICES_SUCCESS = '[Auth] Logout From All Devices Success';
-const LOGOUT_FROM_ALL_DEVICES_FAILURE = '[Auth] Logout From All Devices Failure';
-
-export const login = createAction(LOGIN, props<{ request: LoginRequest }>());
-export const loginSuccess = createAction(LOGIN_SUCCESS, props<{ response: LoginResponse }>());
-export const loginFailure = createAction(LOGIN_FAILURE, props<{ error: Error }>());
-
-export const refreshToken = createAction(REFRESH_TOKEN, props<{ request: RefreshTokenRequest }>());
+// LOGIN
+export const login = createAction('[Auth] Login', props<{ request: LoginRequest }>());
+export const loginSuccess = createAction(
+  '[Auth] Login Success',
+  props<{ response: LoginResponse }>()
+);
+export const loginFailure = createAction('[Auth] Login Failure', props<{ error: Error }>());
+// CHECK AUTH
+export const checkAuth = createAction('[Auth] Check Auth');
+export const checkAuthSuccess = createAction(
+  '[Auth] Check Auth Success',
+  props<{ response: User }>()
+);
+export const checkAuthFailure = createAction(
+  '[Auth] Check Auth Failure',
+  props<{ error: Error }>()
+);
+// REFRESH TOKEN
+export const refreshToken = createAction(
+  '[Auth] Refresh Token',
+  props<{ request: RefreshTokenRequest }>()
+);
 export const refreshTokenSuccess = createAction(
-  REFRESH_TOKEN_SUCCESS,
+  '[Auth] Refresh Token Success',
   props<{ response: RefreshTokenResponse }>()
 );
-export const refreshTokenFailure = createAction(REFRESH_TOKEN_FAILURE, props<{ error: Error }>());
-
-export const signUp = createAction(SIGN_UP, props<{ request: SignUpRequest }>());
-export const signUpSuccess = createAction(SIGN_UP_SUCCESS, props<{ response: User }>());
-export const signUpFailure = createAction(SIGN_UP_FAILURE, props<{ error: Error }>());
-
-export const confirmRegistration = createAction(CONFIRM_REGISTRATION);
-export const confirmRegistrationSuccess = createAction(CONFIRM_REGISTRATION_SUCCESS);
-export const confirmRegistrationFailure = createAction(
-  CONFIRM_REGISTRATION_FAILURE,
+export const refreshTokenFailure = createAction(
+  '[Auth] Refresh Token Failure',
   props<{ error: Error }>()
 );
-
+// SIGN UP
+export const signUp = createAction('[Auth] SignUp', props<{ request: SignUpRequest }>());
+export const signUpSuccess = createAction('[Auth] SignUp Success', props<{ response: User }>());
+export const signUpFailure = createAction('[Auth] SignUp Failure', props<{ error: Error }>());
+// CONFIRM REGISTRATION
+export const confirmRegistration = createAction(
+  '[Auth] Confirm Registration',
+  props<{ request: string }>()
+);
+export const confirmRegistrationSuccess = createAction('[Auth] Confirm Registration Success');
+export const confirmRegistrationFailure = createAction(
+  '[Auth] Confirm Registration Failure',
+  props<{ error: Error }>()
+);
+// RESEND CONFIRMATION EMAIL
 export const resendConfirmationEmail = createAction(
-  RESEND_CONFIRMATION_EMAIL,
+  '[Auth] Resend Confirmation Email',
   props<{ request: ResendConfirmationEmailRequest }>()
 );
-export const resendConfirmationEmailSuccess = createAction(RESEND_CONFIRMATION_EMAIL_SUCCESS);
+export const resendConfirmationEmailSuccess = createAction(
+  '[Auth] Resend Confirmation Email Success'
+);
 export const resendConfirmationEmailFailure = createAction(
-  RESEND_CONFIRMATION_EMAIL_FAILURE,
+  '[Auth] Resend Confirmation Email Failure',
   props<{ error: Error }>()
 );
-
+// FORGOT PASSWORD
 export const forgotPassword = createAction(
-  FORGOT_PASSWORD,
+  '[Auth] Forgot Password',
   props<{ request: ForgotPasswordRequest }>()
 );
-export const forgotPasswordSuccess = createAction(FORGOT_PASSWORD_SUCCESS);
+export const forgotPasswordSuccess = createAction('[Auth] Forgot Password Success');
 export const forgotPasswordFailure = createAction(
-  FORGOT_PASSWORD_FAILURE,
+  '[Auth] Forgot Password Failure',
   props<{ error: Error }>()
 );
-
+// RESET PASSWORD
 export const resetPassword = createAction(
-  RESET_PASSWORD,
+  '[Auth] Reset Password',
   props<{ request: ResetPasswordRequest }>()
 );
-export const resetPasswordSuccess = createAction(RESET_PASSWORD_SUCCESS);
-export const resetPasswordFailure = createAction(RESET_PASSWORD_FAILURE, props<{ error: Error }>());
-
-export const logout = createAction(LOGOUT);
-export const logoutSuccess = createAction(LOGOUT_SUCCESS);
-export const logoutFailure = createAction(LOGOUT_FAILURE, props<{ error: Error }>());
-
-export const logoutFromAllDevices = createAction(LOGOUT_FROM_ALL_DEVICES);
-export const logoutFromAllDevicesSuccess = createAction(LOGOUT_FROM_ALL_DEVICES_SUCCESS);
+export const resetPasswordSuccess = createAction('[Auth] Reset Password Success');
+export const resetPasswordFailure = createAction(
+  '[Auth] Reset Password Failure',
+  props<{ error: Error }>()
+);
+// LOGOUT
+export const logout = createAction('[Auth] Logout');
+export const logoutSuccess = createAction('[Auth] Logout Success');
+export const logoutFailure = createAction('[Auth] Logout Failure', props<{ error: Error }>());
+// LOGOUT FROM ALL DEVICES
+export const logoutFromAllDevices = createAction('[Auth] Logout From All Devices');
+export const logoutFromAllDevicesSuccess = createAction('[Auth] Logout From All Devices Success');
 export const logoutFromAllDevicesFailure = createAction(
-  LOGOUT_FROM_ALL_DEVICES_FAILURE,
+  '[Auth] Logout From All Devices Failure',
   props<{ error: Error }>()
 );
