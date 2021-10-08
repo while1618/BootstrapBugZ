@@ -11,12 +11,12 @@ import {
   SignUpRequest,
 } from '../models/auth.requests';
 import { LoginResponse, RefreshTokenResponse } from '../models/auth.responses';
+import { API_URL_AUTH } from '../../shared/constants/paths';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  API_URL = 'http://localhost:8181/v1.0/auth';
   private jwtHelper: JwtHelperService;
 
   constructor(private http: HttpClient) {
@@ -24,61 +24,61 @@ export class AuthService {
   }
 
   getLoggedInUser() {
-    return this.http.get<User>(`${this.API_URL}/logged-in-user`);
+    return this.http.get<User>(`${API_URL_AUTH}/logged-in-user`);
   }
 
   login(loginRequest: LoginRequest) {
-    return this.http.post<LoginResponse>(`${this.API_URL}/login`, loginRequest);
+    return this.http.post<LoginResponse>(`${API_URL_AUTH}/login`, loginRequest);
   }
 
   refreshToken(refreshTokenRequest: RefreshTokenRequest) {
     return this.http.post<RefreshTokenResponse>(
-      `${this.API_URL}/refresh-token`,
+      `${API_URL_AUTH}/refresh-token`,
       refreshTokenRequest
     );
   }
 
   signUp(signUpRequest: SignUpRequest) {
-    return this.http.post<User>(`${this.API_URL}/sign-up`, signUpRequest);
+    return this.http.post<User>(`${API_URL_AUTH}/sign-up`, signUpRequest);
   }
 
   confirmRegistration(token: string) {
-    return this.http.get<void>(`${this.API_URL}/confirm-registration`, {
+    return this.http.get<void>(`${API_URL_AUTH}/confirm-registration`, {
       params: { token },
     });
   }
 
   resendConfirmationEmail(resendConfirmationEmailRequest: ResendConfirmationEmailRequest) {
     return this.http.post<void>(
-      `${this.API_URL}/resend-confirmation-email`,
+      `${API_URL_AUTH}/resend-confirmation-email`,
       resendConfirmationEmailRequest
     );
   }
 
   forgotPassword(forgotPasswordRequest: ForgotPasswordRequest) {
-    return this.http.post<void>(`${this.API_URL}/forgot-password`, forgotPasswordRequest);
+    return this.http.post<void>(`${API_URL_AUTH}/forgot-password`, forgotPasswordRequest);
   }
 
   resetPassword(resetPasswordRequest: ResetPasswordRequest) {
-    return this.http.put<void>(`${this.API_URL}/reset-password`, resetPasswordRequest);
+    return this.http.put<void>(`${API_URL_AUTH}/reset-password`, resetPasswordRequest);
   }
 
   logout() {
-    return this.http.get<void>(`${this.API_URL}/logout`);
+    return this.http.get<void>(`${API_URL_AUTH}/logout`);
   }
 
   logoutFromAllDevices() {
-    return this.http.get<void>(`${this.API_URL}/logout-from-all-devices`);
+    return this.http.get<void>(`${API_URL_AUTH}/logout-from-all-devices`);
   }
 
   usernameAvailability(username: string) {
-    return this.http.get<boolean>(`${this.API_URL}/username-availability`, {
+    return this.http.get<boolean>(`${API_URL_AUTH}/username-availability`, {
       params: { username },
     });
   }
 
   emailAvailability(email: string) {
-    return this.http.get<boolean>(`${this.API_URL}/email-availability`, {
+    return this.http.get<boolean>(`${API_URL_AUTH}/email-availability`, {
       params: { email },
     });
   }
