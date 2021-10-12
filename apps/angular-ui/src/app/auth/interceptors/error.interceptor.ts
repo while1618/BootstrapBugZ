@@ -21,7 +21,11 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error) => {
         // We don't want to refresh token for some requests like login or refresh token itself
         // So we verify url and we throw an error if it's the case
-        if (error.url.includes('login') || error.url.includes('refresh-token')) {
+        if (
+          error.url.includes('login') ||
+          error.url.includes('refresh-token') ||
+          error.url.includes('logged-in-user')
+        ) {
           // We do another check to see if refresh token failed
           // In this case we want to logout user and to redirect it to login page
           if (error.url.includes('refresh-token')) {
