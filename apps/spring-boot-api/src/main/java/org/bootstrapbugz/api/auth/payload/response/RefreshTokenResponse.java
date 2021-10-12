@@ -1,19 +1,17 @@
-package org.bootstrapbugz.api.auth.response;
+package org.bootstrapbugz.api.auth.payload.response;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
-import org.bootstrapbugz.api.user.response.UserResponse;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
-@Accessors(chain = true)
-public class LoginResponse {
+public class RefreshTokenResponse {
   private String token;
   private String refreshToken;
-  private UserResponse user;
 }

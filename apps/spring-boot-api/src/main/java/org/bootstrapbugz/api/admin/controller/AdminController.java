@@ -2,11 +2,11 @@ package org.bootstrapbugz.api.admin.controller;
 
 import java.util.List;
 import javax.validation.Valid;
-import org.bootstrapbugz.api.admin.request.AdminRequest;
-import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
+import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
+import org.bootstrapbugz.api.admin.payload.request.ChangeRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.user.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;

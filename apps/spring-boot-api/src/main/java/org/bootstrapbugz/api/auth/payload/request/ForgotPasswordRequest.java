@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.request;
+package org.bootstrapbugz.api.auth.payload.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

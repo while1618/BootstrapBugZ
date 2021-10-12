@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.user.request;
+package org.bootstrapbugz.api.user.payload.request;
 
 import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;

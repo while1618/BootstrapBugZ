@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.user.response;
+package org.bootstrapbugz.api.user.payload.response;
 
 import java.util.Set;
 import lombok.AllArgsConstructor;

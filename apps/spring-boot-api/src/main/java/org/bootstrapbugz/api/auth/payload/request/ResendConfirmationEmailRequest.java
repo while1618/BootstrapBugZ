@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.request;
+package org.bootstrapbugz.api.auth.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

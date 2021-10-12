@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.response;
+package org.bootstrapbugz.api.user.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class RefreshTokenResponse {
-  private String token;
-  private String refreshToken;
+public class RoleResponse {
+  private String name;
 }

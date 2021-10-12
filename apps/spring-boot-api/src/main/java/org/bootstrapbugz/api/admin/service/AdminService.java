@@ -1,9 +1,9 @@
 package org.bootstrapbugz.api.admin.service;
 
 import java.util.List;
-import org.bootstrapbugz.api.admin.request.AdminRequest;
-import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
-import org.bootstrapbugz.api.user.response.UserResponse;
+import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
+import org.bootstrapbugz.api.admin.payload.request.ChangeRoleRequest;
+import org.bootstrapbugz.api.user.payload.response.UserResponse;
 
 public interface AdminService {
   List<UserResponse> findAllUsers();

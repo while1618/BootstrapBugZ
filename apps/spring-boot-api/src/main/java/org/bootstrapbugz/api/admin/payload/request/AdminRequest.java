@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.admin.request;
+package org.bootstrapbugz.api.admin.payload.request;
 
 import java.util.Set;
 import javax.validation.constraints.NotEmpty;

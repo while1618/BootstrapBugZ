@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
-import org.bootstrapbugz.api.admin.request.AdminRequest;
-import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
-import org.bootstrapbugz.api.auth.request.LoginRequest;
-import org.bootstrapbugz.api.auth.response.LoginResponse;
+import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
+import org.bootstrapbugz.api.admin.payload.request.ChangeRoleRequest;
+import org.bootstrapbugz.api.auth.payload.request.LoginRequest;
+import org.bootstrapbugz.api.auth.payload.response.LoginResponse;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;

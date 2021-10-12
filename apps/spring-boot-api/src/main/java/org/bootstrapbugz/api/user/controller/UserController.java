@@ -2,9 +2,9 @@ package org.bootstrapbugz.api.user.controller;
 
 import javax.validation.Valid;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
-import org.bootstrapbugz.api.user.request.UpdateUserRequest;
-import org.bootstrapbugz.api.user.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
+import org.bootstrapbugz.api.user.payload.request.UpdateUserRequest;
+import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

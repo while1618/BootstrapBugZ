@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
-import org.bootstrapbugz.api.auth.request.LoginRequest;
+import org.bootstrapbugz.api.auth.payload.request.LoginRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -15,10 +15,10 @@ import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
-import org.bootstrapbugz.api.user.request.UpdateUserRequest;
-import org.bootstrapbugz.api.user.response.RoleResponse;
-import org.bootstrapbugz.api.user.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
+import org.bootstrapbugz.api.user.payload.request.UpdateUserRequest;
+import org.bootstrapbugz.api.user.payload.response.RoleResponse;
+import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

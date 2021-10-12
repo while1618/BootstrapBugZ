@@ -7,9 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
-import org.bootstrapbugz.api.admin.request.AdminRequest;
-import org.bootstrapbugz.api.admin.request.ChangeRoleRequest;
-import org.bootstrapbugz.api.auth.request.LoginRequest;
+import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
+import org.bootstrapbugz.api.admin.payload.request.ChangeRoleRequest;
+import org.bootstrapbugz.api.auth.payload.request.LoginRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -17,8 +17,8 @@ import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.bootstrapbugz.api.user.request.ChangePasswordRequest;
-import org.bootstrapbugz.api.user.request.UpdateUserRequest;
+import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
+import org.bootstrapbugz.api.user.payload.request.UpdateUserRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
