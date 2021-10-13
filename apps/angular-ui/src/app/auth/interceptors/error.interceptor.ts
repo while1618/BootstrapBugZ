@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { switchMap } from 'rxjs/operators';
 import { RefreshTokenResponse } from '../models/auth.responses';
+import { addAccessTokenToRequest } from '../util/util';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -79,20 +80,8 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   private addAuthToken(request: HttpRequest<unknown>) {
-    // Get access token from Local Storage
     const accessToken = this.authService.getToken();
-    // If access token is null this means that user is not logged in
-    // And we return the original request
-    if (!accessToken) {
-      return request;
-    }
-
-    // We clone the request, because the original request is immutable
-    return request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    if (!accessToken) return request;
+    return addAccessTokenToRequest(request, accessToken);
   }
 }
