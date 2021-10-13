@@ -1,10 +1,5 @@
 package org.bootstrapbugz.api.auth.security;
 
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
@@ -16,6 +11,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
@@ -51,10 +52,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   }
 
   private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
+    jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
     final var userPrincipal =
         (UserPrincipal) userDetailsService.loadUserByUserId(JwtUtil.getUserId(token));
-    jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
-
     return new UsernamePasswordAuthenticationToken(
         userPrincipal, null, userPrincipal.getAuthorities());
   }
