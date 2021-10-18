@@ -24,7 +24,6 @@
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <commons-beanutils.version>1.9.4</commons-beanutils.version>
     <commons-validator.version>1.7</commons-validator.version>
-    <springfox.version>3.0.0</springfox.version>
     <jacoco.version>0.8.7</jacoco.version>
     <jedis.version>3.7.0</jedis.version>
     <testcontainers.version>1.16.0</testcontainers.version>
@@ -122,11 +121,6 @@
       <groupId>commons-validator</groupId>
       <artifactId>commons-validator</artifactId>
       <version>${commons-validator.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-boot-starter</artifactId>
-      <version>${springfox.version}</version>
     </dependency>
   </dependencies>
 

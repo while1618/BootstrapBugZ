@@ -25,9 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-  private static final String[] SWAGGER_WHITELIST = {
-    "/swagger-resources/**", "/swagger-ui/**", "/v2/api-docs", "/webjars/**"
-  };
   private static final String[] AUTH_WHITELIST = {
     Path.AUTH + "/login",
     Path.AUTH + "/refresh-token",
@@ -92,8 +89,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .authenticationEntryPoint(customAuthenticationEntryPoint)
         .and()
         .authorizeRequests()
-        .antMatchers(SWAGGER_WHITELIST)
-        .permitAll()
         .antMatchers(AUTH_WHITELIST)
         .permitAll()
         .anyRequest()
