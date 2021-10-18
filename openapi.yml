@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: BootstrapBugZ
   description: Description
-  termsOfService: https://github.com/while1618
+  termsOfService: https://swagger.io/terms/
   contact:
     email: dejan.zdravkovic96@gmail.com
   license:
@@ -366,8 +366,8 @@ paths:
           schema:
             type: string
           description: Pass username to check if it's available.
-          examples: 
-            available: 
+          examples:
+            available:
               value: availableUsername
             taken:
               value: takenUsername
@@ -396,8 +396,8 @@ paths:
           schema:
             type: string
           description: Pass email to check if it's available.
-          examples: 
-            available: 
+          examples:
+            available:
               value: availableEmail@localhost.com
             taken:
               value: takenEmail@localhost.com
@@ -433,7 +433,7 @@ paths:
                   $ref: '#/components/schemas/UserResponse'
               examples:
                 non-signed-in-and-regular-user:
-                  value: 
+                  value:
                     - id: 1
                       firstName: John
                       lastName: Doe
@@ -451,7 +451,7 @@ paths:
                       nonLocked: true
                       roles: null
                 admin:
-                  value: 
+                  value:
                     - id: 1
                       firstName: John
                       lastName: Doe
@@ -748,7 +748,7 @@ paths:
                     - john
                     - jean
                   roleNames:
-                    - USER 
+                    - USER
                     - ADMIN
               bad-request:
                 value:
