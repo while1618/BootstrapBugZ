@@ -10,8 +10,8 @@ info:
     url: https://choosealicense.com/licenses/mit/
   version: 1.0.0
 servers:
-  - url: http://localhost:8181/v1.0
-  - url: https://localhost:8181/v1.0
+  - url: http://localhost:8181/v1
+  - url: https://localhost:8181/v1
 tags:
   - name: auth
     description: Auth Endpoints
@@ -26,6 +26,7 @@ paths:
         - auth
       summary: Sign Up
       operationId: signUp
+      x-codegen-request-body-name: body
       requestBody:
         description: Sign Up Request
         required: true
@@ -33,13 +34,23 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SignUpRequest'
-            example:
-              firstName: John
-              lastName: Doe
-              username: john
-              email: john.doe@localhost.com
-              password: qwerty123
-              confirmPassword: qwerty123
+            examples:
+              valid:
+                value:
+                  firstName: John
+                  lastName: Doe
+                  username: john
+                  email: john.doe@localhost.com
+                  password: qwerty123
+                  confirmPassword: qwerty123
+              bad-request:
+                value:
+                  firstName: John
+                  lastName: Doe
+                  username: john
+                  email: john
+                  password: 123qwerty
+                  confirmPassword: qwerty123
       responses:
         201:
           description: Sign Up Success
@@ -68,11 +79,519 @@ paths:
                 status: 400
                 error: Bad Request
                 errors:
-                  - domain: username
-                    message: Username already exists.
                   - domain: email
-                    message: Email already exists.
+                    message: Invalid email.
+                  - domain: password
+                    message: Passwords do not match.
+  /auth/confirm-registration:
+    put:
+      tags:
+        - auth
+      summary: Confirm Registration
+      operationId: confirmRegistration
       x-codegen-request-body-name: body
+      requestBody:
+        description: Confirm Registration Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmRegistrationRequest'
+            examples:
+              valid:
+                value:
+                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+              bad-request:
+                value:
+                  accessToken: null
+              forbidden:
+                value:
+                  accessToken: invalidToken
+      responses:
+        204:
+          description: Confirm Registration Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: accessToken
+                    message: Invalid token.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 403
+                error: Forbidden
+                errors:
+                  - domain: auth
+                    message: Invalid token.
+  /auth/resend-confirmation-email:
+    post:
+      tags:
+        - auth
+      summary: Resend Confirmation Email
+      operationId: resendConfirmationEmail
+      x-codegen-request-body-name: body
+      requestBody:
+        description: Resend Confirmation Email Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendConfirmationEmailRequest'
+            examples:
+              valid:
+                value:
+                  usernameOrEmail: john.doe@localhost.com
+              bad-request:
+                value:
+                  usernameOrEmail: null
+              forbidden:
+                value:
+                  usernameOrEmail: user
+              not-found:
+                value:
+                  usernameOrEmail: unknown
+      responses:
+        204:
+          description: Resend Confirmation Email Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: usernameOrEmail
+                    message: Invalid username or email.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 403
+                error: Forbidden
+                errors:
+                  - domain: auth
+                    message: User already activated.
+        404:
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 404
+                error: Not Found
+                errors:
+                  - domain: auth
+                    message: User not found.
+  /auth/sign-in:
+    post:
+      tags:
+        - auth
+      summary: Sign In
+      operationId: signIn
+      x-codegen-request-body-name: body
+      requestBody:
+        description: Sign In Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+            examples:
+              valid:
+                value:
+                  usernameOrEmail: john.doe@localhost.com
+                  password: qwerty123
+              bad-request:
+                value:
+                  usernameOrEmail: null
+                  password: null
+              unauthorized:
+                value:
+                  usernameOrEmail: john.doe@localhost.com
+                  password: 123qwerty
+      responses:
+        200:
+          description: Sign In Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponse'
+              example:
+                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5b
+                user:
+                  id: 1
+                  firstName: John
+                  lastName: Doe
+                  username: john
+                  email: john.doe@localhost.com
+                  activated: false
+                  nonLocked: true
+                  roles:
+                    - name: USER
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: usernameOrEmail
+                    message: Invalid username or email.
+                  - domain: password
+                    message: Invalid password.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Invalid credentials.
+  /auth/refresh-token:
+    post:
+      tags:
+        - auth
+      summary: Refresh Token
+      operationId: refreshToken
+      x-codegen-request-body-name: body
+      requestBody:
+        description: Refresh Token Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+            examples:
+              valid:
+                value:
+                  refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5b
+              bad-request:
+                value:
+                  refreshToken: null
+              unauthorized:
+                value:
+                  refreshToken: invalidToken
+      responses:
+        200:
+          description: Refresh Token Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+              example:
+                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5b
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: refreshToken
+                    message: Invalid token.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Invalid token.
+  /auth/sign-out:
+    post:
+      tags:
+        - auth
+      summary: Sign Out
+      operationId: signOut
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      responses:
+        204:
+          description: Sign Out Success
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+  /auth/sign-out-from-all-devices:
+    post:
+      tags:
+        - auth
+      summary: Sign Out From All Devices
+      operationId: signOutFromAllDevices
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      responses:
+        204:
+          description: Sign Out From All Devices Success
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+  /auth/forgot-password:
+    post:
+      tags:
+        - auth
+      summary: Forgot Password
+      operationId: forgotPassword
+      x-codegen-request-body-name: body
+      requestBody:
+        description: Forgot Password Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+            examples:
+              valid:
+                value:
+                  email: john.doe@localhost.com
+              bad-request:
+                value:
+                  email: null
+              not-found:
+                value:
+                  email: unknown@localhost.com
+      responses:
+        204:
+          description: Forgot Password Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: email
+                    message: Invalid email.
+        404:
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 404
+                error: Not Found
+                errors:
+                  - domain: auth
+                    message: User not found.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 403
+                error: Forbidden
+                errors:
+                  - domain: auth
+                    message: Invalid token.
+  /auth/reset-password:
+    put:
+      tags:
+        - auth
+      summary: Reset Password
+      operationId: resetPassword
+      x-codegen-request-body-name: body
+      requestBody:
+        description: Reset Password Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+            examples:
+              valid:
+                value:
+                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                  password: qwerty321
+                  confirmPassword: qwerty321
+              bad-request:
+                value:
+                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                  password: qwerty321
+                  confirmPassword: 321qwerty
+              forbidden:
+                value:
+                  accessToken: invalidToken
+                  password: qwerty321
+                  confirmPassword: qwerty321
+      responses:
+        204:
+          description: Reset Password Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: password
+                    message: Passwords do not match.
+  /auth/signed-in-user:
+    get:
+      tags:
+        - auth
+      summary: Signed In User
+      operationId: signedInUser
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Signed In User Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              example:
+                id: 1
+                firstName: John
+                lastName: Doe
+                username: john
+                email: john.doe@localhost.com
+                activated: false
+                nonLocked: true
+                roles:
+                  - name: USER
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+  /auth/username-availability:
+    get:
+      tags:
+        - auth
+      summary: Username Availability
+      operationId: usernameAvailability
+      parameters:
+        - in: query
+          name: username
+          required: true
+          schema:
+            type: string
+          description: Pass username to check if it's available.
+          example: john
+      responses:
+        200:
+          description: Username Availability Success
+          content:
+            application/json:
+              schema:
+                type: boolean
+              examples:
+                username-available:
+                  value: true
+                username-taken:
+                  value: false
+  /auth/email-availability:
+    get:
+      tags:
+        - auth
+      summary: Email Availability
+      operationId: emailAvailability
+      parameters:
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+          description: Pass email to check if it's available.
+          example: john.doe@localhost.com
+      responses:
+        200:
+          description: Email Availability Success
+          content:
+            application/json:
+              schema:
+                type: boolean
+              examples:
+                email-available:
+                  value: true
+                email-taken:
+                  value: false
 components:
   schemas:
     SignUpRequest:
@@ -91,12 +610,18 @@ components:
           type: string
         confirmPassword:
           type: string
+    ConfirmRegistrationRequest:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          format: JWT
     ResendConfirmationEmailRequest:
       type: object
       properties:
         usernameOrEmail:
           type: string
-    LoginRequest:
+    SignInRequest:
       type: object
       properties:
         usernameOrEmail:
@@ -198,7 +723,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RoleResponse'
-    LoginResponse:
+    SignInResponse:
       type: object
       properties:
         accessToken:
