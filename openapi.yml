@@ -71,73 +71,7 @@ paths:
                 roles:
                   - name: USER
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: email
-                    message: Invalid email.
-                  - domain: password
-                    message: Passwords do not match.
-  /auth/confirm-registration:
-    put:
-      tags:
-        - auth
-      summary: Confirm Registration
-      operationId: confirmRegistration
-      x-codegen-request-body-name: body
-      requestBody:
-        description: Confirm Registration Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConfirmRegistrationRequest'
-            examples:
-              valid:
-                value:
-                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-              bad-request:
-                value:
-                  accessToken: null
-              forbidden:
-                value:
-                  accessToken: invalidToken
-      responses:
-        204:
-          description: Confirm Registration Success
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: accessToken
-                    message: Invalid token.
-        403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 403
-                error: Forbidden
-                errors:
-                  - domain: auth
-                    message: Invalid token.
+          $ref: '#/components/responses/BadRequest'
   /auth/resend-confirmation-email:
     post:
       tags:
@@ -169,44 +103,42 @@ paths:
         204:
           description: Resend Confirmation Email Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: usernameOrEmail
-                    message: Invalid username or email.
+          $ref: '#/components/responses/BadRequest'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 403
-                error: Forbidden
-                errors:
-                  - domain: auth
-                    message: User already activated.
+          $ref: '#/components/responses/Forbidden'
         404:
-          description: User Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 404
-                error: Not Found
-                errors:
-                  - domain: auth
-                    message: User not found.
+          $ref: '#/components/responses/NotFound'
+  /auth/confirm-registration:
+    put:
+      tags:
+        - auth
+      summary: Confirm Registration
+      operationId: confirmRegistration
+      x-codegen-request-body-name: body
+      requestBody:
+        description: Confirm Registration Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmRegistrationRequest'
+            examples:
+              valid:
+                value:
+                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+              bad-request:
+                value:
+                  accessToken: null
+              forbidden:
+                value:
+                  accessToken: invalidToken
+      responses:
+        204:
+          description: Confirm Registration Success
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
   /auth/sign-in:
     post:
       tags:
@@ -250,38 +182,14 @@ paths:
                   lastName: Doe
                   username: john
                   email: john.doe@localhost.com
-                  activated: false
+                  activated: true
                   nonLocked: true
                   roles:
                     - name: USER
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: usernameOrEmail
-                    message: Invalid username or email.
-                  - domain: password
-                    message: Invalid password.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Invalid credentials.
+          $ref: '#/components/responses/Unauthorized'
   /auth/refresh-token:
     post:
       tags:
@@ -317,31 +225,9 @@ paths:
                 accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
                 refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5b
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: refreshToken
-                    message: Invalid token.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Invalid token.
+          $ref: '#/components/responses/Unauthorized'
   /auth/sign-out:
     post:
       tags:
@@ -355,18 +241,7 @@ paths:
         204:
           description: Sign Out Success
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
   /auth/sign-out-from-all-devices:
     post:
       tags:
@@ -380,18 +255,7 @@ paths:
         204:
           description: Sign Out From All Devices Success
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
   /auth/forgot-password:
     post:
       tags:
@@ -420,44 +284,11 @@ paths:
         204:
           description: Forgot Password Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: email
-                    message: Invalid email.
+          $ref: '#/components/responses/BadRequest'
         404:
-          description: User Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 404
-                error: Not Found
-                errors:
-                  - domain: auth
-                    message: User not found.
+          $ref: '#/components/responses/NotFound'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 403
-                error: Forbidden
-                errors:
-                  - domain: auth
-                    message: Invalid token.
+          $ref: '#/components/responses/Forbidden'
   /auth/reset-password:
     put:
       tags:
@@ -492,18 +323,9 @@ paths:
         204:
           description: Reset Password Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: password
-                    message: Passwords do not match.
+          $ref: '#/components/responses/BadRequest'
+        403:
+          $ref: '#/components/responses/Forbidden'
   /auth/signed-in-user:
     get:
       tags:
@@ -525,23 +347,12 @@ paths:
                 lastName: Doe
                 username: john
                 email: john.doe@localhost.com
-                activated: false
+                activated: true
                 nonLocked: true
                 roles:
                   - name: USER
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
   /auth/username-availability:
     get:
       tags:
@@ -555,7 +366,11 @@ paths:
           schema:
             type: string
           description: Pass username to check if it's available.
-          example: john
+          examples: 
+            available: 
+              value: availableUsername
+            taken:
+              value: takenUsername
       responses:
         200:
           description: Username Availability Success
@@ -581,7 +396,11 @@ paths:
           schema:
             type: string
           description: Pass email to check if it's available.
-          example: john.doe@localhost.com
+          examples: 
+            available: 
+              value: availableEmail@localhost.com
+            taken:
+              value: takenEmail@localhost.com
       responses:
         200:
           description: Email Availability Success
@@ -620,7 +439,7 @@ paths:
                       lastName: Doe
                       username: john
                       email: null
-                      activated: false
+                      activated: true
                       nonLocked: true
                       roles: null
                     - id: 2
@@ -628,7 +447,7 @@ paths:
                       lastName: Doe
                       username: jane
                       email: null
-                      activated: false
+                      activated: true
                       nonLocked: true
                       roles: null
                 admin:
@@ -638,7 +457,7 @@ paths:
                       lastName: Doe
                       username: john
                       email: john.doe@localhost.com
-                      activated: false
+                      activated: true
                       nonLocked: true
                       roles:
                         - name: USER
@@ -647,7 +466,7 @@ paths:
                       lastName: Doe
                       username: jane
                       email: jane.doe@localhost.com
-                      activated: false
+                      activated: true
                       nonLocked: true
                       roles:
                         - name: USER
@@ -675,53 +494,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
-              examples:
-                requesting-signed-in-user:
-                  value:
-                    id: 1
-                    firstName: John
-                    lastName: Doe
-                    username: john
-                    email: john.doe@localhost.com
-                    activated: false
-                    nonLocked: true
-                    roles: null 
-                requesting-other-user:
-                  value:
-                    id: 1
-                    firstName: John
-                    lastName: Doe
-                    username: john
-                    email: null
-                    activated: false
-                    nonLocked: true
-                    roles: null
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
               example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+                id: 1
+                firstName: John
+                lastName: Doe
+                username: john
+                email: null
+                activated: true
+                nonLocked: true
+                roles: null
         404:
-          description: User Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 404
-                error: Not Found
-                errors:
-                  - domain: user
-                    message: User not found.
+          $ref: '#/components/responses/NotFound'
   /profile/update:
     put:
       tags:
@@ -769,31 +552,9 @@ paths:
                 roles:
                   - name: USER
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: email
-                    message: Invalid email.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
   /profile/change-password:
     put:
       tags:
@@ -825,31 +586,9 @@ paths:
         204:
           description: Change Password Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: password
-                    message: Passwords do not match.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
   /admin/users/activate:
     put:
       tags:
@@ -879,44 +618,11 @@ paths:
         204:
           description: Activate Users Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: usernames
-                    message: Usernames not provided.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 403
-                error: Forbidden
-                errors:
-                  - domain: auth
-                    message: Forbidden.
+          $ref: '#/components/responses/Forbidden'
   /admin/users/deactivate:
     put:
       tags:
@@ -946,44 +652,11 @@ paths:
         204:
           description: Deactivate Users Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: usernames
-                    message: Usernames not provided.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 403
-                error: Forbidden
-                errors:
-                  - domain: auth
-                    message: Forbidden.
+          $ref: '#/components/responses/Forbidden'
   /admin/users/unlock:
     put:
       tags:
@@ -1013,44 +686,11 @@ paths:
         204:
           description: Unlock Users Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: usernames
-                    message: Usernames not provided.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 403
-                error: Forbidden
-                errors:
-                  - domain: auth
-                    message: Forbidden.
+          $ref: '#/components/responses/Forbidden'
   /admin/users/lock:
     put:
       tags:
@@ -1080,44 +720,11 @@ paths:
         204:
           description: Lock Users Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: usernames
-                    message: Usernames not provided.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 403
-                error: Forbidden
-                errors:
-                  - domain: auth
-                    message: Forbidden.
+          $ref: '#/components/responses/Forbidden'
   /admin/users/update-role:
     put:
       tags:
@@ -1151,46 +758,11 @@ paths:
         204:
           description: Update Users Roles Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: usernames
-                    message: Usernames not provided.
-                  - domain: usernames
-                    message: Roles not provided.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 403
-                error: Forbidden
-                errors:
-                  - domain: auth
-                    message: Forbidden.
+          $ref: '#/components/responses/Forbidden'
   /admin/users/delete:
     delete:
       tags:
@@ -1220,45 +792,65 @@ paths:
         204:
           description: Delete Users Success
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 400
-                error: Bad Request
-                errors:
-                  - domain: usernames
-                    message: Usernames not provided.
+          $ref: '#/components/responses/BadRequest'
         401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 401
-                error: Unauthorized
-                errors:
-                  - domain: auth
-                    message: Unauthorized.
+          $ref: '#/components/responses/Unauthorized'
         403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                timestamp: 18-10-2021 04:00:44
-                status: 403
-                error: Forbidden
-                errors:
-                  - domain: auth
-                    message: Forbidden.
+          $ref: '#/components/responses/Forbidden'
 components:
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            timestamp: 18-10-2021 04:00:44
+            status: 400
+            error: Bad Request
+            errors:
+              - domain: resource/field
+                message: Resource/Field invalid.
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            timestamp: 18-10-2021 04:00:44
+            status: 401
+            error: Not Found
+            errors:
+              - domain: resource
+                message: Resource Not Found.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            timestamp: 18-10-2021 04:00:44
+            status: 401
+            error: Unauthorized
+            errors:
+              - domain: auth
+                message: Unauthorized.
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            timestamp: 18-10-2021 04:00:44
+            status: 403
+            error: Forbidden
+            errors:
+              - domain: auth
+                message: Forbidden.
   schemas:
     SignUpRequest:
       type: object
