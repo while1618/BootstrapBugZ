@@ -600,6 +600,9 @@ paths:
         - user
       summary: Get Users
       operationId: getUsers
+      security:
+        - {}
+        - BearerAuth: []
       responses:
         200:
           description: Get Users Success
@@ -610,7 +613,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserResponse'
               examples:
-                user:
+                non-signed-in-and-regular-user:
                   value: 
                     - id: 1
                       firstName: John
@@ -654,6 +657,9 @@ paths:
         - user
       summary: Get User
       operationId: getUser
+      security:
+        - {}
+        - BearerAuth: []
       parameters:
         - in: path
           name: username
@@ -670,7 +676,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserResponse'
               examples:
-                with-email:
+                requesting-signed-in-user:
                   value:
                     id: 1
                     firstName: John
@@ -680,7 +686,7 @@ paths:
                     activated: false
                     nonLocked: true
                     roles: null 
-                without-email:
+                requesting-other-user:
                   value:
                     id: 1
                     firstName: John
