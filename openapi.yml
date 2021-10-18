@@ -17,6 +17,8 @@ tags:
     description: Auth Endpoints
   - name: user
     description: User Endpoints
+  - name: profile
+    description: Profile Endpoints
   - name: admin
     description: Admin Endpoints
 paths:
@@ -592,6 +594,664 @@ paths:
                   value: true
                 email-taken:
                   value: false
+  /users:
+    get:
+      tags:
+        - user
+      summary: Get Users
+      operationId: getUsers
+      responses:
+        200:
+          description: Get Users Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+              examples:
+                user:
+                  value: 
+                    - id: 1
+                      firstName: John
+                      lastName: Doe
+                      username: john
+                      email: null
+                      activated: false
+                      nonLocked: true
+                      roles: null
+                    - id: 2
+                      firstName: Jane
+                      lastName: Doe
+                      username: jane
+                      email: null
+                      activated: false
+                      nonLocked: true
+                      roles: null
+                admin:
+                  value: 
+                    - id: 1
+                      firstName: John
+                      lastName: Doe
+                      username: john
+                      email: john.doe@localhost.com
+                      activated: false
+                      nonLocked: true
+                      roles:
+                        - name: USER
+                    - id: 2
+                      firstName: Jane
+                      lastName: Doe
+                      username: jane
+                      email: jane.doe@localhost.com
+                      activated: false
+                      nonLocked: true
+                      roles:
+                        - name: USER
+  /users/{username}:
+    get:
+      tags:
+        - user
+      summary: Get User
+      operationId: getUser
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: Pass username to get user.
+          example: john
+      responses:
+        200:
+          description: Get User Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              examples:
+                with-email:
+                  value:
+                    id: 1
+                    firstName: John
+                    lastName: Doe
+                    username: john
+                    email: john.doe@localhost.com
+                    activated: false
+                    nonLocked: true
+                    roles: null 
+                without-email:
+                  value:
+                    id: 1
+                    firstName: John
+                    lastName: Doe
+                    username: john
+                    email: null
+                    activated: false
+                    nonLocked: true
+                    roles: null
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+        404:
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 404
+                error: Not Found
+                errors:
+                  - domain: user
+                    message: User not found.
+  /profile/update:
+    put:
+      tags:
+        - profile
+      summary: Update Profile
+      operationId: updateProfile
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Update Profile Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+            examples:
+              valid:
+                value:
+                  firstName: Jane
+                  lastName: Doe
+                  username: jane
+                  email: jane.doe@localhost.com
+              bad-request:
+                value:
+                  firstName: John
+                  lastName: Doe
+                  username: john
+                  email: john
+      responses:
+        200:
+          description: Update Profile Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              example:
+                id: 1
+                firstName: Jane
+                lastName: Doe
+                username: jane
+                email: jane.doe@localhost.com
+                activated: false
+                nonLocked: true
+                roles:
+                  - name: USER
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: email
+                    message: Invalid email.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+  /profile/change-password:
+    put:
+      tags:
+        - profile
+      summary: Change Password
+      operationId: changePassword
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Change Password Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+            examples:
+              valid:
+                value:
+                  oldPassword: qwerty123
+                  newPassword: qwerty321
+                  confirmNewPassword: qwerty321
+              bad-request:
+                value:
+                  oldPassword: qwerty123
+                  newPassword: qwerty321
+                  confirmNewPassword: qwerty3214
+      responses:
+        204:
+          description: Change Password Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: password
+                    message: Passwords do not match.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+  /admin/users/activate:
+    put:
+      tags:
+        - admin
+      summary: Activate Users
+      operationId: activateUsers
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Activate Users Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminRequest'
+            examples:
+              valid:
+                value:
+                  usernames:
+                    - john
+                    - jean
+              bad-request:
+                value:
+                  usernames: null
+      responses:
+        204:
+          description: Activate Users Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: usernames
+                    message: Usernames not provided.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 403
+                error: Forbidden
+                errors:
+                  - domain: auth
+                    message: Forbidden.
+  /admin/users/deactivate:
+    put:
+      tags:
+        - admin
+      summary: Deactivate Users
+      operationId: deactivateUsers
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Deactivate Users Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminRequest'
+            examples:
+              valid:
+                value:
+                  usernames:
+                    - john
+                    - jean
+              bad-request:
+                value:
+                  usernames: null
+      responses:
+        204:
+          description: Deactivate Users Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: usernames
+                    message: Usernames not provided.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 403
+                error: Forbidden
+                errors:
+                  - domain: auth
+                    message: Forbidden.
+  /admin/users/unlock:
+    put:
+      tags:
+        - admin
+      summary: Unlock Users
+      operationId: unlockUsers
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Unlock Users Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminRequest'
+            examples:
+              valid:
+                value:
+                  usernames:
+                    - john
+                    - jean
+              bad-request:
+                value:
+                  usernames: null
+      responses:
+        204:
+          description: Unlock Users Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: usernames
+                    message: Usernames not provided.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 403
+                error: Forbidden
+                errors:
+                  - domain: auth
+                    message: Forbidden.
+  /admin/users/lock:
+    put:
+      tags:
+        - admin
+      summary: Lock Users
+      operationId: lockUsers
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Lock Users Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminRequest'
+            examples:
+              valid:
+                value:
+                  usernames:
+                    - john
+                    - jean
+              bad-request:
+                value:
+                  usernames: null
+      responses:
+        204:
+          description: Lock Users Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: usernames
+                    message: Usernames not provided.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 403
+                error: Forbidden
+                errors:
+                  - domain: auth
+                    message: Forbidden.
+  /admin/users/update-role:
+    put:
+      tags:
+        - admin
+      summary: Update Users Roles
+      operationId: updateUserRoles
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Update Users Roles Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRoleRequest'
+            examples:
+              valid:
+                value:
+                  usernames:
+                    - john
+                    - jean
+                  roleNames:
+                    - USER 
+                    - ADMIN
+              bad-request:
+                value:
+                  usernames: null
+                  roleNames: null
+      responses:
+        204:
+          description: Update Users Roles Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: usernames
+                    message: Usernames not provided.
+                  - domain: usernames
+                    message: Roles not provided.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 403
+                error: Forbidden
+                errors:
+                  - domain: auth
+                    message: Forbidden.
+  /admin/users/delete:
+    delete:
+      tags:
+        - admin
+      summary: Delete Users
+      operationId: deleteUsers
+      x-codegen-request-body-name: body
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Delete Users Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminRequest'
+            examples:
+              valid:
+                value:
+                  usernames:
+                    - john
+                    - jean
+              bad-request:
+                value:
+                  usernames: null
+      responses:
+        204:
+          description: Delete Users Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 400
+                error: Bad Request
+                errors:
+                  - domain: usernames
+                    message: Usernames not provided.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 401
+                error: Unauthorized
+                errors:
+                  - domain: auth
+                    message: Unauthorized.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                timestamp: 18-10-2021 04:00:44
+                status: 403
+                error: Forbidden
+                errors:
+                  - domain: auth
+                    message: Forbidden.
 components:
   schemas:
     SignUpRequest:
@@ -650,7 +1310,7 @@ components:
           type: string
         confirmPassword:
           type: string
-    UpdateUserRequest:
+    UpdateProfileRequest:
       type: object
       properties:
         firstName:
@@ -678,7 +1338,7 @@ components:
           type: array
           items:
             type: string
-    ChangeRoleRequest:
+    UpdateRoleRequest:
       type: object
       properties:
         usernames:
