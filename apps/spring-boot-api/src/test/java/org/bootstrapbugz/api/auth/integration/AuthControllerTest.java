@@ -1,19 +1,12 @@
 package org.bootstrapbugz.api.auth.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Set;
+import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.LoginRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
+import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.payload.response.RefreshTokenResponse;
 import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
@@ -37,6 +30,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -45,28 +47,6 @@ class AuthControllerTest extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private JwtServiceImpl jwtService;
-
-  @Test
-  void itShouldGetLoggedInUser() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
-    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
-    var expectedUserResponse =
-        new UserResponse(
-            2L, "User", "User", "user", "user@localhost.com", true, true, roleResponses);
-    var resultActions =
-        mockMvc
-            .perform(
-                get(Path.AUTH + "/logged-in-user")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthUtil.AUTH_HEADER, loginResponse.getToken()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    var actualUserResponse =
-        objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(), UserResponse.class);
-    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
-  }
 
   @Test
   void itShouldSignUp() throws Exception {
@@ -107,47 +87,6 @@ class AuthControllerTest extends DatabaseContainers {
     expectedErrorResponse.addError("username", "Username already exists.");
     expectedErrorResponse.addError("email", "Email already exists.");
     expectedErrorResponse.addError("password", "Passwords do not match.");
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
-  }
-
-  @Test
-  void itShouldConfirmRegistration() throws Exception {
-    String token = jwtService.createToken(3L, JwtPurpose.CONFIRM_REGISTRATION); // notActivated
-    mockMvc
-        .perform(
-            get(Path.AUTH + "/confirm-registration")
-                .param("token", token)
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNoContent());
-  }
-
-  @Test
-  void confirmRegistrationShouldThrowForbidden_invalidToken() throws Exception {
-    String token = jwtService.createToken(10L, JwtPurpose.CONFIRM_REGISTRATION); // unknown
-    var resultActions =
-        mockMvc
-            .perform(
-                get(Path.AUTH + "/confirm-registration")
-                    .param("token", token)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "Invalid token.");
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
-  }
-
-  @Test
-  void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() throws Exception {
-    String token = jwtService.createToken(2L, JwtPurpose.CONFIRM_REGISTRATION); // user
-    var resultActions =
-        mockMvc
-            .perform(
-                get(Path.AUTH + "/confirm-registration")
-                    .param("token", token)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "User already activated.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -193,6 +132,127 @@ class AuthControllerTest extends DatabaseContainers {
   }
 
   @Test
+  void itShouldConfirmRegistration() throws Exception {
+    String token = jwtService.createToken(3L, JwtPurpose.CONFIRM_REGISTRATION); // notActivated
+    var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
+    mockMvc
+        .perform(
+            put(Path.AUTH + "/confirm-registration")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
+        .andExpect(status().isNoContent());
+  }
+
+  @Test
+  void confirmRegistrationShouldThrowForbidden_invalidToken() throws Exception {
+    String token = jwtService.createToken(10L, JwtPurpose.CONFIRM_REGISTRATION); // unknown
+    var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
+    var resultActions =
+        mockMvc
+            .perform(
+                put(Path.AUTH + "/confirm-registration")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
+            .andExpect(status().isForbidden());
+    var expectedErrorResponse =
+        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "Invalid token.");
+    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+  }
+
+  @Test
+  void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() throws Exception {
+    String token = jwtService.createToken(2L, JwtPurpose.CONFIRM_REGISTRATION); // user
+    var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
+    var resultActions =
+        mockMvc
+            .perform(
+                put(Path.AUTH + "/confirm-registration")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
+            .andExpect(status().isForbidden());
+    var expectedErrorResponse =
+        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "User already activated.");
+    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+  }
+
+  @Test
+  void itShouldRefreshToken() throws Exception {
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var refreshTokenRequest = new RefreshTokenRequest(signInResponse.getRefreshToken());
+    var resultActions =
+        mockMvc
+            .perform(
+                post(Path.AUTH + "/refresh-token")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(refreshTokenRequest)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    var refreshTokenResponse =
+        objectMapper.readValue(
+            resultActions.andReturn().getResponse().getContentAsString(),
+            RefreshTokenResponse.class);
+    assertThat(refreshTokenResponse.getAccessToken()).isNotEqualTo(signInResponse.getAccessToken());
+    assertThat(refreshTokenResponse.getRefreshToken())
+        .isNotEqualTo(signInResponse.getRefreshToken());
+  }
+
+  @Test
+  void itShouldSignOut() throws Exception {
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/sign-out")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken()))
+        .andExpect(status().isNoContent());
+    jwtShouldBeInvalid(signInResponse.getAccessToken());
+    refreshTokenShouldBeInvalid(signInResponse.getRefreshToken());
+  }
+
+  private void jwtShouldBeInvalid(String token) throws Exception {
+    var expectedErrorResponse =
+        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Unauthorized");
+    var resultActions =
+        mockMvc
+            .perform(
+                get(Path.USERS + "/{username}", "user")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(AuthUtil.AUTH_HEADER, token))
+            .andExpect(status().isUnauthorized());
+    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+  }
+
+  private void refreshTokenShouldBeInvalid(String refreshToken) throws Exception {
+    var refreshTokenRequest = new RefreshTokenRequest(refreshToken);
+    var expectedErrorResponse =
+        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Invalid token.");
+    var resultActions =
+        mockMvc
+            .perform(
+                post(Path.AUTH + "/refresh-token")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(refreshTokenRequest)))
+            .andExpect(status().isUnauthorized());
+    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+  }
+
+  @Test
+  void itShouldSignOutFromAllDevices() throws Exception {
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/sign-out-from-all-devices")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken()))
+        .andExpect(status().isNoContent());
+    jwtShouldBeInvalid(signInResponse.getAccessToken());
+    refreshTokenShouldBeInvalid(signInResponse.getRefreshToken());
+  }
+
+  @Test
   void itShouldForgotPassword() throws Exception {
     var forgotPasswordRequest = new ForgotPasswordRequest("user@localhost.com");
     mockMvc
@@ -228,7 +288,7 @@ class AuthControllerTest extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isNoContent());
-    TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate1", "qwerty1234"));
+    TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate1", "qwerty1234"));
   }
 
   @Test
@@ -264,80 +324,25 @@ class AuthControllerTest extends DatabaseContainers {
   }
 
   @Test
-  void itShouldRefreshToken() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
-    var refreshTokenRequest = new RefreshTokenRequest(loginResponse.getRefreshToken());
+  void itShouldRetrieveSignedInUser() throws Exception {
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var expectedUserResponse =
+        new UserResponse(
+            2L, "User", "User", "user", "user@localhost.com", true, true, roleResponses);
     var resultActions =
         mockMvc
             .perform(
-                post(Path.AUTH + "/refresh-token")
+                get(Path.AUTH + "/signed-in-user")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(refreshTokenRequest)))
+                    .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    var refreshTokenResponse =
+    var actualUserResponse =
         objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(),
-            RefreshTokenResponse.class);
-    assertThat(refreshTokenResponse.getToken()).isNotEqualTo(loginResponse.getToken());
-    assertThat(refreshTokenResponse.getRefreshToken())
-        .isNotEqualTo(loginResponse.getRefreshToken());
-  }
-
-  @Test
-  void itShouldLogout() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
-    mockMvc
-        .perform(
-            get(Path.AUTH + "/logout")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken()))
-        .andExpect(status().isNoContent());
-    jwtShouldBeInvalid(loginResponse.getToken());
-    refreshTokenShouldBeInvalid(loginResponse.getRefreshToken());
-  }
-
-  private void jwtShouldBeInvalid(String token) throws Exception {
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Unauthorized");
-    var resultActions =
-        mockMvc
-            .perform(
-                get(Path.USERS + "/{username}", "user")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthUtil.AUTH_HEADER, token))
-            .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
-  }
-
-  private void refreshTokenShouldBeInvalid(String refreshToken) throws Exception {
-    var refreshTokenRequest = new RefreshTokenRequest(refreshToken);
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Invalid token.");
-    var resultActions =
-        mockMvc
-            .perform(
-                post(Path.AUTH + "/refresh-token")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(refreshTokenRequest)))
-            .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
-  }
-
-  @Test
-  void itShouldLogoutFromAllDevices() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
-    mockMvc
-        .perform(
-            get(Path.AUTH + "/logout-from-all-devices")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken()))
-        .andExpect(status().isNoContent());
-    jwtShouldBeInvalid(loginResponse.getToken());
-    refreshTokenShouldBeInvalid(loginResponse.getRefreshToken());
+            resultActions.andReturn().getResponse().getContentAsString(), UserResponse.class);
+    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
   }
 
   @Test

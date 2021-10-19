@@ -1,12 +1,10 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
-import java.time.Instant;
-import java.util.Set;
-import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
-import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
+import org.bootstrapbugz.api.auth.redis.model.AccessTokenBlacklist;
+import org.bootstrapbugz.api.auth.redis.model.RefreshTokenWhitelist;
 import org.bootstrapbugz.api.auth.redis.model.UserBlacklist;
-import org.bootstrapbugz.api.auth.redis.repository.JwtBlacklistRepository;
-import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
+import org.bootstrapbugz.api.auth.redis.repository.AccessTokenBlacklistRepository;
+import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenWhitelistRepository;
 import org.bootstrapbugz.api.auth.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
@@ -18,11 +16,14 @@ import org.bootstrapbugz.api.user.model.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Set;
+
 @Service
 public class JwtServiceImpl implements JwtService {
-  private final JwtBlacklistRepository jwtBlacklistRepository;
+  private final AccessTokenBlacklistRepository accessTokenBlacklistRepository;
   private final UserBlacklistRepository userBlacklistRepository;
-  private final RefreshTokenRepository refreshTokenRepository;
+  private final RefreshTokenWhitelistRepository refreshTokenWhitelistRepository;
   private final MessageService messageService;
 
   @Value("${jwt.expiration-time-in-secs}")
@@ -35,13 +36,13 @@ public class JwtServiceImpl implements JwtService {
   private String serverSecret;
 
   public JwtServiceImpl(
-      JwtBlacklistRepository jwtBlacklistRepository,
+      AccessTokenBlacklistRepository accessTokenBlacklistRepository,
       UserBlacklistRepository userBlacklistRepository,
-      RefreshTokenRepository refreshTokenRepository,
+      RefreshTokenWhitelistRepository refreshTokenWhitelistRepository,
       MessageService messageService) {
-    this.jwtBlacklistRepository = jwtBlacklistRepository;
+    this.accessTokenBlacklistRepository = accessTokenBlacklistRepository;
     this.userBlacklistRepository = userBlacklistRepository;
-    this.refreshTokenRepository = refreshTokenRepository;
+    this.refreshTokenWhitelistRepository = refreshTokenWhitelistRepository;
     this.messageService = messageService;
   }
 
@@ -67,7 +68,7 @@ public class JwtServiceImpl implements JwtService {
   }
 
   private void isInJwtBlacklist(String token) {
-    if (jwtBlacklistRepository.existsById(token))
+    if (accessTokenBlacklistRepository.existsById(token))
       throw new UnauthorizedException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
   }
 
@@ -80,7 +81,7 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public void invalidateToken(String token) {
-    jwtBlacklistRepository.save(new JwtBlacklist(token, expirationTimeInSecs));
+    accessTokenBlacklistRepository.save(new AccessTokenBlacklist(token, expirationTimeInSecs));
   }
 
   @Override
@@ -96,38 +97,40 @@ public class JwtServiceImpl implements JwtService {
             roles,
             refreshTokenExpirationTimeInSecs,
             createSecret(JwtPurpose.REFRESH_TOKEN));
-    refreshTokenRepository.save(
-        new RefreshToken(refreshToken, userId, ipAddress, refreshTokenExpirationTimeInSecs));
+    refreshTokenWhitelistRepository.save(
+        new RefreshTokenWhitelist(
+            refreshToken, userId, ipAddress, refreshTokenExpirationTimeInSecs));
     return refreshToken;
   }
 
   @Override
   public void checkRefreshToken(String refreshToken) {
     JwtUtil.isTokenValid(refreshToken, createSecret(JwtPurpose.REFRESH_TOKEN));
-    if (!refreshTokenRepository.existsById(refreshToken))
+    if (!refreshTokenWhitelistRepository.existsById(refreshToken))
       throw new UnauthorizedException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
   }
 
   @Override
   public String findRefreshToken(Long userId, String ipAddress) {
-    final var refreshToken = refreshTokenRepository.findByUserIdAndIpAddress(userId, ipAddress);
-    return refreshToken.map(RefreshToken::getToken).orElse(null);
+    final var refreshToken =
+        refreshTokenWhitelistRepository.findByUserIdAndIpAddress(userId, ipAddress);
+    return refreshToken.map(RefreshTokenWhitelist::getRefreshToken).orElse(null);
   }
 
   @Override
   public void deleteRefreshToken(String token) {
-    refreshTokenRepository.deleteById(token);
+    refreshTokenWhitelistRepository.deleteById(token);
   }
 
   @Override
   public void deleteRefreshTokenByUserAndIpAddress(Long userId, String ipAddress) {
-    var refreshToken = refreshTokenRepository.findByUserIdAndIpAddress(userId, ipAddress);
-    refreshToken.ifPresent(refreshTokenRepository::delete);
+    var refreshToken = refreshTokenWhitelistRepository.findByUserIdAndIpAddress(userId, ipAddress);
+    refreshToken.ifPresent(refreshTokenWhitelistRepository::delete);
   }
 
   @Override
   public void deleteAllRefreshTokensByUser(Long userId) {
-    var refreshTokens = refreshTokenRepository.findAllByUserId(userId);
-    refreshTokenRepository.deleteAll(refreshTokens);
+    var refreshTokens = refreshTokenWhitelistRepository.findAllByUserId(userId);
+    refreshTokenWhitelistRepository.deleteAll(refreshTokens);
   }
 }

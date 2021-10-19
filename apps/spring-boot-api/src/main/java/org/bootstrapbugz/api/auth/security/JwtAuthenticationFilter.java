@@ -2,14 +2,8 @@ package org.bootstrapbugz.api.auth.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Set;
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.bootstrapbugz.api.auth.payload.request.LoginRequest;
-import org.bootstrapbugz.api.auth.payload.response.LoginResponse;
+import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
+import org.bootstrapbugz.api.auth.payload.response.SignInResponse;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
@@ -30,6 +24,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Set;
+
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final AuthenticationManager authenticationManager;
   private final JwtService jwtService;
@@ -45,18 +46,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     this.jwtService = jwtService;
     this.userMapper = userMapper;
     this.messageService = messageService;
-    this.setFilterProcessesUrl(Path.AUTH + "/login");
+    this.setFilterProcessesUrl(Path.AUTH + "/sign-in");
   }
 
   @Override
   public Authentication attemptAuthentication(
       HttpServletRequest request, HttpServletResponse response) {
     try {
-      final var loginRequest =
-          new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+      final var signInRequest =
+          new ObjectMapper().readValue(request.getInputStream(), SignInRequest.class);
       final var authToken =
           new UsernamePasswordAuthenticationToken(
-              loginRequest.getUsernameOrEmail(), loginRequest.getPassword(), new ArrayList<>());
+              signInRequest.getUsernameOrEmail(), signInRequest.getPassword(), new ArrayList<>());
       return authenticationManager.authenticate(authToken);
     } catch (IOException | AuthenticationException | ResourceNotFoundException e) {
       handleException(response, e);
@@ -73,7 +74,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
           response, messageService.getMessage("user.locked"), HttpStatus.FORBIDDEN);
     else
       CustomFilterExceptionHandler.handleException(
-          response, messageService.getMessage("login.invalid"), HttpStatus.UNAUTHORIZED);
+          response, messageService.getMessage("signIn.invalid"), HttpStatus.UNAUTHORIZED);
   }
 
   @Override
@@ -86,14 +87,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     final var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
     final String ipAddress = AuthUtil.getUserIpAddress(request);
     final String refreshToken = findRefreshToken(user.getId(), user.getRoles(), ipAddress);
-    final var loginResponse =
-        new LoginResponse()
-            .setToken(
+    final var signInResponse =
+        new SignInResponse()
+            .setAccessToken(
                 jwtService.createToken(
                     user.getId(), user.getRoles(), JwtPurpose.ACCESSING_RESOURCES))
             .setRefreshToken(refreshToken)
             .setUser(userMapper.userToUserResponse(user));
-    writeToResponse(response, loginResponse);
+    writeToResponse(response, signInResponse);
   }
 
   private String findRefreshToken(Long userId, Set<Role> roles, String ipAddress) {
@@ -102,12 +103,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     return refreshToken;
   }
 
-  private void writeToResponse(HttpServletResponse response, LoginResponse loginResponse)
+  private void writeToResponse(HttpServletResponse response, SignInResponse signInResponse)
       throws IOException {
-    final String jsonLoginResponse = new Gson().toJson(loginResponse);
+    final String jsonSignInResponse = new Gson().toJson(signInResponse);
     final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    out.print(jsonLoginResponse);
+    out.print(jsonSignInResponse);
     out.flush();
   }
 }

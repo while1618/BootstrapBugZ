@@ -1,13 +1,7 @@
 package org.bootstrapbugz.api.user.integration;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
-import org.bootstrapbugz.api.auth.payload.request.LoginRequest;
+import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -29,6 +23,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.Collections;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DirtiesContext
 @AutoConfigureMockMvc
@@ -65,11 +66,11 @@ class UserControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_showEmail() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var expectedUserResponse =
         new UserResponse(2L, "User", "User", "user", "user@localhost.com", true, true, null);
-    performFindUserByUsername("user", loginResponse.getToken())
+    performFindUserByUsername("user", signInResponse.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(objectMapper.writeValueAsString(expectedUserResponse)));
@@ -77,11 +78,11 @@ class UserControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_hideEmail() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var expectedUserResponse =
         new UserResponse(1L, "Admin", "Admin", "admin", null, true, true, null);
-    performFindUserByUsername("admin", loginResponse.getToken())
+    performFindUserByUsername("admin", signInResponse.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(objectMapper.writeValueAsString(expectedUserResponse)));
@@ -89,10 +90,10 @@ class UserControllerTest extends DatabaseContainers {
 
   @Test
   void findUserByUsernameShouldThrowResourceNotFound() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("user", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var resultActions =
-        performFindUserByUsername("unknown", loginResponse.getToken())
+        performFindUserByUsername("unknown", signInResponse.getAccessToken())
             .andExpect(status().isNotFound());
     var expectedErrorResponse =
         new ErrorResponse(HttpStatus.NOT_FOUND, ErrorDomain.USER, "User not found.");
@@ -101,8 +102,8 @@ class UserControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldUpdateUser_newUsernameAndEmail() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate1", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate1", "qwerty123"));
     var updateUserRequest =
         new UpdateUserRequest("Updated", "Updated", "updated", "updated@localhost.com");
     var roleResponses = Collections.singleton(new RoleResponse(RoleName.USER.name()));
@@ -116,15 +117,15 @@ class UserControllerTest extends DatabaseContainers {
             false,
             true,
             roleResponses);
-    performUpdateUser(updateUserRequest, loginResponse.getToken())
+    performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().string(objectMapper.writeValueAsString(expectedUserResponse)));
   }
 
   @Test
   void itShouldUpdateUser_sameUsernameAndEmail() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate2", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
     var updateUserRequest =
         new UpdateUserRequest("Updated", "Updated", "forUpdate2", "forUpdate2@localhost.com");
     var roleResponses = Collections.singleton(new RoleResponse(RoleName.USER.name()));
@@ -138,19 +139,19 @@ class UserControllerTest extends DatabaseContainers {
             true,
             true,
             roleResponses);
-    performUpdateUser(updateUserRequest, loginResponse.getToken())
+    performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().string(objectMapper.writeValueAsString(expectedUserResponse)));
   }
 
   @Test
   void updateUserShouldThrowBadRequest_usernameExists() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate2", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
     var updateUserRequest =
         new UpdateUserRequest("Updated", "Updated", "user", "forUpdate2@localhost.com");
     var resultActions =
-        performUpdateUser(updateUserRequest, loginResponse.getToken())
+        performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isConflict());
     var expectedErrorResponse =
         new ErrorResponse(HttpStatus.CONFLICT, ErrorDomain.USER, "Username already exists.");
@@ -159,12 +160,12 @@ class UserControllerTest extends DatabaseContainers {
 
   @Test
   void updateUserShouldThrowBadRequest_emailExists() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate2", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
     var updateUserRequest =
         new UpdateUserRequest("Updated", "Updated", "forUpdate2", "user@localhost.com");
     var resultActions =
-        performUpdateUser(updateUserRequest, loginResponse.getToken())
+        performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isConflict());
     var expectedErrorResponse =
         new ErrorResponse(HttpStatus.CONFLICT, ErrorDomain.USER, "Email already exists.");
@@ -173,12 +174,12 @@ class UserControllerTest extends DatabaseContainers {
 
   @Test
   void updateUserShouldThrowBadRequest_invalidParameters() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate2", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
     var updateUserRequest =
         new UpdateUserRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
     var resultActions =
-        performUpdateUser(updateUserRequest, loginResponse.getToken())
+        performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addError("firstName", "Invalid first name.");
@@ -190,21 +191,21 @@ class UserControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldChangePassword() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate3", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate3", "qwerty123"));
     var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
-    performChangePassword(changePasswordRequest, loginResponse.getToken())
+    performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
         .andExpect(status().isNoContent());
   }
 
   @Test
   void changePasswordShouldThrowBadRequest_oldPasswordDoNotMatch() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate2", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
     var changePasswordRequest =
         new ChangePasswordRequest("qwerty12345", "qwerty1234", "qwerty1234");
     var resultActions =
-        performChangePassword(changePasswordRequest, loginResponse.getToken())
+        performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse =
         new ErrorResponse(HttpStatus.BAD_REQUEST, ErrorDomain.USER, "Wrong old password.");
@@ -213,11 +214,11 @@ class UserControllerTest extends DatabaseContainers {
 
   @Test
   void changePasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate2", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
     var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty12345");
     var resultActions =
-        performChangePassword(changePasswordRequest, loginResponse.getToken())
+        performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addError("newPassword", "Passwords do not match.");
@@ -226,11 +227,11 @@ class UserControllerTest extends DatabaseContainers {
 
   @Test
   void changePasswordShouldThrowBadRequest_invalidParameters() throws Exception {
-    var loginResponse =
-        TestUtil.login(mockMvc, objectMapper, new LoginRequest("forUpdate2", "qwerty123"));
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
     var changePasswordRequest = new ChangePasswordRequest("invalid", "invalid", "invalid");
     var resultActions =
-        performChangePassword(changePasswordRequest, loginResponse.getToken())
+        performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addError("newPassword", "Invalid password.");

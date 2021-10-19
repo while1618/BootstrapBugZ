@@ -1,25 +1,15 @@
 package org.bootstrapbugz.api.auth.unit;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
-import org.bootstrapbugz.api.auth.redis.repository.JwtBlacklistRepository;
-import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
-import org.bootstrapbugz.api.auth.redis.repository.UserBlacklistRepository;
+import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
+import org.bootstrapbugz.api.auth.redis.repository.AccessTokenBlacklistRepository;
+import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenWhitelistRepository;
+import org.bootstrapbugz.api.auth.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
@@ -32,9 +22,9 @@ import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.payload.response.RoleResponse;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,15 +39,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
   @Mock private UserRepository userRepository;
   @Mock private ApplicationEventPublisher eventPublisher;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
   @Spy private UserMapperImpl userMapper;
-  @Mock private JwtBlacklistRepository jwtBlacklistRepository;
+  @Mock private AccessTokenBlacklistRepository accessTokenBlacklistRepository;
   @Mock private UserBlacklistRepository userBlacklistRepository;
-  @Mock private RefreshTokenRepository refreshTokenRepository;
+  @Mock private RefreshTokenWhitelistRepository refreshTokenWhitelistRepository;
   @Mock private MessageService messageService;
   @Mock private Authentication auth;
   @Mock private SecurityContext securityContext;
@@ -74,10 +76,8 @@ class AuthServiceTest {
   public void setUp() {
     jwtService =
         new JwtServiceImpl(
-            jwtBlacklistRepository,
-            userBlacklistRepository,
-            refreshTokenRepository,
-            messageService);
+            accessTokenBlacklistRepository, userBlacklistRepository,
+            refreshTokenWhitelistRepository, messageService);
     authService =
         new AuthServiceImpl(
             userRepository,
@@ -92,28 +92,6 @@ class AuthServiceTest {
   }
 
   @Test
-  void itShouldGetLoggedInUser() {
-    TestUtil.setAuth(auth, securityContext, user);
-    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
-    var expectedUserResponse =
-        new UserResponse(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
-    var actualUserResponse = authService.getLoggedInUser();
-    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
-  }
-
-  @Test
-  void itShouldRefreshToken() {
-    var request = new MockHttpServletRequest();
-    request.addHeader("x-forwarded-for", "ip1");
-    String token = jwtService.createRefreshToken(1L, Collections.emptySet(), "ip1");
-    when(refreshTokenRepository.existsById(token)).thenReturn(true);
-    var refreshTokenRequest = new RefreshTokenRequest(token);
-    var refreshTokenResponse = authService.refreshToken(refreshTokenRequest, request);
-    assertThat(refreshTokenResponse.getToken()).isNotNull();
-    assertThat(refreshTokenResponse.getRefreshToken()).isNotNull();
-  }
-
-  @Test
   void itShouldSignUp() {
     var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
     var expectedUserResponse =
@@ -123,37 +101,6 @@ class AuthServiceTest {
     when(userRepository.save(any(User.class))).thenReturn(user);
     var actualUserResponse = authService.signUp(signUpRequest);
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
-  }
-
-  @Test
-  void itShouldConfirmRegistration() {
-    var expectedUser =
-        new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
-    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-    authService.confirmRegistration(token);
-    verify(userRepository, times(1)).save(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
-  }
-
-  @Test
-  void confirmRegistrationShouldThrowForbidden_invalid() {
-    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
-    when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
-    assertThatThrownBy(() -> authService.confirmRegistration(token))
-        .isInstanceOf(ForbiddenException.class)
-        .hasMessage("Invalid token.");
-  }
-
-  @Test
-  void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() {
-    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
-    when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
-    user.setActivated(true);
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-    assertThatThrownBy(() -> authService.confirmRegistration(token))
-        .isInstanceOf(ForbiddenException.class)
-        .hasMessage("User already activated.");
   }
 
   @Test
@@ -182,6 +129,65 @@ class AuthServiceTest {
     assertThatThrownBy(() -> authService.resendConfirmationEmail(resendConfirmationEmailRequest))
         .isInstanceOf(ForbiddenException.class)
         .hasMessage("User already activated.");
+  }
+
+  @Test
+  void itShouldConfirmRegistration() {
+    var expectedUser =
+        new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
+    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
+    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    authService.confirmRegistration(new ConfirmRegistrationRequest(token));
+    verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+    assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
+  }
+
+  @Test
+  void confirmRegistrationShouldThrowForbidden_invalid() {
+    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
+    when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
+    assertThatThrownBy(() -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)))
+        .isInstanceOf(ForbiddenException.class)
+        .hasMessage("Invalid token.");
+  }
+
+  @Test
+  void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() {
+    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
+    when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
+    user.setActivated(true);
+    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    assertThatThrownBy(() -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)))
+        .isInstanceOf(ForbiddenException.class)
+        .hasMessage("User already activated.");
+  }
+
+  @Test
+  void itShouldRefreshToken() {
+    var request = new MockHttpServletRequest();
+    request.addHeader("x-forwarded-for", "ip1");
+    String token = jwtService.createRefreshToken(1L, Collections.emptySet(), "ip1");
+    when(refreshTokenWhitelistRepository.existsById(token)).thenReturn(true);
+    var refreshTokenRequest = new RefreshTokenRequest(token);
+    var refreshTokenResponse = authService.refreshToken(refreshTokenRequest, request);
+    assertThat(refreshTokenResponse.getAccessToken()).isNotNull();
+    assertThat(refreshTokenResponse.getRefreshToken()).isNotNull();
+  }
+
+  @Test
+  void itShouldSignOut() {
+    TestUtil.setAuth(auth, securityContext, user);
+    String token = jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES);
+    var request = new MockHttpServletRequest();
+    request.addHeader("x-forwarded-for", "ip1");
+    request.addHeader(AuthUtil.AUTH_HEADER, token);
+    assertDoesNotThrow(() -> authService.signOut(request));
+  }
+
+  @Test
+  void itShouldSignOutFromAllDevices() {
+    TestUtil.setAuth(auth, securityContext, user);
+    assertDoesNotThrow(() -> authService.signOutFromAllDevices());
   }
 
   @Test
@@ -225,19 +231,13 @@ class AuthServiceTest {
   }
 
   @Test
-  void itShouldLogout() {
+  void itShouldReceiveSignedInUser() {
     TestUtil.setAuth(auth, securityContext, user);
-    String token = jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES);
-    var request = new MockHttpServletRequest();
-    request.addHeader("x-forwarded-for", "ip1");
-    request.addHeader(AuthUtil.AUTH_HEADER, token);
-    assertDoesNotThrow(() -> authService.logout(request));
-  }
-
-  @Test
-  void itShouldLogoutFromAllDevices() {
-    TestUtil.setAuth(auth, securityContext, user);
-    assertDoesNotThrow(() -> authService.logoutFromAllDevices());
+    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var expectedUserResponse =
+        new UserResponse(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
+    var actualUserResponse = authService.signedInUser();
+    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
   }
 
   @Test

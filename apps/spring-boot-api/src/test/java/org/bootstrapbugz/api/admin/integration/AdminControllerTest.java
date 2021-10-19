@@ -1,18 +1,10 @@
 package org.bootstrapbugz.api.admin.integration;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.ChangeRoleRequest;
-import org.bootstrapbugz.api.auth.payload.request.LoginRequest;
-import org.bootstrapbugz.api.auth.payload.response.LoginResponse;
+import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
+import org.bootstrapbugz.api.auth.payload.response.SignInResponse;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -32,6 +24,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Set;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -41,11 +42,12 @@ class AdminControllerTest extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
-  private LoginResponse loginResponse;
+  private SignInResponse signInResponse;
 
   @BeforeAll
   void setUp() throws Exception {
-    loginResponse = TestUtil.login(mockMvc, objectMapper, new LoginRequest("admin", "qwerty123"));
+    signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
   }
 
   @Test
@@ -54,7 +56,7 @@ class AdminControllerTest extends DatabaseContainers {
         .perform(
             get(Path.ADMIN + "/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken()))
+                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.length()").value(7));
@@ -68,7 +70,7 @@ class AdminControllerTest extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken())
+                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken())
                 .content(objectMapper.writeValueAsString(changeRoleRequest)))
         .andExpect(status().isNoContent());
   }
@@ -86,7 +88,7 @@ class AdminControllerTest extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/" + path)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken())
+                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }
@@ -98,7 +100,7 @@ class AdminControllerTest extends DatabaseContainers {
         .perform(
             delete(Path.ADMIN + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, loginResponse.getToken())
+                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }

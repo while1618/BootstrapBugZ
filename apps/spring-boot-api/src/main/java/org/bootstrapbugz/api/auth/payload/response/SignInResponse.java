@@ -12,8 +12,8 @@ import org.bootstrapbugz.api.user.payload.response.UserResponse;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class LoginResponse {
-  private String token;
+public class SignInResponse {
+  private String accessToken;
   private String refreshToken;
   private UserResponse user;
 }

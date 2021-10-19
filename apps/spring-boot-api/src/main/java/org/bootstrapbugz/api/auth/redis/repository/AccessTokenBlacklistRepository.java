@@ -1,8 +1,9 @@
 package org.bootstrapbugz.api.auth.redis.repository;
 
-import org.bootstrapbugz.api.auth.redis.model.JwtBlacklist;
+import org.bootstrapbugz.api.auth.redis.model.AccessTokenBlacklist;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JwtBlacklistRepository extends CrudRepository<JwtBlacklist, String> {}
+public interface AccessTokenBlacklistRepository
+    extends CrudRepository<AccessTokenBlacklist, String> {}

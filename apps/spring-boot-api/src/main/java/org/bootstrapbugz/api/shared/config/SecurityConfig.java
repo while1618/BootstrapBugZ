@@ -26,11 +26,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private static final String[] AUTH_WHITELIST = {
-    Path.AUTH + "/login",
-    Path.AUTH + "/refresh-token",
     Path.AUTH + "/sign-up",
-    Path.AUTH + "/confirm-registration",
     Path.AUTH + "/resend-confirmation-email",
+    Path.AUTH + "/confirm-registration",
+    Path.AUTH + "/sign-in",
+    Path.AUTH + "/refresh-token",
     Path.AUTH + "/forgot-password",
     Path.AUTH + "/reset-password",
     Path.AUTH + "/username-availability",

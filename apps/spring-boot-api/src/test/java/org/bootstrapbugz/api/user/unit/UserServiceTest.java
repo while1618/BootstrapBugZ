@@ -1,14 +1,5 @@
 package org.bootstrapbugz.api.user.unit;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
@@ -20,10 +11,10 @@ import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateUserRequest;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -40,6 +31,16 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -82,9 +83,9 @@ class UserServiceTest {
   @Test
   void itShouldFindUserByUsername_hideEmail() {
     var expectedUserResponse = new UserResponse(1L, "Test", "Test", "test", null, true, true, null);
-    var loggedUser =
+    var signedInUser =
         new User(2L, "User", "User", "user", "user@user.com", password, true, true, roles);
-    TestUtil.setAuth(auth, securityContext, loggedUser);
+    TestUtil.setAuth(auth, securityContext, signedInUser);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
     var actualUserResponse = userService.findByUsername("test");
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);

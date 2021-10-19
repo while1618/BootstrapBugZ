@@ -1,10 +1,7 @@
 package org.bootstrapbugz.api.auth.data;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-import org.bootstrapbugz.api.auth.redis.model.RefreshToken;
-import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenRepository;
+import org.bootstrapbugz.api.auth.redis.model.RefreshTokenWhitelist;
+import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenWhitelistRepository;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,37 +14,45 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataRedisTest
 @DirtiesContext
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class RefreshTokenRepositoryTest extends DatabaseContainers {
-  private final RefreshToken first = new RefreshToken("token123", 22L, "ip1", 1000);
-  private final RefreshToken second = new RefreshToken("token321", 22L, "ip2", 1000);
-  private final RefreshToken third = new RefreshToken("token213", 23L, "ip3", 1000);
+class RefreshTokenWhitelistRepositoryTest extends DatabaseContainers {
+  private final RefreshTokenWhitelist first =
+      new RefreshTokenWhitelist("token123", 22L, "ip1", 1000);
+  private final RefreshTokenWhitelist second =
+      new RefreshTokenWhitelist("token321", 22L, "ip2", 1000);
+  private final RefreshTokenWhitelist third =
+      new RefreshTokenWhitelist("token213", 23L, "ip3", 1000);
 
-  @Autowired private RefreshTokenRepository refreshTokenRepository;
+  @Autowired private RefreshTokenWhitelistRepository refreshTokenWhitelistRepository;
 
   @BeforeAll
   void setUp() {
-    refreshTokenRepository.saveAll(List.of(first, second, third));
+    refreshTokenWhitelistRepository.saveAll(List.of(first, second, third));
   }
 
   @AfterAll
   void cleanUp() {
-    refreshTokenRepository.deleteAll(List.of(first, second, third));
+    refreshTokenWhitelistRepository.deleteAll(List.of(first, second, third));
   }
 
   @Test
   void itShouldFindByUserIdAndIpAddress() {
-    var refreshToken = refreshTokenRepository.findByUserIdAndIpAddress(23L, "ip3").orElseThrow();
+    var refreshToken =
+        refreshTokenWhitelistRepository.findByUserIdAndIpAddress(23L, "ip3").orElseThrow();
     assertThat(refreshToken).isEqualTo(third);
   }
 
   @Test
   void itShouldFindAllByUserId() {
-    var refreshTokens = refreshTokenRepository.findAllByUserId(22L);
+    var refreshTokens = refreshTokenWhitelistRepository.findAllByUserId(22L);
     assertThat(refreshTokens)
         .usingRecursiveComparison()
         .ignoringCollectionOrder()

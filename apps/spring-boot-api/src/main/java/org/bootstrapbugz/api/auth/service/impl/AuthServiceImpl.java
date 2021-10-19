@@ -1,10 +1,7 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
@@ -24,11 +21,16 @@ import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -55,8 +57,55 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public UserResponse getLoggedInUser() {
-    return userMapper.userToUserResponse(AuthUtil.findLoggedUser());
+  public UserResponse signUp(SignUpRequest signUpRequest) {
+    final var user = createUser(signUpRequest);
+    final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
+    eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
+    return userMapper.userToUserResponse(user);
+  }
+
+  private User createUser(SignUpRequest signUpRequest) {
+    final var user =
+        new User()
+            .setFirstName(signUpRequest.getFirstName())
+            .setLastName(signUpRequest.getLastName())
+            .setUsername(signUpRequest.getUsername())
+            .setEmail(signUpRequest.getEmail())
+            .setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()))
+            .setRoles(Collections.singleton(new Role(RoleName.USER)));
+    return userRepository.save(user);
+  }
+
+  @Override
+  public void resendConfirmationEmail(ResendConfirmationEmailRequest request) {
+    final var user =
+        userRepository
+            .findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
+    if (user.isActivated())
+      throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
+    final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
+    eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
+  }
+
+  @Override
+  public void confirmRegistration(ConfirmRegistrationRequest confirmRegistrationRequest) {
+    final var user =
+        userRepository
+            .findById(JwtUtil.getUserId(confirmRegistrationRequest.getAccessToken()))
+            .orElseThrow(
+                () ->
+                    new ForbiddenException(
+                        messageService.getMessage("token.invalid"), ErrorDomain.AUTH));
+    if (user.isActivated())
+      throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
+    jwtService.checkToken(
+        confirmRegistrationRequest.getAccessToken(), JwtPurpose.CONFIRM_REGISTRATION);
+    user.setActivated(true);
+    userRepository.save(user);
   }
 
   @Override
@@ -79,54 +128,18 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public UserResponse signUp(SignUpRequest signUpRequest) {
-    final var user = createUser(signUpRequest);
-    final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
-    eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
-    return userMapper.userToUserResponse(user);
-  }
-
-  private User createUser(SignUpRequest signUpRequest) {
-    final var user =
-        new User()
-            .setFirstName(signUpRequest.getFirstName())
-            .setLastName(signUpRequest.getLastName())
-            .setUsername(signUpRequest.getUsername())
-            .setEmail(signUpRequest.getEmail())
-            .setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()))
-            .setRoles(Collections.singleton(new Role(RoleName.USER)));
-    return userRepository.save(user);
+  public void signOut(HttpServletRequest request) {
+    jwtService.deleteRefreshTokenByUserAndIpAddress(
+        AuthUtil.findSignedInUser().getId(), AuthUtil.getUserIpAddress(request));
+    jwtService.invalidateToken(
+        JwtUtil.removeTokenTypeFromToken(AuthUtil.getAuthTokenFromRequest(request)));
   }
 
   @Override
-  public void confirmRegistration(String token) {
-    final var user =
-        userRepository
-            .findById(JwtUtil.getUserId(token))
-            .orElseThrow(
-                () ->
-                    new ForbiddenException(
-                        messageService.getMessage("token.invalid"), ErrorDomain.AUTH));
-    if (user.isActivated())
-      throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
-    jwtService.checkToken(token, JwtPurpose.CONFIRM_REGISTRATION);
-    user.setActivated(true);
-    userRepository.save(user);
-  }
-
-  @Override
-  public void resendConfirmationEmail(ResendConfirmationEmailRequest request) {
-    final var user =
-        userRepository
-            .findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
-            .orElseThrow(
-                () ->
-                    new ResourceNotFoundException(
-                        messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
-    if (user.isActivated())
-      throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
-    final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
-    eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
+  public void signOutFromAllDevices() {
+    final Long userId = AuthUtil.findSignedInUser().getId();
+    jwtService.deleteAllRefreshTokensByUser(userId);
+    jwtService.invalidateAllTokens(userId);
   }
 
   @Override
@@ -146,12 +159,12 @@ public class AuthServiceImpl implements AuthService {
   public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
     final var user =
         userRepository
-            .findById(JwtUtil.getUserId(resetPasswordRequest.getToken()))
+            .findById(JwtUtil.getUserId(resetPasswordRequest.getAccessToken()))
             .orElseThrow(
                 () ->
                     new ForbiddenException(
                         messageService.getMessage("token.invalid"), ErrorDomain.AUTH));
-    jwtService.checkToken(resetPasswordRequest.getToken(), JwtPurpose.FORGOT_PASSWORD);
+    jwtService.checkToken(resetPasswordRequest.getAccessToken(), JwtPurpose.FORGOT_PASSWORD);
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
     jwtService.invalidateAllTokens(user.getId());
     jwtService.deleteAllRefreshTokensByUser(user.getId());
@@ -159,18 +172,8 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public void logout(HttpServletRequest request) {
-    jwtService.deleteRefreshTokenByUserAndIpAddress(
-        AuthUtil.findLoggedUser().getId(), AuthUtil.getUserIpAddress(request));
-    jwtService.invalidateToken(
-        JwtUtil.removeTokenTypeFromToken(AuthUtil.getAuthTokenFromRequest(request)));
-  }
-
-  @Override
-  public void logoutFromAllDevices() {
-    final Long userId = AuthUtil.findLoggedUser().getId();
-    jwtService.deleteAllRefreshTokensByUser(userId);
-    jwtService.invalidateAllTokens(userId);
+  public UserResponse signedInUser() {
+    return userMapper.userToUserResponse(AuthUtil.findSignedInUser());
   }
 
   @Override

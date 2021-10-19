@@ -11,10 +11,10 @@ import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateUserRequest;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,13 +54,13 @@ public class UserServiceImpl implements UserService {
                     new ResourceNotFoundException(
                         messageService.getMessage("user.notFound"), ErrorDomain.USER));
     user.setRoles(null);
-    if (!AuthUtil.findLoggedUser().getUsername().equals(user.getUsername())) user.setEmail(null);
+    if (!AuthUtil.findSignedInUser().getUsername().equals(user.getUsername())) user.setEmail(null);
     return userMapper.userToUserResponse(user);
   }
 
   @Override
   public UserResponse update(UpdateUserRequest updateUserRequest) {
-    final var user = AuthUtil.findLoggedUser();
+    final var user = AuthUtil.findSignedInUser();
     user.setFirstName(updateUserRequest.getFirstName());
     user.setLastName(updateUserRequest.getLastName());
     tryToSetUsername(user, updateUserRequest.getUsername());
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void changePassword(ChangePasswordRequest changePasswordRequest) {
-    final var user = AuthUtil.findLoggedUser();
+    final var user = AuthUtil.findSignedInUser();
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
       throw new BadRequestException(
           messageService.getMessage("oldPassword.invalid"), ErrorDomain.USER);

@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.auth.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
@@ -21,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 @RequestMapping(Path.AUTH)
 @RestController
 public class AuthController {
@@ -30,9 +32,23 @@ public class AuthController {
     this.authService = authService;
   }
 
-  @GetMapping("/logged-in-user")
-  public ResponseEntity<UserResponse> getLoggedInUser() {
-    return ResponseEntity.ok(authService.getLoggedInUser());
+  @PostMapping("/sign-up")
+  public ResponseEntity<UserResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    return new ResponseEntity<>(authService.signUp(signUpRequest), HttpStatus.CREATED);
+  }
+
+  @PostMapping("/resend-confirmation-email")
+  public ResponseEntity<Void> resendConfirmationEmail(
+      @Valid @RequestBody ResendConfirmationEmailRequest resendConfirmationEmailRequest) {
+    authService.resendConfirmationEmail(resendConfirmationEmailRequest);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PutMapping("/confirm-registration")
+  public ResponseEntity<Void> confirmRegistration(
+      @Valid @RequestBody ConfirmRegistrationRequest confirmRegistrationRequest) {
+    authService.confirmRegistration(confirmRegistrationRequest);
+    return ResponseEntity.noContent().build();
   }
 
   @PostMapping("/refresh-token")
@@ -41,21 +57,15 @@ public class AuthController {
     return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest, request));
   }
 
-  @PostMapping("/sign-up")
-  public ResponseEntity<UserResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
-    return new ResponseEntity<>(authService.signUp(signUpRequest), HttpStatus.CREATED);
-  }
-
-  @GetMapping("/confirm-registration")
-  public ResponseEntity<Void> confirmRegistration(@RequestParam("token") String token) {
-    authService.confirmRegistration(token);
+  @PostMapping("/sign-out")
+  public ResponseEntity<Void> signOut(HttpServletRequest request) {
+    authService.signOut(request);
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/resend-confirmation-email")
-  public ResponseEntity<Void> resendConfirmationEmail(
-      @Valid @RequestBody ResendConfirmationEmailRequest resendConfirmationEmailRequest) {
-    authService.resendConfirmationEmail(resendConfirmationEmailRequest);
+  @PostMapping("/sign-out-from-all-devices")
+  public ResponseEntity<Void> signOutFromAllDevices() {
+    authService.signOutFromAllDevices();
     return ResponseEntity.noContent().build();
   }
 
@@ -73,16 +83,9 @@ public class AuthController {
     return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/logout")
-  public ResponseEntity<Void> logout(HttpServletRequest request) {
-    authService.logout(request);
-    return ResponseEntity.noContent().build();
-  }
-
-  @GetMapping("/logout-from-all-devices")
-  public ResponseEntity<Void> logoutFromAllDevices() {
-    authService.logoutFromAllDevices();
-    return ResponseEntity.noContent().build();
+  @GetMapping("/signed-in-user")
+  public ResponseEntity<UserResponse> signedInUser() {
+    return ResponseEntity.ok(authService.signedInUser());
   }
 
   @GetMapping("/username-availability")

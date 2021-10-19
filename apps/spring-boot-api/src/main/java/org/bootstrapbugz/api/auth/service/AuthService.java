@@ -1,6 +1,6 @@
 package org.bootstrapbugz.api.auth.service;
 
-import javax.servlet.http.HttpServletRequest;
+import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
@@ -9,25 +9,27 @@ import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.payload.response.RefreshTokenResponse;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface AuthService {
-  UserResponse getLoggedInUser();
+  UserResponse signUp(SignUpRequest signUpRequest);
+
+  void resendConfirmationEmail(ResendConfirmationEmailRequest resendConfirmationEmailRequest);
+
+  void confirmRegistration(ConfirmRegistrationRequest confirmRegistrationRequest);
 
   RefreshTokenResponse refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request);
 
-  UserResponse signUp(SignUpRequest signUpRequest);
+  void signOut(HttpServletRequest request);
 
-  void confirmRegistration(String token);
-
-  void resendConfirmationEmail(ResendConfirmationEmailRequest resendConfirmationEmailRequest);
+  void signOutFromAllDevices();
 
   void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 
   void resetPassword(ResetPasswordRequest resetPasswordRequest);
 
-  void logout(HttpServletRequest request);
-
-  void logoutFromAllDevices();
+  UserResponse signedInUser();
 
   boolean isUsernameAvailable(String username);
 
