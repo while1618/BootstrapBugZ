@@ -10,8 +10,8 @@ info:
     url: https://choosealicense.com/licenses/mit/
   version: 1.0.0
 servers:
-  - url: http://localhost:8181/v1
-  - url: https://localhost:8181/v1
+  - url: http://localhost:8080/v1
+  - url: https://localhost:8080/v1
 tags:
   - name: auth
     description: Auth Endpoints
