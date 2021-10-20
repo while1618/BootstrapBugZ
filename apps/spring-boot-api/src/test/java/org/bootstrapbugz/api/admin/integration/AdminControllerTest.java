@@ -2,7 +2,7 @@ package org.bootstrapbugz.api.admin.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
-import org.bootstrapbugz.api.admin.payload.request.ChangeRoleRequest;
+import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.payload.response.SignInResponse;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
@@ -27,10 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DirtiesContext
@@ -51,27 +48,15 @@ class AdminControllerTest extends DatabaseContainers {
   }
 
   @Test
-  void itShouldFindAllUsers() throws Exception {
+  void itShouldUpdateUsersRoles() throws Exception {
+    var updateRoleRequest =
+        new UpdateRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
         .perform(
-            get(Path.ADMIN + "/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken()))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.length()").value(7));
-  }
-
-  @Test
-  void itShouldChangeUsersRoles() throws Exception {
-    var changeRoleRequest =
-        new ChangeRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
-    mockMvc
-        .perform(
-            put(Path.ADMIN + "/users/role")
+            put(Path.ADMIN + "/users/update-role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken())
-                .content(objectMapper.writeValueAsString(changeRoleRequest)))
+                .content(objectMapper.writeValueAsString(updateRoleRequest)))
         .andExpect(status().isNoContent());
   }
 

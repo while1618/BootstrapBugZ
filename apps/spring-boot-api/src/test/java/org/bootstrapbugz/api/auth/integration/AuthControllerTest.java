@@ -217,7 +217,7 @@ class AuthControllerTest extends DatabaseContainers {
     var resultActions =
         mockMvc
             .perform(
-                get(Path.USERS + "/{username}", "user")
+                get(Path.AUTH + "/signed-in-user")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(AuthUtil.AUTH_HEADER, token))
             .andExpect(status().isUnauthorized());

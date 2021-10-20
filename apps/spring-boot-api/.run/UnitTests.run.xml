@@ -1,43 +1,44 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="UnitTests" type="JUnit" factoryName="JUnit">
-    <module name="api"/>
+    <module name="api" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.admin.service.*"/>
-        <option name="ENABLED" value="true"/>
+        <option name="PATTERN" value="org.bootstrapbugz.api.admin.service.*" />
+        <option name="ENABLED" value="true" />
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.auth.service.*"/>
-        <option name="ENABLED" value="true"/>
+        <option name="PATTERN" value="org.bootstrapbugz.api.auth.service.*" />
+        <option name="ENABLED" value="true" />
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.user.service.*"/>
-        <option name="ENABLED" value="true"/>
+        <option name="PATTERN" value="org.bootstrapbugz.api.user.service.*" />
+        <option name="ENABLED" value="true" />
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.shared.email.service.*"/>
-        <option name="ENABLED" value="true"/>
+        <option name="PATTERN" value="org.bootstrapbugz.api.shared.email.service.*" />
+        <option name="ENABLED" value="true" />
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.shared.message.service.*"/>
-        <option name="ENABLED" value="true"/>
+        <option name="PATTERN" value="org.bootstrapbugz.api.shared.message.service.*" />
+        <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="PACKAGE_NAME" value="org.bootstrapbugz.api"/>
-    <option name="MAIN_CLASS_NAME" value=""/>
-    <option name="METHOD_NAME" value=""/>
-    <option name="TEST_OBJECT" value="pattern"/>
-    <dir value="$PROJECT_DIR$/apps/spring-boot-api/src/test/java/org/bootstrapbugz/api/*/integration"/>
+    <option name="PACKAGE_NAME" value="org.bootstrapbugz.api" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="pattern" />
+    <dir value="$PROJECT_DIR$/apps/spring-boot-api/src/test/java/org/bootstrapbugz/api/*/integration" />
     <patterns>
-      <pattern testClass="org.bootstrapbugz.api.user.unit.UserServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.AuthServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.JwtServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.admin.unit.AdminServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.shared.unit.EmailServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.shared.unit.MessageServiceTest"/>
+      <pattern testClass="org.bootstrapbugz.api.user.unit.UserServiceTest" />
+      <pattern testClass="org.bootstrapbugz.api.user.unit.ProfileServiceTest" />
+      <pattern testClass="org.bootstrapbugz.api.auth.unit.AuthServiceTest" />
+      <pattern testClass="org.bootstrapbugz.api.auth.unit.JwtServiceTest" />
+      <pattern testClass="org.bootstrapbugz.api.admin.unit.AdminServiceTest" />
+      <pattern testClass="org.bootstrapbugz.api.shared.unit.EmailServiceTest" />
+      <pattern testClass="org.bootstrapbugz.api.shared.unit.MessageServiceTest" />
     </patterns>
     <method v="2">
-      <option name="Make" enabled="true"/>
+      <option name="Make" enabled="true" />
     </method>
   </configuration>
 </component>

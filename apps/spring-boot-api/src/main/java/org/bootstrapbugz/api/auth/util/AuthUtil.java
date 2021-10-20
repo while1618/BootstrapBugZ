@@ -14,6 +14,11 @@ public class AuthUtil {
 
   private AuthUtil() {}
 
+  public static boolean isSignedIn() {
+    final var auth = SecurityContextHolder.getContext().getAuthentication();
+    return !auth.getPrincipal().equals("anonymousUser");
+  }
+
   public static User findSignedInUser() {
     final var auth = SecurityContextHolder.getContext().getAuthentication();
     return userPrincipalToUser((UserPrincipal) auth.getPrincipal());

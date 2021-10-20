@@ -1,26 +1,27 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="IntegrationTests" type="JUnit" factoryName="JUnit">
-    <module name="api"/>
+    <module name="api" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.*"/>
-        <option name="ENABLED" value="true"/>
+        <option name="PATTERN" value="org.bootstrapbugz.api.*" />
+        <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="PACKAGE_NAME" value="org.bootstrapbugz.api"/>
-    <option name="MAIN_CLASS_NAME" value=""/>
-    <option name="METHOD_NAME" value=""/>
-    <option name="TEST_OBJECT" value="pattern"/>
-    <dir value="$PROJECT_DIR$/apps/spring-boot-api/src/test/java/org/bootstrapbugz/api/*/integration"/>
+    <option name="PACKAGE_NAME" value="org.bootstrapbugz.api" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="pattern" />
+    <dir value="$PROJECT_DIR$/apps/spring-boot-api/src/test/java/org/bootstrapbugz/api/*/integration" />
     <patterns>
-      <pattern testClass="org.bootstrapbugz.api.user.integration.UserControllerTest"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.integration.AuthControllerTest"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.integration.JwtAuthenticationFilterTest"/>
-      <pattern testClass="org.bootstrapbugz.api.admin.integration.AdminControllerTest"/>
-      <pattern testClass="org.bootstrapbugz.api.shared.integration.AccessingResourcesTest"/>
+      <pattern testClass="org.bootstrapbugz.api.user.integration.UserControllerTest" />
+      <pattern testClass="org.bootstrapbugz.api.user.integration.ProfileControllerTest" />
+      <pattern testClass="org.bootstrapbugz.api.auth.integration.AuthControllerTest" />
+      <pattern testClass="org.bootstrapbugz.api.auth.integration.JwtAuthenticationFilterTest" />
+      <pattern testClass="org.bootstrapbugz.api.admin.integration.AdminControllerTest" />
+      <pattern testClass="org.bootstrapbugz.api.shared.integration.AccessingResourcesTest" />
     </patterns>
     <method v="2">
-      <option name="Make" enabled="true"/>
+      <option name="Make" enabled="true" />
     </method>
   </configuration>
 </component>

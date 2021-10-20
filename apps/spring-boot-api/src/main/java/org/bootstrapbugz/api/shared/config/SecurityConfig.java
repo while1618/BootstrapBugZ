@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+  private static final String[] USERS_WHITELIST = {Path.USERS, Path.USERS + "/**"};
   private static final String[] AUTH_WHITELIST = {
     Path.AUTH + "/sign-up",
     Path.AUTH + "/resend-confirmation-email",
@@ -90,6 +91,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests()
         .antMatchers(AUTH_WHITELIST)
+        .permitAll()
+        .antMatchers(USERS_WHITELIST)
         .permitAll()
         .anyRequest()
         .authenticated();
