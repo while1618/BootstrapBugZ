@@ -36,23 +36,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SignUpRequest'
-            examples:
-              valid:
-                value:
-                  firstName: John
-                  lastName: Doe
-                  username: john
-                  email: john.doe@localhost.com
-                  password: qwerty123
-                  confirmPassword: qwerty123
-              bad-request:
-                value:
-                  firstName: John
-                  lastName: Doe
-                  username: john
-                  email: john
-                  password: 123qwerty
-                  confirmPassword: qwerty123
+            example:
+              firstName: Joe
+              lastName: Bloggs
+              username: joe.bloggs
+              email: joe.blogs@bootstrapbugz.com
+              password: qwerty123
+              confirmPassword: qwerty123
       responses:
         201:
           description: Sign Up Success
@@ -61,11 +51,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserResponse'
               example:
-                id: 1
-                firstName: John
-                lastName: Doe
-                username: john
-                email: john.doe@localhost.com
+                id: 4
+                firstName: Joe
+                lastName: Bloggs
+                username: joe.bloggs
+                email: joe.bloggs@bootstrapbugz.com
                 activated: false
                 nonLocked: true
                 roles:
@@ -86,19 +76,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ResendConfirmationEmailRequest'
-            examples:
-              valid:
-                value:
-                  usernameOrEmail: john.doe@localhost.com
-              bad-request:
-                value:
-                  usernameOrEmail: null
-              forbidden:
-                value:
-                  usernameOrEmail: user
-              not-found:
-                value:
-                  usernameOrEmail: unknown
+            example:
+              usernameOrEmail: joe.bloggs@bootstrapbugz.com
       responses:
         204:
           description: Resend Confirmation Email Success
@@ -122,16 +101,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ConfirmRegistrationRequest'
-            examples:
-              valid:
-                value:
-                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-              bad-request:
-                value:
-                  accessToken: null
-              forbidden:
-                value:
-                  accessToken: invalidToken
+            example:
+              accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
       responses:
         204:
           description: Confirm Registration Success
@@ -153,19 +124,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SignInRequest'
-            examples:
-              valid:
-                value:
-                  usernameOrEmail: john.doe@localhost.com
-                  password: qwerty123
-              bad-request:
-                value:
-                  usernameOrEmail: null
-                  password: null
-              unauthorized:
-                value:
-                  usernameOrEmail: john.doe@localhost.com
-                  password: 123qwerty
+            example:
+              usernameOrEmail: john.doe@bootstrapbugz.com
+              password: qwerty123
       responses:
         200:
           description: Sign In Success
@@ -177,11 +138,11 @@ paths:
                 accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
                 refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5b
                 user:
-                  id: 1
+                  id: 2
                   firstName: John
                   lastName: Doe
-                  username: john
-                  email: john.doe@localhost.com
+                  username: john.doe
+                  email: john.doe@bootstrapbugz.com
                   activated: true
                   nonLocked: true
                   roles:
@@ -204,16 +165,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshTokenRequest'
-            examples:
-              valid:
-                value:
-                  refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5b
-              bad-request:
-                value:
-                  refreshToken: null
-              unauthorized:
-                value:
-                  refreshToken: invalidToken
+            example:
+              refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5b
       responses:
         200:
           description: Refresh Token Success
@@ -236,7 +189,7 @@ paths:
       operationId: signOut
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       responses:
         204:
           description: Sign Out Success
@@ -250,7 +203,7 @@ paths:
       operationId: signOutFromAllDevices
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       responses:
         204:
           description: Sign Out From All Devices Success
@@ -270,16 +223,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ForgotPasswordRequest'
-            examples:
-              valid:
-                value:
-                  email: john.doe@localhost.com
-              bad-request:
-                value:
-                  email: null
-              not-found:
-                value:
-                  email: unknown@localhost.com
+            example:
+              email: john.doe@bootstrapbugz.com
       responses:
         204:
           description: Forgot Password Success
@@ -303,22 +248,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ResetPasswordRequest'
-            examples:
-              valid:
-                value:
-                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-                  password: qwerty321
-                  confirmPassword: qwerty321
-              bad-request:
-                value:
-                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-                  password: qwerty321
-                  confirmPassword: 321qwerty
-              forbidden:
-                value:
-                  accessToken: invalidToken
-                  password: qwerty321
-                  confirmPassword: qwerty321
+            example:
+              accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+              password: qwerty321
+              confirmPassword: qwerty321
       responses:
         204:
           description: Reset Password Success
@@ -333,7 +266,7 @@ paths:
       summary: Signed In User
       operationId: signedInUser
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       responses:
         200:
           description: Signed In User Success
@@ -342,11 +275,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserResponse'
               example:
-                id: 1
+                id: 2
                 firstName: John
                 lastName: Doe
-                username: john
-                email: john.doe@localhost.com
+                username: john.doe
+                email: john.doe@bootstrapbugz.com
                 activated: true
                 nonLocked: true
                 roles:
@@ -366,11 +299,7 @@ paths:
           schema:
             type: string
           description: Pass username to check if it's available.
-          examples:
-            available:
-              value: availableUsername
-            taken:
-              value: takenUsername
+          example: john.doe
       responses:
         200:
           description: Username Availability Success
@@ -396,11 +325,7 @@ paths:
           schema:
             type: string
           description: Pass email to check if it's available.
-          examples:
-            available:
-              value: availableEmail@localhost.com
-            taken:
-              value: takenEmail@localhost.com
+          example: john.doe@bootstrapbugz.com
       responses:
         200:
           description: Email Availability Success
@@ -420,8 +345,8 @@ paths:
       summary: Get Users
       operationId: getUsers
       security:
-        - {}
-        - BearerAuth: []
+        - { }
+        - BearerAuth: [ ]
       responses:
         200:
           description: Get Users Success
@@ -435,14 +360,22 @@ paths:
                 non-signed-in-and-regular-user:
                   value:
                     - id: 1
-                      firstName: John
-                      lastName: Doe
-                      username: john
+                      firstName: Admin
+                      lastName: Admin
+                      username: admin
                       email: null
                       activated: true
                       nonLocked: true
                       roles: null
                     - id: 2
+                      firstName: John
+                      lastName: Doe
+                      username: john.doe
+                      email: null
+                      activated: true
+                      nonLocked: true
+                      roles: null
+                    - id: 3
                       firstName: Jane
                       lastName: Doe
                       username: jane
@@ -453,19 +386,29 @@ paths:
                 admin:
                   value:
                     - id: 1
-                      firstName: John
-                      lastName: Doe
-                      username: john
-                      email: john.doe@localhost.com
+                      firstName: Admin
+                      lastName: Admin
+                      username: admin
+                      email: admin@bootstrapbugz.com
                       activated: true
                       nonLocked: true
                       roles:
                         - name: USER
+                        - name: ADMIN
                     - id: 2
+                      firstName: John
+                      lastName: Doe
+                      username: john.doe
+                      email: john.doe@bootstrapbugz.com
+                      activated: true
+                      nonLocked: true
+                      roles:
+                        - name: USER
+                    - id: 3
                       firstName: Jane
                       lastName: Doe
                       username: jane
-                      email: jane.doe@localhost.com
+                      email: jane.doe@bootstrapbugz.com
                       activated: true
                       nonLocked: true
                       roles:
@@ -477,8 +420,8 @@ paths:
       summary: Get User
       operationId: getUser
       security:
-        - {}
-        - BearerAuth: []
+        - { }
+        - BearerAuth: [ ]
       parameters:
         - in: path
           name: username
@@ -486,7 +429,7 @@ paths:
           schema:
             type: string
           description: Pass username to get user.
-          example: john
+          example: john.doe
       responses:
         200:
           description: Get User Success
@@ -494,15 +437,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
-              example:
-                id: 1
-                firstName: John
-                lastName: Doe
-                username: john
-                email: null
-                activated: true
-                nonLocked: true
-                roles: null
+              examples:
+                non-signed-in-or-requesting-other:
+                  value:
+                    id: 2
+                    firstName: John
+                    lastName: Doe
+                    username: john.doe
+                    email: null
+                    activated: true
+                    nonLocked: true
+                    roles: null
+                signed-in-requesting-himself:
+                  value:
+                    id: 2
+                    firstName: John
+                    lastName: Doe
+                    username: john.doe
+                    email: john.doe@bootstrapbugz.com
+                    activated: true
+                    nonLocked: true
+                    roles: null
+                admin:
+                  value:
+                    id: 2
+                    firstName: John
+                    lastName: Doe
+                    username: john.doe
+                    email: john.doe@bootstrapbugz.com
+                    activated: true
+                    nonLocked: true
+                    roles:
+                      - name: USER
         404:
           $ref: '#/components/responses/NotFound'
   /profile/update:
@@ -513,7 +479,7 @@ paths:
       operationId: updateProfile
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         description: Update Profile Request
         required: true
@@ -521,19 +487,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdateProfileRequest'
-            examples:
-              valid:
-                value:
-                  firstName: Jane
-                  lastName: Doe
-                  username: jane
-                  email: jane.doe@localhost.com
-              bad-request:
-                value:
-                  firstName: John
-                  lastName: Doe
-                  username: john
-                  email: john
+            example:
+              firstName: Joe
+              lastName: Blow
+              username: joe.blow
+              email: joe.blow@bootstrapbugz.com
       responses:
         200:
           description: Update Profile Success
@@ -542,11 +500,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserResponse'
               example:
-                id: 1
-                firstName: Jane
-                lastName: Doe
-                username: jane
-                email: jane.doe@localhost.com
+                id: 4
+                firstName: Joe
+                lastName: Blow
+                username: joe.blow
+                email: joe.blow@bootstrapbugz.com
                 activated: false
                 nonLocked: true
                 roles:
@@ -563,7 +521,7 @@ paths:
       operationId: changePassword
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         description: Change Password Request
         required: true
@@ -571,17 +529,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ChangePasswordRequest'
-            examples:
-              valid:
-                value:
-                  oldPassword: qwerty123
-                  newPassword: qwerty321
-                  confirmNewPassword: qwerty321
-              bad-request:
-                value:
-                  oldPassword: qwerty123
-                  newPassword: qwerty321
-                  confirmNewPassword: qwerty3214
+            example:
+              oldPassword: qwerty123
+              newPassword: qwerty321
+              confirmNewPassword: qwerty321
       responses:
         204:
           description: Change Password Success
@@ -597,7 +548,7 @@ paths:
       operationId: activateUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         description: Activate Users Request
         required: true
@@ -605,15 +556,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AdminRequest'
-            examples:
-              valid:
-                value:
-                  usernames:
-                    - john
-                    - jean
-              bad-request:
-                value:
-                  usernames: null
+            example:
+              usernames:
+                - john.doe
+                - jean.doe
       responses:
         204:
           description: Activate Users Success
@@ -631,7 +577,7 @@ paths:
       operationId: deactivateUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         description: Deactivate Users Request
         required: true
@@ -639,15 +585,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AdminRequest'
-            examples:
-              valid:
-                value:
-                  usernames:
-                    - john
-                    - jean
-              bad-request:
-                value:
-                  usernames: null
+            example:
+              usernames:
+                - john.doe
+                - jean.doe
       responses:
         204:
           description: Deactivate Users Success
@@ -665,7 +606,7 @@ paths:
       operationId: unlockUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         description: Unlock Users Request
         required: true
@@ -673,15 +614,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AdminRequest'
-            examples:
-              valid:
-                value:
-                  usernames:
-                    - john
-                    - jean
-              bad-request:
-                value:
-                  usernames: null
+            example:
+              usernames:
+                - john.doe
+                - jean.doe
       responses:
         204:
           description: Unlock Users Success
@@ -699,7 +635,7 @@ paths:
       operationId: lockUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         description: Lock Users Request
         required: true
@@ -707,15 +643,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AdminRequest'
-            examples:
-              valid:
-                value:
-                  usernames:
-                    - john
-                    - jean
-              bad-request:
-                value:
-                  usernames: null
+            example:
+              usernames:
+                - john.doe
+                - jean.doe
       responses:
         204:
           description: Lock Users Success
@@ -733,7 +664,7 @@ paths:
       operationId: updateUserRoles
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         description: Update Users Roles Request
         required: true
@@ -741,19 +672,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdateRoleRequest'
-            examples:
-              valid:
-                value:
-                  usernames:
-                    - john
-                    - jean
-                  roleNames:
-                    - USER
-                    - ADMIN
-              bad-request:
-                value:
-                  usernames: null
-                  roleNames: null
+            example:
+              usernames:
+                - john.doe
+                - jean.doe
+              roleNames:
+                - USER
+                - ADMIN
       responses:
         204:
           description: Update Users Roles Success
@@ -771,7 +696,7 @@ paths:
       operationId: deleteUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: []
+        - BearerAuth: [ ]
       requestBody:
         description: Delete Users Request
         required: true
@@ -779,15 +704,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AdminRequest'
-            examples:
-              valid:
-                value:
-                  usernames:
-                    - john
-                    - jean
-              bad-request:
-                value:
-                  usernames: null
+            example:
+              usernames:
+                - john.doe
+                - jean.doe
       responses:
         204:
           description: Delete Users Success
