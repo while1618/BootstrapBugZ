@@ -40,7 +40,7 @@ paths:
               firstName: Joe
               lastName: Bloggs
               username: joe.bloggs
-              email: joe.blogs@bootstrapbugz.com
+              email: joe.bloggs@bootstrapbugz.com
               password: qwerty123
               confirmPassword: qwerty123
       responses:
