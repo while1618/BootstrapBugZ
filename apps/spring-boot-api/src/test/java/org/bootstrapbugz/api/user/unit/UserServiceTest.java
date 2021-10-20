@@ -91,6 +91,18 @@ class UserServiceTest {
   }
 
   @Test
+  void itShouldFindUserByUsername_adminSignedIn() {
+    TestUtil.setAuth(auth, securityContext, admin);
+    var userRoleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var expectedUserResponse =
+        new UserResponse(
+            1L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses);
+    when(userRepository.findByUsernameWithRoles("test")).thenReturn(Optional.of(user));
+    var actualUserResponse = userService.findByUsername("test");
+    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
+  }
+
+  @Test
   void findUserByUsernameShouldThrowResourceNotFound() {
     when(messageService.getMessage("user.notFound")).thenReturn("User not found.");
     assertThatThrownBy(() -> userService.findByUsername("test"))

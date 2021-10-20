@@ -5,7 +5,7 @@ import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
-import org.bootstrapbugz.api.user.model.Role;
+import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.UserService;
@@ -28,8 +28,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<UserResponse> findAll() {
-    if (AuthUtil.isSignedIn()
-        && AuthUtil.findSignedInUser().getRoles().contains(new Role(Role.RoleName.ADMIN)))
+    if (AuthUtil.isAdminSignedIn())
       return userRepository.findAllWithRoles().stream()
           .map(userMapper::userToUserResponse)
           .toList();
@@ -45,6 +44,20 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse findByUsername(String username) {
+    if (AuthUtil.isAdminSignedIn()) return userMapper.userToUserResponse(userForAdmin(username));
+    return userMapper.userToUserResponse(userForNonAdmin(username));
+  }
+
+  private User userForAdmin(String username) {
+    return userRepository
+        .findByUsernameWithRoles(username)
+        .orElseThrow(
+            () ->
+                new ResourceNotFoundException(
+                    messageService.getMessage("user.notFound"), ErrorDomain.USER));
+  }
+
+  private User userForNonAdmin(String username) {
     final var user =
         userRepository
             .findByUsername(username)
@@ -53,9 +66,9 @@ public class UserServiceImpl implements UserService {
                     new ResourceNotFoundException(
                         messageService.getMessage("user.notFound"), ErrorDomain.USER));
     user.setRoles(null);
-    if (!AuthUtil.isSignedIn()
-        || !AuthUtil.findSignedInUser().getUsername().equals(user.getUsername()))
+    if (!(AuthUtil.isSignedIn()
+        && AuthUtil.findSignedInUser().getUsername().equals(user.getUsername())))
       user.setEmail(null);
-    return userMapper.userToUserResponse(user);
+    return user;
   }
 }

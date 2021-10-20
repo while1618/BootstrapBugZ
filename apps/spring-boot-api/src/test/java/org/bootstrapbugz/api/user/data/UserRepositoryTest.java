@@ -89,8 +89,9 @@ class UserRepositoryTest extends DatabaseContainers {
     var actualUser = userRepository.findByEmail("user@bootstrapbugz.com").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
-        .ignoringFields("password")
         .ignoringFields("id")
+        .ignoringFields("password")
+        .ignoringFields("roles")
         .isEqualTo(expectedUser);
   }
 
@@ -99,8 +100,19 @@ class UserRepositoryTest extends DatabaseContainers {
     var actualUser = userRepository.findByUsername("user").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
-        .ignoringFields("password")
         .ignoringFields("id")
+        .ignoringFields("password")
+        .ignoringFields("roles")
+        .isEqualTo(expectedUser);
+  }
+
+  @Test
+  void itShouldFindUserByUsernameWithRoles() {
+    var actualUser = userRepository.findByUsernameWithRoles("user").orElseThrow();
+    assertThat(actualUser)
+        .usingRecursiveComparison()
+        .ignoringFields("id")
+        .ignoringFields("password")
         .isEqualTo(expectedUser);
   }
 
@@ -109,8 +121,9 @@ class UserRepositoryTest extends DatabaseContainers {
     var actualUser = userRepository.findByUsernameOrEmail("user", "user").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
-        .ignoringFields("password")
         .ignoringFields("id")
+        .ignoringFields("password")
+        .ignoringFields("roles")
         .isEqualTo(expectedUser);
   }
 

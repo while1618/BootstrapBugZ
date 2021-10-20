@@ -8,6 +8,8 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
+import org.bootstrapbugz.api.user.model.Role;
+import org.bootstrapbugz.api.user.payload.response.RoleResponse;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -86,6 +90,26 @@ class UserControllerTest extends DatabaseContainers {
     var expectedUserResponse =
         new UserResponse(1L, "Admin", "Admin", "admin", null, true, true, null);
     performFindUserByUsername("admin", signInResponse.getAccessToken())
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserResponse)));
+  }
+
+  @Test
+  void itShouldFindUserByUsername_adminSignedIn() throws Exception {
+    var signInResponse =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    var expectedUserResponse =
+        new UserResponse(
+            2L,
+            "User",
+            "User",
+            "user",
+            "user@bootstrapbugz.com",
+            true,
+            true,
+            Set.of(new RoleResponse(Role.RoleName.USER.name())));
+    performFindUserByUsername("user", signInResponse.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string(objectMapper.writeValueAsString(expectedUserResponse)));

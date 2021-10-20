@@ -19,6 +19,12 @@ public class AuthUtil {
     return !auth.getPrincipal().equals("anonymousUser");
   }
 
+  public static boolean isAdminSignedIn() {
+    if (!isSignedIn()) return false;
+    User user = findSignedInUser();
+    return user.getRoles().contains(new Role(RoleName.ADMIN));
+  }
+
   public static User findSignedInUser() {
     final var auth = SecurityContextHolder.getContext().getAuthentication();
     return userPrincipalToUser((UserPrincipal) auth.getPrincipal());
