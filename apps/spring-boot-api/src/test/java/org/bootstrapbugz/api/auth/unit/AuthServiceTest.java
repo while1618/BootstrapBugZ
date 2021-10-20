@@ -248,7 +248,7 @@ class AuthServiceTest {
 
   @Test
   void itShouldCheckEmailAvailability() {
-    when(userRepository.existsByEmail("available@localhost.com")).thenReturn(false);
-    assertThat(authService.isEmailAvailable("available@localhost.com")).isTrue();
+    when(userRepository.existsByEmail("available@bootstrapbugz.com")).thenReturn(false);
+    assertThat(authService.isEmailAvailable("available@bootstrapbugz.com")).isTrue();
   }
 }

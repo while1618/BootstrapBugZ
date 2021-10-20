@@ -72,7 +72,7 @@ class UserControllerTest extends DatabaseContainers {
     var signInResponse =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var expectedUserResponse =
-        new UserResponse(2L, "User", "User", "user", "user@localhost.com", true, true, null);
+        new UserResponse(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, null);
     performFindUserByUsername("user", signInResponse.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))

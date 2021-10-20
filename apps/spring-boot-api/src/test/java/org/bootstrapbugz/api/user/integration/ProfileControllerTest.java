@@ -59,9 +59,9 @@ class ProfileControllerTest extends DatabaseContainers {
   @Test
   void itShouldUpdateUser_newUsernameAndEmail() throws Exception {
     var signInResponse =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate1", "qwerty123"));
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty123"));
     var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "updated", "updated@localhost.com");
+        new UpdateProfileRequest("Updated", "Updated", "updated", "updated@bootstrapbugz.com");
     var roleResponses = Collections.singleton(new RoleResponse(Role.RoleName.USER.name()));
     var expectedUserResponse =
         new UserResponse(
@@ -69,7 +69,7 @@ class ProfileControllerTest extends DatabaseContainers {
             "Updated",
             "Updated",
             "updated",
-            "updated@localhost.com",
+            "updated@bootstrapbugz.com",
             false,
             true,
             roleResponses);
@@ -81,17 +81,18 @@ class ProfileControllerTest extends DatabaseContainers {
   @Test
   void itShouldUpdateUser_sameUsernameAndEmail() throws Exception {
     var signInResponse =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "forUpdate2", "forUpdate2@localhost.com");
+        new UpdateProfileRequest(
+            "Updated", "Updated", "for.update.2", "for.update.2@bootstrapbugz.com");
     var roleResponses = Collections.singleton(new RoleResponse(Role.RoleName.USER.name()));
     var expectedUserResponse =
         new UserResponse(
             6L,
             "Updated",
             "Updated",
-            "forUpdate2",
-            "forUpdate2@localhost.com",
+            "for.update.2",
+            "for.update.2@bootstrapbugz.com",
             true,
             true,
             roleResponses);
@@ -103,9 +104,9 @@ class ProfileControllerTest extends DatabaseContainers {
   @Test
   void updateUserShouldThrowBadRequest_usernameExists() throws Exception {
     var signInResponse =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "user", "forUpdate2@localhost.com");
+        new UpdateProfileRequest("Updated", "Updated", "user", "for.update.2@bootstrapbugz.com");
     var resultActions =
         performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isConflict());
@@ -117,9 +118,9 @@ class ProfileControllerTest extends DatabaseContainers {
   @Test
   void updateUserShouldThrowBadRequest_emailExists() throws Exception {
     var signInResponse =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "forUpdate2", "user@localhost.com");
+        new UpdateProfileRequest("Updated", "Updated", "for.update.2", "user@bootstrapbugz.com");
     var resultActions =
         performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isConflict());
@@ -131,7 +132,7 @@ class ProfileControllerTest extends DatabaseContainers {
   @Test
   void updateUserShouldThrowBadRequest_invalidParameters() throws Exception {
     var signInResponse =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var updateUserRequest =
         new UpdateProfileRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
     var resultActions =
@@ -148,7 +149,7 @@ class ProfileControllerTest extends DatabaseContainers {
   @Test
   void itShouldChangePassword() throws Exception {
     var signInResponse =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate3", "qwerty123"));
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.3", "qwerty123"));
     var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
     performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
         .andExpect(status().isNoContent());
@@ -157,7 +158,7 @@ class ProfileControllerTest extends DatabaseContainers {
   @Test
   void changePasswordShouldThrowBadRequest_oldPasswordDoNotMatch() throws Exception {
     var signInResponse =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var changePasswordRequest =
         new ChangePasswordRequest("qwerty12345", "qwerty1234", "qwerty1234");
     var resultActions =
@@ -171,7 +172,7 @@ class ProfileControllerTest extends DatabaseContainers {
   @Test
   void changePasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
     var signInResponse =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty12345");
     var resultActions =
         performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
@@ -184,7 +185,7 @@ class ProfileControllerTest extends DatabaseContainers {
   @Test
   void changePasswordShouldThrowBadRequest_invalidParameters() throws Exception {
     var signInResponse =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate2", "qwerty123"));
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var changePasswordRequest = new ChangePasswordRequest("invalid", "invalid", "invalid");
     var resultActions =
         performChangePassword(changePasswordRequest, signInResponse.getAccessToken())

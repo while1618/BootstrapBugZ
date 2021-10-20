@@ -51,11 +51,12 @@ class AuthControllerTest extends DatabaseContainers {
   @Test
   void itShouldSignUp() throws Exception {
     var signUpRequest =
-        new SignUpRequest("Test", "Test", "test", "test@localhost.com", "qwerty123", "qwerty123");
+        new SignUpRequest(
+            "Test", "Test", "test", "test@bootstrapbugz.com", "qwerty123", "qwerty123");
     var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
     var expectedUserResponse =
         new UserResponse(
-            8L, "Test", "Test", "test", "test@localhost.com", false, true, roleResponses);
+            8L, "Test", "Test", "test", "test@bootstrapbugz.com", false, true, roleResponses);
     var resultActions =
         mockMvc
             .perform(
@@ -73,7 +74,8 @@ class AuthControllerTest extends DatabaseContainers {
   @Test
   void signUpShouldThrowBadRequest_invalidParameters() throws Exception {
     var signUpRequest =
-        new SignUpRequest("Test1", "Test1", "user", "user@localhost.com", "qwerty123", "qwerty12");
+        new SignUpRequest(
+            "Test1", "Test1", "user", "user@bootstrapbugz.com", "qwerty123", "qwerty12");
     var resultActions =
         mockMvc
             .perform(
@@ -92,7 +94,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldResendConfirmationEmail() throws Exception {
-    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("notActivated");
+    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("not.activated");
     mockMvc
         .perform(
             post(Path.AUTH + "/resend-confirmation-email")
@@ -133,7 +135,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldConfirmRegistration() throws Exception {
-    String token = jwtService.createToken(3L, JwtPurpose.CONFIRM_REGISTRATION); // notActivated
+    String token = jwtService.createToken(3L, JwtPurpose.CONFIRM_REGISTRATION); // not.activated
     var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     mockMvc
         .perform(
@@ -254,7 +256,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldForgotPassword() throws Exception {
-    var forgotPasswordRequest = new ForgotPasswordRequest("user@localhost.com");
+    var forgotPasswordRequest = new ForgotPasswordRequest("user@bootstrapbugz.com");
     mockMvc
         .perform(
             post(Path.AUTH + "/forgot-password")
@@ -265,7 +267,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void forgotPasswordShouldThrowResourceNotFound_userNotFound() throws Exception {
-    var forgotPasswordRequest = new ForgotPasswordRequest("unknown@localhost.com");
+    var forgotPasswordRequest = new ForgotPasswordRequest("unknown@bootstrapbugz.com");
     var expectedErrorResponse =
         new ErrorResponse(HttpStatus.NOT_FOUND, ErrorDomain.AUTH, "User not found.");
     var resultActions =
@@ -280,7 +282,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldResetPassword() throws Exception {
-    String token = jwtService.createToken(5L, JwtPurpose.FORGOT_PASSWORD); // forUpdate1
+    String token = jwtService.createToken(5L, JwtPurpose.FORGOT_PASSWORD); // for.update.1
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
@@ -288,12 +290,12 @@ class AuthControllerTest extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isNoContent());
-    TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("forUpdate1", "qwerty1234"));
+    TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty1234"));
   }
 
   @Test
   void resetPasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    String token = jwtService.createToken(6L, JwtPurpose.FORGOT_PASSWORD); // forUpdate2
+    String token = jwtService.createToken(6L, JwtPurpose.FORGOT_PASSWORD); // for.update.2
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty123", "qwerty1234");
     var resultActions =
         mockMvc
@@ -330,7 +332,7 @@ class AuthControllerTest extends DatabaseContainers {
     var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
     var expectedUserResponse =
         new UserResponse(
-            2L, "User", "User", "user", "user@localhost.com", true, true, roleResponses);
+            2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, roleResponses);
     var resultActions =
         mockMvc
             .perform(
@@ -362,7 +364,7 @@ class AuthControllerTest extends DatabaseContainers {
     mockMvc
         .perform(
             get(Path.AUTH + "/email-availability")
-                .param("email", "available@localhost.com")
+                .param("email", "available@bootstrapbugz.com")
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))

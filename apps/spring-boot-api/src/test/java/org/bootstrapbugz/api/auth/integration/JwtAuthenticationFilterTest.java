@@ -58,7 +58,7 @@ class JwtAuthenticationFilterTest extends DatabaseContainers {
   @ParameterizedTest
   @CsvSource({
     "locked, User locked.",
-    "notActivated, User not activated.",
+    "not.activated, User not activated.",
   })
   void signInShouldThrowForbidden_userLockedAndUserNotActivated(String username, String message)
       throws Exception {

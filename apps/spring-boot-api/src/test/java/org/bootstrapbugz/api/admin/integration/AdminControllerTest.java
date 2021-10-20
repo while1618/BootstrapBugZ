@@ -64,8 +64,8 @@ class AdminControllerTest extends DatabaseContainers {
   @CsvSource({
     "lock, user",
     "unlock, locked",
-    "deactivate, forUpdate1",
-    "activate, notActivated",
+    "deactivate, for.update.1",
+    "activate, not.activated",
   })
   void itShouldLockUnlockDeactivateActivateUsers(String path, String username) throws Exception {
     var adminRequest = new AdminRequest(Set.of(username));
@@ -80,7 +80,7 @@ class AdminControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldDeleteUsers() throws Exception {
-    var adminRequest = new AdminRequest(Set.of("forUpdate2"));
+    var adminRequest = new AdminRequest(Set.of("for.update.2"));
     mockMvc
         .perform(
             delete(Path.ADMIN + "/users/delete")

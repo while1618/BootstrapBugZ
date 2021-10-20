@@ -49,7 +49,8 @@ class AccessingResourcesTest extends DatabaseContainers {
   @Test
   void updateProfileShouldThrowUnauthorized_userNotSignedIn() throws Exception {
     var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "forUpdate2", "forUpdate2@localhost.com");
+        new UpdateProfileRequest(
+            "Updated", "Updated", "for.update.2", "for.update.2@bootstrapbugz.com");
     var resultActions =
         mockMvc
             .perform(
@@ -108,8 +109,8 @@ class AccessingResourcesTest extends DatabaseContainers {
   @CsvSource({
     "lock, user",
     "unlock, locked",
-    "deactivate, forUpdate1",
-    "activate, notActivated",
+    "deactivate, for.update.1",
+    "activate, not.activated",
   })
   void lockUnlockDeactivateActivateUsersShouldThrowUnauthorized_userNotSignedIn(
       String path, String username) throws Exception {
@@ -128,8 +129,8 @@ class AccessingResourcesTest extends DatabaseContainers {
   @CsvSource({
     "lock, user",
     "unlock, locked",
-    "deactivate, forUpdate1",
-    "activate, notActivated",
+    "deactivate, for.update.1",
+    "activate, not.activated",
   })
   void lockUnlockDeactivateActivateUsersShouldThrowForbidden_signedInUserIsNotAdmin(
       String path, String username) throws Exception {
@@ -149,7 +150,7 @@ class AccessingResourcesTest extends DatabaseContainers {
 
   @Test
   void deleteUsersShouldThrowUnauthorized_userNotSignedIn() throws Exception {
-    var adminRequest = new AdminRequest(Set.of("forUpdate2"));
+    var adminRequest = new AdminRequest(Set.of("for.update.2"));
     var resultActions =
         mockMvc
             .perform(
@@ -164,7 +165,7 @@ class AccessingResourcesTest extends DatabaseContainers {
   void deleteUsersShouldThrowForbidden_signedInUserIsNotAdmin() throws Exception {
     var signInResponse =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var adminRequest = new AdminRequest(Set.of("forUpdate2"));
+    var adminRequest = new AdminRequest(Set.of("for.update.2"));
     var resultActions =
         mockMvc
             .perform(
