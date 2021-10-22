@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.shared.error.handling;
 
-import java.util.Objects;
-import javax.annotation.Nonnull;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
@@ -22,6 +21,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import javax.annotation.Nonnull;
+import java.util.Objects;
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
@@ -83,6 +85,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler({ConflictException.class})
   public ResponseEntity<Object> handleConflictException(ConflictException ex) {
     return createErrorResponseEntity(ex.getDomain(), ex.getMessage(), ex.getStatus());
+  }
+
+  @ExceptionHandler({JWTVerificationException.class})
+  public ResponseEntity<Object> handleJwtVerificationException(JWTVerificationException ex) {
+    return createErrorResponseEntity(ErrorDomain.GLOBAL, ex.getMessage(), HttpStatus.FORBIDDEN);
   }
 
   @ExceptionHandler({Exception.class})
