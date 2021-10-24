@@ -1,9 +1,10 @@
 package org.bootstrapbugz.api.auth.event.email;
 
+import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Supplier;
-import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 
 public class JwtEmailSupplier {
   private static final Map<JwtPurpose, Supplier<JwtEmail>> emailType =
@@ -17,7 +18,7 @@ public class JwtEmailSupplier {
   public JwtEmail supplyEmail(JwtPurpose jwtPurpose) {
     final var emailSupplier = emailType.get(jwtPurpose);
     if (emailSupplier == null)
-      throw new IllegalArgumentException("Invalid player type: " + jwtPurpose);
+      throw new IllegalArgumentException("Invalid email type: " + jwtPurpose);
     return emailSupplier.get();
   }
 }
