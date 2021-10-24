@@ -1,9 +1,12 @@
 package org.bootstrapbugz.api.user.model;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import com.google.common.base.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,12 +17,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -27,7 +28,6 @@ import lombok.experimental.Accessors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Accessors(chain = true)
 public class User implements Serializable {
   @Serial private static final long serialVersionUID = -7881387078460754905L;
@@ -59,4 +59,24 @@ public class User implements Serializable {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_name"))
   private Set<Role> roles = new HashSet<>();
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof User user)) return false;
+    return activated == user.activated
+        && nonLocked == user.nonLocked
+        && Objects.equal(id, user.id)
+        && Objects.equal(firstName, user.firstName)
+        && Objects.equal(lastName, user.lastName)
+        && Objects.equal(username, user.username)
+        && Objects.equal(email, user.email)
+        && Objects.equal(password, user.password);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(
+        id, firstName, lastName, username, email, password, activated, nonLocked);
+  }
 }
