@@ -55,7 +55,7 @@ public class ProfileServiceImpl implements ProfileService {
   private void tryToSetUsername(User user, String username) {
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
-      throw new ConflictException(messageService.getMessage("username.exists"));
+      throw new ConflictException("username", messageService.getMessage("username.exists"));
 
     user.setUsername(username);
   }
@@ -63,7 +63,7 @@ public class ProfileServiceImpl implements ProfileService {
   private void tryToSetEmail(User user, String email) {
     if (user.getEmail().equals(email)) return;
     if (userRepository.existsByEmail(email))
-      throw new ConflictException(messageService.getMessage("email.exists"));
+      throw new ConflictException("email", messageService.getMessage("email.exists"));
 
     user.setEmail(email);
     user.setActivated(false);

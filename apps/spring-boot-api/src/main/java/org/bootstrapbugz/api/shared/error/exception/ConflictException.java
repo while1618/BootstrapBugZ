@@ -9,9 +9,11 @@ import java.io.Serial;
 public class ConflictException extends RuntimeException {
   @Serial private static final long serialVersionUID = 8841655774286844538L;
   private final HttpStatus status;
+  private final String field;
 
-  public ConflictException(String message) {
+  public ConflictException(String field, String message) {
     super(message);
     this.status = HttpStatus.CONFLICT;
+    this.field = field;
   }
 }

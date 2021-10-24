@@ -62,6 +62,8 @@ paths:
                   - name: USER
         400:
           $ref: '#/components/responses/BadRequest'
+        409:
+          $ref: '#/components/responses/Conflict'
   /auth/resend-confirmation-email:
     post:
       tags:
@@ -513,6 +515,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
+        409:
+          $ref: '#/components/responses/Conflict'
   /profile/change-password:
     put:
       tags:
@@ -722,7 +726,7 @@ components:
     BadRequest:
       description: Bad Request
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
@@ -737,7 +741,7 @@ components:
     NotFound:
       description: Not Found
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
@@ -749,7 +753,7 @@ components:
     Unauthorized:
       description: Unauthorized
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
@@ -761,7 +765,7 @@ components:
     Forbidden:
       description: Forbidden
       content:
-        application/json:
+        application/problem+json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
@@ -770,6 +774,19 @@ components:
             error: Forbidden
             details:
               - message: Forbidden.
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            timestamp: 18-10-2021 04:00:44
+            status: 409
+            error: Conflict
+            details:
+              - field: field
+                message: Field already exists.
   schemas:
     SignUpRequest:
       type: object

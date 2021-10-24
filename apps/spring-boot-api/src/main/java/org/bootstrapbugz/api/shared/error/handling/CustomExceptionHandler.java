@@ -44,7 +44,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errorResponse, headers, status);
   }
 
-  private ResponseEntity<Object> createErrorResponseEntity(HttpStatus status, String message) {
+  private ResponseEntity<Object> createErrorResponseEntityWithoutField(
+      HttpStatus status, String message) {
     final var errorResponse = new ErrorResponse(status);
     errorResponse.addDetails(message);
     final var header = new HttpHeaders();
@@ -52,48 +53,53 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errorResponse, header, status);
   }
 
-  @ExceptionHandler({BadRequestException.class})
-  public ResponseEntity<Object> handleBadRequestException(BadRequestException ex) {
-    final var errorResponse = new ErrorResponse(ex.getStatus());
-    errorResponse.addDetails(ex.getField(), ex.getMessage());
+  private ResponseEntity<Object> createErrorResponseEntityWithField(
+      HttpStatus status, String field, String message) {
+    final var errorResponse = new ErrorResponse(status);
+    errorResponse.addDetails(field, message);
     final var header = new HttpHeaders();
     header.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
-    return new ResponseEntity<>(errorResponse, header, ex.getStatus());
+    return new ResponseEntity<>(errorResponse, header, status);
+  }
+
+  @ExceptionHandler({BadRequestException.class})
+  public ResponseEntity<Object> handleBadRequestException(BadRequestException ex) {
+    return createErrorResponseEntityWithField(ex.getStatus(), ex.getField(), ex.getMessage());
   }
 
   @ExceptionHandler({UnauthorizedException.class})
   public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
-    return createErrorResponseEntity(ex.getStatus(), ex.getMessage());
+    return createErrorResponseEntityWithoutField(ex.getStatus(), ex.getMessage());
   }
 
   @ExceptionHandler({ForbiddenException.class})
   public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex) {
-    return createErrorResponseEntity(ex.getStatus(), ex.getMessage());
+    return createErrorResponseEntityWithoutField(ex.getStatus(), ex.getMessage());
   }
 
   @ExceptionHandler({AccessDeniedException.class})
   public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
-    return createErrorResponseEntity(HttpStatus.FORBIDDEN, ex.getMessage());
+    return createErrorResponseEntityWithoutField(HttpStatus.FORBIDDEN, ex.getMessage());
   }
 
   @ExceptionHandler({ResourceNotFoundException.class})
   public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
-    return createErrorResponseEntity(ex.getStatus(), ex.getMessage());
+    return createErrorResponseEntityWithoutField(ex.getStatus(), ex.getMessage());
   }
 
   @ExceptionHandler({ConflictException.class})
   public ResponseEntity<Object> handleConflictException(ConflictException ex) {
-    return createErrorResponseEntity(ex.getStatus(), ex.getMessage());
+    return createErrorResponseEntityWithField(ex.getStatus(), ex.getField(), ex.getMessage());
   }
 
   @ExceptionHandler({JWTVerificationException.class})
   public ResponseEntity<Object> handleJwtVerificationException(JWTVerificationException ex) {
-    return createErrorResponseEntity(HttpStatus.FORBIDDEN, ex.getMessage());
+    return createErrorResponseEntityWithoutField(HttpStatus.FORBIDDEN, ex.getMessage());
   }
 
   @ExceptionHandler({Exception.class})
   public ResponseEntity<Object> handleGlobalException(Exception ex) {
-    return createErrorResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    return createErrorResponseEntityWithoutField(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
   }
 
   @Override
@@ -103,7 +109,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatus status,
       @Nonnull WebRequest request) {
-    return createErrorResponseEntity(status, ex.getParameterName() + " parameter is missing");
+    return createErrorResponseEntityWithoutField(
+        status, ex.getParameterName() + " parameter is missing");
   }
 
   @Override
@@ -118,7 +125,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     builder.append(" method is not supported for this request. Supported methods are ");
     Objects.requireNonNull(ex.getSupportedHttpMethods())
         .forEach(t -> builder.append(t).append(" "));
-    return createErrorResponseEntity(status, builder.toString());
+    return createErrorResponseEntityWithoutField(status, builder.toString());
   }
 
   @Override
@@ -128,13 +135,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatus status,
       @Nonnull WebRequest request) {
-    return createErrorResponseEntity(status, ex.getMostSpecificCause().getMessage());
+    return createErrorResponseEntityWithoutField(status, ex.getMostSpecificCause().getMessage());
   }
 
   @ExceptionHandler({MethodArgumentTypeMismatchException.class})
   public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
       MethodArgumentTypeMismatchException ex) {
-    return createErrorResponseEntity(
+    return createErrorResponseEntityWithoutField(
         HttpStatus.BAD_REQUEST,
         ex.getName()
             + " should be of type "

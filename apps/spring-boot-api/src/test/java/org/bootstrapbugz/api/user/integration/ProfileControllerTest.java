@@ -110,7 +110,7 @@ class ProfileControllerTest extends DatabaseContainers {
         performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isConflict());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.CONFLICT);
-    expectedErrorResponse.addDetails("Username already exists.");
+    expectedErrorResponse.addDetails("username", "Username already exists.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -124,7 +124,7 @@ class ProfileControllerTest extends DatabaseContainers {
         performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isConflict());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.CONFLICT);
-    expectedErrorResponse.addDetails("Email already exists.");
+    expectedErrorResponse.addDetails("email", "Email already exists.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
