@@ -559,7 +559,7 @@ paths:
             example:
               usernames:
                 - john.doe
-                - jean.doe
+                - jane.doe
       responses:
         204:
           description: Activate Users Success
@@ -588,7 +588,7 @@ paths:
             example:
               usernames:
                 - john.doe
-                - jean.doe
+                - jane.doe
       responses:
         204:
           description: Deactivate Users Success
@@ -617,7 +617,7 @@ paths:
             example:
               usernames:
                 - john.doe
-                - jean.doe
+                - jane.doe
       responses:
         204:
           description: Unlock Users Success
@@ -646,7 +646,7 @@ paths:
             example:
               usernames:
                 - john.doe
-                - jean.doe
+                - jane.doe
       responses:
         204:
           description: Lock Users Success
@@ -675,7 +675,7 @@ paths:
             example:
               usernames:
                 - john.doe
-                - jean.doe
+                - jane.doe
               roleNames:
                 - USER
                 - ADMIN
@@ -707,7 +707,7 @@ paths:
             example:
               usernames:
                 - john.doe
-                - jean.doe
+                - jane.doe
       responses:
         204:
           description: Delete Users Success
