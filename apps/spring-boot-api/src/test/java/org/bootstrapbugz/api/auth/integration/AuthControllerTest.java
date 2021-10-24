@@ -1,6 +1,8 @@
 package org.bootstrapbugz.api.auth.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
+import org.bootstrapbugz.api.auth.jwt.service.impl.ForgotPasswordTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
@@ -9,9 +11,7 @@ import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.payload.response.RefreshTokenResponse;
-import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
@@ -45,7 +45,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthControllerTest extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  @Autowired private JwtServiceImpl jwtService;
+  @Autowired private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
+  @Autowired private ForgotPasswordTokenServiceImpl forgotPasswordTokenService;
 
   @Test
   void itShouldSignUp() throws Exception {
@@ -134,7 +135,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldConfirmRegistration() throws Exception {
-    String token = jwtService.createToken(3L, JwtPurpose.CONFIRM_REGISTRATION); // not.activated
+    String token = confirmRegistrationTokenService.create(3L); // not.activated
     var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     mockMvc
         .perform(
@@ -146,7 +147,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_invalidToken() throws Exception {
-    String token = jwtService.createToken(10L, JwtPurpose.CONFIRM_REGISTRATION); // unknown
+    String token = confirmRegistrationTokenService.create(10L); // unknown
     var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     var resultActions =
         mockMvc
@@ -162,7 +163,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() throws Exception {
-    String token = jwtService.createToken(2L, JwtPurpose.CONFIRM_REGISTRATION); // user
+    String token = confirmRegistrationTokenService.create(2L); // user
     var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     var resultActions =
         mockMvc
@@ -281,7 +282,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void itShouldResetPassword() throws Exception {
-    String token = jwtService.createToken(5L, JwtPurpose.FORGOT_PASSWORD); // for.update.1
+    String token = forgotPasswordTokenService.create(5L); // for.update.1
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
@@ -294,7 +295,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    String token = jwtService.createToken(6L, JwtPurpose.FORGOT_PASSWORD); // for.update.2
+    String token = forgotPasswordTokenService.create(6L); // for.update.2
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty123", "qwerty1234");
     var resultActions =
         mockMvc
@@ -310,7 +311,7 @@ class AuthControllerTest extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowForbidden_invalidToken() throws Exception {
-    String token = jwtService.createToken(10L, JwtPurpose.FORGOT_PASSWORD); // unknown
+    String token = forgotPasswordTokenService.create(10L); // unknown
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     var resultActions =
         mockMvc

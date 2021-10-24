@@ -6,24 +6,34 @@
       "description": "Application name."
     },
     {
-      "name": "jwt.server-secret",
-      "type": "java.lang.String",
-      "description": "Server secret used to encrypt JWT."
-    },
-    {
-      "name": "jwt.expiration-time-in-secs",
-      "type": "java.lang.String",
-      "description": "JWT expiration time."
-    },
-    {
-      "name": "refresh-token.expiration-time-in-secs",
-      "type": "java.lang.String",
-      "description": "Refresh token expiration time."
-    },
-    {
       "name": "ui.app.url",
       "type": "java.lang.String",
       "description": "UI application URL."
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret used to encrypt JWT."
+    },
+    {
+      "name": "jwt.access-token.duration",
+      "type": "java.lang.String",
+      "description": "Access token duration time."
+    },
+    {
+      "name": "jwt.refresh-token.duration",
+      "type": "java.lang.String",
+      "description": "Refresh token duration time."
+    },
+    {
+      "name": "jwt.confirm-registration-token.duration",
+      "type": "java.lang.String",
+      "description": "Confirm registration token duration time."
+    },
+    {
+      "name": "jwt.forgot-password-token.duration",
+      "type": "java.lang.String",
+      "description": "Forgot password token duration time."
     }
   ]
 }

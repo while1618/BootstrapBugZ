@@ -2,11 +2,12 @@ package org.bootstrapbugz.api.auth.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.bootstrapbugz.api.user.model.Role;
+
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
-import org.bootstrapbugz.api.user.model.Role;
+import java.util.stream.Collectors;
 
 public class JwtUtil {
   public static final String TOKEN_TYPE = "Bearer ";
@@ -43,8 +44,10 @@ public class JwtUtil {
     return JWT.decode(token).getClaim("userId").asLong();
   }
 
-  public static List<String> getRoles(String token) {
-    return JWT.decode(token).getClaim("roles").asList(String.class);
+  public static Set<Role> getRoles(String token) {
+    return JWT.decode(token).getClaim("roles").asList(String.class).stream()
+        .map(role -> new Role(Role.RoleName.valueOf(role)))
+        .collect(Collectors.toSet());
   }
 
   public static String getIssuedAt(String token) {

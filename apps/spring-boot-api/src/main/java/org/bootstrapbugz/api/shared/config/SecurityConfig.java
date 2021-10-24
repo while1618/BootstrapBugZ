@@ -1,9 +1,10 @@
 package org.bootstrapbugz.api.shared.config;
 
+import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.security.JwtAuthenticationFilter;
 import org.bootstrapbugz.api.auth.security.JwtAuthorizationFilter;
 import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
-import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -38,19 +39,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     Path.AUTH + "/email-availability"
   };
   private final CustomUserDetailsService userDetailsService;
-  private final JwtService jwtService;
+  private final AccessTokenService accessTokenService;
+  private final RefreshTokenService refreshTokenService;
   private final UserMapper userMapper;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final MessageService messageService;
 
   public SecurityConfig(
       CustomUserDetailsService userDetailsService,
-      JwtService jwtService,
+      AccessTokenService accessTokenService,
+      RefreshTokenService refreshTokenService,
       UserMapper userMapper,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
       MessageService messageService) {
     this.userDetailsService = userDetailsService;
-    this.jwtService = jwtService;
+    this.accessTokenService = accessTokenService;
+    this.refreshTokenService = refreshTokenService;
     this.userMapper = userMapper;
     this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     this.messageService = messageService;
@@ -83,9 +87,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .addFilter(
             new JwtAuthenticationFilter(
-                authenticationManager(), jwtService, userMapper, messageService))
+                authenticationManager(),
+                accessTokenService,
+                refreshTokenService,
+                userMapper,
+                messageService))
         .addFilter(
-            new JwtAuthorizationFilter(authenticationManager(), jwtService, userDetailsService))
+            new JwtAuthorizationFilter(
+                authenticationManager(), accessTokenService, userDetailsService))
         .exceptionHandling()
         .authenticationEntryPoint(customAuthenticationEntryPoint)
         .and()

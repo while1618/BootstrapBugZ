@@ -1,7 +1,8 @@
 package org.bootstrapbugz.api.user.unit;
 
-import org.bootstrapbugz.api.auth.service.JwtService;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
+import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -22,7 +23,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -42,8 +42,9 @@ class ProfileServiceTest {
   @Mock private MessageService messageService;
   @Spy private UserMapperImpl userMapper;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
-  @Mock private ApplicationEventPublisher eventPublisher;
-  @Mock private JwtService jwtService;
+  @Mock private AccessTokenService accessTokenService;
+  @Mock private RefreshTokenService refreshTokenService;
+  @Mock private ConfirmRegistrationTokenService confirmRegistrationTokenService;
   @Mock private Authentication auth;
   @Mock private SecurityContext securityContext;
 
@@ -69,7 +70,6 @@ class ProfileServiceTest {
     var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(false);
-    when(jwtService.createToken(1L, JwtUtil.JwtPurpose.CONFIRM_REGISTRATION)).thenReturn("token");
     profileService.update(updateUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);

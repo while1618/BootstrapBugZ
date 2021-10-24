@@ -25,13 +25,13 @@ public class JwtServiceImpl implements JwtService {
   private final RefreshTokenWhitelistRepository refreshTokenWhitelistRepository;
   private final MessageService messageService;
 
-  @Value("${jwt.expiration-time-in-secs}")
+  @Value("${jwt.access-token.duration}")
   private int expirationTimeInSecs; // 15min
 
-  @Value("${refresh-token.expiration-time-in-secs}")
+  @Value("${jwt.access-token.duration}")
   private int refreshTokenExpirationTimeInSecs; // 7 days
 
-  @Value("${jwt.server-secret}")
+  @Value("${jwt.secret}")
   private String serverSecret;
 
   public JwtServiceImpl(

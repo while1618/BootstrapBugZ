@@ -1,6 +1,10 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
-import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
@@ -9,10 +13,7 @@ import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.payload.response.RefreshTokenResponse;
 import org.bootstrapbugz.api.auth.service.AuthService;
-import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -22,44 +23,48 @@ import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
   private final UserRepository userRepository;
-  private final JwtService jwtService;
-  private final ApplicationEventPublisher eventPublisher;
   private final MessageService messageService;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final UserMapper userMapper;
+  private final AccessTokenService accessTokenService;
+  private final RefreshTokenService refreshTokenService;
+  private final ConfirmRegistrationTokenService confirmRegistrationTokenService;
+  private final ForgotPasswordTokenService forgotPasswordTokenService;
 
   public AuthServiceImpl(
       UserRepository userRepository,
-      JwtService jwtService,
-      ApplicationEventPublisher eventPublisher,
       MessageService messageService,
       PasswordEncoder bCryptPasswordEncoder,
-      UserMapper userMapper) {
+      UserMapper userMapper,
+      AccessTokenService accessTokenService,
+      RefreshTokenService refreshTokenService,
+      ConfirmRegistrationTokenService confirmRegistrationTokenService,
+      ForgotPasswordTokenService forgotPasswordTokenService) {
     this.userRepository = userRepository;
-    this.jwtService = jwtService;
-    this.eventPublisher = eventPublisher;
     this.messageService = messageService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userMapper = userMapper;
+    this.accessTokenService = accessTokenService;
+    this.refreshTokenService = refreshTokenService;
+    this.confirmRegistrationTokenService = confirmRegistrationTokenService;
+    this.forgotPasswordTokenService = forgotPasswordTokenService;
   }
 
   @Override
   public UserResponse signUp(SignUpRequest signUpRequest) {
     final var user = createUser(signUpRequest);
-    final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
-    eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
+    final var accessToken = confirmRegistrationTokenService.create(user.getId());
+    confirmRegistrationTokenService.sendToEmail(user, accessToken);
     return userMapper.userToUserResponse(user);
   }
 
@@ -84,8 +89,8 @@ public class AuthServiceImpl implements AuthService {
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     if (user.isActivated())
       throw new ForbiddenException(messageService.getMessage("user.activated"));
-    final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
-    eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
+    final var accessToken = confirmRegistrationTokenService.create(user.getId());
+    confirmRegistrationTokenService.sendToEmail(user, accessToken);
   }
 
   @Override
@@ -96,8 +101,7 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
     if (user.isActivated())
       throw new ForbiddenException(messageService.getMessage("user.activated"));
-    jwtService.checkToken(
-        confirmRegistrationRequest.getAccessToken(), JwtPurpose.CONFIRM_REGISTRATION);
+    confirmRegistrationTokenService.check(confirmRegistrationRequest.getAccessToken());
     user.setActivated(true);
     userRepository.save(user);
   }
@@ -105,35 +109,31 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public RefreshTokenResponse refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
-    final String refreshToken =
-        JwtUtil.removeTokenTypeFromToken(refreshTokenRequest.getRefreshToken());
-    jwtService.checkRefreshToken(refreshToken);
-    jwtService.deleteRefreshToken(refreshToken);
-    final Long userId = JwtUtil.getUserId(refreshToken);
-    final Set<Role> roles =
-        JwtUtil.getRoles(refreshToken).stream()
-            .map(role -> new Role(RoleName.valueOf(role)))
-            .collect(Collectors.toSet());
-    final String accessToken =
-        jwtService.createToken(userId, roles, JwtPurpose.ACCESSING_RESOURCES);
+    final String oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.getRefreshToken());
+    refreshTokenService.check(oldRefreshToken);
+    final Long userId = JwtUtil.getUserId(oldRefreshToken);
+    final Set<Role> roles = JwtUtil.getRoles(oldRefreshToken);
+    refreshTokenService.delete(oldRefreshToken);
+    final String accessToken = accessTokenService.create(userId, roles);
     final String newRefreshToken =
-        jwtService.createRefreshToken(userId, roles, AuthUtil.getUserIpAddress(request));
-    return new RefreshTokenResponse(accessToken, newRefreshToken);
+        refreshTokenService.create(userId, roles, AuthUtil.getUserIpAddress(request));
+    return new RefreshTokenResponse(
+        JwtUtil.addBearer(accessToken), JwtUtil.addBearer(newRefreshToken));
   }
 
   @Override
   public void signOut(HttpServletRequest request) {
-    jwtService.deleteRefreshTokenByUserAndIpAddress(
+    refreshTokenService.deleteByUserAndIpAddress(
         AuthUtil.findSignedInUser().getId(), AuthUtil.getUserIpAddress(request));
-    jwtService.invalidateToken(
-        JwtUtil.removeTokenTypeFromToken(AuthUtil.getAuthTokenFromRequest(request)));
+    accessTokenService.invalidate(
+        JwtUtil.removeBearer(AuthUtil.getAccessTokenFromRequest(request)));
   }
 
   @Override
   public void signOutFromAllDevices() {
     final Long userId = AuthUtil.findSignedInUser().getId();
-    jwtService.deleteAllRefreshTokensByUser(userId);
-    jwtService.invalidateAllTokens(userId);
+    refreshTokenService.deleteAllByUser(userId);
+    accessTokenService.invalidateAllByUser(userId);
   }
 
   @Override
@@ -143,8 +143,8 @@ public class AuthServiceImpl implements AuthService {
             .findByEmail(forgotPasswordRequest.getEmail())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    final String token = jwtService.createToken(user.getId(), JwtPurpose.FORGOT_PASSWORD);
-    eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.FORGOT_PASSWORD));
+    var accessToken = forgotPasswordTokenService.create(user.getId());
+    forgotPasswordTokenService.sendToEmail(user, accessToken);
   }
 
   @Override
@@ -153,10 +153,10 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findById(JwtUtil.getUserId(resetPasswordRequest.getAccessToken()))
             .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
-    jwtService.checkToken(resetPasswordRequest.getAccessToken(), JwtPurpose.FORGOT_PASSWORD);
+    forgotPasswordTokenService.check(resetPasswordRequest.getAccessToken());
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
-    jwtService.invalidateAllTokens(user.getId());
-    jwtService.deleteAllRefreshTokensByUser(user.getId());
+    accessTokenService.invalidateAllByUser(user.getId());
+    refreshTokenService.deleteAllByUser(user.getId());
     userRepository.save(user);
   }
 

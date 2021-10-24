@@ -3,7 +3,8 @@ package org.bootstrapbugz.api.admin.service.impl;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
-import org.bootstrapbugz.api.auth.service.JwtService;
+import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,16 @@ import java.util.stream.Collectors;
 @Service
 public class AdminServiceImpl implements AdminService {
   private final UserRepository userRepository;
-  private final JwtService jwtService;
+  private final AccessTokenService accessTokenService;
+  private final RefreshTokenService refreshTokenService;
 
-  public AdminServiceImpl(UserRepository userRepository, JwtService jwtService) {
+  public AdminServiceImpl(
+      UserRepository userRepository,
+      AccessTokenService accessTokenService,
+      RefreshTokenService refreshTokenService) {
     this.userRepository = userRepository;
-    this.jwtService = jwtService;
+    this.accessTokenService = accessTokenService;
+    this.refreshTokenService = refreshTokenService;
   }
 
   @Override
@@ -34,8 +40,8 @@ public class AdminServiceImpl implements AdminService {
     users.forEach(
         user -> {
           user.setActivated(false);
-          jwtService.invalidateAllTokens(user.getId());
-          jwtService.deleteAllRefreshTokensByUser(user.getId());
+          accessTokenService.invalidateAllByUser(user.getId());
+          refreshTokenService.deleteAllByUser(user.getId());
         });
     userRepository.saveAll(users);
   }
@@ -53,8 +59,8 @@ public class AdminServiceImpl implements AdminService {
     users.forEach(
         user -> {
           user.setNonLocked(false);
-          jwtService.invalidateAllTokens(user.getId());
-          jwtService.deleteAllRefreshTokensByUser(user.getId());
+          accessTokenService.invalidateAllByUser(user.getId());
+          refreshTokenService.deleteAllByUser(user.getId());
         });
     userRepository.saveAll(users);
   }
@@ -67,8 +73,8 @@ public class AdminServiceImpl implements AdminService {
           final var roles =
               updateRoleRequest.getRoleNames().stream().map(Role::new).collect(Collectors.toSet());
           user.setRoles(roles);
-          jwtService.invalidateAllTokens(user.getId());
-          jwtService.deleteAllRefreshTokensByUser(user.getId());
+          accessTokenService.invalidateAllByUser(user.getId());
+          refreshTokenService.deleteAllByUser(user.getId());
         });
     userRepository.saveAll(users);
   }
@@ -79,8 +85,8 @@ public class AdminServiceImpl implements AdminService {
     final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
     users.forEach(
         user -> {
-          jwtService.invalidateAllTokens(user.getId());
-          jwtService.deleteAllRefreshTokensByUser(user.getId());
+          accessTokenService.invalidateAllByUser(user.getId());
+          refreshTokenService.deleteAllByUser(user.getId());
           userRepository.delete(user);
         });
   }

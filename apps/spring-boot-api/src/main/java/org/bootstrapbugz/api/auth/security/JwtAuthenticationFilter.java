@@ -2,12 +2,13 @@ package org.bootstrapbugz.api.auth.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.payload.response.SignInResponse;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
-import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
@@ -33,17 +34,20 @@ import java.util.Set;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final AuthenticationManager authenticationManager;
-  private final JwtService jwtService;
+  private final AccessTokenService accessTokenService;
+  private final RefreshTokenService refreshTokenService;
   private final UserMapper userMapper;
   private final MessageService messageService;
 
   public JwtAuthenticationFilter(
       AuthenticationManager authenticationManager,
-      JwtService jwtService,
+      AccessTokenService accessTokenService,
+      RefreshTokenService refreshTokenService,
       UserMapper userMapper,
       MessageService messageService) {
     this.authenticationManager = authenticationManager;
-    this.jwtService = jwtService;
+    this.accessTokenService = accessTokenService;
+    this.refreshTokenService = refreshTokenService;
     this.userMapper = userMapper;
     this.messageService = messageService;
     this.setFilterProcessesUrl(Path.AUTH + "/sign-in");
@@ -86,20 +90,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       throws IOException {
     final var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
     final String ipAddress = AuthUtil.getUserIpAddress(request);
+    final String accessToken = accessTokenService.create(user.getId(), user.getRoles());
     final String refreshToken = findRefreshToken(user.getId(), user.getRoles(), ipAddress);
     final var signInResponse =
         new SignInResponse()
-            .setAccessToken(
-                jwtService.createToken(
-                    user.getId(), user.getRoles(), JwtPurpose.ACCESSING_RESOURCES))
-            .setRefreshToken(refreshToken)
+            .setAccessToken(JwtUtil.addBearer(accessToken))
+            .setRefreshToken(JwtUtil.addBearer(refreshToken))
             .setUser(userMapper.userToUserResponse(user));
     writeToResponse(response, signInResponse);
   }
 
   private String findRefreshToken(Long userId, Set<Role> roles, String ipAddress) {
-    final String refreshToken = jwtService.findRefreshToken(userId, ipAddress);
-    if (refreshToken == null) return jwtService.createRefreshToken(userId, roles, ipAddress);
+    final String refreshToken = refreshTokenService.findByUserAndIpAddress(userId, ipAddress);
+    if (refreshToken == null) return refreshTokenService.create(userId, roles, ipAddress);
     return refreshToken;
   }
 

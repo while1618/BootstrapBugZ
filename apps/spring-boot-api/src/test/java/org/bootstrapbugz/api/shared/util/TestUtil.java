@@ -1,10 +1,10 @@
 package org.bootstrapbugz.api.shared.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.payload.response.SignInResponse;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.user.model.User;
@@ -49,7 +49,7 @@ public class TestUtil {
     var signInResponse =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), SignInResponse.class);
-    signInResponse.setAccessToken(JwtUtil.TOKEN_TYPE + signInResponse.getAccessToken());
+    signInResponse.setAccessToken(JwtUtil.addBearer(signInResponse.getAccessToken()));
     return signInResponse;
   }
 

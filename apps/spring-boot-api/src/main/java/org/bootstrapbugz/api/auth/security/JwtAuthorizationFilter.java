@@ -1,12 +1,11 @@
 package org.bootstrapbugz.api.auth.security;
 
 import lombok.extern.slf4j.Slf4j;
+import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
-import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,15 +19,15 @@ import java.io.IOException;
 
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-  private final JwtService jwtService;
+  private final AccessTokenService accessTokenService;
   private final CustomUserDetailsService userDetailsService;
 
   public JwtAuthorizationFilter(
       AuthenticationManager authenticationManager,
-      JwtService jwtService,
+      AccessTokenService accessTokenService,
       CustomUserDetailsService userDetailsService) {
     super(authenticationManager);
-    this.jwtService = jwtService;
+    this.accessTokenService = accessTokenService;
     this.userDetailsService = userDetailsService;
   }
 
@@ -36,13 +35,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    final String token = AuthUtil.getAuthTokenFromRequest(request);
-    if (token == null || !token.startsWith(JwtUtil.TOKEN_TYPE)) {
+    final String accessToken = AuthUtil.getAccessTokenFromRequest(request);
+    if (accessToken == null || !JwtUtil.isBearer(accessToken)) {
       chain.doFilter(request, response);
       return;
     }
     try {
-      final var authToken = getAuthenticationToken(JwtUtil.removeTokenTypeFromToken(token));
+      final var authToken = getAuthenticationToken(JwtUtil.removeBearer(accessToken));
       SecurityContextHolder.getContext().setAuthentication(authToken);
     } catch (RuntimeException e) {
       log.error(e.getMessage());
@@ -51,10 +50,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
   }
 
-  private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
-    jwtService.checkToken(token, JwtPurpose.ACCESSING_RESOURCES);
+  private UsernamePasswordAuthenticationToken getAuthenticationToken(String accessToken) {
+    accessTokenService.check(accessToken);
     final var userPrincipal =
-        (UserPrincipal) userDetailsService.loadUserByUserId(JwtUtil.getUserId(token));
+        (UserPrincipal) userDetailsService.loadUserByUserId(JwtUtil.getUserId(accessToken));
     return new UsernamePasswordAuthenticationToken(
         userPrincipal, null, userPrincipal.getAuthorities());
   }

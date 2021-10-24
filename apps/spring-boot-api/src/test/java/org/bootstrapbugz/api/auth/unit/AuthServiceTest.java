@@ -1,6 +1,10 @@
 package org.bootstrapbugz.api.auth.unit;
 
 import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.jwt.service.impl.AccessTokenServiceImpl;
+import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
+import org.bootstrapbugz.api.auth.jwt.service.impl.ForgotPasswordTokenServiceImpl;
+import org.bootstrapbugz.api.auth.jwt.service.impl.RefreshTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
@@ -11,9 +15,7 @@ import org.bootstrapbugz.api.auth.redis.repository.AccessTokenBlacklistRepositor
 import org.bootstrapbugz.api.auth.redis.repository.RefreshTokenWhitelistRepository;
 import org.bootstrapbugz.api.auth.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
-import org.bootstrapbugz.api.auth.service.impl.JwtServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -38,6 +40,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -54,18 +57,24 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
   @Mock private UserRepository userRepository;
-  @Mock private ApplicationEventPublisher eventPublisher;
+  @Mock private MessageService messageService;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
   @Spy private UserMapperImpl userMapper;
-  @Mock private AccessTokenBlacklistRepository accessTokenBlacklistRepository;
-  @Mock private UserBlacklistRepository userBlacklistRepository;
-  @Mock private RefreshTokenWhitelistRepository refreshTokenWhitelistRepository;
-  @Mock private MessageService messageService;
   @Mock private Authentication auth;
   @Mock private SecurityContext securityContext;
 
-  private JwtServiceImpl jwtService;
+  @Mock private AccessTokenBlacklistRepository accessTokenBlacklistRepository;
+  @Mock private UserBlacklistRepository userBlacklistRepository;
+  @Mock private RefreshTokenWhitelistRepository refreshTokenWhitelistRepository;
+  @Mock private ApplicationEventPublisher eventPublisher;
+
+  private AccessTokenServiceImpl accessTokenService;
+  private RefreshTokenServiceImpl refreshTokenService;
+  private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
+  private ForgotPasswordTokenServiceImpl forgotPasswordTokenService;
+
   private AuthServiceImpl authService;
+
   private String password;
   private Set<Role> roles;
   private User user;
@@ -74,18 +83,28 @@ class AuthServiceTest {
 
   @BeforeEach
   public void setUp() {
-    jwtService =
-        new JwtServiceImpl(
-            accessTokenBlacklistRepository, userBlacklistRepository,
-            refreshTokenWhitelistRepository, messageService);
+    accessTokenService =
+        new AccessTokenServiceImpl(
+            accessTokenBlacklistRepository, userBlacklistRepository, messageService);
+    refreshTokenService =
+        new RefreshTokenServiceImpl(refreshTokenWhitelistRepository, messageService);
+    confirmRegistrationTokenService = new ConfirmRegistrationTokenServiceImpl(eventPublisher);
+    forgotPasswordTokenService =
+        new ForgotPasswordTokenServiceImpl(userBlacklistRepository, messageService, eventPublisher);
+    ReflectionTestUtils.setField(accessTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(refreshTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(confirmRegistrationTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(forgotPasswordTokenService, "secret", "secret");
     authService =
         new AuthServiceImpl(
             userRepository,
-            jwtService,
-            eventPublisher,
             messageService,
             bCryptPasswordEncoder,
-            userMapper);
+            userMapper,
+            accessTokenService,
+            refreshTokenService,
+            confirmRegistrationTokenService,
+            forgotPasswordTokenService);
     password = bCryptPasswordEncoder.encode("qwerty123");
     roles = Set.of(new Role(RoleName.USER));
     user = new User(1L, "Test", "Test", "test", "test@test.com", password, false, true, roles);
@@ -135,7 +154,7 @@ class AuthServiceTest {
   void itShouldConfirmRegistration() {
     var expectedUser =
         new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
-    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
+    String token = confirmRegistrationTokenService.create(1L);
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.confirmRegistration(new ConfirmRegistrationRequest(token));
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
@@ -144,7 +163,7 @@ class AuthServiceTest {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_invalid() {
-    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
+    String token = confirmRegistrationTokenService.create(1L);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)))
         .isInstanceOf(ForbiddenException.class)
@@ -153,7 +172,7 @@ class AuthServiceTest {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() {
-    String token = jwtService.createToken(1L, JwtPurpose.CONFIRM_REGISTRATION);
+    String token = confirmRegistrationTokenService.create(1L);
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     user.setActivated(true);
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -166,7 +185,7 @@ class AuthServiceTest {
   void itShouldRefreshToken() {
     var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
-    String token = jwtService.createRefreshToken(1L, Collections.emptySet(), "ip1");
+    String token = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
     when(refreshTokenWhitelistRepository.existsById(token)).thenReturn(true);
     var refreshTokenRequest = new RefreshTokenRequest(token);
     var refreshTokenResponse = authService.refreshToken(refreshTokenRequest, request);
@@ -177,7 +196,7 @@ class AuthServiceTest {
   @Test
   void itShouldSignOut() {
     TestUtil.setAuth(auth, securityContext, user);
-    String token = jwtService.createToken(1L, JwtPurpose.ACCESSING_RESOURCES);
+    String token = accessTokenService.create(1L, Collections.emptySet());
     var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
     request.addHeader(AuthUtil.AUTH_HEADER, token);
@@ -209,7 +228,7 @@ class AuthServiceTest {
 
   @Test
   void itShouldResetPassword() {
-    String token = jwtService.createToken(1L, JwtPurpose.FORGOT_PASSWORD);
+    String token = forgotPasswordTokenService.create(1L);
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.resetPassword(resetPasswordRequest);
@@ -222,7 +241,7 @@ class AuthServiceTest {
 
   @Test
   void resetPasswordShouldThrowForbidden_invalid() {
-    String token = jwtService.createToken(1L, JwtPurpose.FORGOT_PASSWORD);
+    String token = forgotPasswordTokenService.create(1L);
     var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.resetPassword(resetPasswordRequest))

@@ -52,7 +52,7 @@ public class AuthUtil {
     return ipAddress;
   }
 
-  public static String getAuthTokenFromRequest(HttpServletRequest request) {
+  public static String getAccessTokenFromRequest(HttpServletRequest request) {
     return request.getHeader(AUTH_HEADER);
   }
 }

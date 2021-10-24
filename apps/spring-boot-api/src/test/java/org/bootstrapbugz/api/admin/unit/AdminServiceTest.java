@@ -3,7 +3,8 @@ package org.bootstrapbugz.api.admin.unit;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.admin.service.impl.AdminServiceImpl;
-import org.bootstrapbugz.api.auth.service.JwtService;
+import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
@@ -40,7 +41,8 @@ class AdminServiceTest {
       new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, false, false, userRoles);
 
   @Mock private UserRepository userRepository;
-  @Mock private JwtService jwtService;
+  @Mock private AccessTokenService accessTokenService;
+  @Mock private RefreshTokenService refreshTokenService;
   @Mock private Authentication auth;
   @Mock private SecurityContext securityContext;
   @InjectMocks private AdminServiceImpl adminService;

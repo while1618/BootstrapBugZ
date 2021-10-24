@@ -1,9 +1,9 @@
 package org.bootstrapbugz.api.user.service.impl;
 
-import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
-import org.bootstrapbugz.api.auth.service.JwtService;
+import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -14,7 +14,6 @@ import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.ProfileService;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,22 +23,25 @@ public class ProfileServiceImpl implements ProfileService {
   private final MessageService messageService;
   private final UserMapper userMapper;
   private final PasswordEncoder bCryptPasswordEncoder;
-  private final ApplicationEventPublisher eventPublisher;
-  private final JwtService jwtService;
+  private final AccessTokenService accessTokenService;
+  private final RefreshTokenService refreshTokenService;
+  private final ConfirmRegistrationTokenService confirmRegistrationTokenService;
 
   public ProfileServiceImpl(
       UserRepository userRepository,
       MessageService messageService,
       UserMapper userMapper,
       PasswordEncoder bCryptPasswordEncoder,
-      ApplicationEventPublisher eventPublisher,
-      JwtService jwtService) {
+      AccessTokenService accessTokenService,
+      RefreshTokenService refreshTokenService,
+      ConfirmRegistrationTokenService confirmRegistrationTokenService) {
     this.userRepository = userRepository;
     this.messageService = messageService;
     this.userMapper = userMapper;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    this.eventPublisher = eventPublisher;
-    this.jwtService = jwtService;
+    this.accessTokenService = accessTokenService;
+    this.refreshTokenService = refreshTokenService;
+    this.confirmRegistrationTokenService = confirmRegistrationTokenService;
   }
 
   @Override
@@ -67,13 +69,10 @@ public class ProfileServiceImpl implements ProfileService {
 
     user.setEmail(email);
     user.setActivated(false);
-    jwtService.invalidateAllTokens(user.getId());
-    jwtService.deleteAllRefreshTokensByUser(user.getId());
-
-    final String token =
-        jwtService.createToken(user.getId(), JwtUtil.JwtPurpose.CONFIRM_REGISTRATION);
-    eventPublisher.publishEvent(
-        new OnSendJwtEmail(user, token, JwtUtil.JwtPurpose.CONFIRM_REGISTRATION));
+    accessTokenService.invalidateAllByUser(user.getId());
+    refreshTokenService.deleteAllByUser(user.getId());
+    final var accessToken = confirmRegistrationTokenService.create(user.getId());
+    confirmRegistrationTokenService.sendToEmail(user, accessToken);
   }
 
   @Override
@@ -83,8 +82,8 @@ public class ProfileServiceImpl implements ProfileService {
       throw new BadRequestException(
           "oldPassword", messageService.getMessage("oldPassword.invalid"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getNewPassword()));
-    jwtService.invalidateAllTokens(user.getId());
-    jwtService.deleteAllRefreshTokensByUser(user.getId());
+    accessTokenService.invalidateAllByUser(user.getId());
+    refreshTokenService.deleteAllByUser(user.getId());
     userRepository.save(user);
   }
 }
