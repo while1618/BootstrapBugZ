@@ -5,7 +5,6 @@ import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role;
@@ -110,8 +109,8 @@ class ProfileControllerTest extends DatabaseContainers {
     var resultActions =
         performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isConflict());
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.CONFLICT, ErrorDomain.USER, "Username already exists.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.CONFLICT);
+    expectedErrorResponse.addDetails("Username already exists.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -124,8 +123,8 @@ class ProfileControllerTest extends DatabaseContainers {
     var resultActions =
         performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isConflict());
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.CONFLICT, ErrorDomain.USER, "Email already exists.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.CONFLICT);
+    expectedErrorResponse.addDetails("Email already exists.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -139,10 +138,10 @@ class ProfileControllerTest extends DatabaseContainers {
         performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
-    expectedErrorResponse.addError("firstName", "Invalid first name.");
-    expectedErrorResponse.addError("lastName", "Invalid last name.");
-    expectedErrorResponse.addError("username", "Invalid username.");
-    expectedErrorResponse.addError("email", "Invalid email.");
+    expectedErrorResponse.addDetails("firstName", "Invalid first name.");
+    expectedErrorResponse.addDetails("lastName", "Invalid last name.");
+    expectedErrorResponse.addDetails("username", "Invalid username.");
+    expectedErrorResponse.addDetails("email", "Invalid email.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -164,8 +163,8 @@ class ProfileControllerTest extends DatabaseContainers {
     var resultActions =
         performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
             .andExpect(status().isBadRequest());
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.BAD_REQUEST, ErrorDomain.USER, "Wrong old password.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
+    expectedErrorResponse.addDetails("oldPassword", "Wrong old password.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -178,7 +177,7 @@ class ProfileControllerTest extends DatabaseContainers {
         performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
-    expectedErrorResponse.addError("newPassword", "Passwords do not match.");
+    expectedErrorResponse.addDetails("Passwords do not match.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -191,9 +190,9 @@ class ProfileControllerTest extends DatabaseContainers {
         performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
-    expectedErrorResponse.addError("newPassword", "Invalid password.");
-    expectedErrorResponse.addError("oldPassword", "Invalid password.");
-    expectedErrorResponse.addError("confirmNewPassword", "Invalid password.");
+    expectedErrorResponse.addDetails("newPassword", "Invalid password.");
+    expectedErrorResponse.addDetails("oldPassword", "Invalid password.");
+    expectedErrorResponse.addDetails("confirmNewPassword", "Invalid password.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 }

@@ -5,7 +5,6 @@ import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role;
@@ -122,8 +121,8 @@ class UserControllerTest extends DatabaseContainers {
     var resultActions =
         performFindUserByUsername("unknown", signInResponse.getAccessToken())
             .andExpect(status().isNotFound());
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.NOT_FOUND, ErrorDomain.USER, "User not found.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.NOT_FOUND);
+    expectedErrorResponse.addDetails("User not found.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 }

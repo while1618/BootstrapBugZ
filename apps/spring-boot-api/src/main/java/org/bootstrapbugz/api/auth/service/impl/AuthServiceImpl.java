@@ -13,7 +13,6 @@ import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -82,11 +81,9 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
             .orElseThrow(
-                () ->
-                    new ResourceNotFoundException(
-                        messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
+                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     if (user.isActivated())
-      throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
+      throw new ForbiddenException(messageService.getMessage("user.activated"));
     final String token = jwtService.createToken(user.getId(), JwtPurpose.CONFIRM_REGISTRATION);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.CONFIRM_REGISTRATION));
   }
@@ -96,12 +93,9 @@ public class AuthServiceImpl implements AuthService {
     final var user =
         userRepository
             .findById(JwtUtil.getUserId(confirmRegistrationRequest.getAccessToken()))
-            .orElseThrow(
-                () ->
-                    new ForbiddenException(
-                        messageService.getMessage("token.invalid"), ErrorDomain.AUTH));
+            .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
     if (user.isActivated())
-      throw new ForbiddenException(messageService.getMessage("user.activated"), ErrorDomain.AUTH);
+      throw new ForbiddenException(messageService.getMessage("user.activated"));
     jwtService.checkToken(
         confirmRegistrationRequest.getAccessToken(), JwtPurpose.CONFIRM_REGISTRATION);
     user.setActivated(true);
@@ -148,9 +142,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findByEmail(forgotPasswordRequest.getEmail())
             .orElseThrow(
-                () ->
-                    new ResourceNotFoundException(
-                        messageService.getMessage("user.notFound"), ErrorDomain.AUTH));
+                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     final String token = jwtService.createToken(user.getId(), JwtPurpose.FORGOT_PASSWORD);
     eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtPurpose.FORGOT_PASSWORD));
   }
@@ -160,10 +152,7 @@ public class AuthServiceImpl implements AuthService {
     final var user =
         userRepository
             .findById(JwtUtil.getUserId(resetPasswordRequest.getAccessToken()))
-            .orElseThrow(
-                () ->
-                    new ForbiddenException(
-                        messageService.getMessage("token.invalid"), ErrorDomain.AUTH));
+            .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
     jwtService.checkToken(resetPasswordRequest.getAccessToken(), JwtPurpose.FORGOT_PASSWORD);
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
     jwtService.invalidateAllTokens(user.getId());

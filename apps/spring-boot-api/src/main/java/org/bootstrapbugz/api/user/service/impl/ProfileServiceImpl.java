@@ -4,7 +4,6 @@ import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -29,12 +28,12 @@ public class ProfileServiceImpl implements ProfileService {
   private final JwtService jwtService;
 
   public ProfileServiceImpl(
-    UserRepository userRepository,
-    MessageService messageService,
-    UserMapper userMapper,
-    PasswordEncoder bCryptPasswordEncoder,
-    ApplicationEventPublisher eventPublisher,
-    JwtService jwtService) {
+      UserRepository userRepository,
+      MessageService messageService,
+      UserMapper userMapper,
+      PasswordEncoder bCryptPasswordEncoder,
+      ApplicationEventPublisher eventPublisher,
+      JwtService jwtService) {
     this.userRepository = userRepository;
     this.messageService = messageService;
     this.userMapper = userMapper;
@@ -56,7 +55,7 @@ public class ProfileServiceImpl implements ProfileService {
   private void tryToSetUsername(User user, String username) {
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
-      throw new ConflictException(messageService.getMessage("username.exists"), ErrorDomain.USER);
+      throw new ConflictException(messageService.getMessage("username.exists"));
 
     user.setUsername(username);
   }
@@ -64,15 +63,17 @@ public class ProfileServiceImpl implements ProfileService {
   private void tryToSetEmail(User user, String email) {
     if (user.getEmail().equals(email)) return;
     if (userRepository.existsByEmail(email))
-      throw new ConflictException(messageService.getMessage("email.exists"), ErrorDomain.USER);
+      throw new ConflictException(messageService.getMessage("email.exists"));
 
     user.setEmail(email);
     user.setActivated(false);
     jwtService.invalidateAllTokens(user.getId());
     jwtService.deleteAllRefreshTokensByUser(user.getId());
 
-    final String token = jwtService.createToken(user.getId(), JwtUtil.JwtPurpose.CONFIRM_REGISTRATION);
-    eventPublisher.publishEvent(new OnSendJwtEmail(user, token, JwtUtil.JwtPurpose.CONFIRM_REGISTRATION));
+    final String token =
+        jwtService.createToken(user.getId(), JwtUtil.JwtPurpose.CONFIRM_REGISTRATION);
+    eventPublisher.publishEvent(
+        new OnSendJwtEmail(user, token, JwtUtil.JwtPurpose.CONFIRM_REGISTRATION));
   }
 
   @Override
@@ -80,7 +81,7 @@ public class ProfileServiceImpl implements ProfileService {
     final var user = AuthUtil.findSignedInUser();
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
       throw new BadRequestException(
-        messageService.getMessage("oldPassword.invalid"), ErrorDomain.USER);
+          "oldPassword", messageService.getMessage("oldPassword.invalid"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getNewPassword()));
     jwtService.invalidateAllTokens(user.getId());
     jwtService.deleteAllRefreshTokensByUser(user.getId());

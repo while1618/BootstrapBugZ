@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.user.service.impl;
 
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
@@ -52,9 +51,7 @@ public class UserServiceImpl implements UserService {
     return userRepository
         .findByUsernameWithRoles(username)
         .orElseThrow(
-            () ->
-                new ResourceNotFoundException(
-                    messageService.getMessage("user.notFound"), ErrorDomain.USER));
+            () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
   }
 
   private User userForNonAdmin(String username) {
@@ -62,9 +59,7 @@ public class UserServiceImpl implements UserService {
         userRepository
             .findByUsername(username)
             .orElseThrow(
-                () ->
-                    new ResourceNotFoundException(
-                        messageService.getMessage("user.notFound"), ErrorDomain.USER));
+                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     user.setRoles(null);
     if (!(AuthUtil.isSignedIn()
         && AuthUtil.findSignedInUser().getUsername().equals(user.getUsername())))
