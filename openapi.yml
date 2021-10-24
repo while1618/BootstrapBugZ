@@ -730,8 +730,10 @@ components:
             status: 400
             error: Bad Request
             errors:
-              - domain: resource/field
-                message: Resource/Field invalid.
+              - field: field1
+                message: Invalid field1.
+              - field: field2
+                message: Invalid field2.
     NotFound:
       description: Not Found
       content:
@@ -740,11 +742,10 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             timestamp: 18-10-2021 04:00:44
-            status: 401
+            status: 404
             error: Not Found
-            errors:
-              - domain: resource
-                message: Resource Not Found.
+            details:
+              - message: Resource Not Found.
     Unauthorized:
       description: Unauthorized
       content:
@@ -755,9 +756,8 @@ components:
             timestamp: 18-10-2021 04:00:44
             status: 401
             error: Unauthorized
-            errors:
-              - domain: auth
-                message: Unauthorized.
+            details:
+              - message: Unauthorized.
     Forbidden:
       description: Forbidden
       content:
@@ -768,9 +768,8 @@ components:
             timestamp: 18-10-2021 04:00:44
             status: 403
             error: Forbidden
-            errors:
-              - domain: auth
-                message: Forbidden.
+            details:
+              - message: Forbidden.
   schemas:
     SignUpRequest:
       type: object
@@ -931,13 +930,14 @@ components:
           format: int32
         error:
           type: string
-        errors:
+        details:
           type: array
           items:
             type: object
             properties:
-              domain:
+              field:
                 type: string
+                nullable: true
               message:
                 type: string
   securitySchemes:
