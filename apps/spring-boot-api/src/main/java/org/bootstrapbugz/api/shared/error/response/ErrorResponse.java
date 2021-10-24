@@ -1,43 +1,43 @@
 package org.bootstrapbugz.api.shared.error.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.http.HttpStatus;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
-import org.springframework.http.HttpStatus;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-  private final LocalDateTime timestamp = LocalDateTime.now();
+  private final LocalDateTime timestamp;
 
   private final int status;
   private final String error;
-  private final List<Error> errors;
+  private final List<Detail> details;
 
   public ErrorResponse(HttpStatus status) {
+    this.timestamp = LocalDateTime.now();
     this.status = status.value();
     this.error = status.getReasonPhrase();
-    this.errors = new ArrayList<>();
+    this.details = new ArrayList<>();
   }
 
-  public ErrorResponse(HttpStatus status, ErrorDomain domain, String message) {
-    this.status = status.value();
-    this.error = status.getReasonPhrase();
-    this.errors = new ArrayList<>();
-    this.errors.add(new Error(domain.getValue(), message));
+  public void addDetails(String message) {
+    this.details.add(new Detail(message));
   }
 
-  public void addError(String domain, String message) {
-    this.errors.add(new Error(domain, message));
+  public void addDetails(String field, String message) {
+    this.details.add(new Detail(field, message));
   }
 
   @Override
@@ -58,12 +58,17 @@ public class ErrorResponse {
 
   @Getter
   @Setter
-  private static final class Error {
-    private final String domain;
-    private final String message;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private static final class Detail {
+    private String field;
+    private String message;
 
-    private Error(String domain, String message) {
-      this.domain = domain;
+    private Detail(String message) {
+      this.message = message;
+    }
+
+    private Detail(String field, String message) {
+      this.field = field;
       this.message = message;
     }
 

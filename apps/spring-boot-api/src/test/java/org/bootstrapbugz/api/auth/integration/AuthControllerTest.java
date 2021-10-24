@@ -14,7 +14,6 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -84,11 +83,11 @@ class AuthControllerTest extends DatabaseContainers {
                     .content(objectMapper.writeValueAsString(signUpRequest)))
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
-    expectedErrorResponse.addError("firstName", "Invalid first name.");
-    expectedErrorResponse.addError("lastName", "Invalid last name.");
-    expectedErrorResponse.addError("username", "Username already exists.");
-    expectedErrorResponse.addError("email", "Email already exists.");
-    expectedErrorResponse.addError("password", "Passwords do not match.");
+    expectedErrorResponse.addDetails("firstName", "Invalid first name.");
+    expectedErrorResponse.addDetails("lastName", "Invalid last name.");
+    expectedErrorResponse.addDetails("username", "Username already exists.");
+    expectedErrorResponse.addDetails("email", "Email already exists.");
+    expectedErrorResponse.addDetails("Passwords do not match.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -106,8 +105,8 @@ class AuthControllerTest extends DatabaseContainers {
   @Test
   void resendConfirmationEmailShouldThrowResourceNotFound_userNotFound() throws Exception {
     var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("unknown");
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.NOT_FOUND, ErrorDomain.AUTH, "User not found.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.NOT_FOUND);
+    expectedErrorResponse.addDetails("User not found.");
     var resultActions =
         mockMvc
             .perform(
@@ -121,8 +120,8 @@ class AuthControllerTest extends DatabaseContainers {
   @Test
   void resendConfirmationEmailShouldThrowForbidden_userAlreadyActivated() throws Exception {
     var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("user");
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "User already activated.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.FORBIDDEN);
+    expectedErrorResponse.addDetails("User already activated.");
     var resultActions =
         mockMvc
             .perform(
@@ -156,8 +155,8 @@ class AuthControllerTest extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
             .andExpect(status().isForbidden());
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "Invalid token.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.FORBIDDEN);
+    expectedErrorResponse.addDetails("Invalid token.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -172,8 +171,8 @@ class AuthControllerTest extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
             .andExpect(status().isForbidden());
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "User already activated.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.FORBIDDEN);
+    expectedErrorResponse.addDetails("User already activated.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -214,8 +213,8 @@ class AuthControllerTest extends DatabaseContainers {
   }
 
   private void jwtShouldBeInvalid(String token) throws Exception {
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Unauthorized");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED);
+    expectedErrorResponse.addDetails("Full authentication is required to access this resource");
     var resultActions =
         mockMvc
             .perform(
@@ -228,8 +227,8 @@ class AuthControllerTest extends DatabaseContainers {
 
   private void refreshTokenShouldBeInvalid(String refreshToken) throws Exception {
     var refreshTokenRequest = new RefreshTokenRequest(refreshToken);
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Invalid token.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED);
+    expectedErrorResponse.addDetails("Invalid token.");
     var resultActions =
         mockMvc
             .perform(
@@ -268,8 +267,8 @@ class AuthControllerTest extends DatabaseContainers {
   @Test
   void forgotPasswordShouldThrowResourceNotFound_userNotFound() throws Exception {
     var forgotPasswordRequest = new ForgotPasswordRequest("unknown@bootstrapbugz.com");
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.NOT_FOUND, ErrorDomain.AUTH, "User not found.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.NOT_FOUND);
+    expectedErrorResponse.addDetails("User not found.");
     var resultActions =
         mockMvc
             .perform(
@@ -305,7 +304,7 @@ class AuthControllerTest extends DatabaseContainers {
                     .content(objectMapper.writeValueAsString(resetPasswordRequest)))
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
-    expectedErrorResponse.addError("password", "Passwords do not match.");
+    expectedErrorResponse.addDetails("Passwords do not match.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
@@ -320,8 +319,8 @@ class AuthControllerTest extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(resetPasswordRequest)))
             .andExpect(status().isForbidden());
-    var expectedErrorResponse =
-        new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "Invalid token.");
+    var expectedErrorResponse = new ErrorResponse(HttpStatus.FORBIDDEN);
+    expectedErrorResponse.addDetails("Invalid token.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 

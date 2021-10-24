@@ -7,12 +7,12 @@ import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -38,13 +38,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @SpringBootTest
 class AccessingResourcesTest extends DatabaseContainers {
-  private final ErrorResponse expectedForbiddenResponse =
-      new ErrorResponse(HttpStatus.FORBIDDEN, ErrorDomain.AUTH, "Access is denied");
-  private final ErrorResponse expectedUnauthorizedResponse =
-      new ErrorResponse(HttpStatus.UNAUTHORIZED, ErrorDomain.AUTH, "Unauthorized");
+  private static ErrorResponse expectedForbiddenResponse;
+  private static ErrorResponse expectedUnauthorizedResponse;
 
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
+
+  @BeforeAll
+  static void setUp() {
+    expectedForbiddenResponse = new ErrorResponse(HttpStatus.FORBIDDEN);
+    expectedForbiddenResponse.addDetails("Access is denied");
+    expectedUnauthorizedResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED);
+    expectedUnauthorizedResponse.addDetails(
+        "Full authentication is required to access this resource");
+  }
 
   @Test
   void updateProfileShouldThrowUnauthorized_userNotSignedIn() throws Exception {

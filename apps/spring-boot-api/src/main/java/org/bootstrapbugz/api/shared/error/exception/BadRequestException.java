@@ -1,19 +1,19 @@
 package org.bootstrapbugz.api.shared.error.exception;
 
-import java.io.Serial;
 import lombok.Getter;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.springframework.http.HttpStatus;
+
+import java.io.Serial;
 
 @Getter
 public class BadRequestException extends RuntimeException {
   @Serial private static final long serialVersionUID = -6237654540916338509L;
-  private final ErrorDomain domain;
   private final HttpStatus status;
+  private final String field;
 
-  public BadRequestException(String message, ErrorDomain domain) {
+  public BadRequestException(String field, String message) {
     super(message);
-    this.domain = domain;
     this.status = HttpStatus.BAD_REQUEST;
+    this.field = field;
   }
 }

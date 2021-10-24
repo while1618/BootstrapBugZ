@@ -9,7 +9,6 @@ import org.bootstrapbugz.api.auth.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.service.JwtService;
 import org.bootstrapbugz.api.auth.util.JwtUtil;
 import org.bootstrapbugz.api.auth.util.JwtUtil.JwtPurpose;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.model.Role;
@@ -69,14 +68,14 @@ public class JwtServiceImpl implements JwtService {
 
   private void isInJwtBlacklist(String token) {
     if (accessTokenBlacklistRepository.existsById(token))
-      throw new UnauthorizedException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
+      throw new UnauthorizedException(messageService.getMessage("token.invalid"));
   }
 
   private void isInUserBlacklist(String token) {
     final var userInBlacklist = userBlacklistRepository.findById(JwtUtil.getUserId(token));
     if (userInBlacklist.isPresent()
         && Instant.parse(JwtUtil.getIssuedAt(token)).isBefore(userInBlacklist.get().getUpdatedAt()))
-      throw new UnauthorizedException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
+      throw new UnauthorizedException(messageService.getMessage("token.invalid"));
   }
 
   @Override
@@ -107,7 +106,7 @@ public class JwtServiceImpl implements JwtService {
   public void checkRefreshToken(String refreshToken) {
     JwtUtil.isTokenValid(refreshToken, createSecret(JwtPurpose.REFRESH_TOKEN));
     if (!refreshTokenWhitelistRepository.existsById(refreshToken))
-      throw new UnauthorizedException(messageService.getMessage("token.invalid"), ErrorDomain.AUTH);
+      throw new UnauthorizedException(messageService.getMessage("token.invalid"));
   }
 
   @Override

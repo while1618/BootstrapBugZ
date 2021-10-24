@@ -31,10 +31,10 @@ public class TestUtil {
         new JSONObject(resultActions.andReturn().getResponse().getContentAsString());
     assertThat(actualResponse.getInt("status")).isEqualTo(expectedResponse.getStatus());
     assertThat(actualResponse.getString("error")).isEqualTo(expectedResponse.getError());
-    assertThat(actualResponse.getJSONArray("errors"))
+    assertThat(actualResponse.getJSONArray("details"))
         .usingRecursiveComparison()
         .ignoringCollectionOrder()
-        .isEqualTo(new JSONArray(expectedResponse.getErrors().toString()));
+        .isEqualTo(new JSONArray(expectedResponse.getDetails().toString()));
   }
 
   public static SignInResponse signIn(

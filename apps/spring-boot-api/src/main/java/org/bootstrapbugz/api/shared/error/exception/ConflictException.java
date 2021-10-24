@@ -1,19 +1,17 @@
 package org.bootstrapbugz.api.shared.error.exception;
 
-import java.io.Serial;
 import lombok.Getter;
-import org.bootstrapbugz.api.shared.error.ErrorDomain;
 import org.springframework.http.HttpStatus;
+
+import java.io.Serial;
 
 @Getter
 public class ConflictException extends RuntimeException {
   @Serial private static final long serialVersionUID = 8841655774286844538L;
-  private final ErrorDomain domain;
   private final HttpStatus status;
 
-  public ConflictException(String message, ErrorDomain domain) {
+  public ConflictException(String message) {
     super(message);
-    this.domain = domain;
     this.status = HttpStatus.CONFLICT;
   }
 }
