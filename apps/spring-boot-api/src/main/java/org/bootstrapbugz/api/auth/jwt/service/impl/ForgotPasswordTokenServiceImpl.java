@@ -1,10 +1,10 @@
 package org.bootstrapbugz.api.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
-import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
-import org.bootstrapbugz.api.auth.redis.repository.UserBlacklistRepository;
+import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.model.User;

@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.event;
+package org.bootstrapbugz.api.auth.jwt.event;
 
 import lombok.Getter;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;

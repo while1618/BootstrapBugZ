@@ -2,8 +2,8 @@ package org.bootstrapbugz.api.shared.config;
 
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
-import org.bootstrapbugz.api.auth.security.JwtAuthenticationFilter;
-import org.bootstrapbugz.api.auth.security.JwtAuthorizationFilter;
+import org.bootstrapbugz.api.auth.security.AuthenticationFilter;
+import org.bootstrapbugz.api.auth.security.AuthorizationFilter;
 import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
@@ -86,14 +86,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .addFilter(
-            new JwtAuthenticationFilter(
+            new AuthenticationFilter(
                 authenticationManager(),
                 accessTokenService,
                 refreshTokenService,
                 userMapper,
                 messageService))
         .addFilter(
-            new JwtAuthorizationFilter(
+            new AuthorizationFilter(
                 authenticationManager(), accessTokenService, userDetailsService))
         .exceptionHandling()
         .authenticationEntryPoint(customAuthenticationEntryPoint)

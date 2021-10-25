@@ -32,14 +32,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final AuthenticationManager authenticationManager;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
   private final UserMapper userMapper;
   private final MessageService messageService;
 
-  public JwtAuthenticationFilter(
+  public AuthenticationFilter(
       AuthenticationManager authenticationManager,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,

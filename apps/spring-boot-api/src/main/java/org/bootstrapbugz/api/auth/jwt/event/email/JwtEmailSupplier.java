@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.event.email;
+package org.bootstrapbugz.api.auth.jwt.event.email;
 
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 
@@ -12,7 +12,7 @@ public class JwtEmailSupplier {
 
   static {
     emailType.put(JwtUtil.JwtPurpose.CONFIRM_REGISTRATION_TOKEN, ConfirmRegistrationEmail::new);
-    emailType.put(JwtUtil.JwtPurpose.FORGOT_PASSWORD_TOKEN, ResetPasswordEmail::new);
+    emailType.put(JwtUtil.JwtPurpose.FORGOT_PASSWORD_TOKEN, ForgotPasswordEmail::new);
   }
 
   public JwtEmail supplyEmail(JwtUtil.JwtPurpose jwtPurpose) {

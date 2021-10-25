@@ -1,7 +1,7 @@
-package org.bootstrapbugz.api.auth.event.listener;
+package org.bootstrapbugz.api.auth.jwt.event.listener;
 
-import org.bootstrapbugz.api.auth.event.OnSendJwtEmail;
-import org.bootstrapbugz.api.auth.event.email.JwtEmailSupplier;
+import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.jwt.event.email.JwtEmailSupplier;
 import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;

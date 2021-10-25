@@ -18,11 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+public class AuthorizationFilter extends BasicAuthenticationFilter {
   private final AccessTokenService accessTokenService;
   private final CustomUserDetailsService userDetailsService;
 
-  public JwtAuthorizationFilter(
+  public AuthorizationFilter(
       AuthenticationManager authenticationManager,
       AccessTokenService accessTokenService,
       CustomUserDetailsService userDetailsService) {

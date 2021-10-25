@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.redis.model;
+package org.bootstrapbugz.api.auth.jwt.redis.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
