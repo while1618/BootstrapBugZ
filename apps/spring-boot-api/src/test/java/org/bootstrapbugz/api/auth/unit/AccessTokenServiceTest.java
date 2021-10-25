@@ -1,10 +1,10 @@
 package org.bootstrapbugz.api.auth.unit;
 
-import org.bootstrapbugz.api.auth.jwt.service.impl.AccessTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.redis.model.AccessTokenBlacklist;
 import org.bootstrapbugz.api.auth.jwt.redis.model.UserBlacklist;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.AccessTokenBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
+import org.bootstrapbugz.api.auth.jwt.service.impl.AccessTokenServiceImpl;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.junit.jupiter.api.BeforeEach;

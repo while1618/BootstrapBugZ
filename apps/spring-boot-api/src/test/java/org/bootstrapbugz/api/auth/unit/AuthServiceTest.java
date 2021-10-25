@@ -1,6 +1,9 @@
 package org.bootstrapbugz.api.auth.unit;
 
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
+import org.bootstrapbugz.api.auth.jwt.redis.repository.AccessTokenBlacklistRepository;
+import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenWhitelistRepository;
+import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.impl.AccessTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ForgotPasswordTokenServiceImpl;
@@ -11,9 +14,6 @@ import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.jwt.redis.repository.AccessTokenBlacklistRepository;
-import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenWhitelistRepository;
-import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;

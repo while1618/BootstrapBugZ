@@ -1,10 +1,10 @@
 package org.bootstrapbugz.api.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
-import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
-import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.jwt.redis.model.RefreshTokenWhitelist;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenWhitelistRepository;
+import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.model.Role;

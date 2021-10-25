@@ -1,8 +1,8 @@
 package org.bootstrapbugz.api.auth.unit;
 
-import org.bootstrapbugz.api.auth.jwt.service.impl.RefreshTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.redis.model.RefreshTokenWhitelist;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenWhitelistRepository;
+import org.bootstrapbugz.api.auth.jwt.service.impl.RefreshTokenServiceImpl;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.junit.jupiter.api.BeforeEach;
