@@ -27,6 +27,7 @@
     <jacoco.version>0.8.7</jacoco.version>
     <jedis.version>3.7.0</jedis.version>
     <testcontainers.version>1.16.0</testcontainers.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
   </properties>
 
   <dependencies>
