@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.user.data;
+package org.bootstrapbugz.api.user.integration;
 
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.user.model.Role;
@@ -25,7 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserRepositoryTest extends DatabaseContainers {
+class UserRepositoryIT extends DatabaseContainers {
   private final User expectedUser =
       new User(
           2L,

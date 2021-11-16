@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @SpringBootTest
-class AccessingResourcesTest extends DatabaseContainers {
+class AccessingResourcesIT extends DatabaseContainers {
   private static ErrorResponse expectedForbiddenResponse;
   private static ErrorResponse expectedUnauthorizedResponse;
 

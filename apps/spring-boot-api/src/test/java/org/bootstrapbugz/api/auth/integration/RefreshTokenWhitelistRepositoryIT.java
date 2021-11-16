@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.data;
+package org.bootstrapbugz.api.auth.integration;
 
 import org.bootstrapbugz.api.auth.jwt.redis.model.RefreshTokenWhitelist;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenWhitelistRepository;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class RefreshTokenWhitelistRepositoryTest extends DatabaseContainers {
+class RefreshTokenWhitelistRepositoryIT extends DatabaseContainers {
   private final RefreshTokenWhitelist first =
       new RefreshTokenWhitelist("token123", 22L, "ip1", 1000);
   private final RefreshTokenWhitelist second =
