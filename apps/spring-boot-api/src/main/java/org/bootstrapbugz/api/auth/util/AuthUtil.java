@@ -1,13 +1,12 @@
 package org.bootstrapbugz.api.auth.util;
 
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.stream.Collectors;
 
 public class AuthUtil {
   public static final String AUTH_HEADER = "Authorization";

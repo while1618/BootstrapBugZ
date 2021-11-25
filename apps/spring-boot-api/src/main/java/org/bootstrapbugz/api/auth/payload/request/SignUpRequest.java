@@ -1,5 +1,8 @@
 package org.bootstrapbugz.api.auth.payload.request;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +12,6 @@ import org.bootstrapbugz.api.auth.validator.EmailExist;
 import org.bootstrapbugz.api.auth.validator.FieldMatch;
 import org.bootstrapbugz.api.auth.validator.UsernameExist;
 import org.bootstrapbugz.api.shared.constants.Regex;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter

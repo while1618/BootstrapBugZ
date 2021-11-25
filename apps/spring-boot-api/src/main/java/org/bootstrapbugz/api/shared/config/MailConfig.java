@@ -1,12 +1,11 @@
 package org.bootstrapbugz.api.shared.config;
 
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-
-import java.util.Objects;
 
 @Configuration
 public class MailConfig {

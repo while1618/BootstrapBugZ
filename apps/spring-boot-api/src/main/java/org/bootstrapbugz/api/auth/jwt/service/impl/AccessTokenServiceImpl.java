@@ -1,6 +1,9 @@
 package org.bootstrapbugz.api.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.redis.model.AccessTokenBlacklist;
 import org.bootstrapbugz.api.auth.jwt.redis.model.UserBlacklist;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.AccessTokenBlacklistRepository;
@@ -12,10 +15,6 @@ import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.model.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.Date;
-import java.util.Set;
 
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {

@@ -1,8 +1,7 @@
 package org.bootstrapbugz.api.auth.jwt.service;
 
-import org.bootstrapbugz.api.user.model.Role;
-
 import java.util.Set;
+import org.bootstrapbugz.api.user.model.Role;
 
 public interface RefreshTokenService {
   String create(Long userId, Set<Role> roles, String ipAddress);

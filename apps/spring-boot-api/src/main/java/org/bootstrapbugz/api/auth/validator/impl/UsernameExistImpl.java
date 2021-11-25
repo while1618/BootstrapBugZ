@@ -1,10 +1,9 @@
 package org.bootstrapbugz.api.auth.validator.impl;
 
-import org.bootstrapbugz.api.auth.validator.UsernameExist;
-import org.bootstrapbugz.api.user.repository.UserRepository;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import org.bootstrapbugz.api.auth.validator.UsernameExist;
+import org.bootstrapbugz.api.user.repository.UserRepository;
 
 public class UsernameExistImpl implements ConstraintValidator<UsernameExist, String> {
   private final UserRepository userRepository;

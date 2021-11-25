@@ -1,10 +1,9 @@
 package org.bootstrapbugz.api.auth.jwt.event.email;
 
-import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
-
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 
 public class JwtEmailSupplier {
   private static final Map<JwtUtil.JwtPurpose, Supplier<JwtEmail>> emailType =

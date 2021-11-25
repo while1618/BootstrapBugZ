@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.admin.service.impl;
 
+import java.util.stream.Collectors;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
@@ -9,8 +10,6 @@ import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.stream.Collectors;
 
 @Service
 public class AdminServiceImpl implements AdminService {

@@ -1,9 +1,8 @@
 package org.bootstrapbugz.api.shared.error.exception;
 
+import java.io.Serial;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
-import java.io.Serial;
 
 @Getter
 public class ForbiddenException extends RuntimeException {

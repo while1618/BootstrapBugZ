@@ -1,6 +1,8 @@
 package org.bootstrapbugz.api.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
+import java.time.Instant;
+import java.util.Date;
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
@@ -11,9 +13,6 @@ import org.bootstrapbugz.api.user.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.Date;
 
 @Service
 public class ForgotPasswordTokenServiceImpl implements ForgotPasswordTokenService {

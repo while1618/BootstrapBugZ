@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.auth.service;
 
+import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
@@ -8,8 +9,6 @@ import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.payload.response.RefreshTokenResponse;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
-
-import javax.servlet.http.HttpServletRequest;
 
 public interface AuthService {
   UserResponse signUp(SignUpRequest signUpRequest);

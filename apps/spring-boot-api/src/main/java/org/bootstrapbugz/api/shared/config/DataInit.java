@@ -1,5 +1,9 @@
 package org.bootstrapbugz.api.shared.config;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import javax.annotation.PostConstruct;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
@@ -8,11 +12,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 @Profile({"dev", "test"})
 @Component

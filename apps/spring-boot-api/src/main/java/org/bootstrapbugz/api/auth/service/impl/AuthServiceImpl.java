@@ -1,5 +1,8 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
+import java.util.Collections;
+import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
@@ -25,10 +28,6 @@ import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.Set;
 
 @Service
 public class AuthServiceImpl implements AuthService {

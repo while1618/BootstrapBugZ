@@ -1,5 +1,8 @@
 package org.bootstrapbugz.api.auth.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.bootstrapbugz.api.auth.jwt.redis.model.RefreshTokenWhitelist;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenWhitelistRepository;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
@@ -13,10 +16,6 @@ import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DataRedisTest
 @DirtiesContext

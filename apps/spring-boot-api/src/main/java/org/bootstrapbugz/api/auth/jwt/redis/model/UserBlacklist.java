@@ -1,5 +1,8 @@
 package org.bootstrapbugz.api.auth.jwt.redis.model;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,10 +10,6 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.Instant;
 
 @Getter
 @Setter

@@ -1,11 +1,10 @@
 package org.bootstrapbugz.api.auth.jwt.redis.repository;
 
+import java.util.List;
+import java.util.Optional;
 import org.bootstrapbugz.api.auth.jwt.redis.model.RefreshTokenWhitelist;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface RefreshTokenWhitelistRepository
