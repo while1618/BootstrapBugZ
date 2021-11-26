@@ -35,7 +35,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignUpRequest'
+              $ref: "#/components/schemas/SignUpRequest"
             example:
               firstName: Joe
               lastName: Bloggs
@@ -49,7 +49,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: "#/components/schemas/UserResponse"
               example:
                 id: 4
                 firstName: Joe
@@ -61,9 +61,9 @@ paths:
                 roles:
                   - name: USER
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         409:
-          $ref: '#/components/responses/Conflict'
+          $ref: "#/components/responses/Conflict"
   /auth/resend-confirmation-email:
     post:
       tags:
@@ -77,18 +77,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ResendConfirmationEmailRequest'
+              $ref: "#/components/schemas/ResendConfirmationEmailRequest"
             example:
               usernameOrEmail: joe.bloggs@bootstrapbugz.com
       responses:
         204:
           description: Resend Confirmation Email Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
         404:
-          $ref: '#/components/responses/NotFound'
+          $ref: "#/components/responses/NotFound"
   /auth/confirm-registration:
     put:
       tags:
@@ -102,16 +102,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ConfirmRegistrationRequest'
+              $ref: "#/components/schemas/ConfirmRegistrationRequest"
             example:
               accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
       responses:
         204:
           description: Confirm Registration Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
   /auth/sign-in:
     post:
       tags:
@@ -125,7 +125,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignInRequest'
+              $ref: "#/components/schemas/SignInRequest"
             example:
               usernameOrEmail: john.doe@bootstrapbugz.com
               password: qwerty123
@@ -135,7 +135,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignInResponse'
+                $ref: "#/components/schemas/SignInResponse"
               example:
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
                 refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
@@ -150,9 +150,9 @@ paths:
                   roles:
                     - name: USER
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
   /auth/refresh-token:
     post:
       tags:
@@ -166,7 +166,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RefreshTokenRequest'
+              $ref: "#/components/schemas/RefreshTokenRequest"
             example:
               refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
       responses:
@@ -175,14 +175,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RefreshTokenResponse'
+                $ref: "#/components/schemas/RefreshTokenResponse"
               example:
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
                 refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
   /auth/sign-out:
     post:
       tags:
@@ -191,12 +191,12 @@ paths:
       operationId: signOut
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       responses:
         204:
           description: Sign Out Success
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
   /auth/sign-out-from-all-devices:
     post:
       tags:
@@ -205,12 +205,12 @@ paths:
       operationId: signOutFromAllDevices
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       responses:
         204:
           description: Sign Out From All Devices Success
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
   /auth/forgot-password:
     post:
       tags:
@@ -224,18 +224,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ForgotPasswordRequest'
+              $ref: "#/components/schemas/ForgotPasswordRequest"
             example:
               email: john.doe@bootstrapbugz.com
       responses:
         204:
           description: Forgot Password Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         404:
-          $ref: '#/components/responses/NotFound'
+          $ref: "#/components/responses/NotFound"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
   /auth/reset-password:
     put:
       tags:
@@ -249,7 +249,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ResetPasswordRequest'
+              $ref: "#/components/schemas/ResetPasswordRequest"
             example:
               accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
               password: qwerty321
@@ -258,9 +258,9 @@ paths:
         204:
           description: Reset Password Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
   /auth/signed-in-user:
     get:
       tags:
@@ -268,14 +268,14 @@ paths:
       summary: Signed In User
       operationId: signedInUser
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       responses:
         200:
           description: Signed In User Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: "#/components/schemas/UserResponse"
               example:
                 id: 2
                 firstName: John
@@ -287,7 +287,7 @@ paths:
                 roles:
                   - name: USER
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
   /auth/username-availability:
     get:
       tags:
@@ -347,8 +347,8 @@ paths:
       summary: Get Users
       operationId: getUsers
       security:
-        - { }
-        - BearerAuth: [ ]
+        - {}
+        - BearerAuth: []
       responses:
         200:
           description: Get Users Success
@@ -357,7 +357,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UserResponse'
+                  $ref: "#/components/schemas/UserResponse"
               examples:
                 non-signed-in-and-regular-user:
                   value:
@@ -422,8 +422,8 @@ paths:
       summary: Get User
       operationId: getUser
       security:
-        - { }
-        - BearerAuth: [ ]
+        - {}
+        - BearerAuth: []
       parameters:
         - in: path
           name: username
@@ -438,7 +438,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: "#/components/schemas/UserResponse"
               examples:
                 non-signed-in-or-requesting-other:
                   value:
@@ -472,7 +472,7 @@ paths:
                     roles:
                       - name: USER
         404:
-          $ref: '#/components/responses/NotFound'
+          $ref: "#/components/responses/NotFound"
   /profile/update:
     put:
       tags:
@@ -481,14 +481,14 @@ paths:
       operationId: updateProfile
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Update Profile Request
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateProfileRequest'
+              $ref: "#/components/schemas/UpdateProfileRequest"
             example:
               firstName: Joe
               lastName: Blow
@@ -500,7 +500,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: "#/components/schemas/UserResponse"
               example:
                 id: 4
                 firstName: Joe
@@ -512,11 +512,11 @@ paths:
                 roles:
                   - name: USER
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
         409:
-          $ref: '#/components/responses/Conflict'
+          $ref: "#/components/responses/Conflict"
   /profile/change-password:
     put:
       tags:
@@ -525,14 +525,14 @@ paths:
       operationId: changePassword
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Change Password Request
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangePasswordRequest'
+              $ref: "#/components/schemas/ChangePasswordRequest"
             example:
               oldPassword: qwerty123
               newPassword: qwerty321
@@ -541,9 +541,9 @@ paths:
         204:
           description: Change Password Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
   /admin/users/activate:
     put:
       tags:
@@ -552,14 +552,14 @@ paths:
       operationId: activateUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Activate Users Request
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminRequest'
+              $ref: "#/components/schemas/AdminRequest"
             example:
               usernames:
                 - john.doe
@@ -568,11 +568,11 @@ paths:
         204:
           description: Activate Users Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
   /admin/users/deactivate:
     put:
       tags:
@@ -581,14 +581,14 @@ paths:
       operationId: deactivateUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Deactivate Users Request
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminRequest'
+              $ref: "#/components/schemas/AdminRequest"
             example:
               usernames:
                 - john.doe
@@ -597,11 +597,11 @@ paths:
         204:
           description: Deactivate Users Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
   /admin/users/unlock:
     put:
       tags:
@@ -610,14 +610,14 @@ paths:
       operationId: unlockUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Unlock Users Request
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminRequest'
+              $ref: "#/components/schemas/AdminRequest"
             example:
               usernames:
                 - john.doe
@@ -626,11 +626,11 @@ paths:
         204:
           description: Unlock Users Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
   /admin/users/lock:
     put:
       tags:
@@ -639,14 +639,14 @@ paths:
       operationId: lockUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Lock Users Request
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminRequest'
+              $ref: "#/components/schemas/AdminRequest"
             example:
               usernames:
                 - john.doe
@@ -655,11 +655,11 @@ paths:
         204:
           description: Lock Users Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
   /admin/users/update-role:
     put:
       tags:
@@ -668,14 +668,14 @@ paths:
       operationId: updateUserRoles
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Update Users Roles Request
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateRoleRequest'
+              $ref: "#/components/schemas/UpdateRoleRequest"
             example:
               usernames:
                 - john.doe
@@ -687,11 +687,11 @@ paths:
         204:
           description: Update Users Roles Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
   /admin/users/delete:
     delete:
       tags:
@@ -700,14 +700,14 @@ paths:
       operationId: deleteUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Delete Users Request
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminRequest'
+              $ref: "#/components/schemas/AdminRequest"
             example:
               usernames:
                 - john.doe
@@ -716,11 +716,11 @@ paths:
         204:
           description: Delete Users Success
         400:
-          $ref: '#/components/responses/BadRequest'
+          $ref: "#/components/responses/BadRequest"
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
         403:
-          $ref: '#/components/responses/Forbidden'
+          $ref: "#/components/responses/Forbidden"
 components:
   responses:
     BadRequest:
@@ -728,7 +728,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 400
@@ -743,7 +743,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 404
@@ -755,7 +755,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 401
@@ -767,7 +767,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 403
@@ -779,7 +779,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 409
@@ -916,7 +916,7 @@ components:
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/RoleResponse'
+            $ref: "#/components/schemas/RoleResponse"
     SignInResponse:
       type: object
       properties:
@@ -927,7 +927,7 @@ components:
           type: string
           format: JWT
         user:
-          $ref: '#/components/schemas/UserResponse'
+          $ref: "#/components/schemas/UserResponse"
     RefreshTokenResponse:
       properties:
         accessToken:
