@@ -3,5 +3,17 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": true
-  }
+  },
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "bootstrapbugz",
+      "database": "bootstrapbugz",
+      "username": "postgres"
+    }
+  ]
 }
