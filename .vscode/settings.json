@@ -1,9 +1,5 @@
 {
   "cSpell.words": ["bootstrapbugz"],
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true
-  },
   "sqltools.connections": [
     {
       "previewLimit": 50,
