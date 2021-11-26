@@ -24,7 +24,7 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# NetBeans 
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -32,13 +32,13 @@
 /.nb-gradle/
 build/
 
-# IntelliJ IDEA 
+# IntelliJ IDEA
 .idea
 *.iws
 *.iml
 *.ipr
 
-# STS 
+# STS
 .apt_generated
 .classpath
 .factorypath
