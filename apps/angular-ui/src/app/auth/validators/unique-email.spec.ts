@@ -1,6 +1,6 @@
-import { UniqueEmail } from './unique-email';
-import { AuthService } from '../services/auth.service';
 import { TestBed } from '@angular/core/testing';
+import { AuthService } from '../services/auth.service';
+import { UniqueEmail } from './unique-email';
 
 describe('UniqueEmail', () => {
   let authService: AuthService;

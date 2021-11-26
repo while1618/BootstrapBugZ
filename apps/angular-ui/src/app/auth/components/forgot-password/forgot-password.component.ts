@@ -4,8 +4,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { forgotPassword } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
-import { ForgotPasswordRequest } from '../../models/auth.requests';
 import { getLoading } from '../../+state/auth.selectors';
+import { ForgotPasswordRequest } from '../../models/auth.requests';
 
 @Component({
   selector: 'bootstrapbugz-forgot-password',

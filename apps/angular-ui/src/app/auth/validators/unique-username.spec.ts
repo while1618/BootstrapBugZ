@@ -1,6 +1,6 @@
-import { UniqueUsername } from './unique-username';
 import { TestBed } from '@angular/core/testing';
 import { AuthService } from '../services/auth.service';
+import { UniqueUsername } from './unique-username';
 
 describe('UniqueUsername', () => {
   let authService: AuthService;

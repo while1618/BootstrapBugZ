@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { API_URL_ADMIN } from '../../shared/constants/paths';
 import { User } from '../../user/models/user.models';
 import { AdminRequest, ChangeRoleRequest } from '../models/admin.requests';
-import { API_URL_ADMIN } from '../../shared/constants/paths';
 
 @Injectable({
   providedIn: 'root',

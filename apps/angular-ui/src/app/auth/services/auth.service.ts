@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { API_URL_AUTH } from '../../shared/constants/paths';
 import { User } from '../../user/models/user.models';
 import {
   ForgotPasswordRequest,
@@ -11,7 +12,6 @@ import {
   SignUpRequest,
 } from '../models/auth.requests';
 import { LoginResponse, RefreshTokenResponse } from '../models/auth.responses';
-import { API_URL_AUTH } from '../../shared/constants/paths';
 
 @Injectable({
   providedIn: 'root',

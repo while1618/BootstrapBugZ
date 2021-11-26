@@ -1,10 +1,10 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, filter, Observable, take, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { BehaviorSubject, catchError, filter, Observable, take, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { RefreshTokenResponse } from '../models/auth.responses';
+import { AuthService } from '../services/auth.service';
 import { addAccessTokenToRequest } from '../util/util';
 
 @Injectable()

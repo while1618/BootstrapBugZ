@@ -4,8 +4,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { login, resendConfirmationEmail } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
-import { LoginRequest, ResendConfirmationEmailRequest } from '../../models/auth.requests';
 import { getLoading } from '../../+state/auth.selectors';
+import { LoginRequest, ResendConfirmationEmailRequest } from '../../models/auth.requests';
 
 @Component({
   selector: 'bootstrapbugz-login',

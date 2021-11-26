@@ -4,12 +4,12 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { signUp } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
+import { getLoading } from '../../+state/auth.selectors';
 import { NAME_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '../../../shared/constants/regex';
 import { SignUpRequest } from '../../models/auth.requests';
 import { MatchPassword } from '../../validators/match-password';
 import { UniqueEmail } from '../../validators/unique-email';
 import { UniqueUsername } from '../../validators/unique-username';
-import { getLoading } from '../../+state/auth.selectors';
 
 @Component({
   selector: 'bootstrapbugz-sign-up',
