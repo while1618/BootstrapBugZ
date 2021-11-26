@@ -27,7 +27,9 @@
     "postinstall": "ngcc --properties es2015 browser module main",
     "g:angular-app": "nx workspace-generator angular-app",
     "g:angular-lib": "nx workspace-generator angular-lib",
-    "g:shared-lib": "nx workspace-generator shared-lib"
+    "g:shared-lib": "nx workspace-generator shared-lib",
+    "check-updates:npm": "npx npm-check-updates",
+    "check-updates:maven": "mvn -f ./apps/spring-boot-api/pom.xml versions:display-property-updates"
   },
   "private": true,
   "dependencies": {
