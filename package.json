@@ -47,7 +47,7 @@
     "@auth0/angular-jwt": "5.0.2",
     "@ngrx/component-store": "13.0.1",
     "@ngrx/effects": "13.0.1",
-    "@ngrx/entity": "13.0.1",
+    "@ngrx/entity": "13.0.2",
     "@ngrx/router-store": "13.0.1",
     "@ngrx/store": "13.0.1",
     "rxjs": "7.4.0",
