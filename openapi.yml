@@ -733,7 +733,7 @@ components:
             timestamp: 18-10-2021 04:00:44
             status: 400
             error: Bad Request
-            errors:
+            details:
               - field: field1
                 message: Invalid field1.
               - field: field2
