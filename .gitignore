@@ -15,10 +15,13 @@
 .c9/
 *.launch
 .settings/
+*.iws
+*.iml
+*.ipr
 *.sublime-workspace
 
 # IDE - VSCode
-.vscode/*
+.vscode
 
 # NetBeans
 /nbproject/private/
@@ -27,12 +30,6 @@
 /nbdist/
 /.nb-gradle/
 build/
-
-# IntelliJ IDEA
-.idea
-*.iws
-*.iml
-*.ipr
 
 # STS
 .apt_generated
