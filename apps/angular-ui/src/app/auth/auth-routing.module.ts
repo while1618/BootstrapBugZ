@@ -14,20 +14,6 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        path: 'login',
-        component: LoginComponent,
-      },
-      {
-        path: 'logout',
-        component: LogoutComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'logout-from-all-devices',
-        component: LogoutFromAllDevicesComponent,
-        canActivate: [AuthGuard],
-      },
-      {
         path: 'sign-up',
         component: SignUpComponent,
       },
@@ -36,12 +22,26 @@ const routes: Routes = [
         component: ConfirmRegistrationComponent,
       },
       {
+        path: 'sign-in',
+        component: LoginComponent,
+      },
+      {
         path: 'forgot-password',
         component: ForgotPasswordComponent,
       },
       {
         path: 'reset-password',
         component: ResetPasswordComponent,
+      },
+      {
+        path: 'sign-out',
+        component: LogoutComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'sign-out-from-all-devices',
+        component: LogoutFromAllDevicesComponent,
+        canActivate: [AuthGuard],
       },
     ],
   },

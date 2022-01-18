@@ -8,58 +8,13 @@ import * as AuthActions from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
-  login$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.login),
-      switchMap((action) =>
-        this.authService.login(action.request).pipe(
-          map((response) => AuthActions.loginSuccess({ response })),
-          tap(() => this.router.navigate(['/'])),
-          catchError((error) => of(AuthActions.loginFailure(error)))
-        )
-      )
-    )
-  );
-  checkAuth$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.checkAuth),
-      switchMap((action) =>
-        this.authService.getLoggedInUser().pipe(
-          map((response) => AuthActions.checkAuthSuccess({ response })),
-          catchError((error) => of(AuthActions.checkAuthFailure(error)))
-        )
-      )
-    )
-  );
-  refreshToken$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.refreshToken),
-      switchMap((action) =>
-        this.authService.refreshToken(action.request).pipe(
-          map((response) => AuthActions.refreshTokenSuccess({ response })),
-          catchError((error) => of(AuthActions.refreshTokenFailure(error)))
-        )
-      )
-    )
-  );
-  saveTokenAndRefreshToken$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.loginSuccess, AuthActions.refreshTokenSuccess),
-        tap((action) => {
-          localStorage.setItem('token', action.response.token);
-          localStorage.setItem('refreshToken', action.response.refreshToken);
-        })
-      ),
-    { dispatch: false }
-  );
   signUp$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.signUp),
       switchMap((action) =>
         this.authService.signUp(action.request).pipe(
           map((response) => AuthActions.signUpSuccess({ response })),
-          tap(() => this.router.navigate(['/auth/login'])),
+          tap(() => this.router.navigate(['/auth/sign-in'])),
           catchError((error) => of(AuthActions.signUpFailure(error)))
         )
       )
@@ -71,7 +26,7 @@ export class AuthEffects {
       switchMap((action) =>
         this.authService.confirmRegistration(action.request).pipe(
           map(() => AuthActions.confirmRegistrationSuccess()),
-          tap(() => this.router.navigate(['/auth/login'])),
+          tap(() => this.router.navigate(['/auth/sign-in'])),
           catchError((error) => of(AuthActions.confirmRegistrationFailure(error)))
         )
       )
@@ -88,13 +43,82 @@ export class AuthEffects {
       )
     )
   );
+  signIn$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.signIn),
+      switchMap((action) =>
+        this.authService.signIn(action.request).pipe(
+          map((response) => AuthActions.signInSuccess({ response })),
+          tap(() => this.router.navigate(['/'])),
+          catchError((error) => of(AuthActions.signInFailure(error)))
+        )
+      )
+    )
+  );
+  refreshToken$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.refreshToken),
+      switchMap((action) =>
+        this.authService.refreshToken(action.request).pipe(
+          map((response) => AuthActions.refreshTokenSuccess({ response })),
+          catchError((error) => of(AuthActions.refreshTokenFailure(error)))
+        )
+      )
+    )
+  );
+  saveAccessTokenAndRefreshToken$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.signInSuccess, AuthActions.refreshTokenSuccess),
+        tap((action) => {
+          localStorage.setItem('accessToken', action.response.accessToken);
+          localStorage.setItem('refreshToken', action.response.refreshToken);
+        })
+      ),
+    { dispatch: false }
+  );
+  signOut$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.signOut),
+      switchMap(() =>
+        this.authService.signOut().pipe(
+          map(() => AuthActions.signOutSuccess()),
+          tap(() => this.router.navigate(['/'])),
+          catchError((error) => of(AuthActions.signOutFailure(error)))
+        )
+      )
+    )
+  );
+  signOutFromAllDevices$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.signOutFromAllDevices),
+      switchMap(() =>
+        this.authService.signOutFromAllDevices().pipe(
+          map(() => AuthActions.signOutFromAllDevicesSuccess()),
+          tap(() => this.router.navigate(['/'])),
+          catchError((error) => of(AuthActions.signOutFromAllDevicesFailure(error)))
+        )
+      )
+    )
+  );
+  removeAccessTokenAndRefreshToken$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.signOutSuccess, AuthActions.signOutFromAllDevicesSuccess),
+        tap((action) => {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+        })
+      ),
+    { dispatch: false }
+  );
   forgotPassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.forgotPassword),
       switchMap((action) =>
         this.authService.forgotPassword(action.request).pipe(
           map(() => AuthActions.forgotPasswordSuccess()),
-          tap(() => this.router.navigate(['/auth/login'])),
+          tap(() => this.router.navigate(['/auth/sign-in'])),
           catchError((error) => of(AuthActions.forgotPasswordFailure(error)))
         )
       )
@@ -106,46 +130,22 @@ export class AuthEffects {
       switchMap((action) =>
         this.authService.resetPassword(action.request).pipe(
           map(() => AuthActions.resetPasswordSuccess()),
-          tap(() => this.router.navigate(['/auth/login'])),
+          tap(() => this.router.navigate(['/auth/sign-in'])),
           catchError((error) => of(AuthActions.resetPasswordFailure(error)))
         )
       )
     )
   );
-  logout$ = createEffect(() =>
+  checkAuth$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.logout),
-      switchMap(() =>
-        this.authService.logout().pipe(
-          map(() => AuthActions.logoutSuccess()),
-          tap(() => this.router.navigate(['/'])),
-          catchError((error) => of(AuthActions.logoutFailure(error)))
+      ofType(AuthActions.checkAuth),
+      switchMap((action) =>
+        this.authService.getSignedInUser().pipe(
+          map((response) => AuthActions.checkAuthSuccess({ response })),
+          catchError((error) => of(AuthActions.checkAuthFailure(error)))
         )
       )
     )
-  );
-  logoutFromAllDevices$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.logoutFromAllDevices),
-      switchMap(() =>
-        this.authService.logoutFromAllDevices().pipe(
-          map(() => AuthActions.logoutFromAllDevicesSuccess()),
-          tap(() => this.router.navigate(['/'])),
-          catchError((error) => of(AuthActions.logoutFromAllDevicesFailure(error)))
-        )
-      )
-    )
-  );
-  removeTokenAndRefreshToken$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.logoutSuccess, AuthActions.logoutFromAllDevicesSuccess),
-        tap((action) => {
-          localStorage.removeItem('token');
-          localStorage.removeItem('refreshToken');
-        })
-      ),
-    { dispatch: false }
   );
 
   constructor(

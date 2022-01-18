@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { logoutFromAllDevices } from '../../+state/auth.actions';
+import { signOutFromAllDevices } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
 
 @Component({
@@ -11,6 +11,6 @@ export class LogoutFromAllDevicesComponent implements OnInit {
   constructor(private store: Store<AuthState>) {}
 
   ngOnInit(): void {
-    this.store.dispatch(logoutFromAllDevices());
+    this.store.dispatch(signOutFromAllDevices());
   }
 }

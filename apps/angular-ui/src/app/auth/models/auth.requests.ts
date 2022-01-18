@@ -1,12 +1,3 @@
-export interface LoginRequest {
-  usernameOrEmail: string;
-  password: string;
-}
-
-export interface RefreshTokenRequest {
-  refreshToken: string;
-}
-
 export interface SignUpRequest {
   firstName: string;
   lastName: string;
@@ -20,12 +11,21 @@ export interface ResendConfirmationEmailRequest {
   usernameOrEmail: string;
 }
 
+export interface SignInRequest {
+  usernameOrEmail: string;
+  password: string;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
 export interface ForgotPasswordRequest {
   email: string;
 }
 
 export interface ResetPasswordRequest {
-  token: string;
+  accessToken: string;
   password: string;
   confirmPassword: string;
 }

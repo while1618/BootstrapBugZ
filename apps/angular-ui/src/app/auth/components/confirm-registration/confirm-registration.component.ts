@@ -12,7 +12,7 @@ export class ConfirmRegistrationComponent implements OnInit {
   constructor(private store: Store<AuthState>, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    const token = this.route.snapshot.queryParamMap.get('token');
-    this.store.dispatch(confirmRegistration({ request: token }));
+    const accessToken = this.route.snapshot.queryParamMap.get('accessToken');
+    this.store.dispatch(confirmRegistration({ request: accessToken }));
   }
 }

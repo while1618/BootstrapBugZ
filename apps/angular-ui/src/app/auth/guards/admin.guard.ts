@@ -22,7 +22,7 @@ export class AdminGuard implements CanActivate, CanLoad {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (!this.authService.isAdminLoggedIn()) return this.router.navigateByUrl('/auth/login');
+    if (!this.authService.isSignedInAsAdmin()) return this.router.navigateByUrl('/auth/sign-in');
     return true;
   }
 
@@ -30,7 +30,7 @@ export class AdminGuard implements CanActivate, CanLoad {
     route: Route,
     segments: UrlSegment[]
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (!this.authService.isAdminLoggedIn()) return this.router.navigateByUrl('/auth/login');
+    if (!this.authService.isSignedInAsAdmin()) return this.router.navigateByUrl('/auth/sign-in');
     return true;
   }
 }

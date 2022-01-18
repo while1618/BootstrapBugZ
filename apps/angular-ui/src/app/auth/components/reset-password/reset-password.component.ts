@@ -35,7 +35,7 @@ export class ResetPasswordComponent {
     if (!this.resetPasswordForm.valid) return;
 
     const request: ResetPasswordRequest = {
-      token: this.route.snapshot.queryParamMap.get('token'),
+      accessToken: this.route.snapshot.queryParamMap.get('accessToken'),
       password: this.resetPasswordForm.controls.password.value,
       confirmPassword: this.resetPasswordForm.controls.confirmPassword.value,
     };

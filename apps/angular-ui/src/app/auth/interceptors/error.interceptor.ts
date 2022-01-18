@@ -23,16 +23,16 @@ export class ErrorInterceptor implements HttpInterceptor {
         // We don't want to refresh token for some requests like login or refresh token itself
         // So we verify url and we throw an error if it's the case
         if (
-          error.url.includes('login') ||
+          error.url.includes('sign-in') ||
           error.url.includes('refresh-token') ||
-          error.url.includes('logged-in-user')
+          error.url.includes('signed-in-user')
         ) {
           // We do another check to see if refresh token failed
           // In this case we want to logout user and to redirect it to login page
           if (error.url.includes('refresh-token')) {
-            localStorage.removeItem('token');
+            localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
-            this.router.navigateByUrl('/auth/login').then();
+            this.router.navigateByUrl('/auth/sign-in').then();
           }
           return throwError(() => error);
         }
@@ -47,7 +47,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           // If refreshTokenInProgress is true, we will wait until refreshTokenSubject has a non-null value
           // – which means the new token is ready and we can retry the request again
           return this.refreshTokenSubject.pipe(
-            filter((token: RefreshTokenResponse) => token !== null),
+            filter((refreshTokenResponse: RefreshTokenResponse) => refreshTokenResponse !== null),
             take(1),
             switchMap(() => next.handle(this.addAuthToken(request)))
           );
@@ -59,13 +59,13 @@ export class ErrorInterceptor implements HttpInterceptor {
           const refreshToken = this.authService.getRefreshToken();
           // Call auth.refreshAccessToken(this is an Observable that will be returned)
           return this.authService.refreshToken({ refreshToken: refreshToken }).pipe(
-            switchMap((token: RefreshTokenResponse) => {
+            switchMap((refreshTokenResponse: RefreshTokenResponse) => {
               //When the call to refreshToken completes we reset the refreshTokenInProgress to false
               // for the next time the token needs to be refreshed
               this.refreshTokenInProgress = false;
-              this.refreshTokenSubject.next(token);
-              localStorage.setItem('token', token.token);
-              localStorage.setItem('refreshToken', token.refreshToken);
+              this.refreshTokenSubject.next(refreshTokenResponse);
+              localStorage.setItem('accessToken', refreshTokenResponse.accessToken);
+              localStorage.setItem('refreshToken', refreshTokenResponse.refreshToken);
 
               return next.handle(this.addAuthToken(request));
             }),
@@ -80,7 +80,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   private addAuthToken(request: HttpRequest<unknown>) {
-    const accessToken = this.authService.getToken();
+    const accessToken = this.authService.getAccessToken();
     if (!accessToken) return request;
     return addAccessTokenToRequest(request, accessToken);
   }

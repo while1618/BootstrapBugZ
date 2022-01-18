@@ -4,11 +4,11 @@
   </a>
   <span class="spacer"></span>
   <ng-container *ngIf="isAuthenticated$ | async; else noAuth">
-    <a mat-button routerLink="/auth/logout">Logout</a>
-    <a mat-button routerLink="/auth/logout-from-all-devices">Logout From All Devices</a>
+    <a mat-button routerLink="/auth/sign-out">Sign Out</a>
+    <a mat-button routerLink="/auth/sign-out-from-all-devices">Sign Out From All Devices</a>
   </ng-container>
   <ng-template #noAuth>
-    <a mat-button routerLink="/auth/login">Login</a>
+    <a mat-button routerLink="/auth/sign-in">Sign In</a>
     <a mat-button routerLink="/auth/sign-up">Sign Up</a>
   </ng-template>
 </mat-toolbar>

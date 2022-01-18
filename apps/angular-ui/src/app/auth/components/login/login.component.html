@@ -4,19 +4,19 @@
 <ng-template #noLoading>
   <mat-card>
     <mat-card-content>
-      <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+      <form (ngSubmit)="onSubmit()" [formGroup]="signInForm">
         <h2>Log In</h2>
         <mat-form-field appearance="outline">
           <mat-label>Username or Email</mat-label>
           <input formControlName="usernameOrEmail" matInput type="text" />
-          <mat-error *ngIf="loginForm.controls.usernameOrEmail.errors?.required">
+          <mat-error *ngIf="signInForm.controls.usernameOrEmail.errors?.required">
             Username or Email is required.
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
           <input formControlName="password" matInput type="password" />
-          <mat-error *ngIf="loginForm.controls.password.errors?.required">
+          <mat-error *ngIf="signInForm.controls.password.errors?.required">
             Password is required.
           </mat-error>
         </mat-form-field>
@@ -29,7 +29,7 @@
         >
           Resend confirmation email
         </button>
-        <button color="primary" mat-raised-button type="submit">Login</button>
+        <button color="primary" mat-raised-button type="submit">Sign In</button>
       </form>
     </mat-card-content>
   </mat-card>

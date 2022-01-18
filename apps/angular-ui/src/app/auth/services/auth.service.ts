@@ -5,13 +5,13 @@ import { API_URL_AUTH } from '../../shared/constants/paths';
 import { User } from '../../user/models/user.models';
 import {
   ForgotPasswordRequest,
-  LoginRequest,
   RefreshTokenRequest,
   ResendConfirmationEmailRequest,
   ResetPasswordRequest,
+  SignInRequest,
   SignUpRequest,
 } from '../models/auth.requests';
-import { LoginResponse, RefreshTokenResponse } from '../models/auth.responses';
+import { RefreshTokenResponse, SignInResponse } from '../models/auth.responses';
 
 @Injectable({
   providedIn: 'root',
@@ -23,12 +23,25 @@ export class AuthService {
     this.jwtHelper = new JwtHelperService();
   }
 
-  getLoggedInUser() {
-    return this.http.get<User>(`${API_URL_AUTH}/logged-in-user`);
+  signUp(signUpRequest: SignUpRequest) {
+    return this.http.post<User>(`${API_URL_AUTH}/sign-up`, signUpRequest);
   }
 
-  login(loginRequest: LoginRequest) {
-    return this.http.post<LoginResponse>(`${API_URL_AUTH}/login`, loginRequest);
+  resendConfirmationEmail(resendConfirmationEmailRequest: ResendConfirmationEmailRequest) {
+    return this.http.post<void>(
+      `${API_URL_AUTH}/resend-confirmation-email`,
+      resendConfirmationEmailRequest
+    );
+  }
+
+  confirmRegistration(accessToken: string) {
+    return this.http.put<void>(`${API_URL_AUTH}/confirm-registration`, {
+      params: { accessToken },
+    });
+  }
+
+  signIn(signInRequest: SignInRequest) {
+    return this.http.post<SignInResponse>(`${API_URL_AUTH}/sign-in`, signInRequest);
   }
 
   refreshToken(refreshTokenRequest: RefreshTokenRequest) {
@@ -38,21 +51,12 @@ export class AuthService {
     );
   }
 
-  signUp(signUpRequest: SignUpRequest) {
-    return this.http.post<User>(`${API_URL_AUTH}/sign-up`, signUpRequest);
+  signOut() {
+    return this.http.post<void>(`${API_URL_AUTH}/sign-out`, null);
   }
 
-  confirmRegistration(token: string) {
-    return this.http.get<void>(`${API_URL_AUTH}/confirm-registration`, {
-      params: { token },
-    });
-  }
-
-  resendConfirmationEmail(resendConfirmationEmailRequest: ResendConfirmationEmailRequest) {
-    return this.http.post<void>(
-      `${API_URL_AUTH}/resend-confirmation-email`,
-      resendConfirmationEmailRequest
-    );
+  signOutFromAllDevices() {
+    return this.http.post<void>(`${API_URL_AUTH}/sign-out-from-all-devices`, null);
   }
 
   forgotPassword(forgotPasswordRequest: ForgotPasswordRequest) {
@@ -63,12 +67,8 @@ export class AuthService {
     return this.http.put<void>(`${API_URL_AUTH}/reset-password`, resetPasswordRequest);
   }
 
-  logout() {
-    return this.http.get<void>(`${API_URL_AUTH}/logout`);
-  }
-
-  logoutFromAllDevices() {
-    return this.http.get<void>(`${API_URL_AUTH}/logout-from-all-devices`);
+  getSignedInUser() {
+    return this.http.get<User>(`${API_URL_AUTH}/signed-in-user`);
   }
 
   usernameAvailability(username: string) {
@@ -83,33 +83,37 @@ export class AuthService {
     });
   }
 
-  getToken() {
-    return localStorage.getItem('token');
+  getAccessToken() {
+    return localStorage.getItem('accessToken');
   }
 
   getRefreshToken() {
     return localStorage.getItem('refreshToken');
   }
 
-  isLoggedIn() {
-    const token = this.getToken();
+  isSignedInAsUser() {
+    const accessToken = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
-    if (!token || !refreshToken) return false;
+    if (!accessToken || !refreshToken) return false;
     try {
-      return !this.jwtHelper.isTokenExpired(token) || !this.jwtHelper.isTokenExpired(refreshToken);
+      return (
+        !this.jwtHelper.isTokenExpired(accessToken) || !this.jwtHelper.isTokenExpired(refreshToken)
+      );
     } catch (e) {
       return false;
     }
   }
 
-  isAdminLoggedIn() {
-    const token = this.getToken();
+  isSignedInAsAdmin() {
+    const accessToken = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
-    if (!token || !refreshToken) return false;
+    if (!accessToken || !refreshToken) return false;
     try {
-      const decoded = this.jwtHelper.decodeToken(token);
-      if (!decoded?.roles.includes('ADMIN')) return false;
-      return !this.jwtHelper.isTokenExpired(token) || !this.jwtHelper.isTokenExpired(refreshToken);
+      const user = this.jwtHelper.decodeToken(accessToken);
+      if (!user?.roles.includes('ADMIN')) return false;
+      return (
+        !this.jwtHelper.isTokenExpired(accessToken) || !this.jwtHelper.isTokenExpired(refreshToken)
+      );
     } catch (e) {
       return false;
     }

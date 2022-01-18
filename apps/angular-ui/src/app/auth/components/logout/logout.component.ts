@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { logout } from '../../+state/auth.actions';
+import { signOut } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
 
 @Component({
@@ -11,6 +11,6 @@ export class LogoutComponent implements OnInit {
   constructor(private store: Store<AuthState>) {}
 
   ngOnInit(): void {
-    this.store.dispatch(logout());
+    this.store.dispatch(signOut());
   }
 }

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { login, resendConfirmationEmail } from '../../+state/auth.actions';
+import { resendConfirmationEmail, signIn } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
 import { getLoading } from '../../+state/auth.selectors';
-import { LoginRequest, ResendConfirmationEmailRequest } from '../../models/auth.requests';
+import { ResendConfirmationEmailRequest, SignInRequest } from '../../models/auth.requests';
 
 @Component({
   selector: 'bootstrapbugz-login',
@@ -15,7 +15,7 @@ import { LoginRequest, ResendConfirmationEmailRequest } from '../../models/auth.
 export class LoginComponent implements OnInit {
   loading$: Observable<boolean>;
   disableResendButton = false;
-  loginForm = new FormGroup({
+  signInForm = new FormGroup({
     usernameOrEmail: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
@@ -28,17 +28,17 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.loginForm.valid) return;
+    if (!this.signInForm.valid) return;
 
-    const request = this.loginForm.value as LoginRequest;
-    this.store.dispatch(login({ request }));
+    const request = this.signInForm.value as SignInRequest;
+    this.store.dispatch(signIn({ request }));
   }
 
   resendConfirmationEmail() {
     this.resendCounter++;
     if (this.resendCounter >= 3) this.disableResendButton = true;
     const request: ResendConfirmationEmailRequest = {
-      usernameOrEmail: this.loginForm.controls.usernameOrEmail.value,
+      usernameOrEmail: this.signInForm.controls.usernameOrEmail.value,
     };
     this.store.dispatch(resendConfirmationEmail({ request }));
   }

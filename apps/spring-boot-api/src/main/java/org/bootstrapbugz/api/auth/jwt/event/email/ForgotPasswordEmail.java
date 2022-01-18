@@ -18,7 +18,7 @@ public class ForgotPasswordEmail implements JwtEmail {
     try {
       final var template = new ClassPathResource("templates/email/forgot-password.html").getFile();
       final String link =
-          environment.getProperty("ui.app.url") + "/auth/reset-password?token=" + token;
+          environment.getProperty("ui.app.url") + "/auth/reset-password?accessToken=" + token;
       final String body =
           Files.asCharSource(template, StandardCharsets.UTF_8)
               .read()

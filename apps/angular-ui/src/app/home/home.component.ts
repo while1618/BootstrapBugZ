@@ -19,6 +19,6 @@ export class HomeComponent implements OnInit {
   }
 
   onClick(): void {
-    this.userService.findByUsername('user').subscribe();
+    this.userService.findByUsername('john.doe').subscribe();
   }
 }

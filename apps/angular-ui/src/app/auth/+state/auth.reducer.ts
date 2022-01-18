@@ -20,51 +20,7 @@ export const initialState: AuthState = {
 
 const authReducer = createReducer(
   initialState,
-  // LOGIN
-  on(AuthActions.login, (state, action) => ({ ...state, loading: true })),
-  on(AuthActions.loginSuccess, (state, action) => ({
-    ...state,
-    isAuthenticated: true,
-    user: action.response.user,
-    error: null,
-    loading: false,
-  })),
-  on(AuthActions.loginFailure, (state, action) => ({
-    ...state,
-    isAuthenticated: false,
-    user: null,
-    error: action.error,
-    loading: false,
-  })),
-  // CHECK AUTH
-  on(AuthActions.checkAuth, (state, action) => ({ ...state, loading: true })),
-  on(AuthActions.checkAuthSuccess, (state, action) => ({
-    ...state,
-    isAuthenticated: true,
-    user: action.response,
-    error: null,
-    loading: false,
-  })),
-  on(AuthActions.checkAuthFailure, (state, action) => ({
-    ...state,
-    isAuthenticated: false,
-    user: null,
-    error: action.error,
-    loading: false,
-  })),
-  // REFRESH TOKEN
-  on(AuthActions.refreshToken, (state, action) => ({ ...state, loading: true })),
-  on(AuthActions.refreshTokenSuccess, (state, action) => ({
-    ...state,
-    error: null,
-    loading: false,
-  })),
-  on(AuthActions.refreshTokenFailure, (state, action) => ({
-    ...state,
-    error: action.error,
-    loading: false,
-  })),
-  // SIGN UP
+
   on(AuthActions.signUp, (state, action) => ({ ...state, loading: true })),
   on(AuthActions.signUpSuccess, (state, action) => ({
     ...state,
@@ -78,7 +34,7 @@ const authReducer = createReducer(
     error: action.error,
     loading: false,
   })),
-  // CONFIRM REGISTRATION
+
   on(AuthActions.confirmRegistration, (state, action) => ({ ...state, loading: true })),
   on(AuthActions.confirmRegistrationSuccess, (state, action) => ({
     ...state,
@@ -90,7 +46,7 @@ const authReducer = createReducer(
     error: action.error,
     loading: false,
   })),
-  // RESEND CONFIRMATION EMAIL
+
   on(AuthActions.resendConfirmationEmail, (state, action) => ({ ...state, loading: true })),
   on(AuthActions.resendConfirmationEmailSuccess, (state, action) => ({ ...state, loading: false })),
   on(AuthActions.resendConfirmationEmailFailure, (state, action) => ({
@@ -98,7 +54,61 @@ const authReducer = createReducer(
     error: action.error,
     loading: false,
   })),
-  // FORGOT PASSWORD
+
+  on(AuthActions.signIn, (state, action) => ({ ...state, loading: true })),
+  on(AuthActions.signInSuccess, (state, action) => ({
+    ...state,
+    isAuthenticated: true,
+    user: action.response.user,
+    error: null,
+    loading: false,
+  })),
+  on(AuthActions.signInFailure, (state, action) => ({
+    ...state,
+    isAuthenticated: false,
+    user: null,
+    error: action.error,
+    loading: false,
+  })),
+
+  on(AuthActions.refreshToken, (state, action) => ({ ...state, loading: true })),
+  on(AuthActions.refreshTokenSuccess, (state, action) => ({
+    ...state,
+    error: null,
+    loading: false,
+  })),
+  on(AuthActions.refreshTokenFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+    loading: false,
+  })),
+
+  on(AuthActions.signOut, (state, action) => ({ ...state, loading: true })),
+  on(AuthActions.signOutSuccess, (state, action) => ({
+    ...state,
+    isAuthenticated: false,
+    user: null,
+    loading: false,
+  })),
+  on(AuthActions.signOutFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+    loading: false,
+  })),
+
+  on(AuthActions.signOutFromAllDevices, (state, action) => ({ ...state, loading: true })),
+  on(AuthActions.signOutFromAllDevicesSuccess, (state, action) => ({
+    ...state,
+    isAuthenticated: false,
+    user: null,
+    loading: false,
+  })),
+  on(AuthActions.signOutFromAllDevicesFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+    loading: false,
+  })),
+
   on(AuthActions.forgotPassword, (state, action) => ({ ...state, loading: true })),
   on(AuthActions.forgotPasswordSuccess, (state, action) => ({ ...state, loading: false })),
   on(AuthActions.forgotPasswordFailure, (state, action) => ({
@@ -106,7 +116,7 @@ const authReducer = createReducer(
     error: action.error,
     loading: false,
   })),
-  // RESET PASSWORD
+
   on(AuthActions.resetPassword, (state, action) => ({ ...state, loading: true })),
   on(AuthActions.resetPasswordSuccess, (state, action) => ({ ...state, loading: false })),
   on(AuthActions.resetPasswordFailure, (state, action) => ({
@@ -114,29 +124,19 @@ const authReducer = createReducer(
     error: action.error,
     loading: false,
   })),
-  // LOGOUT
-  on(AuthActions.logout, (state, action) => ({ ...state, loading: true })),
-  on(AuthActions.logoutSuccess, (state, action) => ({
+
+  on(AuthActions.checkAuth, (state, action) => ({ ...state, loading: true })),
+  on(AuthActions.checkAuthSuccess, (state, action) => ({
+    ...state,
+    isAuthenticated: true,
+    user: action.response,
+    error: null,
+    loading: false,
+  })),
+  on(AuthActions.checkAuthFailure, (state, action) => ({
     ...state,
     isAuthenticated: false,
     user: null,
-    loading: false,
-  })),
-  on(AuthActions.logoutFailure, (state, action) => ({
-    ...state,
-    error: action.error,
-    loading: false,
-  })),
-  // LOGOUT FROM ALL DEVICES
-  on(AuthActions.logoutFromAllDevices, (state, action) => ({ ...state, loading: true })),
-  on(AuthActions.logoutFromAllDevicesSuccess, (state, action) => ({
-    ...state,
-    isAuthenticated: false,
-    user: null,
-    loading: false,
-  })),
-  on(AuthActions.logoutFromAllDevicesFailure, (state, action) => ({
-    ...state,
     error: action.error,
     loading: false,
   }))
