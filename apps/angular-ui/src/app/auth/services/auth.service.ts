@@ -36,7 +36,7 @@ export class AuthService {
 
   confirmRegistration(accessToken: string) {
     return this.http.put<void>(`${API_URL_AUTH}/confirm-registration`, {
-      params: { accessToken },
+      accessToken: accessToken,
     });
   }
 
