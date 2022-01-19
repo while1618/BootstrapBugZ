@@ -4,10 +4,10 @@ import { signOut } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
 
 @Component({
-  selector: 'bootstrapbugz-logout',
+  selector: 'bootstrapbugz-sign-out',
   template: '',
 })
-export class LogoutComponent implements OnInit {
+export class SignOutComponent implements OnInit {
   constructor(private store: Store<AuthState>) {}
 
   ngOnInit(): void {

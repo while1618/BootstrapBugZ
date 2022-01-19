@@ -4,10 +4,10 @@ import { signOutFromAllDevices } from '../../+state/auth.actions';
 import { AuthState } from '../../+state/auth.reducer';
 
 @Component({
-  selector: 'bootstrapbugz-logout-from-all-devices',
+  selector: 'bootstrapbugz-sign-out-from-all-devices',
   template: '',
 })
-export class LogoutFromAllDevicesComponent implements OnInit {
+export class SignOutFromAllDevicesComponent implements OnInit {
   constructor(private store: Store<AuthState>) {}
 
   ngOnInit(): void {

@@ -8,11 +8,11 @@ import { getLoading } from '../../+state/auth.selectors';
 import { ResendConfirmationEmailRequest, SignInRequest } from '../../models/auth.requests';
 
 @Component({
-  selector: 'bootstrapbugz-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'bootstrapbugz-sign-in',
+  templateUrl: './sign-in.component.html',
+  styleUrls: ['./sign-in.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class SignInComponent implements OnInit {
   loading$: Observable<boolean>;
   disableResendButton = false;
   signInForm = new FormGroup({
