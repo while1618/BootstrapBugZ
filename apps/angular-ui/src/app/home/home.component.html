@@ -1,4 +1,2 @@
-<ng-container *ngIf="isAuthenticated$ | async; else noAuth">
-  <button (click)="onClick()">call</button>
-</ng-container>
-<ng-template #noAuth> Landing Page</ng-template>
+<ng-container *ngIf="isAuthenticated$ | async; else noAuth"> Dashboard </ng-container>
+<ng-template #noAuth> Landing Page </ng-template>
