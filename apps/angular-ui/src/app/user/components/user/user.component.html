@@ -1,0 +1,8 @@
+<ng-container *ngIf="user$ | async as user">
+  <p>first name: {{ user.firstName }}</p>
+  <p>last name: {{ user.lastName }}</p>
+  <p>username: {{ user.username }}</p>
+  <ng-container *ngIf="user.username === (signedInUser$ | async).username">
+    <p>email: {{ user.email }}</p>
+  </ng-container>
+</ng-container>

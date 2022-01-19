@@ -6,6 +6,7 @@
   <ng-container *ngIf="isAuthenticated$ | async; else noAuth">
     <a mat-button routerLink="/auth/sign-out">Sign Out</a>
     <a mat-button routerLink="/auth/sign-out-from-all-devices">Sign Out From All Devices</a>
+    <a mat-button [routerLink]="['/user/', (user$ | async).username]">Profile</a>
   </ng-container>
   <ng-template #noAuth>
     <a mat-button routerLink="/auth/sign-in">Sign In</a>
