@@ -15,6 +15,8 @@ import { ErrorInterceptor } from './auth/interceptors/error.interceptor';
 import { TokenInterceptor } from './auth/interceptors/token.interceptor';
 import { HomeComponent } from './home/home.component';
 import { SharedModule } from './shared/shared.module';
+import { UsersEffects } from './user/+state/users.effects';
+import { reducer as usersReducer } from './user/+state/users.reducer';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -22,8 +24,8 @@ import { SharedModule } from './shared/shared.module';
     BrowserModule,
     HttpClientModule,
     SharedModule,
-    StoreModule.forRoot({ auth: authReducer }),
-    EffectsModule.forRoot([AuthEffects]),
+    StoreModule.forRoot({ auth: authReducer, users: usersReducer }),
+    EffectsModule.forRoot([AuthEffects, UsersEffects]),
     BrowserAnimationsModule,
     AppRoutingModule,
     StoreDevtoolsModule.instrument({

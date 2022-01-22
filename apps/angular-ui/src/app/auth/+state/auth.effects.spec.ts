@@ -6,7 +6,7 @@
 // import { provideMockStore } from '@ngrx/store/testing';
 
 // import { NxModule, DataPersistence } from '@nrwl/angular';
-// import { hot } from '@nrwl/angular/testing';
+// import { hot } from 'jasmine-marbles';
 
 // import { AuthEffects } from './auth.effects';
 // import * as AuthActions from './auth.actions';
