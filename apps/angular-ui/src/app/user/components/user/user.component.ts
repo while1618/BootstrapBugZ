@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { findByUsername } from '../../+state/users.actions';
 import { getLoading, getUsers } from '../../+state/users.selectors';
-import { getUser } from '../../../auth/+state/auth.selectors';
+import { getSignedInUser } from '../../../auth/+state/auth.selectors';
 import { User } from '../../models/user.models';
 
 @Component({
@@ -21,7 +21,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.url.subscribe(() => {
-      this.signedInUser$ = this.store.select(getUser);
+      this.signedInUser$ = this.store.select(getSignedInUser);
       this.store.dispatch(findByUsername({ request: this.route.snapshot.params.username }));
       this.user$ = this.store.select(getUsers);
       this.loading$ = this.store.select(getLoading);

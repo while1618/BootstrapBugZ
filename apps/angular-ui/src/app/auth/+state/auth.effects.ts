@@ -136,13 +136,13 @@ export class AuthEffects {
       )
     )
   );
-  checkAuth$ = createEffect(() =>
+  getSignedInUser = createEffect(() =>
     this.actions$.pipe(
-      ofType(AuthActions.checkAuth),
+      ofType(AuthActions.getSignedInUser),
       switchMap((action) =>
         this.authService.getSignedInUser().pipe(
-          map((response) => AuthActions.checkAuthSuccess({ response })),
-          catchError((error) => of(AuthActions.checkAuthFailure(error)))
+          map((response) => AuthActions.getSignedInUserSuccess({ response })),
+          catchError((error) => of(AuthActions.getSignedInUserFailure(error)))
         )
       )
     )

@@ -89,12 +89,12 @@ export const resetPasswordFailure = createAction(
   props<{ error: Error }>()
 );
 
-export const checkAuth = createAction('[Auth] Check Auth');
-export const checkAuthSuccess = createAction(
-  '[Auth] Check Auth Success',
+export const getSignedInUser = createAction('[Auth] Get Signed In User');
+export const getSignedInUserSuccess = createAction(
+  '[Auth] Get Signed In User Success',
   props<{ response: User }>()
 );
-export const checkAuthFailure = createAction(
-  '[Auth] Check Auth Failure',
+export const getSignedInUserFailure = createAction(
+  '[Auth] Get Signed In User Failure',
   props<{ error: Error }>()
 );

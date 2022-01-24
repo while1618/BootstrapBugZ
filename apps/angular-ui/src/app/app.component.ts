@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { checkAuth } from './auth/+state/auth.actions';
+import { getSignedInUser } from './auth/+state/auth.actions';
 
 @Component({
   selector: 'bootstrapbugz-root',
@@ -11,6 +11,6 @@ export class AppComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.store.dispatch(checkAuth());
+    this.store.dispatch(getSignedInUser());
   }
 }

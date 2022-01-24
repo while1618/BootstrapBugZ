@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AuthState } from '../../../auth/+state/auth.reducer';
-import { getIsAuthenticated, getUser } from '../../../auth/+state/auth.selectors';
+import { getIsAuthenticated, getSignedInUser } from '../../../auth/+state/auth.selectors';
 import { User } from '../../../user/models/user.models';
 
 @Component({
@@ -18,6 +18,6 @@ export class NavMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated$ = this.store.select(getIsAuthenticated);
-    this.user$ = this.store.select(getUser);
+    this.user$ = this.store.select(getSignedInUser);
   }
 }

@@ -6,14 +6,14 @@ export const AUTH_FEATURE_KEY = 'auth';
 
 export interface AuthState {
   isAuthenticated: boolean;
-  user: User;
+  signedInUser: User;
   error: Error;
   loading: boolean;
 }
 
 export const initialState: AuthState = {
   isAuthenticated: false,
-  user: null,
+  signedInUser: null,
   error: null,
   loading: false,
 };
@@ -24,13 +24,13 @@ const authReducer = createReducer(
   on(AuthActions.signUp, (state, action) => ({ ...state, loading: true })),
   on(AuthActions.signUpSuccess, (state, action) => ({
     ...state,
-    user: action.response,
+    signedInUser: action.response,
     error: null,
     loading: false,
   })),
   on(AuthActions.signUpFailure, (state, action) => ({
     ...state,
-    user: null,
+    signedInUser: null,
     error: action.error,
     loading: false,
   })),
@@ -59,14 +59,14 @@ const authReducer = createReducer(
   on(AuthActions.signInSuccess, (state, action) => ({
     ...state,
     isAuthenticated: true,
-    user: action.response.user,
+    signedInUser: action.response.user,
     error: null,
     loading: false,
   })),
   on(AuthActions.signInFailure, (state, action) => ({
     ...state,
     isAuthenticated: false,
-    user: null,
+    signedInUser: null,
     error: action.error,
     loading: false,
   })),
@@ -87,7 +87,7 @@ const authReducer = createReducer(
   on(AuthActions.signOutSuccess, (state, action) => ({
     ...state,
     isAuthenticated: false,
-    user: null,
+    signedInUser: null,
     loading: false,
   })),
   on(AuthActions.signOutFailure, (state, action) => ({
@@ -100,7 +100,7 @@ const authReducer = createReducer(
   on(AuthActions.signOutFromAllDevicesSuccess, (state, action) => ({
     ...state,
     isAuthenticated: false,
-    user: null,
+    signedInUser: null,
     loading: false,
   })),
   on(AuthActions.signOutFromAllDevicesFailure, (state, action) => ({
@@ -125,18 +125,18 @@ const authReducer = createReducer(
     loading: false,
   })),
 
-  on(AuthActions.checkAuth, (state, action) => ({ ...state, loading: true })),
-  on(AuthActions.checkAuthSuccess, (state, action) => ({
+  on(AuthActions.getSignedInUser, (state, action) => ({ ...state, loading: true })),
+  on(AuthActions.getSignedInUserSuccess, (state, action) => ({
     ...state,
     isAuthenticated: true,
-    user: action.response,
+    signedInUser: action.response,
     error: null,
     loading: false,
   })),
-  on(AuthActions.checkAuthFailure, (state, action) => ({
+  on(AuthActions.getSignedInUserFailure, (state, action) => ({
     ...state,
     isAuthenticated: false,
-    user: null,
+    signedInUser: null,
     error: action.error,
     loading: false,
   }))

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AuthState } from '../../../auth/+state/auth.reducer';
-import { getLoading, getUser } from '../../../auth/+state/auth.selectors';
+import { getLoading, getSignedInUser } from '../../../auth/+state/auth.selectors';
 import { MatchPassword } from '../../../auth/validators/match-password';
 import { UniqueEmail } from '../../../auth/validators/unique-email';
 import { UniqueUsername } from '../../../auth/validators/unique-username';
@@ -59,7 +59,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading$ = this.store.select(getLoading);
-    this.store.select(getUser).subscribe((user) => {
+    this.store.select(getSignedInUser).subscribe((user) => {
       if (user) {
         this.updateProfileForm.setValue({
           firstName: user.firstName,
