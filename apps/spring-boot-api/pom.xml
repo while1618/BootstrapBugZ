@@ -18,7 +18,7 @@
   <properties>
     <java.version>17</java.version>
     <lombok.version>1.18.22</lombok.version>
-    <gson.version>2.8.9</gson.version>
+    <gson.version>2.9.0</gson.version>
     <guava.version>31.0.1-jre</guava.version>
     <jwt.version>3.18.3</jwt.version>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
