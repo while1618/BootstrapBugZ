@@ -25,6 +25,7 @@
     <commons-beanutils.version>1.9.4</commons-beanutils.version>
     <commons-validator.version>1.7</commons-validator.version>
     <jacoco.version>0.8.7</jacoco.version>
+    <jedis.version>3.8.0</jedis.version>
     <testcontainers.version>1.17.6</testcontainers.version>
     <maven-compiler-plugin.version>3.9.0</maven-compiler-plugin.version>
   </properties>
@@ -41,6 +42,7 @@
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
+      <version>${jedis.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
