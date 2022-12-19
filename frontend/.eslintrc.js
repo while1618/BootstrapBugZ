@@ -12,7 +12,8 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
       parserOptions: {
-        project: ['frontend/tsconfig.json'],
+        tsconfigRootDir: __dirname,
+        project: ['tsconfig.json'],
         createDefaultProgram: true,
       },
       extends: ['airbnb-typescript/base', 'prettier', 'plugin:prettier/recommended'],
