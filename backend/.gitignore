@@ -31,3 +31,10 @@ build/
 .settings
 .springBeans
 .sts4-cache
+
+# spring-boot-api
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
