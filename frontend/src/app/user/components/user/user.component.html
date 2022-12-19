@@ -1,0 +1,13 @@
+<ng-container *ngIf="loading$ | async; else noLoading">
+  <bootstrapbugz-loader></bootstrapbugz-loader>
+</ng-container>
+<ng-template #noLoading>
+  <ng-container *ngIf="user$ | async as user">
+    <p>first name: {{ user[0]?.firstName }}</p>
+    <p>last name: {{ user[0]?.lastName }}</p>
+    <p>username: {{ user[0]?.username }}</p>
+    <ng-container *ngIf="user[0]?.username === (signedInUser$ | async)?.username">
+      <p>email: {{ user[0]?.email }}</p>
+    </ng-container>
+  </ng-container>
+</ng-template>
