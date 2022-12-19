@@ -8,7 +8,7 @@ import { MatchPassword } from '../../../auth/validators/match-password';
 import { UniqueEmail } from '../../../auth/validators/unique-email';
 import { UniqueUsername } from '../../../auth/validators/unique-username';
 import { NAME_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '../../../shared/constants/regex';
-import { ChangePasswordRequest, UpdateProfileRequest } from '../../models/user.requests';
+// import { ChangePasswordRequest, UpdateProfileRequest } from '../../models/user.requests';
 
 @Component({
   selector: 'bootstrapbugz-settings',
@@ -74,12 +74,12 @@ export class SettingsComponent implements OnInit {
   onProfileUpdate() {
     if (!this.updateProfileForm.valid) return;
 
-    const request = this.updateProfileForm.value as UpdateProfileRequest;
+    // const request = this.updateProfileForm.value as UpdateProfileRequest;
   }
 
   onPasswordChange() {
     if (!this.changePasswordForm.valid) return;
 
-    const request = this.changePasswordForm.value as ChangePasswordRequest;
+    // const request = this.changePasswordForm.value as ChangePasswordRequest;
   }
 }
