@@ -33,9 +33,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<UserDTO> findAll() {
     if (AuthUtil.isAdminSignedIn(roleService))
-      return userRepository.findAllWithRoles().stream()
-          .map(userMapper::userToUserDTO)
-          .toList();
+      return userRepository.findAllWithRoles().stream().map(userMapper::userToUserDTO).toList();
     return userRepository.findAll().stream()
         .map(
             user -> {

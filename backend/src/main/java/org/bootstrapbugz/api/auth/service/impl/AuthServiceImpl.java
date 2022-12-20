@@ -8,13 +8,13 @@ import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
+import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
@@ -121,8 +121,7 @@ public class AuthServiceImpl implements AuthService {
     final String accessToken = accessTokenService.create(userId, roles);
     final String newRefreshToken =
         refreshTokenService.create(userId, roles, AuthUtil.getUserIpAddress(request));
-    return new RefreshTokenDTO(
-        JwtUtil.addBearer(accessToken), JwtUtil.addBearer(newRefreshToken));
+    return new RefreshTokenDTO(JwtUtil.addBearer(accessToken), JwtUtil.addBearer(newRefreshToken));
   }
 
   @Override
