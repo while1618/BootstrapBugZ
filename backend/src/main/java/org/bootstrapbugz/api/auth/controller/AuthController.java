@@ -2,13 +2,13 @@ package org.bootstrapbugz.api.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;

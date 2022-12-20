@@ -258,8 +258,7 @@ class AuthServiceTest {
     var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserDTO =
         new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
-    when(roleService.findAllByNameIn(Set.of(RoleName.USER)))
-        .thenReturn(List.copyOf(roles));
+    when(roleService.findAllByNameIn(Set.of(RoleName.USER))).thenReturn(List.copyOf(roles));
     var actualUserDTO = authService.signedInUser();
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }

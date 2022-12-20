@@ -48,8 +48,7 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindAllUsersWithRolesAndEmails() throws Exception {
-    var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
     mockMvc
         .perform(
             get(Path.USERS)
@@ -71,8 +70,7 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_showEmail() throws Exception {
-    var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var expectedUserDTO =
         new UserDTO(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, null);
     performFindUserByUsername("user", signInDTO.getAccessToken())
@@ -83,10 +81,8 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_hideEmail() throws Exception {
-    var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var expectedUserDTO =
-        new UserDTO(1L, "Admin", "Admin", "admin", null, true, true, null);
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var expectedUserDTO = new UserDTO(1L, "Admin", "Admin", "admin", null, true, true, null);
     performFindUserByUsername("admin", signInDTO.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -95,8 +91,7 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_adminSignedIn() throws Exception {
-    var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
     var expectedUserDTO =
         new UserDTO(
             2L,
@@ -115,8 +110,7 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void findUserByUsernameShouldThrowResourceNotFound() throws Exception {
-    var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var resultActions =
         performFindUserByUsername("unknown", signInDTO.getAccessToken())
             .andExpect(status().isNotFound());

@@ -65,8 +65,7 @@ class UserServiceTest {
         Set.of(new RoleDTO(RoleName.USER.name()), new RoleDTO(RoleName.ADMIN.name()));
     var expectedUserDTOs =
         List.of(
-            new UserDTO(
-                1L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses),
+            new UserDTO(1L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses),
             new UserDTO(
                 2L, "Admin", "Admin", "admin", "admin@admin.com", true, true, adminRoleResponses));
     when(roleService.findAllByNameIn(Set.of(RoleName.ADMIN, RoleName.USER)))
@@ -88,8 +87,7 @@ class UserServiceTest {
 
   @Test
   void itShouldFindUserByUsername_hideEmail() {
-    var expectedUserDTO =
-        new UserDTO(2L, "Admin", "Admin", "admin", null, true, true, null);
+    var expectedUserDTO = new UserDTO(2L, "Admin", "Admin", "admin", null, true, true, null);
     when(userRepository.findByUsername("admin")).thenReturn(Optional.of(admin));
     var actualUserDTO = userService.findByUsername("admin");
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
@@ -100,8 +98,7 @@ class UserServiceTest {
     TestUtil.setAuth(auth, securityContext, admin);
     var userRoleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserDTO =
-        new UserDTO(
-            1L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses);
+        new UserDTO(1L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses);
     when(roleService.findAllByNameIn(Set.of(RoleName.ADMIN, RoleName.USER)))
         .thenReturn(List.copyOf(adminRoles));
     when(userRepository.findByUsernameWithRoles("test")).thenReturn(Optional.of(user));

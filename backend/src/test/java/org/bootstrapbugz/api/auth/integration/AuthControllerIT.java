@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ForgotPasswordTokenServiceImpl;
+import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
@@ -18,7 +19,6 @@ import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -178,8 +178,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldRefreshToken() throws Exception {
-    var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var refreshTokenRequest = new RefreshTokenRequest(signInDTO.getRefreshToken());
     var resultActions =
         mockMvc
@@ -191,17 +190,14 @@ class AuthControllerIT extends DatabaseContainers {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     var refreshTokenDTO =
         objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(),
-            RefreshTokenDTO.class);
+            resultActions.andReturn().getResponse().getContentAsString(), RefreshTokenDTO.class);
     assertThat(refreshTokenDTO.getAccessToken()).isNotEqualTo(signInDTO.getAccessToken());
-    assertThat(refreshTokenDTO.getRefreshToken())
-        .isNotEqualTo(signInDTO.getRefreshToken());
+    assertThat(refreshTokenDTO.getRefreshToken()).isNotEqualTo(signInDTO.getRefreshToken());
   }
 
   @Test
   void itShouldSignOut() throws Exception {
-    var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out")
@@ -241,8 +237,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldSignOutFromAllDevices() throws Exception {
-    var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices")
@@ -326,8 +321,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldRetrieveSignedInUser() throws Exception {
-    var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserDTO =
         new UserDTO(
