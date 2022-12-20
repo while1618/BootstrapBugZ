@@ -48,13 +48,13 @@ class UserServiceTest {
 
   @Test
   void itShouldFindAllUsersWithoutRolesAndEmails() {
-    var expectedUserResponses =
+    var expectedUserDTOs =
         List.of(
             new UserDTO(1L, "Test", "Test", "test", null, true, true, null),
             new UserDTO(2L, "Admin", "Admin", "admin", null, true, true, null));
     when(userRepository.findAll()).thenReturn(List.of(user, admin));
-    var actualUserResponses = userService.findAll();
-    assertThat(actualUserResponses).isEqualTo(expectedUserResponses);
+    var actualUserDTOs = userService.findAll();
+    assertThat(actualUserDTOs).isEqualTo(expectedUserDTOs);
   }
 
   @Test
@@ -63,7 +63,7 @@ class UserServiceTest {
     var userRoleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
     var adminRoleResponses =
         Set.of(new RoleDTO(RoleName.USER.name()), new RoleDTO(RoleName.ADMIN.name()));
-    var expectedUserResponses =
+    var expectedUserDTOs =
         List.of(
             new UserDTO(
                 1L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses),
@@ -72,41 +72,41 @@ class UserServiceTest {
     when(roleService.findAllByNameIn(Set.of(RoleName.ADMIN, RoleName.USER)))
         .thenReturn(List.copyOf(adminRoles));
     when(userRepository.findAllWithRoles()).thenReturn(List.of(user, admin));
-    var actualUserResponses = userService.findAll();
-    assertThat(actualUserResponses).isEqualTo(expectedUserResponses);
+    var actualUserDTOs = userService.findAll();
+    assertThat(actualUserDTOs).isEqualTo(expectedUserDTOs);
   }
 
   @Test
   void itShouldFindUserByUsername_showEmail() {
     TestUtil.setAuth(auth, securityContext, user);
-    var expectedUserResponse =
+    var expectedUserDTO =
         new UserDTO(1L, "Test", "Test", "test", "test@test.com", true, true, null);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
-    var actualUserResponse = userService.findByUsername("test");
-    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
+    var actualUserDTO = userService.findByUsername("test");
+    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test
   void itShouldFindUserByUsername_hideEmail() {
-    var expectedUserResponse =
+    var expectedUserDTO =
         new UserDTO(2L, "Admin", "Admin", "admin", null, true, true, null);
     when(userRepository.findByUsername("admin")).thenReturn(Optional.of(admin));
-    var actualUserResponse = userService.findByUsername("admin");
-    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
+    var actualUserDTO = userService.findByUsername("admin");
+    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test
   void itShouldFindUserByUsername_adminSignedIn() {
     TestUtil.setAuth(auth, securityContext, admin);
     var userRoleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserResponse =
+    var expectedUserDTO =
         new UserDTO(
             1L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses);
     when(roleService.findAllByNameIn(Set.of(RoleName.ADMIN, RoleName.USER)))
         .thenReturn(List.copyOf(adminRoles));
     when(userRepository.findByUsernameWithRoles("test")).thenReturn(Optional.of(user));
-    var actualUserResponse = userService.findByUsername("test");
-    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
+    var actualUserDTO = userService.findByUsername("test");
+    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test

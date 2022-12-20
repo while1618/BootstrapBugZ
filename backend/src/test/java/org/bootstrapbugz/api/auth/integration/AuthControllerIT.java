@@ -53,7 +53,7 @@ class AuthControllerIT extends DatabaseContainers {
         new SignUpRequest(
             "Test", "Test", "test", "test@bootstrapbugz.com", "qwerty123", "qwerty123");
     var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserResponse =
+    var expectedUserDTO =
         new UserDTO(
             8L, "Test", "Test", "test", "test@bootstrapbugz.com", false, true, roleResponses);
     var resultActions =
@@ -64,10 +64,10 @@ class AuthControllerIT extends DatabaseContainers {
                     .content(objectMapper.writeValueAsString(signUpRequest)))
             .andExpect(status().isCreated())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    var actualUserResponse =
+    var actualUserDTO =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), UserDTO.class);
-    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
+    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test
@@ -178,9 +178,9 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldRefreshToken() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var refreshTokenRequest = new RefreshTokenRequest(signInResponse.getRefreshToken());
+    var refreshTokenRequest = new RefreshTokenRequest(signInDTO.getRefreshToken());
     var resultActions =
         mockMvc
             .perform(
@@ -189,27 +189,27 @@ class AuthControllerIT extends DatabaseContainers {
                     .content(objectMapper.writeValueAsString(refreshTokenRequest)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    var refreshTokenResponse =
+    var refreshTokenDTO =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(),
             RefreshTokenDTO.class);
-    assertThat(refreshTokenResponse.getAccessToken()).isNotEqualTo(signInResponse.getAccessToken());
-    assertThat(refreshTokenResponse.getRefreshToken())
-        .isNotEqualTo(signInResponse.getRefreshToken());
+    assertThat(refreshTokenDTO.getAccessToken()).isNotEqualTo(signInDTO.getAccessToken());
+    assertThat(refreshTokenDTO.getRefreshToken())
+        .isNotEqualTo(signInDTO.getRefreshToken());
   }
 
   @Test
   void itShouldSignOut() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken()))
+                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
         .andExpect(status().isNoContent());
-    jwtShouldBeInvalid(signInResponse.getAccessToken());
-    refreshTokenShouldBeInvalid(signInResponse.getRefreshToken());
+    jwtShouldBeInvalid(signInDTO.getAccessToken());
+    refreshTokenShouldBeInvalid(signInDTO.getRefreshToken());
   }
 
   private void jwtShouldBeInvalid(String token) throws Exception {
@@ -241,16 +241,16 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldSignOutFromAllDevices() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken()))
+                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
         .andExpect(status().isNoContent());
-    jwtShouldBeInvalid(signInResponse.getAccessToken());
-    refreshTokenShouldBeInvalid(signInResponse.getRefreshToken());
+    jwtShouldBeInvalid(signInDTO.getAccessToken());
+    refreshTokenShouldBeInvalid(signInDTO.getRefreshToken());
   }
 
   @Test
@@ -326,10 +326,10 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldRetrieveSignedInUser() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserResponse =
+    var expectedUserDTO =
         new UserDTO(
             2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, roleResponses);
     var resultActions =
@@ -337,13 +337,13 @@ class AuthControllerIT extends DatabaseContainers {
             .perform(
                 get(Path.AUTH + "/signed-in-user")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken()))
+                    .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    var actualUserResponse =
+    var actualUserDTO =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), UserDTO.class);
-    assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
+    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test

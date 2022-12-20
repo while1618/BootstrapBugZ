@@ -56,12 +56,12 @@ class ProfileControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldUpdateUser_newUsernameAndEmail() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty123"));
     var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "updated", "updated@bootstrapbugz.com");
     var roleResponses = Collections.singleton(new RoleDTO(Role.RoleName.USER.name()));
-    var expectedUserResponse =
+    var expectedUserDTO =
         new UserDTO(
             5L,
             "Updated",
@@ -71,20 +71,20 @@ class ProfileControllerIT extends DatabaseContainers {
             false,
             true,
             roleResponses);
-    performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
+    performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
         .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserResponse)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
   }
 
   @Test
   void itShouldUpdateUser_sameUsernameAndEmail() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var updateUserRequest =
         new UpdateProfileRequest(
             "Updated", "Updated", "for.update.2", "for.update.2@bootstrapbugz.com");
     var roleResponses = Collections.singleton(new RoleDTO(Role.RoleName.USER.name()));
-    var expectedUserResponse =
+    var expectedUserDTO =
         new UserDTO(
             6L,
             "Updated",
@@ -94,19 +94,19 @@ class ProfileControllerIT extends DatabaseContainers {
             true,
             true,
             roleResponses);
-    performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
+    performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
         .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserResponse)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
   }
 
   @Test
   void updateUserShouldThrowBadRequest_usernameExists() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "user", "for.update.2@bootstrapbugz.com");
     var resultActions =
-        performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
+        performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
             .andExpect(status().isConflict());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.CONFLICT);
     expectedErrorResponse.addDetails("username", "Username already exists.");
@@ -115,12 +115,12 @@ class ProfileControllerIT extends DatabaseContainers {
 
   @Test
   void updateUserShouldThrowBadRequest_emailExists() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "for.update.2", "user@bootstrapbugz.com");
     var resultActions =
-        performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
+        performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
             .andExpect(status().isConflict());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.CONFLICT);
     expectedErrorResponse.addDetails("email", "Email already exists.");
@@ -129,12 +129,12 @@ class ProfileControllerIT extends DatabaseContainers {
 
   @Test
   void updateUserShouldThrowBadRequest_invalidParameters() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var updateUserRequest =
         new UpdateProfileRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
     var resultActions =
-        performUpdateUser(updateUserRequest, signInResponse.getAccessToken())
+        performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("firstName", "Invalid first name.");
@@ -146,21 +146,21 @@ class ProfileControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldChangePassword() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.3", "qwerty123"));
     var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
-    performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
+    performChangePassword(changePasswordRequest, signInDTO.getAccessToken())
         .andExpect(status().isNoContent());
   }
 
   @Test
   void changePasswordShouldThrowBadRequest_oldPasswordDoNotMatch() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var changePasswordRequest =
         new ChangePasswordRequest("qwerty12345", "qwerty1234", "qwerty1234");
     var resultActions =
-        performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
+        performChangePassword(changePasswordRequest, signInDTO.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("oldPassword", "Wrong old password.");
@@ -169,11 +169,11 @@ class ProfileControllerIT extends DatabaseContainers {
 
   @Test
   void changePasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty12345");
     var resultActions =
-        performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
+        performChangePassword(changePasswordRequest, signInDTO.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("Passwords do not match.");
@@ -182,11 +182,11 @@ class ProfileControllerIT extends DatabaseContainers {
 
   @Test
   void changePasswordShouldThrowBadRequest_invalidParameters() throws Exception {
-    var signInResponse =
+    var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
     var changePasswordRequest = new ChangePasswordRequest("invalid", "invalid", "invalid");
     var resultActions =
-        performChangePassword(changePasswordRequest, signInResponse.getAccessToken())
+        performChangePassword(changePasswordRequest, signInDTO.getAccessToken())
             .andExpect(status().isBadRequest());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("newPassword", "Invalid password.");
