@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface UserMapper {
-  UserDTO userToUserResponse(User user);
+  UserDTO userToUserDTO(User user);
 }

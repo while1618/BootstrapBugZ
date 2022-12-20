@@ -68,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
     final var user = createUser(signUpRequest);
     final var accessToken = confirmRegistrationTokenService.create(user.getId());
     confirmRegistrationTokenService.sendToEmail(user, accessToken);
-    return userMapper.userToUserResponse(user);
+    return userMapper.userToUserDTO(user);
   }
 
   private User createUser(SignUpRequest signUpRequest) {
@@ -166,7 +166,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserDTO signedInUser() {
-    return userMapper.userToUserResponse(AuthUtil.findSignedInUser(roleService));
+    return userMapper.userToUserDTO(AuthUtil.findSignedInUser(roleService));
   }
 
   @Override

@@ -99,7 +99,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         new SignInDTO()
             .setAccessToken(JwtUtil.addBearer(accessToken))
             .setRefreshToken(JwtUtil.addBearer(refreshToken))
-            .setUser(userMapper.userToUserResponse(user));
+            .setUser(userMapper.userToUserDTO(user));
     writeToResponse(response, signInResponse);
   }
 
