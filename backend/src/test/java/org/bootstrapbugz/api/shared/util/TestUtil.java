@@ -46,11 +46,11 @@ public class TestUtil {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(signInRequest)))
             .andExpect(status().isOk());
-    var signInResponse =
+    var signInDTO =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), SignInDTO.class);
-    signInResponse.setAccessToken(JwtUtil.addBearer(signInResponse.getAccessToken()));
-    return signInResponse;
+    signInDTO.setAccessToken(JwtUtil.addBearer(signInDTO.getAccessToken()));
+    return signInDTO;
   }
 
   public static void setAuth(Authentication auth, SecurityContext securityContext, User user) {
