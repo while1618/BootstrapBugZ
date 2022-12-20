@@ -12,7 +12,7 @@ import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
-import org.bootstrapbugz.api.auth.payload.response.SignInResponse;
+import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -96,7 +96,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     final String accessToken = accessTokenService.create(user.getId(), user.getRoles());
     final String refreshToken = findRefreshToken(user.getId(), user.getRoles(), ipAddress);
     final var signInResponse =
-        new SignInResponse()
+        new SignInDTO()
             .setAccessToken(JwtUtil.addBearer(accessToken))
             .setRefreshToken(JwtUtil.addBearer(refreshToken))
             .setUser(userMapper.userToUserResponse(user));
@@ -109,9 +109,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     return refreshToken;
   }
 
-  private void writeToResponse(HttpServletResponse response, SignInResponse signInResponse)
+  private void writeToResponse(HttpServletResponse response, SignInDTO signInDTO)
       throws IOException {
-    final String jsonSignInResponse = new Gson().toJson(signInResponse);
+    final String jsonSignInResponse = new Gson().toJson(signInDTO);
     final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     out.print(jsonSignInResponse);

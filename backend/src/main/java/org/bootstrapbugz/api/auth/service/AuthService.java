@@ -7,17 +7,17 @@ import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.payload.response.RefreshTokenResponse;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 
 public interface AuthService {
-  UserResponse signUp(SignUpRequest signUpRequest);
+  UserDTO signUp(SignUpRequest signUpRequest);
 
   void resendConfirmationEmail(ResendConfirmationEmailRequest resendConfirmationEmailRequest);
 
   void confirmRegistration(ConfirmRegistrationRequest confirmRegistrationRequest);
 
-  RefreshTokenResponse refreshToken(
+  RefreshTokenDTO refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request);
 
   void signOut(HttpServletRequest request);
@@ -28,7 +28,7 @@ public interface AuthService {
 
   void resetPassword(ResetPasswordRequest resetPasswordRequest);
 
-  UserResponse signedInUser();
+  UserDTO signedInUser();
 
   boolean isUsernameAvailable(String username);
 

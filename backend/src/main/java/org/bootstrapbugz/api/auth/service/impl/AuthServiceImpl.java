@@ -14,7 +14,7 @@ import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.payload.response.RefreshTokenResponse;
+import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
@@ -24,7 +24,7 @@ import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.RoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public UserResponse signUp(SignUpRequest signUpRequest) {
+  public UserDTO signUp(SignUpRequest signUpRequest) {
     final var user = createUser(signUpRequest);
     final var accessToken = confirmRegistrationTokenService.create(user.getId());
     confirmRegistrationTokenService.sendToEmail(user, accessToken);
@@ -111,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public RefreshTokenResponse refreshToken(
+  public RefreshTokenDTO refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
     final String oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.getRefreshToken());
     refreshTokenService.check(oldRefreshToken);
@@ -121,7 +121,7 @@ public class AuthServiceImpl implements AuthService {
     final String accessToken = accessTokenService.create(userId, roles);
     final String newRefreshToken =
         refreshTokenService.create(userId, roles, AuthUtil.getUserIpAddress(request));
-    return new RefreshTokenResponse(
+    return new RefreshTokenDTO(
         JwtUtil.addBearer(accessToken), JwtUtil.addBearer(newRefreshToken));
   }
 
@@ -165,7 +165,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public UserResponse signedInUser() {
+  public UserDTO signedInUser() {
     return userMapper.userToUserResponse(AuthUtil.findSignedInUser(roleService));
   }
 

@@ -14,8 +14,8 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.payload.response.RoleResponse;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -74,7 +74,7 @@ class UserControllerIT extends DatabaseContainers {
     var signInResponse =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var expectedUserResponse =
-        new UserResponse(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, null);
+        new UserDTO(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, null);
     performFindUserByUsername("user", signInResponse.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -86,7 +86,7 @@ class UserControllerIT extends DatabaseContainers {
     var signInResponse =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var expectedUserResponse =
-        new UserResponse(1L, "Admin", "Admin", "admin", null, true, true, null);
+        new UserDTO(1L, "Admin", "Admin", "admin", null, true, true, null);
     performFindUserByUsername("admin", signInResponse.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -98,7 +98,7 @@ class UserControllerIT extends DatabaseContainers {
     var signInResponse =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
     var expectedUserResponse =
-        new UserResponse(
+        new UserDTO(
             2L,
             "User",
             "User",
@@ -106,7 +106,7 @@ class UserControllerIT extends DatabaseContainers {
             "user@bootstrapbugz.com",
             true,
             true,
-            Set.of(new RoleResponse(Role.RoleName.USER.name())));
+            Set.of(new RoleDTO(Role.RoleName.USER.name())));
     performFindUserByUsername("user", signInResponse.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))

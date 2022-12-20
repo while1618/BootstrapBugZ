@@ -36,8 +36,8 @@ import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.response.RoleResponse;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.RoleService;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,9 +115,9 @@ class AuthServiceTest {
 
   @Test
   void itShouldSignUp() {
-    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserResponse =
-        new UserResponse(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
+        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
     var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@test.com", "qwerty123", "qwerty123");
     when(userRepository.save(any(User.class))).thenReturn(user);
@@ -255,9 +255,9 @@ class AuthServiceTest {
   @Test
   void itShouldReceiveSignedInUser() {
     TestUtil.setAuth(auth, securityContext, user);
-    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserResponse =
-        new UserResponse(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
+        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
     when(roleService.findAllByNameIn(Set.of(RoleName.USER)))
         .thenReturn(List.copyOf(roles));
     var actualUserResponse = authService.signedInUser();

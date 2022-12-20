@@ -13,10 +13,10 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
-import org.bootstrapbugz.api.user.payload.response.RoleResponse;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -60,9 +60,9 @@ class ProfileControllerIT extends DatabaseContainers {
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty123"));
     var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "updated", "updated@bootstrapbugz.com");
-    var roleResponses = Collections.singleton(new RoleResponse(Role.RoleName.USER.name()));
+    var roleResponses = Collections.singleton(new RoleDTO(Role.RoleName.USER.name()));
     var expectedUserResponse =
-        new UserResponse(
+        new UserDTO(
             5L,
             "Updated",
             "Updated",
@@ -83,9 +83,9 @@ class ProfileControllerIT extends DatabaseContainers {
     var updateUserRequest =
         new UpdateProfileRequest(
             "Updated", "Updated", "for.update.2", "for.update.2@bootstrapbugz.com");
-    var roleResponses = Collections.singleton(new RoleResponse(Role.RoleName.USER.name()));
+    var roleResponses = Collections.singleton(new RoleDTO(Role.RoleName.USER.name()));
     var expectedUserResponse =
-        new UserResponse(
+        new UserDTO(
             6L,
             "Updated",
             "Updated",
