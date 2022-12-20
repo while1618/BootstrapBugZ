@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.user.payload.response;
+package org.bootstrapbugz.api.user.payload.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class RoleResponse {
+public class RoleDTO {
   private String name;
 }

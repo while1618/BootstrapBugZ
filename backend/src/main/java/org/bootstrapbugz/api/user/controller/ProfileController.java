@@ -2,9 +2,9 @@ package org.bootstrapbugz.api.user.controller;
 
 import javax.validation.Valid;
 import org.bootstrapbugz.api.shared.constants.Path;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.service.ProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,7 +22,7 @@ public class ProfileController {
   }
 
   @PutMapping("/update")
-  public ResponseEntity<UserResponse> update(
+  public ResponseEntity<UserDTO> update(
       @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
     return ResponseEntity.ok(profileService.update(updateProfileRequest));
   }

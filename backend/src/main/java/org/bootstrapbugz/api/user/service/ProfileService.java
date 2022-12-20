@@ -2,10 +2,10 @@ package org.bootstrapbugz.api.user.service;
 
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 
 public interface ProfileService {
-  UserResponse update(UpdateProfileRequest updateProfileRequest);
+  UserDTO update(UpdateProfileRequest updateProfileRequest);
 
   void changePassword(ChangePasswordRequest changePasswordRequest);
 }

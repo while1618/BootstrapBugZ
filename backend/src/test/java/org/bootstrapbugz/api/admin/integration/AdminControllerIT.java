@@ -9,7 +9,7 @@ import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
-import org.bootstrapbugz.api.auth.payload.response.SignInResponse;
+import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -38,11 +38,11 @@ class AdminControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
-  private SignInResponse signInResponse;
+  private SignInDTO signInDTO;
 
   @BeforeAll
   void setUp() throws Exception {
-    signInResponse =
+    signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
   }
 
@@ -54,7 +54,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/update-role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken())
+                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
         .andExpect(status().isNoContent());
   }
@@ -72,7 +72,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/" + path)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken())
+                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }
@@ -84,7 +84,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             delete(Path.ADMIN + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInResponse.getAccessToken())
+                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }

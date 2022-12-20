@@ -9,9 +9,9 @@ import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.ProfileService;
 import org.bootstrapbugz.api.user.service.RoleService;
@@ -49,7 +49,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public UserResponse update(UpdateProfileRequest updateProfileRequest) {
+  public UserDTO update(UpdateProfileRequest updateProfileRequest) {
     final var user = AuthUtil.findSignedInUser(roleService);
     user.setFirstName(updateProfileRequest.getFirstName());
     user.setLastName(updateProfileRequest.getLastName());

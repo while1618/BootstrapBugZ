@@ -8,10 +8,10 @@ import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.payload.response.RefreshTokenResponse;
+import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +32,7 @@ public class AuthController {
   }
 
   @PostMapping("/sign-up")
-  public ResponseEntity<UserResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+  public ResponseEntity<UserDTO> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
     return new ResponseEntity<>(authService.signUp(signUpRequest), HttpStatus.CREATED);
   }
 
@@ -51,7 +51,7 @@ public class AuthController {
   }
 
   @PostMapping("/refresh-token")
-  public ResponseEntity<RefreshTokenResponse> refreshToken(
+  public ResponseEntity<RefreshTokenDTO> refreshToken(
       @Valid @RequestBody RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
     return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest, request));
   }
@@ -83,7 +83,7 @@ public class AuthController {
   }
 
   @GetMapping("/signed-in-user")
-  public ResponseEntity<UserResponse> signedInUser() {
+  public ResponseEntity<UserDTO> signedInUser() {
     return ResponseEntity.ok(authService.signedInUser());
   }
 

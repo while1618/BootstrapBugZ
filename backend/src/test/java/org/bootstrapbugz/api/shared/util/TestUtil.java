@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
-import org.bootstrapbugz.api.auth.payload.response.SignInResponse;
+import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
@@ -37,7 +37,7 @@ public class TestUtil {
         .isEqualTo(new JSONArray(expectedResponse.getDetails().toString()));
   }
 
-  public static SignInResponse signIn(
+  public static SignInDTO signIn(
       MockMvc mockMvc, ObjectMapper objectMapper, SignInRequest signInRequest) throws Exception {
     var resultActions =
         mockMvc
@@ -48,7 +48,7 @@ public class TestUtil {
             .andExpect(status().isOk());
     var signInResponse =
         objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(), SignInResponse.class);
+            resultActions.andReturn().getResponse().getContentAsString(), SignInDTO.class);
     signInResponse.setAccessToken(JwtUtil.addBearer(signInResponse.getAccessToken()));
     return signInResponse;
   }

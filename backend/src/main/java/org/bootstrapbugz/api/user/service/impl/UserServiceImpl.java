@@ -6,7 +6,7 @@ import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.RoleService;
 import org.bootstrapbugz.api.user.service.UserService;
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserResponse> findAll() {
+  public List<UserDTO> findAll() {
     if (AuthUtil.isAdminSignedIn(roleService))
       return userRepository.findAllWithRoles().stream()
           .map(userMapper::userToUserResponse)
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserResponse findByUsername(String username) {
+  public UserDTO findByUsername(String username) {
     if (AuthUtil.isAdminSignedIn(roleService))
       return userMapper.userToUserResponse(userForAdmin(username));
     return userMapper.userToUserResponse(userForNonAdmin(username));

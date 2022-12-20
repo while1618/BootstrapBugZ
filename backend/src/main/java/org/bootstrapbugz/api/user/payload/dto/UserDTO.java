@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.user.payload.response;
+package org.bootstrapbugz.api.user.payload.dto;
 
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class UserResponse {
+public class UserDTO {
   private Long id;
   private String firstName;
   private String lastName;
@@ -22,5 +22,5 @@ public class UserResponse {
   private String email;
   private boolean activated;
   private boolean nonLocked;
-  private Set<RoleResponse> roles;
+  private Set<RoleDTO> roles;
 }

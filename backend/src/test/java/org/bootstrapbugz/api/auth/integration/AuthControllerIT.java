@@ -18,15 +18,15 @@ import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.payload.response.RefreshTokenResponse;
+import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.bootstrapbugz.api.user.payload.response.RoleResponse;
-import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -52,9 +52,9 @@ class AuthControllerIT extends DatabaseContainers {
     var signUpRequest =
         new SignUpRequest(
             "Test", "Test", "test", "test@bootstrapbugz.com", "qwerty123", "qwerty123");
-    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserResponse =
-        new UserResponse(
+        new UserDTO(
             8L, "Test", "Test", "test", "test@bootstrapbugz.com", false, true, roleResponses);
     var resultActions =
         mockMvc
@@ -66,7 +66,7 @@ class AuthControllerIT extends DatabaseContainers {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     var actualUserResponse =
         objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(), UserResponse.class);
+            resultActions.andReturn().getResponse().getContentAsString(), UserDTO.class);
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
   }
 
@@ -192,7 +192,7 @@ class AuthControllerIT extends DatabaseContainers {
     var refreshTokenResponse =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(),
-            RefreshTokenResponse.class);
+            RefreshTokenDTO.class);
     assertThat(refreshTokenResponse.getAccessToken()).isNotEqualTo(signInResponse.getAccessToken());
     assertThat(refreshTokenResponse.getRefreshToken())
         .isNotEqualTo(signInResponse.getRefreshToken());
@@ -328,9 +328,9 @@ class AuthControllerIT extends DatabaseContainers {
   void itShouldRetrieveSignedInUser() throws Exception {
     var signInResponse =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
+    var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserResponse =
-        new UserResponse(
+        new UserDTO(
             2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, roleResponses);
     var resultActions =
         mockMvc
@@ -342,7 +342,7 @@ class AuthControllerIT extends DatabaseContainers {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     var actualUserResponse =
         objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(), UserResponse.class);
+            resultActions.andReturn().getResponse().getContentAsString(), UserDTO.class);
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
   }
 
