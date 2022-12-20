@@ -8,25 +8,31 @@ import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.bootstrapbugz.api.user.service.RoleService;
 import org.bootstrapbugz.api.user.service.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
+  private final RoleService roleService;
   private final MessageService messageService;
   private final UserMapper userMapper;
 
   public UserServiceImpl(
-      UserRepository userRepository, MessageService messageService, UserMapper userMapper) {
+      UserRepository userRepository,
+      RoleService roleService,
+      MessageService messageService,
+      UserMapper userMapper) {
     this.userRepository = userRepository;
+    this.roleService = roleService;
     this.messageService = messageService;
     this.userMapper = userMapper;
   }
 
   @Override
   public List<UserResponse> findAll() {
-    if (AuthUtil.isAdminSignedIn())
+    if (AuthUtil.isAdminSignedIn(roleService))
       return userRepository.findAllWithRoles().stream()
           .map(userMapper::userToUserResponse)
           .toList();
@@ -42,7 +48,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse findByUsername(String username) {
-    if (AuthUtil.isAdminSignedIn()) return userMapper.userToUserResponse(userForAdmin(username));
+    if (AuthUtil.isAdminSignedIn(roleService))
+      return userMapper.userToUserResponse(userForAdmin(username));
     return userMapper.userToUserResponse(userForNonAdmin(username));
   }
 
@@ -61,7 +68,7 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     user.setRoles(null);
     if (!(AuthUtil.isSignedIn()
-        && AuthUtil.findSignedInUser().getUsername().equals(user.getUsername())))
+        && AuthUtil.findSignedInUser(roleService).getUsername().equals(user.getUsername())))
       user.setEmail(null);
     return user;
   }

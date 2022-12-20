@@ -112,6 +112,7 @@ class UserRepositoryIT extends DatabaseContainers {
         .usingRecursiveComparison()
         .ignoringFields("id")
         .ignoringFields("password")
+        .ignoringFields("roles.id")
         .isEqualTo(expectedUser);
   }
 

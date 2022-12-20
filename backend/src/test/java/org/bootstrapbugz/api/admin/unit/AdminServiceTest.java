@@ -18,6 +18,7 @@ import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.bootstrapbugz.api.user.service.RoleService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -40,6 +41,7 @@ class AdminServiceTest {
       new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, false, false, userRoles);
 
   @Mock private UserRepository userRepository;
+  @Mock private RoleService roleService;
   @Mock private AccessTokenService accessTokenService;
   @Mock private RefreshTokenService refreshTokenService;
   @Mock private Authentication auth;
@@ -55,6 +57,8 @@ class AdminServiceTest {
         new User(2L, "Test", "Test", "test", "test@test.com", null, true, true, adminRoles);
     when(userRepository.findAllByUsernameIn(updateRolesRequest.getUsernames()))
         .thenReturn(List.of(user));
+    when(roleService.findAllByNameIn(updateRolesRequest.getRoleNames()))
+        .thenReturn(List.copyOf(adminRoles));
     adminService.updateRole(updateRolesRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));

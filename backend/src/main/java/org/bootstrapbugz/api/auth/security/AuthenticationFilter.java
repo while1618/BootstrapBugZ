@@ -21,6 +21,7 @@ import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
+import org.bootstrapbugz.api.user.service.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final AuthenticationManager authenticationManager;
+  private final RoleService roleService;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
   private final UserMapper userMapper;
@@ -40,11 +42,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
   public AuthenticationFilter(
       AuthenticationManager authenticationManager,
+      RoleService roleService,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
       UserMapper userMapper,
       MessageService messageService) {
     this.authenticationManager = authenticationManager;
+    this.roleService = roleService;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
     this.userMapper = userMapper;
@@ -87,7 +91,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    final var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal());
+    final var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal(), roleService);
     final String ipAddress = AuthUtil.getUserIpAddress(request);
     final String accessToken = accessTokenService.create(user.getId(), user.getRoles());
     final String refreshToken = findRefreshToken(user.getId(), user.getRoles(), ipAddress);
