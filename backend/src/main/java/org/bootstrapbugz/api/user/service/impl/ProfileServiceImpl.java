@@ -55,7 +55,7 @@ public class ProfileServiceImpl implements ProfileService {
     user.setLastName(updateProfileRequest.getLastName());
     tryToSetUsername(user, updateProfileRequest.getUsername());
     tryToSetEmail(user, updateProfileRequest.getEmail());
-    return userMapper.userToUserResponse(userRepository.save(user));
+    return userMapper.userToUserDTO(userRepository.save(user));
   }
 
   private void tryToSetUsername(User user, String username) {

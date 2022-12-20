@@ -34,14 +34,14 @@ public class UserServiceImpl implements UserService {
   public List<UserDTO> findAll() {
     if (AuthUtil.isAdminSignedIn(roleService))
       return userRepository.findAllWithRoles().stream()
-          .map(userMapper::userToUserResponse)
+          .map(userMapper::userToUserDTO)
           .toList();
     return userRepository.findAll().stream()
         .map(
             user -> {
               user.setRoles(null);
               user.setEmail(null);
-              return userMapper.userToUserResponse(user);
+              return userMapper.userToUserDTO(user);
             })
         .toList();
   }
@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDTO findByUsername(String username) {
     if (AuthUtil.isAdminSignedIn(roleService))
-      return userMapper.userToUserResponse(userForAdmin(username));
-    return userMapper.userToUserResponse(userForNonAdmin(username));
+      return userMapper.userToUserDTO(userForAdmin(username));
+    return userMapper.userToUserDTO(userForNonAdmin(username));
   }
 
   private User userForAdmin(String username) {
