@@ -16,7 +16,9 @@ import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.response.RoleResponse;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
+import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.bootstrapbugz.api.user.service.RoleService;
 import org.bootstrapbugz.api.user.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +38,8 @@ class UserServiceTest {
   private final User admin =
       new User(2L, "Admin", "Admin", "admin", "admin@admin.com", null, true, true, adminRoles);
   @Mock private UserRepository userRepository;
+  @Mock private RoleRepository roleRepository;
+  @Mock private RoleService roleService;
   @Mock private MessageService messageService;
   @Spy private UserMapperImpl userMapper;
   @Mock private Authentication auth;
@@ -65,6 +69,8 @@ class UserServiceTest {
                 1L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses),
             new UserResponse(
                 2L, "Admin", "Admin", "admin", "admin@admin.com", true, true, adminRoleResponses));
+    when(roleService.findAllByNameIn(Set.of(RoleName.ADMIN, RoleName.USER)))
+        .thenReturn(List.copyOf(adminRoles));
     when(userRepository.findAllWithRoles()).thenReturn(List.of(user, admin));
     var actualUserResponses = userService.findAll();
     assertThat(actualUserResponses).isEqualTo(expectedUserResponses);
@@ -96,6 +102,8 @@ class UserServiceTest {
     var expectedUserResponse =
         new UserResponse(
             1L, "Test", "Test", "test", "test@test.com", true, true, userRoleResponses);
+    when(roleService.findAllByNameIn(Set.of(RoleName.ADMIN, RoleName.USER)))
+        .thenReturn(List.copyOf(adminRoles));
     when(userRepository.findByUsernameWithRoles("test")).thenReturn(Optional.of(user));
     var actualUserResponse = userService.findByUsername("test");
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);

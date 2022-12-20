@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
@@ -38,6 +39,7 @@ import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.response.RoleResponse;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.bootstrapbugz.api.user.service.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +58,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
   @Mock private UserRepository userRepository;
+  @Mock private RoleService roleService;
   @Mock private MessageService messageService;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
   @Spy private UserMapperImpl userMapper;
@@ -97,6 +100,7 @@ class AuthServiceTest {
     authService =
         new AuthServiceImpl(
             userRepository,
+            roleService,
             messageService,
             bCryptPasswordEncoder,
             userMapper,
@@ -254,6 +258,8 @@ class AuthServiceTest {
     var roleResponses = Set.of(new RoleResponse(RoleName.USER.name()));
     var expectedUserResponse =
         new UserResponse(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
+    when(roleService.findAllByNameIn(Set.of(RoleName.USER)))
+        .thenReturn(List.copyOf(roles));
     var actualUserResponse = authService.signedInUser();
     assertThat(actualUserResponse).isEqualTo(expectedUserResponse);
   }

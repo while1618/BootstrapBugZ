@@ -1,27 +1,30 @@
 package org.bootstrapbugz.api.admin.service.impl;
 
-import java.util.stream.Collectors;
+import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
-import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.bootstrapbugz.api.user.service.RoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminServiceImpl implements AdminService {
   private final UserRepository userRepository;
+  private final RoleService roleService;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
 
   public AdminServiceImpl(
       UserRepository userRepository,
+      RoleService roleService,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService) {
     this.userRepository = userRepository;
+    this.roleService = roleService;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
   }
@@ -69,9 +72,8 @@ public class AdminServiceImpl implements AdminService {
     final var users = userRepository.findAllByUsernameIn(updateRoleRequest.getUsernames());
     users.forEach(
         user -> {
-          final var roles =
-              updateRoleRequest.getRoleNames().stream().map(Role::new).collect(Collectors.toSet());
-          user.setRoles(roles);
+          final var roles = roleService.findAllByNameIn(updateRoleRequest.getRoleNames());
+          user.setRoles(Set.copyOf(roles));
           accessTokenService.invalidateAllByUser(user.getId());
           refreshTokenService.deleteAllByUser(user.getId());
         });

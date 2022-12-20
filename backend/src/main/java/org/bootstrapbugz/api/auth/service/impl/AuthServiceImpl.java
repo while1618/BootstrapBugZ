@@ -26,12 +26,14 @@ import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.response.UserResponse;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.bootstrapbugz.api.user.service.RoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
   private final UserRepository userRepository;
+  private final RoleService roleService;
   private final MessageService messageService;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final UserMapper userMapper;
@@ -42,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
 
   public AuthServiceImpl(
       UserRepository userRepository,
+      RoleService roleService,
       MessageService messageService,
       PasswordEncoder bCryptPasswordEncoder,
       UserMapper userMapper,
@@ -50,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
       ConfirmRegistrationTokenService confirmRegistrationTokenService,
       ForgotPasswordTokenService forgotPasswordTokenService) {
     this.userRepository = userRepository;
+    this.roleService = roleService;
     this.messageService = messageService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userMapper = userMapper;
@@ -68,6 +72,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   private User createUser(SignUpRequest signUpRequest) {
+    final var role = roleService.findByName(RoleName.USER);
     final var user =
         new User()
             .setFirstName(signUpRequest.getFirstName())
@@ -75,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
             .setUsername(signUpRequest.getUsername())
             .setEmail(signUpRequest.getEmail())
             .setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()))
-            .setRoles(Collections.singleton(new Role(RoleName.USER)));
+            .setRoles(Collections.singleton(role));
     return userRepository.save(user);
   }
 
@@ -111,7 +116,7 @@ public class AuthServiceImpl implements AuthService {
     final String oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.getRefreshToken());
     refreshTokenService.check(oldRefreshToken);
     final Long userId = JwtUtil.getUserId(oldRefreshToken);
-    final Set<Role> roles = JwtUtil.getRoles(oldRefreshToken);
+    final Set<Role> roles = JwtUtil.getRoles(oldRefreshToken, roleService);
     refreshTokenService.delete(oldRefreshToken);
     final String accessToken = accessTokenService.create(userId, roles);
     final String newRefreshToken =
@@ -123,14 +128,14 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void signOut(HttpServletRequest request) {
     refreshTokenService.deleteByUserAndIpAddress(
-        AuthUtil.findSignedInUser().getId(), AuthUtil.getUserIpAddress(request));
+        AuthUtil.findSignedInUser(roleService).getId(), AuthUtil.getUserIpAddress(request));
     accessTokenService.invalidate(
         JwtUtil.removeBearer(AuthUtil.getAccessTokenFromRequest(request)));
   }
 
   @Override
   public void signOutFromAllDevices() {
-    final Long userId = AuthUtil.findSignedInUser().getId();
+    final Long userId = AuthUtil.findSignedInUser(roleService).getId();
     refreshTokenService.deleteAllByUser(userId);
     accessTokenService.invalidateAllByUser(userId);
   }
@@ -161,7 +166,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserResponse signedInUser() {
-    return userMapper.userToUserResponse(AuthUtil.findSignedInUser());
+    return userMapper.userToUserResponse(AuthUtil.findSignedInUser(roleService));
   }
 
   @Override
