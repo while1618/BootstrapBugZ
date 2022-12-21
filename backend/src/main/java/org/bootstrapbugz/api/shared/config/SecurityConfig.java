@@ -8,8 +8,6 @@ import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.mapper.UserMapper;
-import org.bootstrapbugz.api.user.service.RoleService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,26 +38,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     Path.AUTH + "/email-availability"
   };
   private final CustomUserDetailsService userDetailsService;
-  private final RoleService roleService;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
-  private final UserMapper userMapper;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final MessageService messageService;
 
   public SecurityConfig(
       CustomUserDetailsService userDetailsService,
-      RoleService roleService,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
-      UserMapper userMapper,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
       MessageService messageService) {
     this.userDetailsService = userDetailsService;
-    this.roleService = roleService;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
-    this.userMapper = userMapper;
     this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     this.messageService = messageService;
   }
@@ -91,12 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .addFilter(
             new AuthenticationFilter(
-                authenticationManager(),
-                roleService,
-                accessTokenService,
-                refreshTokenService,
-                userMapper,
-                messageService))
+                authenticationManager(), accessTokenService, refreshTokenService, messageService))
         .addFilter(
             new AuthorizationFilter(
                 authenticationManager(), accessTokenService, userDetailsService))

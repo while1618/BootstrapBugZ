@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
 import java.util.Collections;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
@@ -21,7 +20,6 @@ import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
-import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
@@ -116,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
     final String oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.getRefreshToken());
     refreshTokenService.check(oldRefreshToken);
     final Long userId = JwtUtil.getUserId(oldRefreshToken);
-    final Set<Role> roles = JwtUtil.getRoles(oldRefreshToken, roleService);
+    final var roles = JwtUtil.getRolesDTO(oldRefreshToken);
     refreshTokenService.delete(oldRefreshToken);
     final String accessToken = accessTokenService.create(userId, roles);
     final String newRefreshToken =
@@ -127,14 +125,14 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void signOut(HttpServletRequest request) {
     refreshTokenService.deleteByUserAndIpAddress(
-        AuthUtil.findSignedInUser(roleService).getId(), AuthUtil.getUserIpAddress(request));
+        AuthUtil.findSignedInUser().getId(), AuthUtil.getUserIpAddress(request));
     accessTokenService.invalidate(
         JwtUtil.removeBearer(AuthUtil.getAccessTokenFromRequest(request)));
   }
 
   @Override
   public void signOutFromAllDevices() {
-    final Long userId = AuthUtil.findSignedInUser(roleService).getId();
+    final Long userId = AuthUtil.findSignedInUser().getId();
     refreshTokenService.deleteAllByUser(userId);
     accessTokenService.invalidateAllByUser(userId);
   }
@@ -165,7 +163,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserDTO signedInUser() {
-    return userMapper.userToUserDTO(AuthUtil.findSignedInUser(roleService));
+    return AuthUtil.findSignedInUser();
   }
 
   @Override

@@ -19,9 +19,7 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.mapper.UserMapper;
-import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.service.RoleService;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,24 +32,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final AuthenticationManager authenticationManager;
-  private final RoleService roleService;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
-  private final UserMapper userMapper;
   private final MessageService messageService;
 
   public AuthenticationFilter(
       AuthenticationManager authenticationManager,
-      RoleService roleService,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
-      UserMapper userMapper,
       MessageService messageService) {
     this.authenticationManager = authenticationManager;
-    this.roleService = roleService;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
-    this.userMapper = userMapper;
     this.messageService = messageService;
     this.setFilterProcessesUrl(Path.AUTH + "/sign-in");
   }
@@ -91,7 +83,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    final var user = AuthUtil.userPrincipalToUser((UserPrincipal) auth.getPrincipal(), roleService);
+    final var user = AuthUtil.userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
     final String ipAddress = AuthUtil.getUserIpAddress(request);
     final String accessToken = accessTokenService.create(user.getId(), user.getRoles());
     final String refreshToken = findRefreshToken(user.getId(), user.getRoles(), ipAddress);
@@ -99,11 +91,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         new SignInDTO()
             .setAccessToken(JwtUtil.addBearer(accessToken))
             .setRefreshToken(JwtUtil.addBearer(refreshToken))
-            .setUser(userMapper.userToUserDTO(user));
+            .setUser(user);
     writeToResponse(response, signInDTO);
   }
 
-  private String findRefreshToken(Long userId, Set<Role> roles, String ipAddress) {
+  private String findRefreshToken(Long userId, Set<RoleDTO> roles, String ipAddress) {
     final String refreshToken = refreshTokenService.findByUserAndIpAddress(userId, ipAddress);
     if (refreshToken == null) return refreshTokenService.create(userId, roles, ipAddress);
     return refreshToken;
