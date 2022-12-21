@@ -1,12 +1,11 @@
 package org.bootstrapbugz.api.auth.util;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.service.RoleService;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtil {
@@ -19,33 +18,32 @@ public class AuthUtil {
     return !auth.getPrincipal().equals("anonymousUser");
   }
 
-  public static boolean isAdminSignedIn(RoleService roleService) {
+  public static boolean isAdminSignedIn() {
     if (!isSignedIn()) return false;
-    User user = findSignedInUser(roleService);
-    return user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ADMIN));
+    var userDTO = findSignedInUser();
+    return userDTO.getRoles().stream()
+        .anyMatch(roleDTO -> roleDTO.getName().equals(RoleName.ADMIN.name()));
   }
 
-  public static User findSignedInUser(RoleService roleService) {
+  public static UserDTO findSignedInUser() {
     final var auth = SecurityContextHolder.getContext().getAuthentication();
-    return userPrincipalToUser((UserPrincipal) auth.getPrincipal(), roleService);
+    return userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
   }
 
-  public static User userPrincipalToUser(UserPrincipal userPrincipal, RoleService roleService) {
+  public static UserDTO userPrincipalToUserDTO(UserPrincipal userPrincipal) {
     final var roleNames =
         userPrincipal.getAuthorities().stream()
-            .map(authority -> RoleName.valueOf(authority.getAuthority()))
+            .map(authority -> new RoleDTO(RoleName.valueOf(authority.getAuthority()).name()))
             .collect(Collectors.toSet());
-    final var roles = roleService.findAllByNameIn(roleNames);
-    return new User()
+    return new UserDTO()
         .setId(userPrincipal.getId())
         .setFirstName(userPrincipal.getFirstName())
         .setLastName(userPrincipal.getLastName())
         .setUsername(userPrincipal.getUsername())
         .setEmail(userPrincipal.getEmail())
-        .setPassword(userPrincipal.getPassword())
         .setActivated(userPrincipal.isEnabled())
         .setNonLocked(userPrincipal.isAccountNonLocked())
-        .setRoles(Set.copyOf(roles));
+        .setRoles(roleNames);
   }
 
   public static String getUserIpAddress(HttpServletRequest request) {

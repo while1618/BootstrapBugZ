@@ -8,31 +8,25 @@ import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import org.bootstrapbugz.api.user.service.RoleService;
 import org.bootstrapbugz.api.user.service.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
-  private final RoleService roleService;
   private final MessageService messageService;
   private final UserMapper userMapper;
 
   public UserServiceImpl(
-      UserRepository userRepository,
-      RoleService roleService,
-      MessageService messageService,
-      UserMapper userMapper) {
+      UserRepository userRepository, MessageService messageService, UserMapper userMapper) {
     this.userRepository = userRepository;
-    this.roleService = roleService;
     this.messageService = messageService;
     this.userMapper = userMapper;
   }
 
   @Override
   public List<UserDTO> findAll() {
-    if (AuthUtil.isAdminSignedIn(roleService))
+    if (AuthUtil.isAdminSignedIn())
       return userRepository.findAllWithRoles().stream().map(userMapper::userToUserDTO).toList();
     return userRepository.findAll().stream()
         .map(
@@ -46,8 +40,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO findByUsername(String username) {
-    if (AuthUtil.isAdminSignedIn(roleService))
-      return userMapper.userToUserDTO(userForAdmin(username));
+    if (AuthUtil.isAdminSignedIn()) return userMapper.userToUserDTO(userForAdmin(username));
     return userMapper.userToUserDTO(userForNonAdmin(username));
   }
 
@@ -66,7 +59,7 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     user.setRoles(null);
     if (!(AuthUtil.isSignedIn()
-        && AuthUtil.findSignedInUser(roleService).getUsername().equals(user.getUsername())))
+        && AuthUtil.findSignedInUser().getUsername().equals(user.getUsername())))
       user.setEmail(null);
     return user;
   }

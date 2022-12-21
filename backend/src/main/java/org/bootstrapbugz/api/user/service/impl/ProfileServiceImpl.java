@@ -6,6 +6,7 @@ import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
+import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
@@ -14,14 +15,12 @@ import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.ProfileService;
-import org.bootstrapbugz.api.user.service.RoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
   private final UserRepository userRepository;
-  private final RoleService roleService;
   private final MessageService messageService;
   private final UserMapper userMapper;
   private final PasswordEncoder bCryptPasswordEncoder;
@@ -31,7 +30,6 @@ public class ProfileServiceImpl implements ProfileService {
 
   public ProfileServiceImpl(
       UserRepository userRepository,
-      RoleService roleService,
       MessageService messageService,
       UserMapper userMapper,
       PasswordEncoder bCryptPasswordEncoder,
@@ -39,7 +37,6 @@ public class ProfileServiceImpl implements ProfileService {
       RefreshTokenService refreshTokenService,
       ConfirmRegistrationTokenService confirmRegistrationTokenService) {
     this.userRepository = userRepository;
-    this.roleService = roleService;
     this.messageService = messageService;
     this.userMapper = userMapper;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -50,7 +47,12 @@ public class ProfileServiceImpl implements ProfileService {
 
   @Override
   public UserDTO update(UpdateProfileRequest updateProfileRequest) {
-    final var user = AuthUtil.findSignedInUser(roleService);
+    final var userDTO = AuthUtil.findSignedInUser();
+    final var user =
+        userRepository
+            .findByUsernameWithRoles(userDTO.getUsername())
+            .orElseThrow(
+                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     user.setFirstName(updateProfileRequest.getFirstName());
     user.setLastName(updateProfileRequest.getLastName());
     tryToSetUsername(user, updateProfileRequest.getUsername());
@@ -81,7 +83,12 @@ public class ProfileServiceImpl implements ProfileService {
 
   @Override
   public void changePassword(ChangePasswordRequest changePasswordRequest) {
-    final var user = AuthUtil.findSignedInUser(roleService);
+    final var userDTO = AuthUtil.findSignedInUser();
+    final var user =
+        userRepository
+            .findByUsername(userDTO.getUsername())
+            .orElseThrow(
+                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
       throw new BadRequestException(
           "oldPassword", messageService.getMessage("oldPassword.invalid"));

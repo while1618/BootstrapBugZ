@@ -21,7 +21,6 @@ import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import org.bootstrapbugz.api.user.service.RoleService;
 import org.bootstrapbugz.api.user.service.impl.ProfileServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +38,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @ExtendWith(MockitoExtension.class)
 class ProfileServiceTest {
   @Mock private UserRepository userRepository;
-  @Mock private RoleService roleService;
   @Mock private MessageService messageService;
   @Spy private UserMapperImpl userMapper;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;

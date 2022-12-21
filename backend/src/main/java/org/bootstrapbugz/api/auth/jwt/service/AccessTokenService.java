@@ -1,10 +1,10 @@
 package org.bootstrapbugz.api.auth.jwt.service;
 
 import java.util.Set;
-import org.bootstrapbugz.api.user.model.Role;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 
 public interface AccessTokenService {
-  String create(Long userId, Set<Role> roles);
+  String create(Long userId, Set<RoleDTO> roles);
 
   void check(String token);
 
