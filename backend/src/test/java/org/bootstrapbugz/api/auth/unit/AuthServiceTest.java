@@ -36,8 +36,8 @@ import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
-import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.payload.dto.RoleDto;
+import org.bootstrapbugz.api.user.payload.dto.UserDto;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.RoleService;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,14 +115,14 @@ class AuthServiceTest {
 
   @Test
   void itShouldSignUp() {
-    var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserDTO =
-        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
+    var roleResponses = Set.of(new RoleDto(RoleName.USER.name()));
+    var expectedUserDto =
+        new UserDto(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
     var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@test.com", "qwerty123", "qwerty123");
     when(userRepository.save(any(User.class))).thenReturn(user);
-    var actualUserDTO = authService.signUp(signUpRequest);
-    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
+    var actualUserDto = authService.signUp(signUpRequest);
+    assertThat(actualUserDto).isEqualTo(expectedUserDto);
   }
 
   @Test
@@ -191,9 +191,9 @@ class AuthServiceTest {
     String token = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
     when(refreshTokenWhitelistRepository.existsById(token)).thenReturn(true);
     var refreshTokenRequest = new RefreshTokenRequest(token);
-    var refreshTokenDTO = authService.refreshToken(refreshTokenRequest, request);
-    assertThat(refreshTokenDTO.getAccessToken()).isNotNull();
-    assertThat(refreshTokenDTO.getRefreshToken()).isNotNull();
+    var refreshTokenDto = authService.refreshToken(refreshTokenRequest, request);
+    assertThat(refreshTokenDto.getAccessToken()).isNotNull();
+    assertThat(refreshTokenDto.getRefreshToken()).isNotNull();
   }
 
   @Test
@@ -255,12 +255,12 @@ class AuthServiceTest {
   @Test
   void itShouldReceiveSignedInUser() {
     TestUtil.setAuth(auth, securityContext, user);
-    var roleResponses = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserDTO =
-        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
+    var roleResponses = Set.of(new RoleDto(RoleName.USER.name()));
+    var expectedUserDto =
+        new UserDto(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
     when(roleService.findAllByNameIn(Set.of(RoleName.USER))).thenReturn(List.copyOf(roles));
-    var actualUserDTO = authService.signedInUser();
-    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
+    var actualUserDto = authService.signedInUser();
+    assertThat(actualUserDto).isEqualTo(expectedUserDto);
   }
 
   @Test

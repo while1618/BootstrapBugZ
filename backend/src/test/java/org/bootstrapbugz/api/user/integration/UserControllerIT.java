@@ -14,8 +14,8 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
-import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.payload.dto.RoleDto;
+import org.bootstrapbugz.api.user.payload.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -48,12 +48,12 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindAllUsersWithRolesAndEmails() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
     mockMvc
         .perform(
             get(Path.USERS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
+                .header(AuthUtil.AUTH_HEADER, signInDto.getAccessToken()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.length()").value(7))
@@ -70,30 +70,30 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_showEmail() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var expectedUserDTO =
-        new UserDTO(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, null);
-    performFindUserByUsername("user", signInDTO.getAccessToken())
+    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var expectedUserDto =
+        new UserDto(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, null);
+    performFindUserByUsername("user", signInDto.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDto)));
   }
 
   @Test
   void itShouldFindUserByUsername_hideEmail() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var expectedUserDTO = new UserDTO(1L, "Admin", "Admin", "admin", null, true, true, null);
-    performFindUserByUsername("admin", signInDTO.getAccessToken())
+    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var expectedUserDto = new UserDto(1L, "Admin", "Admin", "admin", null, true, true, null);
+    performFindUserByUsername("admin", signInDto.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDto)));
   }
 
   @Test
   void itShouldFindUserByUsername_adminSignedIn() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
-    var expectedUserDTO =
-        new UserDTO(
+    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    var expectedUserDto =
+        new UserDto(
             2L,
             "User",
             "User",
@@ -101,18 +101,18 @@ class UserControllerIT extends DatabaseContainers {
             "user@bootstrapbugz.com",
             true,
             true,
-            Set.of(new RoleDTO(Role.RoleName.USER.name())));
-    performFindUserByUsername("user", signInDTO.getAccessToken())
+            Set.of(new RoleDto(Role.RoleName.USER.name())));
+    performFindUserByUsername("user", signInDto.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDto)));
   }
 
   @Test
   void findUserByUsernameShouldThrowResourceNotFound() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var resultActions =
-        performFindUserByUsername("unknown", signInDTO.getAccessToken())
+        performFindUserByUsername("unknown", signInDto.getAccessToken())
             .andExpect(status().isNotFound());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.NOT_FOUND);
     expectedErrorResponse.addDetails("User not found.");

@@ -10,7 +10,7 @@ import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.RoleDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -34,12 +34,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   }
 
   @Override
-  public String create(Long userId, Set<RoleDTO> roles, String ipAddress) {
+  public String create(Long userId, Set<RoleDto> roles, String ipAddress) {
     final String token =
         JWT.create()
             .withClaim("userId", userId)
             .withClaim("issuedAt", Instant.now().toString())
-            .withClaim("roles", roles.stream().map(RoleDTO::getName).toList())
+            .withClaim("roles", roles.stream().map(RoleDto::getName).toList())
             .withClaim("purpose", PURPOSE.name())
             .withExpiresAt(new Date(System.currentTimeMillis() + tokenDuration * 1000L))
             .sign(JwtUtil.getAlgorithm(secret));

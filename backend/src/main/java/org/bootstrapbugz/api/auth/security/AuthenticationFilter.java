@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
-import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
+import org.bootstrapbugz.api.auth.payload.dto.SignInDto;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
@@ -19,7 +19,7 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.RoleDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,30 +83,30 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    final var user = AuthUtil.userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
+    final var user = AuthUtil.userPrincipalToUserDto((UserPrincipal) auth.getPrincipal());
     final String ipAddress = AuthUtil.getUserIpAddress(request);
     final String accessToken = accessTokenService.create(user.getId(), user.getRoles());
     final String refreshToken = findRefreshToken(user.getId(), user.getRoles(), ipAddress);
-    final var signInDTO =
-        new SignInDTO()
+    final var signInDto =
+        new SignInDto()
             .setAccessToken(JwtUtil.addBearer(accessToken))
             .setRefreshToken(JwtUtil.addBearer(refreshToken))
             .setUser(user);
-    writeToResponse(response, signInDTO);
+    writeToResponse(response, signInDto);
   }
 
-  private String findRefreshToken(Long userId, Set<RoleDTO> roles, String ipAddress) {
+  private String findRefreshToken(Long userId, Set<RoleDto> roles, String ipAddress) {
     final String refreshToken = refreshTokenService.findByUserAndIpAddress(userId, ipAddress);
     if (refreshToken == null) return refreshTokenService.create(userId, roles, ipAddress);
     return refreshToken;
   }
 
-  private void writeToResponse(HttpServletResponse response, SignInDTO signInDTO)
+  private void writeToResponse(HttpServletResponse response, SignInDto signInDto)
       throws IOException {
-    final String jsonSignInDTO = new Gson().toJson(signInDTO);
+    final String jsonSignInDto = new Gson().toJson(signInDto);
     final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    out.print(jsonSignInDTO);
+    out.print(jsonSignInDto);
     out.flush();
   }
 }

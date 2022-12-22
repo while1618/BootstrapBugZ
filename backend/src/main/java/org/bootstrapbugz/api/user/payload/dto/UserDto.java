@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Accessors(chain = true)
-public class UserDTO {
+public class UserDto {
   private Long id;
   private String firstName;
   private String lastName;
@@ -22,5 +22,5 @@ public class UserDTO {
   private String email;
   private boolean activated;
   private boolean nonLocked;
-  private Set<RoleDTO> roles;
+  private Set<RoleDto> roles;
 }

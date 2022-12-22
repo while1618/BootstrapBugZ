@@ -6,7 +6,7 @@ import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDto;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.UserService;
 import org.springframework.stereotype.Service;
@@ -25,23 +25,23 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserDTO> findAll() {
+  public List<UserDto> findAll() {
     if (AuthUtil.isAdminSignedIn())
-      return userRepository.findAllWithRoles().stream().map(userMapper::userToUserDTO).toList();
+      return userRepository.findAllWithRoles().stream().map(userMapper::userToUserDto).toList();
     return userRepository.findAll().stream()
         .map(
             user -> {
               user.setRoles(null);
               user.setEmail(null);
-              return userMapper.userToUserDTO(user);
+              return userMapper.userToUserDto(user);
             })
         .toList();
   }
 
   @Override
-  public UserDTO findByUsername(String username) {
-    if (AuthUtil.isAdminSignedIn()) return userMapper.userToUserDTO(userForAdmin(username));
-    return userMapper.userToUserDTO(userForNonAdmin(username));
+  public UserDto findByUsername(String username) {
+    if (AuthUtil.isAdminSignedIn()) return userMapper.userToUserDto(userForAdmin(username));
+    return userMapper.userToUserDto(userForNonAdmin(username));
   }
 
   private User userForAdmin(String username) {
