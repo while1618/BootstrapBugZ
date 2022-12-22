@@ -4,8 +4,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
-import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.payload.dto.RoleDto;
+import org.bootstrapbugz.api.user.payload.dto.UserDto;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtil {
@@ -20,22 +20,22 @@ public class AuthUtil {
 
   public static boolean isAdminSignedIn() {
     if (!isSignedIn()) return false;
-    var userDTO = findSignedInUser();
-    return userDTO.getRoles().stream()
-        .anyMatch(roleDTO -> roleDTO.getName().equals(RoleName.ADMIN.name()));
+    var userDto = findSignedInUser();
+    return userDto.getRoles().stream()
+        .anyMatch(roleDto -> roleDto.getName().equals(RoleName.ADMIN.name()));
   }
 
-  public static UserDTO findSignedInUser() {
+  public static UserDto findSignedInUser() {
     final var auth = SecurityContextHolder.getContext().getAuthentication();
-    return userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
+    return userPrincipalToUserDto((UserPrincipal) auth.getPrincipal());
   }
 
-  public static UserDTO userPrincipalToUserDTO(UserPrincipal userPrincipal) {
+  public static UserDto userPrincipalToUserDto(UserPrincipal userPrincipal) {
     final var roleNames =
         userPrincipal.getAuthorities().stream()
-            .map(authority -> new RoleDTO(RoleName.valueOf(authority.getAuthority()).name()))
+            .map(authority -> new RoleDto(RoleName.valueOf(authority.getAuthority()).name()))
             .collect(Collectors.toSet());
-    return new UserDTO()
+    return new UserDto()
         .setId(userPrincipal.getId())
         .setFirstName(userPrincipal.getFirstName())
         .setLastName(userPrincipal.getLastName())

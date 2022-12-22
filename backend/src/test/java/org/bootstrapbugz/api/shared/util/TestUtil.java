@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
-import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
+import org.bootstrapbugz.api.auth.payload.dto.SignInDto;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -37,7 +37,7 @@ public class TestUtil {
         .isEqualTo(new JSONArray(expectedResponse.getDetails().toString()));
   }
 
-  public static SignInDTO signIn(
+  public static SignInDto signIn(
       MockMvc mockMvc, ObjectMapper objectMapper, SignInRequest signInRequest) throws Exception {
     var resultActions =
         mockMvc
@@ -46,11 +46,11 @@ public class TestUtil {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(signInRequest)))
             .andExpect(status().isOk());
-    var signInDTO =
+    var signInDto =
         objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(), SignInDTO.class);
-    signInDTO.setAccessToken(JwtUtil.addBearer(signInDTO.getAccessToken()));
-    return signInDTO;
+            resultActions.andReturn().getResponse().getContentAsString(), SignInDto.class);
+    signInDto.setAccessToken(JwtUtil.addBearer(signInDto.getAccessToken()));
+    return signInDto;
   }
 
   public static void setAuth(Authentication auth, SecurityContext securityContext, User user) {

@@ -96,7 +96,7 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void changeUsersRolesShouldThrowForbidden_signedInUserIsNotAdmin() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var updateRoleRequest =
         new UpdateRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
     var resultActions =
@@ -104,7 +104,7 @@ class AccessingResourcesIT extends DatabaseContainers {
             .perform(
                 put(Path.ADMIN + "/users/update-role")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
+                    .header(AuthUtil.AUTH_HEADER, signInDto.getAccessToken())
                     .content(objectMapper.writeValueAsString(updateRoleRequest)))
             .andExpect(status().isForbidden());
     TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
@@ -139,14 +139,14 @@ class AccessingResourcesIT extends DatabaseContainers {
   })
   void lockUnlockDeactivateActivateUsersShouldThrowForbidden_signedInUserIsNotAdmin(
       String path, String username) throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var adminRequest = new AdminRequest(Set.of(username));
     var resultActions =
         mockMvc
             .perform(
                 put(Path.ADMIN + "/users/" + path)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
+                    .header(AuthUtil.AUTH_HEADER, signInDto.getAccessToken())
                     .content(objectMapper.writeValueAsString(adminRequest)))
             .andExpect(status().isForbidden());
     TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
@@ -167,14 +167,14 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void deleteUsersShouldThrowForbidden_signedInUserIsNotAdmin() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var adminRequest = new AdminRequest(Set.of("for.update.2"));
     var resultActions =
         mockMvc
             .perform(
                 delete(Path.ADMIN + "/users/delete")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
+                    .header(AuthUtil.AUTH_HEADER, signInDto.getAccessToken())
                     .content(objectMapper.writeValueAsString(adminRequest)))
             .andExpect(status().isForbidden());
     TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);

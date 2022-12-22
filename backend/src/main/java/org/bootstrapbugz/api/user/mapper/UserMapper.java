@@ -1,11 +1,11 @@
 package org.bootstrapbugz.api.user.mapper;
 
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDto;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 
 @Mapper(injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface UserMapper {
-  UserDTO userToUserDTO(User user);
+  UserDto userToUserDto(User user);
 }

@@ -1,10 +1,10 @@
 package org.bootstrapbugz.api.user.service;
 
 import java.util.List;
-import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDto;
 
 public interface UserService {
-  List<UserDTO> findAll();
+  List<UserDto> findAll();
 
-  UserDTO findByUsername(String username);
+  UserDto findByUsername(String username);
 }
