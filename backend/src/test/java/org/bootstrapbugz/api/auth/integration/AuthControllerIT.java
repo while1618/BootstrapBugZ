@@ -52,10 +52,9 @@ class AuthControllerIT extends DatabaseContainers {
     var signUpRequest =
         new SignUpRequest(
             "Test", "Test", "test", "test@bootstrapbugz.com", "qwerty123", "qwerty123");
-    var roleResponses = Set.of(new RoleDto(RoleName.USER.name()));
+    var roleDtos = Set.of(new RoleDto(RoleName.USER.name()));
     var expectedUserDto =
-        new UserDto(
-            8L, "Test", "Test", "test", "test@bootstrapbugz.com", false, true, roleResponses);
+        new UserDto(8L, "Test", "Test", "test", "test@bootstrapbugz.com", false, true, roleDtos);
     var resultActions =
         mockMvc
             .perform(
@@ -322,10 +321,9 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void itShouldRetrieveSignedInUser() throws Exception {
     var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var roleResponses = Set.of(new RoleDto(RoleName.USER.name()));
+    var roleDtos = Set.of(new RoleDto(RoleName.USER.name()));
     var expectedUserDto =
-        new UserDto(
-            2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, roleResponses);
+        new UserDto(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, roleDtos);
     var resultActions =
         mockMvc
             .perform(

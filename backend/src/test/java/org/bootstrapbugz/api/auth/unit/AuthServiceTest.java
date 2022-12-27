@@ -38,8 +38,8 @@ import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.RoleDto;
 import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import org.bootstrapbugz.api.user.service.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,7 +58,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
   @Mock private UserRepository userRepository;
-  @Mock private RoleService roleService;
+  @Mock private RoleRepository roleRepository;
   @Mock private MessageService messageService;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
   @Spy private UserMapperImpl userMapper;
@@ -78,6 +78,7 @@ class AuthServiceTest {
   private AuthServiceImpl authService;
 
   private String password;
+  private Role role;
   private Set<Role> roles;
   private User user;
 
@@ -100,7 +101,7 @@ class AuthServiceTest {
     authService =
         new AuthServiceImpl(
             userRepository,
-            roleService,
+            roleRepository,
             messageService,
             bCryptPasswordEncoder,
             userMapper,
@@ -109,17 +110,19 @@ class AuthServiceTest {
             confirmRegistrationTokenService,
             forgotPasswordTokenService);
     password = bCryptPasswordEncoder.encode("qwerty123");
-    roles = Set.of(new Role(RoleName.USER));
+    role = new Role(RoleName.USER);
+    roles = Set.of(role);
     user = new User(1L, "Test", "Test", "test", "test@test.com", password, false, true, roles);
   }
 
   @Test
   void itShouldSignUp() {
-    var roleResponses = Set.of(new RoleDto(RoleName.USER.name()));
+    var roleDtos = Set.of(new RoleDto(RoleName.USER.name()));
     var expectedUserDto =
-        new UserDto(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
+        new UserDto(1L, "Test", "Test", "test", "test@test.com", false, true, roleDtos);
     var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@test.com", "qwerty123", "qwerty123");
+    when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(role));
     when(userRepository.save(any(User.class))).thenReturn(user);
     var actualUserDto = authService.signUp(signUpRequest);
     assertThat(actualUserDto).isEqualTo(expectedUserDto);
@@ -255,10 +258,9 @@ class AuthServiceTest {
   @Test
   void itShouldReceiveSignedInUser() {
     TestUtil.setAuth(auth, securityContext, user);
-    var roleResponses = Set.of(new RoleDto(RoleName.USER.name()));
+    var roleDtos = Set.of(new RoleDto(RoleName.USER.name()));
     var expectedUserDto =
-        new UserDto(1L, "Test", "Test", "test", "test@test.com", false, true, roleResponses);
-    when(roleService.findAllByNameIn(Set.of(RoleName.USER))).thenReturn(List.copyOf(roles));
+        new UserDto(1L, "Test", "Test", "test", "test@test.com", false, true, roleDtos);
     var actualUserDto = authService.signedInUser();
     assertThat(actualUserDto).isEqualTo(expectedUserDto);
   }
