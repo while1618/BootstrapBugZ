@@ -20,18 +20,19 @@ import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
+import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
-import org.bootstrapbugz.api.user.service.RoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
   private final UserRepository userRepository;
-  private final RoleService roleService;
+  private final RoleRepository roleRepository;
   private final MessageService messageService;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final UserMapper userMapper;
@@ -42,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
 
   public AuthServiceImpl(
       UserRepository userRepository,
-      RoleService roleService,
+      RoleRepository roleRepository,
       MessageService messageService,
       PasswordEncoder bCryptPasswordEncoder,
       UserMapper userMapper,
@@ -51,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
       ConfirmRegistrationTokenService confirmRegistrationTokenService,
       ForgotPasswordTokenService forgotPasswordTokenService) {
     this.userRepository = userRepository;
-    this.roleService = roleService;
+    this.roleRepository = roleRepository;
     this.messageService = messageService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.userMapper = userMapper;
@@ -70,7 +71,6 @@ public class AuthServiceImpl implements AuthService {
   }
 
   private User createUser(SignUpRequest signUpRequest) {
-    final var role = roleService.findByName(RoleName.USER);
     final var user =
         new User()
             .setFirstName(signUpRequest.getFirstName())
@@ -78,8 +78,15 @@ public class AuthServiceImpl implements AuthService {
             .setUsername(signUpRequest.getUsername())
             .setEmail(signUpRequest.getEmail())
             .setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()))
-            .setRoles(Collections.singleton(role));
+            .setRoles(Collections.singleton(getUserRole()));
     return userRepository.save(user);
+  }
+
+  private Role getUserRole() {
+    return roleRepository
+        .findByName(RoleName.USER)
+        .orElseThrow(
+            () -> new ResourceNotFoundException(messageService.getMessage("role.notFound")));
   }
 
   @Override

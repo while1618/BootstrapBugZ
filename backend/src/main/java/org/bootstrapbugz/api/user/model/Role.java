@@ -40,12 +40,12 @@ public class Role implements Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Role role)) return false;
-    return name == role.name;
+    return Objects.equal(id, role.id) && Objects.equal(name, role.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(name);
+    return Objects.hashCode(id, name);
   }
 
   public enum RoleName {

@@ -60,7 +60,7 @@ class ProfileControllerIT extends DatabaseContainers {
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty123"));
     var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "updated", "updated@bootstrapbugz.com");
-    var roleResponses = Collections.singleton(new RoleDto(Role.RoleName.USER.name()));
+    var roleDtos = Collections.singleton(new RoleDto(Role.RoleName.USER.name()));
     var expectedUserDto =
         new UserDto(
             5L,
@@ -70,7 +70,7 @@ class ProfileControllerIT extends DatabaseContainers {
             "updated@bootstrapbugz.com",
             false,
             true,
-            roleResponses);
+            roleDtos);
     performUpdateUser(updateUserRequest, signInDto.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDto)));
@@ -83,7 +83,7 @@ class ProfileControllerIT extends DatabaseContainers {
     var updateUserRequest =
         new UpdateProfileRequest(
             "Updated", "Updated", "for.update.2", "for.update.2@bootstrapbugz.com");
-    var roleResponses = Collections.singleton(new RoleDto(Role.RoleName.USER.name()));
+    var roleDtos = Collections.singleton(new RoleDto(Role.RoleName.USER.name()));
     var expectedUserDto =
         new UserDto(
             6L,
@@ -93,7 +93,7 @@ class ProfileControllerIT extends DatabaseContainers {
             "for.update.2@bootstrapbugz.com",
             true,
             true,
-            roleResponses);
+            roleDtos);
     performUpdateUser(updateUserRequest, signInDto.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDto)));
