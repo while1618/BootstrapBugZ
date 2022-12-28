@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
@@ -53,12 +54,13 @@ class ProfileServiceTest {
 
   private String password;
   private Set<Role> roles;
+  private User user;
 
   @BeforeEach
   void setUp() {
     password = bCryptPasswordEncoder.encode("qwerty123");
     roles = Collections.singleton(new Role(Role.RoleName.USER));
-    var user = new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
+    user = new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
     TestUtil.setAuth(auth, securityContext, user);
   }
 
@@ -67,6 +69,7 @@ class ProfileServiceTest {
     var expectedUser =
         new User(1L, "User", "User", "user", "user@user.com", password, false, true, roles);
     var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
+    when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(false);
     profileService.update(updateUserRequest);
@@ -79,6 +82,7 @@ class ProfileServiceTest {
     var expectedUser =
         new User(1L, "User", "User", "test", "test@test.com", password, true, true, roles);
     var updateUserRequest = new UpdateProfileRequest("User", "User", "test", "test@test.com");
+    when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     profileService.update(updateUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
@@ -87,6 +91,7 @@ class ProfileServiceTest {
   @Test
   void updateUserShouldThrowBadRequest_usernameExists() {
     var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
+    when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> profileService.update(updateUserRequest))
@@ -97,6 +102,7 @@ class ProfileServiceTest {
   @Test
   void updateUserShouldThrowBadRequest_emailExists() {
     var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
+    when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
@@ -108,6 +114,7 @@ class ProfileServiceTest {
   @Test
   void itShouldChangePassword() {
     var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
+    when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
     profileService.changePassword(changePasswordRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(
@@ -122,6 +129,7 @@ class ProfileServiceTest {
     when(messageService.getMessage("oldPassword.invalid")).thenReturn("Wrong old password.");
     var changePasswordRequest =
         new ChangePasswordRequest("qwerty123456", "qwerty1234", "qwerty1234");
+    when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
     assertThatThrownBy(() -> profileService.changePassword(changePasswordRequest))
         .isInstanceOf(BadRequestException.class)
         .hasMessage("Wrong old password.");
