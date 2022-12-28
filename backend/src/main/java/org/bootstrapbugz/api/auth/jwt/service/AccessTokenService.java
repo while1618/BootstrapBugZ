@@ -4,7 +4,7 @@ import java.util.Set;
 import org.bootstrapbugz.api.user.payload.dto.RoleDto;
 
 public interface AccessTokenService {
-  String create(Long userId, Set<RoleDto> roles);
+  String create(Long userId, Set<RoleDto> roleDtos);
 
   void check(String token);
 

@@ -40,11 +40,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   }
 
   @Override
-  public String create(Long userId, Set<RoleDto> roles) {
+  public String create(Long userId, Set<RoleDto> roleDtos) {
     return JWT.create()
         .withClaim("userId", userId)
         .withClaim("issuedAt", Instant.now().toString())
-        .withClaim("roles", roles.stream().map(RoleDto::getName).toList())
+        .withClaim("roles", roleDtos.stream().map(RoleDto::getName).toList())
         .withClaim("purpose", PURPOSE.name())
         .withExpiresAt(new Date(System.currentTimeMillis() + tokenDuration * 1000L))
         .sign(JwtUtil.getAlgorithm(secret));

@@ -118,14 +118,14 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public RefreshTokenDto refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
-    final String oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.getRefreshToken());
+    final var oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.getRefreshToken());
     refreshTokenService.check(oldRefreshToken);
-    final Long userId = JwtUtil.getUserId(oldRefreshToken);
-    final var roles = JwtUtil.getRolesDto(oldRefreshToken);
+    final var userId = JwtUtil.getUserId(oldRefreshToken);
+    final var roleDtos = JwtUtil.getRoleDtos(oldRefreshToken);
     refreshTokenService.delete(oldRefreshToken);
-    final String accessToken = accessTokenService.create(userId, roles);
-    final String newRefreshToken =
-        refreshTokenService.create(userId, roles, AuthUtil.getUserIpAddress(request));
+    final var accessToken = accessTokenService.create(userId, roleDtos);
+    final var newRefreshToken =
+        refreshTokenService.create(userId, roleDtos, AuthUtil.getUserIpAddress(request));
     return new RefreshTokenDto(JwtUtil.addBearer(accessToken), JwtUtil.addBearer(newRefreshToken));
   }
 
@@ -139,7 +139,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void signOutFromAllDevices() {
-    final Long userId = AuthUtil.findSignedInUser().getId();
+    final var userId = AuthUtil.findSignedInUser().getId();
     refreshTokenService.deleteAllByUser(userId);
     accessTokenService.invalidateAllByUser(userId);
   }
@@ -151,7 +151,7 @@ public class AuthServiceImpl implements AuthService {
             .findByEmail(forgotPasswordRequest.getEmail())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    var accessToken = forgotPasswordTokenService.create(user.getId());
+    final var accessToken = forgotPasswordTokenService.create(user.getId());
     forgotPasswordTokenService.sendToEmail(user, accessToken);
   }
 

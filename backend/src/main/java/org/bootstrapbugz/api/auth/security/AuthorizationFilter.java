@@ -34,7 +34,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    final String accessToken = AuthUtil.getAccessTokenFromRequest(request);
+    final var accessToken = AuthUtil.getAccessTokenFromRequest(request);
     if (accessToken == null || !JwtUtil.isBearer(accessToken)) {
       chain.doFilter(request, response);
       return;
