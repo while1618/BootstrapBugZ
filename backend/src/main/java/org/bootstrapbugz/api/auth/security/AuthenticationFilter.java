@@ -83,27 +83,27 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    final var user = AuthUtil.userPrincipalToUserDto((UserPrincipal) auth.getPrincipal());
-    final String ipAddress = AuthUtil.getUserIpAddress(request);
-    final String accessToken = accessTokenService.create(user.getId(), user.getRoles());
-    final String refreshToken = findRefreshToken(user.getId(), user.getRoles(), ipAddress);
+    final var userDto = AuthUtil.userPrincipalToUserDto((UserPrincipal) auth.getPrincipal());
+    final var ipAddress = AuthUtil.getUserIpAddress(request);
+    final var accessToken = accessTokenService.create(userDto.getId(), userDto.getRoles());
+    final var refreshToken = findRefreshToken(userDto.getId(), userDto.getRoles(), ipAddress);
     final var signInDto =
         new SignInDto()
             .setAccessToken(JwtUtil.addBearer(accessToken))
             .setRefreshToken(JwtUtil.addBearer(refreshToken))
-            .setUser(user);
+            .setUser(userDto);
     writeToResponse(response, signInDto);
   }
 
   private String findRefreshToken(Long userId, Set<RoleDto> roles, String ipAddress) {
-    final String refreshToken = refreshTokenService.findByUserAndIpAddress(userId, ipAddress);
+    final var refreshToken = refreshTokenService.findByUserAndIpAddress(userId, ipAddress);
     if (refreshToken == null) return refreshTokenService.create(userId, roles, ipAddress);
     return refreshToken;
   }
 
   private void writeToResponse(HttpServletResponse response, SignInDto signInDto)
       throws IOException {
-    final String jsonSignInDto = new Gson().toJson(signInDto);
+    final var jsonSignInDto = new Gson().toJson(signInDto);
     final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     out.print(jsonSignInDto);

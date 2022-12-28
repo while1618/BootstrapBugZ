@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import org.bootstrapbugz.api.user.model.Role;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -21,8 +22,8 @@ public class DataInit {
   private final RoleRepository roleRepository;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final Environment environment;
-  private final Role userRole = new Role(Role.RoleName.USER);
-  private final Role adminRole = new Role(Role.RoleName.ADMIN);
+  private final Role userRole = new Role(RoleName.USER);
+  private final Role adminRole = new Role(RoleName.ADMIN);
 
   public DataInit(
       UserRepository userRepository,
@@ -37,14 +38,14 @@ public class DataInit {
 
   @PostConstruct
   public void init() {
-    List<Role> roles = List.of(userRole, adminRole);
+    final var roles = List.of(userRole, adminRole);
     roleRepository.saveAll(roles);
     if (environment.getActiveProfiles()[0].equals("dev")) devUsers();
     else if (environment.getActiveProfiles()[0].equals("test")) testUsers();
   }
 
   private void devUsers() {
-    List<User> users =
+    final var users =
         List.of(
             new User()
                 .setFirstName("Admin")
@@ -74,7 +75,7 @@ public class DataInit {
   }
 
   private void testUsers() {
-    List<User> users =
+    final var users =
         List.of(
             new User()
                 .setFirstName("Admin")

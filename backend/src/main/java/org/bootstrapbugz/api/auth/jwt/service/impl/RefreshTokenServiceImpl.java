@@ -34,12 +34,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   }
 
   @Override
-  public String create(Long userId, Set<RoleDto> roles, String ipAddress) {
-    final String token =
+  public String create(Long userId, Set<RoleDto> roleDtos, String ipAddress) {
+    final var token =
         JWT.create()
             .withClaim("userId", userId)
             .withClaim("issuedAt", Instant.now().toString())
-            .withClaim("roles", roles.stream().map(RoleDto::getName).toList())
+            .withClaim("roles", roleDtos.stream().map(RoleDto::getName).toList())
             .withClaim("purpose", PURPOSE.name())
             .withExpiresAt(new Date(System.currentTimeMillis() + tokenDuration * 1000L))
             .sign(JwtUtil.getAlgorithm(secret));
@@ -73,13 +73,13 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   @Override
   public void deleteByUserAndIpAddress(Long userId, String ipAddress) {
-    var token = refreshTokenWhitelistRepository.findByUserIdAndIpAddress(userId, ipAddress);
+    final var token = refreshTokenWhitelistRepository.findByUserIdAndIpAddress(userId, ipAddress);
     token.ifPresent(refreshTokenWhitelistRepository::delete);
   }
 
   @Override
   public void deleteAllByUser(Long userId) {
-    var refreshTokens = refreshTokenWhitelistRepository.findAllByUserId(userId);
+    final var refreshTokens = refreshTokenWhitelistRepository.findAllByUserId(userId);
     refreshTokenWhitelistRepository.deleteAll(refreshTokens);
   }
 }

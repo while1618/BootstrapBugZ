@@ -37,7 +37,7 @@ public class JwtUtil {
     return JWT.decode(token).getClaim("userId").asLong();
   }
 
-  public static Set<RoleDto> getRolesDto(String token) {
+  public static Set<RoleDto> getRoleDtos(String token) {
     return Set.copyOf(JWT.decode(token).getClaim("roles").asList(RoleDto.class));
   }
 
