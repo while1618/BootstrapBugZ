@@ -48,12 +48,12 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindAllUsersWithRolesAndEmails() throws Exception {
-    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
     mockMvc
         .perform(
             get(Path.USERS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDto.getAccessToken()))
+                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.length()").value(7))
@@ -70,29 +70,29 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_showEmail() throws Exception {
-    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var expectedUserDto =
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var expectedUserDTO =
         new UserDTO(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, null);
-    performFindUserByUsername("user", signInDto.getAccessToken())
+    performFindUserByUsername("user", signInDTO.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDto)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
   }
 
   @Test
   void itShouldFindUserByUsername_hideEmail() throws Exception {
-    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var expectedUserDto = new UserDTO(1L, "Admin", "Admin", "admin", null, true, true, null);
-    performFindUserByUsername("admin", signInDto.getAccessToken())
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var expectedUserDTO = new UserDTO(1L, "Admin", "Admin", "admin", null, true, true, null);
+    performFindUserByUsername("admin", signInDTO.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDto)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
   }
 
   @Test
   void itShouldFindUserByUsername_adminSignedIn() throws Exception {
-    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
-    var expectedUserDto =
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    var expectedUserDTO =
         new UserDTO(
             2L,
             "User",
@@ -102,17 +102,17 @@ class UserControllerIT extends DatabaseContainers {
             true,
             true,
             Set.of(new RoleDTO(Role.RoleName.USER.name())));
-    performFindUserByUsername("user", signInDto.getAccessToken())
+    performFindUserByUsername("user", signInDTO.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDto)));
+        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
   }
 
   @Test
   void findUserByUsernameShouldThrowResourceNotFound() throws Exception {
-    var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var resultActions =
-        performFindUserByUsername("unknown", signInDto.getAccessToken())
+        performFindUserByUsername("unknown", signInDTO.getAccessToken())
             .andExpect(status().isNotFound());
     var expectedErrorResponse = new ErrorResponse(HttpStatus.NOT_FOUND);
     expectedErrorResponse.addDetails("User not found.");
