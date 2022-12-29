@@ -10,7 +10,7 @@ import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -46,18 +46,18 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public UserDto update(UpdateProfileRequest updateProfileRequest) {
-    final var userDto = AuthUtil.findSignedInUser();
+  public UserDTO update(UpdateProfileRequest updateProfileRequest) {
+    final var userDTO = AuthUtil.findSignedInUser();
     final var user =
         userRepository
-            .findByUsernameWithRoles(userDto.getUsername())
+            .findByUsernameWithRoles(userDTO.getUsername())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     user.setFirstName(updateProfileRequest.getFirstName());
     user.setLastName(updateProfileRequest.getLastName());
     tryToSetUsername(user, updateProfileRequest.getUsername());
     tryToSetEmail(user, updateProfileRequest.getEmail());
-    return userMapper.userToUserDto(userRepository.save(user));
+    return userMapper.userToUserDTO(userRepository.save(user));
   }
 
   private void tryToSetUsername(User user, String username) {
@@ -83,10 +83,10 @@ public class ProfileServiceImpl implements ProfileService {
 
   @Override
   public void changePassword(ChangePasswordRequest changePasswordRequest) {
-    final var userDto = AuthUtil.findSignedInUser();
+    final var userDTO = AuthUtil.findSignedInUser();
     final var user =
         userRepository
-            .findByUsername(userDto.getUsername())
+            .findByUsername(userDTO.getUsername())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))

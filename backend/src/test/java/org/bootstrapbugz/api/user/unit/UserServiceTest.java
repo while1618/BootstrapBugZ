@@ -14,8 +14,8 @@ import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.dto.RoleDto;
-import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.impl.UserServiceImpl;
@@ -48,8 +48,8 @@ class UserServiceTest {
   void itShouldFindAllUsersWithoutRolesAndEmails() {
     var expectedUserDtos =
         List.of(
-            new UserDto(1L, "Test", "Test", "test", null, true, true, null),
-            new UserDto(2L, "Admin", "Admin", "admin", null, true, true, null));
+            new UserDTO(1L, "Test", "Test", "test", null, true, true, null),
+            new UserDTO(2L, "Admin", "Admin", "admin", null, true, true, null));
     when(userRepository.findAll()).thenReturn(List.of(user, admin));
     var actualUserDtos = userService.findAll();
     assertThat(actualUserDtos).isEqualTo(expectedUserDtos);
@@ -58,13 +58,13 @@ class UserServiceTest {
   @Test
   void itShouldFindAllUsersWithRolesAndEmails() {
     TestUtil.setAuth(auth, securityContext, admin);
-    var userRoleDtos = Set.of(new RoleDto(RoleName.USER.name()));
+    var userRoleDtos = Set.of(new RoleDTO(RoleName.USER.name()));
     var adminRoleDtos =
-        Set.of(new RoleDto(RoleName.USER.name()), new RoleDto(RoleName.ADMIN.name()));
+        Set.of(new RoleDTO(RoleName.USER.name()), new RoleDTO(RoleName.ADMIN.name()));
     var expectedUserDtos =
         List.of(
-            new UserDto(1L, "Test", "Test", "test", "test@test.com", true, true, userRoleDtos),
-            new UserDto(
+            new UserDTO(1L, "Test", "Test", "test", "test@test.com", true, true, userRoleDtos),
+            new UserDTO(
                 2L, "Admin", "Admin", "admin", "admin@admin.com", true, true, adminRoleDtos));
     when(userRepository.findAllWithRoles()).thenReturn(List.of(user, admin));
     var actualUserDtos = userService.findAll();
@@ -75,7 +75,7 @@ class UserServiceTest {
   void itShouldFindUserByUsername_showEmail() {
     TestUtil.setAuth(auth, securityContext, user);
     var expectedUserDto =
-        new UserDto(1L, "Test", "Test", "test", "test@test.com", true, true, null);
+        new UserDTO(1L, "Test", "Test", "test", "test@test.com", true, true, null);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
     var actualUserDto = userService.findByUsername("test");
     assertThat(actualUserDto).isEqualTo(expectedUserDto);
@@ -83,7 +83,7 @@ class UserServiceTest {
 
   @Test
   void itShouldFindUserByUsername_hideEmail() {
-    var expectedUserDto = new UserDto(2L, "Admin", "Admin", "admin", null, true, true, null);
+    var expectedUserDto = new UserDTO(2L, "Admin", "Admin", "admin", null, true, true, null);
     when(userRepository.findByUsername("admin")).thenReturn(Optional.of(admin));
     var actualUserDto = userService.findByUsername("admin");
     assertThat(actualUserDto).isEqualTo(expectedUserDto);
@@ -92,9 +92,9 @@ class UserServiceTest {
   @Test
   void itShouldFindUserByUsername_adminSignedIn() {
     TestUtil.setAuth(auth, securityContext, admin);
-    var userRoleDtos = Set.of(new RoleDto(RoleName.USER.name()));
+    var userRoleDtos = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserDto =
-        new UserDto(1L, "Test", "Test", "test", "test@test.com", true, true, userRoleDtos);
+        new UserDTO(1L, "Test", "Test", "test", "test@test.com", true, true, userRoleDtos);
     when(userRepository.findByUsernameWithRoles("test")).thenReturn(Optional.of(user));
     var actualUserDto = userService.findByUsername("test");
     assertThat(actualUserDto).isEqualTo(expectedUserDto);

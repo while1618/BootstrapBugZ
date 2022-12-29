@@ -12,7 +12,7 @@ import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.payload.dto.RoleDto;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -40,11 +40,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   }
 
   @Override
-  public String create(Long userId, Set<RoleDto> roleDtos) {
+  public String create(Long userId, Set<RoleDTO> roleDTOs) {
     return JWT.create()
         .withClaim("userId", userId)
         .withClaim("issuedAt", Instant.now().toString())
-        .withClaim("roles", roleDtos.stream().map(RoleDto::getName).toList())
+        .withClaim("roles", roleDTOs.stream().map(RoleDTO::getName).toList())
         .withClaim("purpose", PURPOSE.name())
         .withExpiresAt(new Date(System.currentTimeMillis() + tokenDuration * 1000L))
         .sign(JwtUtil.getAlgorithm(secret));

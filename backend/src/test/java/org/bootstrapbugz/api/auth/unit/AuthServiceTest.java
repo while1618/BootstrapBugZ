@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
@@ -36,8 +35,8 @@ import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.dto.RoleDto;
-import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -117,9 +116,9 @@ class AuthServiceTest {
 
   @Test
   void itShouldSignUp() {
-    var roleDtos = Set.of(new RoleDto(RoleName.USER.name()));
+    var roleDtos = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserDto =
-        new UserDto(1L, "Test", "Test", "test", "test@test.com", false, true, roleDtos);
+        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDtos);
     var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@test.com", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(role));
@@ -258,9 +257,9 @@ class AuthServiceTest {
   @Test
   void itShouldReceiveSignedInUser() {
     TestUtil.setAuth(auth, securityContext, user);
-    var roleDtos = Set.of(new RoleDto(RoleName.USER.name()));
+    var roleDtos = Set.of(new RoleDTO(RoleName.USER.name()));
     var expectedUserDto =
-        new UserDto(1L, "Test", "Test", "test", "test@test.com", false, true, roleDtos);
+        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDtos);
     var actualUserDto = authService.signedInUser();
     assertThat(actualUserDto).isEqualTo(expectedUserDto);
   }

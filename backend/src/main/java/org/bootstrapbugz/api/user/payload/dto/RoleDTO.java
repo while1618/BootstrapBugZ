@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.payload.dto;
+package org.bootstrapbugz.api.user.payload.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class RefreshTokenDto {
-  private String accessToken;
-  private String refreshToken;
+public class RoleDTO {
+  private String name;
 }

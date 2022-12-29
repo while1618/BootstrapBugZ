@@ -1,11 +1,12 @@
 package org.bootstrapbugz.api.auth.util;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.bootstrapbugz.api.user.payload.dto.RoleDto;
-import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtil {
@@ -20,22 +21,18 @@ public class AuthUtil {
 
   public static boolean isAdminSignedIn() {
     if (!isSignedIn()) return false;
-    var userDto = findSignedInUser();
-    return userDto.getRoles().stream()
-        .anyMatch(roleDto -> roleDto.getName().equals(RoleName.ADMIN.name()));
+    final var userDTO = findSignedInUser();
+    return userDTO.getRoleDTOs().stream()
+        .anyMatch(roleDTO -> roleDTO.getName().equals(RoleName.ADMIN.name()));
   }
 
-  public static UserDto findSignedInUser() {
+  public static UserDTO findSignedInUser() {
     final var auth = SecurityContextHolder.getContext().getAuthentication();
-    return userPrincipalToUserDto((UserPrincipal) auth.getPrincipal());
+    return userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
   }
 
-  public static UserDto userPrincipalToUserDto(UserPrincipal userPrincipal) {
-    final var roleNames =
-        userPrincipal.getAuthorities().stream()
-            .map(authority -> new RoleDto(RoleName.valueOf(authority.getAuthority()).name()))
-            .collect(Collectors.toSet());
-    return new UserDto()
+  public static UserDTO userPrincipalToUserDTO(UserPrincipal userPrincipal) {
+    return new UserDTO()
         .setId(userPrincipal.getId())
         .setFirstName(userPrincipal.getFirstName())
         .setLastName(userPrincipal.getLastName())
@@ -43,12 +40,18 @@ public class AuthUtil {
         .setEmail(userPrincipal.getEmail())
         .setActivated(userPrincipal.isEnabled())
         .setNonLocked(userPrincipal.isAccountNonLocked())
-        .setRoles(roleNames);
+        .setRoleDTOs(getRoleDTOs(userPrincipal));
+  }
+
+  private static Set<RoleDTO> getRoleDTOs(UserPrincipal userPrincipal) {
+    return userPrincipal.getAuthorities().stream()
+        .map(authority -> new RoleDTO(RoleName.valueOf(authority.getAuthority()).name()))
+        .collect(Collectors.toSet());
   }
 
   public static String getUserIpAddress(HttpServletRequest request) {
-    String ipAddress = request.getHeader("x-forwarded-for");
-    if (ipAddress == null || ipAddress.isEmpty()) ipAddress = request.getRemoteAddr();
+    final var ipAddress = request.getHeader("x-forwarded-for");
+    if (ipAddress == null || ipAddress.isEmpty()) return request.getRemoteAddr();
     return ipAddress;
   }
 

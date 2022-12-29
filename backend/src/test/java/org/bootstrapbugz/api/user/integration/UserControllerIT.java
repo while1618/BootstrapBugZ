@@ -14,8 +14,8 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.payload.dto.RoleDto;
-import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -72,7 +72,7 @@ class UserControllerIT extends DatabaseContainers {
   void itShouldFindUserByUsername_showEmail() throws Exception {
     var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     var expectedUserDto =
-        new UserDto(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, null);
+        new UserDTO(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, null);
     performFindUserByUsername("user", signInDto.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -82,7 +82,7 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void itShouldFindUserByUsername_hideEmail() throws Exception {
     var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var expectedUserDto = new UserDto(1L, "Admin", "Admin", "admin", null, true, true, null);
+    var expectedUserDto = new UserDTO(1L, "Admin", "Admin", "admin", null, true, true, null);
     performFindUserByUsername("admin", signInDto.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ class UserControllerIT extends DatabaseContainers {
   void itShouldFindUserByUsername_adminSignedIn() throws Exception {
     var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
     var expectedUserDto =
-        new UserDto(
+        new UserDTO(
             2L,
             "User",
             "User",
@@ -101,7 +101,7 @@ class UserControllerIT extends DatabaseContainers {
             "user@bootstrapbugz.com",
             true,
             true,
-            Set.of(new RoleDto(Role.RoleName.USER.name())));
+            Set.of(new RoleDTO(Role.RoleName.USER.name())));
     performFindUserByUsername("user", signInDto.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
