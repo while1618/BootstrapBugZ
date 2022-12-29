@@ -8,6 +8,7 @@ import org.bootstrapbugz.api.auth.jwt.redis.model.RefreshTokenWhitelist;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenWhitelistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
-  private static final JwtUtil.JwtPurpose PURPOSE = JwtUtil.JwtPurpose.REFRESH_TOKEN;
+  private static final JwtPurpose PURPOSE = JwtPurpose.REFRESH_TOKEN;
   private final RefreshTokenWhitelistRepository refreshTokenWhitelistRepository;
   private final MessageService messageService;
 

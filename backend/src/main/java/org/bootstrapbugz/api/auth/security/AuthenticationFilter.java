@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.auth.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
@@ -103,10 +102,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
   private void writeToResponse(HttpServletResponse response, SignInDTO signInDTO)
       throws IOException {
-    final var jsonSignInDTO = new Gson().toJson(signInDTO);
+    final var json = new ObjectMapper().writeValueAsString(signInDTO);
     final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    out.print(jsonSignInDTO);
+    out.print(json);
     out.flush();
   }
 }

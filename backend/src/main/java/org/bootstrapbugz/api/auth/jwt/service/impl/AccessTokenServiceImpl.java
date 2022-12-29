@@ -10,6 +10,7 @@ import org.bootstrapbugz.api.auth.jwt.redis.repository.AccessTokenBlacklistRepos
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
-  private static final JwtUtil.JwtPurpose PURPOSE = JwtUtil.JwtPurpose.ACCESS_TOKEN;
+  private static final JwtPurpose PURPOSE = JwtPurpose.ACCESS_TOKEN;
 
   private final AccessTokenBlacklistRepository accessTokenBlacklistRepository;
   private final UserBlacklistRepository userBlacklistRepository;
