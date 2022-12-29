@@ -7,7 +7,7 @@ import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
-import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDto;
+import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
@@ -23,7 +23,7 @@ import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
-import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,11 +63,11 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public UserDto signUp(SignUpRequest signUpRequest) {
+  public UserDTO signUp(SignUpRequest signUpRequest) {
     final var user = createUser(signUpRequest);
     final var accessToken = confirmRegistrationTokenService.create(user.getId());
     confirmRegistrationTokenService.sendToEmail(user, accessToken);
-    return userMapper.userToUserDto(user);
+    return userMapper.userToUserDTO(user);
   }
 
   private User createUser(SignUpRequest signUpRequest) {
@@ -116,17 +116,17 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public RefreshTokenDto refreshToken(
+  public RefreshTokenDTO refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
     final var oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.getRefreshToken());
     refreshTokenService.check(oldRefreshToken);
     final var userId = JwtUtil.getUserId(oldRefreshToken);
-    final var roleDtos = JwtUtil.getRoleDtos(oldRefreshToken);
+    final var roleDTOs = JwtUtil.getRoleDTOs(oldRefreshToken);
     refreshTokenService.delete(oldRefreshToken);
-    final var accessToken = accessTokenService.create(userId, roleDtos);
+    final var accessToken = accessTokenService.create(userId, roleDTOs);
     final var newRefreshToken =
-        refreshTokenService.create(userId, roleDtos, AuthUtil.getUserIpAddress(request));
-    return new RefreshTokenDto(JwtUtil.addBearer(accessToken), JwtUtil.addBearer(newRefreshToken));
+        refreshTokenService.create(userId, roleDTOs, AuthUtil.getUserIpAddress(request));
+    return new RefreshTokenDTO(JwtUtil.addBearer(accessToken), JwtUtil.addBearer(newRefreshToken));
   }
 
   @Override
@@ -169,7 +169,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public UserDto signedInUser() {
+  public UserDTO signedInUser() {
     return AuthUtil.findSignedInUser();
   }
 

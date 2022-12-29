@@ -3,7 +3,7 @@ package org.bootstrapbugz.api.auth.jwt.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import java.util.Set;
-import org.bootstrapbugz.api.user.payload.dto.RoleDto;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 
 public class JwtUtil {
   private static final String TOKEN_TYPE = "Bearer ";
@@ -37,8 +37,8 @@ public class JwtUtil {
     return JWT.decode(token).getClaim("userId").asLong();
   }
 
-  public static Set<RoleDto> getRoleDtos(String token) {
-    return Set.copyOf(JWT.decode(token).getClaim("roles").asList(RoleDto.class));
+  public static Set<RoleDTO> getRoleDTOs(String token) {
+    return Set.copyOf(JWT.decode(token).getClaim("roles").asList(RoleDTO.class));
   }
 
   public static String getIssuedAt(String token) {

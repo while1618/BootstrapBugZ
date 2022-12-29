@@ -13,8 +13,8 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role;
-import org.bootstrapbugz.api.user.payload.dto.RoleDto;
-import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.junit.jupiter.api.Test;
@@ -60,9 +60,9 @@ class ProfileControllerIT extends DatabaseContainers {
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty123"));
     var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "updated", "updated@bootstrapbugz.com");
-    var roleDtos = Collections.singleton(new RoleDto(Role.RoleName.USER.name()));
+    var roleDtos = Collections.singleton(new RoleDTO(Role.RoleName.USER.name()));
     var expectedUserDto =
-        new UserDto(
+        new UserDTO(
             5L,
             "Updated",
             "Updated",
@@ -83,9 +83,9 @@ class ProfileControllerIT extends DatabaseContainers {
     var updateUserRequest =
         new UpdateProfileRequest(
             "Updated", "Updated", "for.update.2", "for.update.2@bootstrapbugz.com");
-    var roleDtos = Collections.singleton(new RoleDto(Role.RoleName.USER.name()));
+    var roleDtos = Collections.singleton(new RoleDTO(Role.RoleName.USER.name()));
     var expectedUserDto =
-        new UserDto(
+        new UserDTO(
             6L,
             "Updated",
             "Updated",

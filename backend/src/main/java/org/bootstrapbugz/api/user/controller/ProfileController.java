@@ -2,7 +2,7 @@ package org.bootstrapbugz.api.user.controller;
 
 import javax.validation.Valid;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.bootstrapbugz.api.user.service.ProfileService;
@@ -22,7 +22,7 @@ public class ProfileController {
   }
 
   @PutMapping("/update")
-  public ResponseEntity<UserDto> update(
+  public ResponseEntity<UserDTO> update(
       @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
     return ResponseEntity.ok(profileService.update(updateProfileRequest));
   }

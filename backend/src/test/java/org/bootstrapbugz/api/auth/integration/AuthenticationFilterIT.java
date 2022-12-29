@@ -33,7 +33,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
   @Test
   void itShouldSignIn() throws Exception {
     var signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    assertThat(signInDto.getUser().getUsername()).isEqualTo("user");
+    assertThat(signInDto.getUserDTO().getUsername()).isEqualTo("user");
     assertThat(signInDto.getAccessToken()).isNotNull();
     assertThat(signInDto.getRefreshToken()).isNotNull();
   }

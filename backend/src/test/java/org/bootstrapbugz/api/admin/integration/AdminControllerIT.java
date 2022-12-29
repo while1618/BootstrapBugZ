@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
-import org.bootstrapbugz.api.auth.payload.dto.SignInDto;
+import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
@@ -38,7 +38,7 @@ class AdminControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
-  private SignInDto signInDto;
+  private SignInDTO signInDto;
 
   @BeforeAll
   void setUp() throws Exception {

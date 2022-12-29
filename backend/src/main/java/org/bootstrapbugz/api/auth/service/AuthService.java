@@ -1,23 +1,23 @@
 package org.bootstrapbugz.api.auth.service;
 
 import javax.servlet.http.HttpServletRequest;
-import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDto;
+import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.user.payload.dto.UserDto;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 
 public interface AuthService {
-  UserDto signUp(SignUpRequest signUpRequest);
+  UserDTO signUp(SignUpRequest signUpRequest);
 
   void resendConfirmationEmail(ResendConfirmationEmailRequest resendConfirmationEmailRequest);
 
   void confirmRegistration(ConfirmRegistrationRequest confirmRegistrationRequest);
 
-  RefreshTokenDto refreshToken(RefreshTokenRequest refreshTokenRequest, HttpServletRequest request);
+  RefreshTokenDTO refreshToken(RefreshTokenRequest refreshTokenRequest, HttpServletRequest request);
 
   void signOut(HttpServletRequest request);
 
@@ -27,7 +27,7 @@ public interface AuthService {
 
   void resetPassword(ResetPasswordRequest resetPasswordRequest);
 
-  UserDto signedInUser();
+  UserDTO signedInUser();
 
   boolean isUsernameAvailable(String username);
 
