@@ -6,6 +6,7 @@ import java.util.Date;
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ConfirmRegistrationTokenServiceImpl implements ConfirmRegistrationTokenService {
-  private static final JwtUtil.JwtPurpose PURPOSE = JwtUtil.JwtPurpose.CONFIRM_REGISTRATION_TOKEN;
+  private static final JwtPurpose PURPOSE = JwtPurpose.CONFIRM_REGISTRATION_TOKEN;
 
   private final ApplicationEventPublisher eventPublisher;
 

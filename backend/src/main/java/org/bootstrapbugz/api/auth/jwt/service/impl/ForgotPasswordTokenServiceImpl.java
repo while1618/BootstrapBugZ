@@ -7,6 +7,7 @@ import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.model.User;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ForgotPasswordTokenServiceImpl implements ForgotPasswordTokenService {
-  private static final JwtUtil.JwtPurpose PURPOSE = JwtUtil.JwtPurpose.FORGOT_PASSWORD_TOKEN;
+  private static final JwtPurpose PURPOSE = JwtPurpose.FORGOT_PASSWORD_TOKEN;
 
   private final UserBlacklistRepository userBlacklistRepository;
   private final MessageService messageService;

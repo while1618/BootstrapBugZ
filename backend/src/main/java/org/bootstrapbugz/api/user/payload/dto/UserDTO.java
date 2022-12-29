@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.user.payload.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -26,6 +25,5 @@ public class UserDTO {
   private boolean nonLocked;
 
   @JsonProperty("roles")
-  @SerializedName("roles")
   private Set<RoleDTO> roleDTOs;
 }
