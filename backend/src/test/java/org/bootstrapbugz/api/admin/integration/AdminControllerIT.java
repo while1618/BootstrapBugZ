@@ -38,11 +38,11 @@ class AdminControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
-  private SignInDTO signInDto;
+  private SignInDTO signInDTO;
 
   @BeforeAll
   void setUp() throws Exception {
-    signInDto = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
   }
 
   @Test
@@ -53,7 +53,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/update-role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDto.getAccessToken())
+                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
         .andExpect(status().isNoContent());
   }
@@ -71,7 +71,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/" + path)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDto.getAccessToken())
+                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }
@@ -83,7 +83,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             delete(Path.ADMIN + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDto.getAccessToken())
+                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }

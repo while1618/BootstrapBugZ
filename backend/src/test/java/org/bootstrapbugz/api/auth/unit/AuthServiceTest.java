@@ -116,15 +116,15 @@ class AuthServiceTest {
 
   @Test
   void itShouldSignUp() {
-    var roleDtos = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserDto =
-        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDtos);
+    var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
+    var expectedUserDTO =
+        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDTOs);
     var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@test.com", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(role));
     when(userRepository.save(any(User.class))).thenReturn(user);
-    var actualUserDto = authService.signUp(signUpRequest);
-    assertThat(actualUserDto).isEqualTo(expectedUserDto);
+    var actualUserDTO = authService.signUp(signUpRequest);
+    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test
@@ -193,9 +193,9 @@ class AuthServiceTest {
     String token = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
     when(refreshTokenWhitelistRepository.existsById(token)).thenReturn(true);
     var refreshTokenRequest = new RefreshTokenRequest(token);
-    var refreshTokenDto = authService.refreshToken(refreshTokenRequest, request);
-    assertThat(refreshTokenDto.getAccessToken()).isNotNull();
-    assertThat(refreshTokenDto.getRefreshToken()).isNotNull();
+    var refreshTokenDTO = authService.refreshToken(refreshTokenRequest, request);
+    assertThat(refreshTokenDTO.getAccessToken()).isNotNull();
+    assertThat(refreshTokenDTO.getRefreshToken()).isNotNull();
   }
 
   @Test
@@ -257,11 +257,11 @@ class AuthServiceTest {
   @Test
   void itShouldReceiveSignedInUser() {
     TestUtil.setAuth(auth, securityContext, user);
-    var roleDtos = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserDto =
-        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDtos);
-    var actualUserDto = authService.signedInUser();
-    assertThat(actualUserDto).isEqualTo(expectedUserDto);
+    var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
+    var expectedUserDTO =
+        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDTOs);
+    var actualUserDTO = authService.signedInUser();
+    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test
