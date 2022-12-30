@@ -18,6 +18,7 @@ import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
@@ -59,7 +60,7 @@ class ProfileServiceTest {
   @BeforeEach
   void setUp() {
     password = bCryptPasswordEncoder.encode("qwerty123");
-    roles = Collections.singleton(new Role(Role.RoleName.USER));
+    roles = Collections.singleton(new Role(RoleName.USER));
     user = new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
     TestUtil.setAuth(auth, securityContext, user);
   }
