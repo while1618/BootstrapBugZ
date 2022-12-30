@@ -21,7 +21,6 @@ public class UserController {
 
   @GetMapping
   public ResponseEntity<List<UserDTO>> findAll() {
-    var test = userService.findAll();
     return ResponseEntity.ok(userService.findAll());
   }
 

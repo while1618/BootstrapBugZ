@@ -85,7 +85,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     final var userDTO = AuthUtil.userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
     final var ipAddress = AuthUtil.getUserIpAddress(request);
     final var accessToken = accessTokenService.create(userDTO.getId(), userDTO.getRoleDTOs());
-    final var refreshToken = findRefreshToken(userDTO.getId(), userDTO.getRoleDTOs(), ipAddress);
+    final var refreshToken = getRefreshToken(userDTO.getId(), userDTO.getRoleDTOs(), ipAddress);
     final var signInDTO =
         new SignInDTO()
             .setAccessToken(JwtUtil.addBearer(accessToken))
@@ -94,7 +94,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     writeToResponse(response, signInDTO);
   }
 
-  private String findRefreshToken(Long userId, Set<RoleDTO> roleDTOs, String ipAddress) {
+  private String getRefreshToken(Long userId, Set<RoleDTO> roleDTOs, String ipAddress) {
     final var refreshToken = refreshTokenService.findByUserAndIpAddress(userId, ipAddress);
     if (refreshToken == null) return refreshTokenService.create(userId, roleDTOs, ipAddress);
     return refreshToken;
