@@ -49,7 +49,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserResponse"
+                $ref: "#/components/schemas/UserDTO"
               example:
                 id: 4
                 firstName: Joe
@@ -135,7 +135,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SignInResponse"
+                $ref: "#/components/schemas/SignInDTO"
               example:
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
                 refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
@@ -175,7 +175,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RefreshTokenResponse"
+                $ref: "#/components/schemas/RefreshTokenDTO"
               example:
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
                 refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
@@ -275,7 +275,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserResponse"
+                $ref: "#/components/schemas/UserDTO"
               example:
                 id: 2
                 firstName: John
@@ -357,7 +357,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/UserResponse"
+                  $ref: "#/components/schemas/UserDTO"
               examples:
                 non-signed-in-and-regular-user:
                   value:
@@ -438,7 +438,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserResponse"
+                $ref: "#/components/schemas/UserDTO"
               examples:
                 non-signed-in-or-requesting-other:
                   value:
@@ -500,7 +500,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserResponse"
+                $ref: "#/components/schemas/UserDTO"
               example:
                 id: 4
                 firstName: Joe
@@ -886,7 +886,7 @@ components:
             enum:
               - USER
               - ADMIN
-    RoleResponse:
+    RoleDTO:
       type: object
       properties:
         name:
@@ -894,7 +894,7 @@ components:
           enum:
             - USER
             - ADMIN
-    UserResponse:
+    UserDTO:
       type: object
       properties:
         id:
@@ -916,8 +916,8 @@ components:
         roles:
           type: array
           items:
-            $ref: "#/components/schemas/RoleResponse"
-    SignInResponse:
+            $ref: "#/components/schemas/RoleDTO"
+    SignInDTO:
       type: object
       properties:
         accessToken:
@@ -927,8 +927,8 @@ components:
           type: string
           format: JWT
         user:
-          $ref: "#/components/schemas/UserResponse"
-    RefreshTokenResponse:
+          $ref: "#/components/schemas/UserDTO"
+    RefreshTokenDTO:
       properties:
         accessToken:
           type: string
