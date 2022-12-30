@@ -2,8 +2,8 @@ package org.bootstrapbugz.api.auth.validator.impl;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.beanutils.BeanUtils;
 import org.bootstrapbugz.api.auth.validator.FieldMatch;
+import org.springframework.beans.BeanWrapperImpl;
 
 public class FieldMatchImpl implements ConstraintValidator<FieldMatch, Object> {
   private String firstFieldName;
@@ -17,8 +17,10 @@ public class FieldMatchImpl implements ConstraintValidator<FieldMatch, Object> {
 
   public boolean isValid(Object obj, ConstraintValidatorContext context) {
     try {
-      final Object firstObj = BeanUtils.getProperty(obj, firstFieldName);
-      final Object secondObj = BeanUtils.getProperty(obj, secondFieldName);
+      final var wrapper = new BeanWrapperImpl(obj);
+
+      final Object firstObj = wrapper.getPropertyValue(firstFieldName);
+      final Object secondObj = wrapper.getPropertyValue(secondFieldName);
 
       return firstObj == null && secondObj == null
           || firstObj != null && firstObj.equals(secondObj);

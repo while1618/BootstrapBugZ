@@ -24,6 +24,6 @@ public class UpdateProfileRequest {
   private String username;
 
   @NotEmpty(message = "{email.invalid}")
-  @Email(message = "{email.invalid}")
+  @Email(message = "{email.invalid}", regexp = Regex.EMAIL)
   private String email;
 }

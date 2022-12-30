@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bootstrapbugz.api.shared.constants.Regex;
 
 @Getter
 @Setter
@@ -13,6 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ForgotPasswordRequest {
   @NotEmpty(message = "{email.invalid}")
-  @Email(message = "{email.invalid}")
+  @Email(message = "{email.invalid}", regexp = Regex.EMAIL)
   private String email;
 }

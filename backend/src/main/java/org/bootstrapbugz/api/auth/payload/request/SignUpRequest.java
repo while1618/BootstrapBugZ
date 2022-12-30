@@ -31,7 +31,7 @@ public class SignUpRequest {
   private String username;
 
   @NotEmpty(message = "{email.invalid}")
-  @Email(message = "{email.invalid}")
+  @Email(message = "{email.invalid}", regexp = Regex.EMAIL)
   @EmailExist(message = "{email.exists}")
   private String email;
 

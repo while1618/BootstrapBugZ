@@ -23,8 +23,6 @@
     <guava.version>31.1-jre</guava.version>
     <jwt.version>4.2.1</jwt.version>
     <mapstruct.version>1.5.3.Final</mapstruct.version>
-    <commons-beanutils.version>1.9.4</commons-beanutils.version>
-    <commons-validator.version>1.7</commons-validator.version>
     <jacoco.version>0.8.7</jacoco.version>
     <jedis.version>4.3.1</jedis.version>
     <testcontainers.version>1.17.6</testcontainers.version>
@@ -117,16 +115,6 @@
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
       <version>${mapstruct.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>${commons-beanutils.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-validator</groupId>
-      <artifactId>commons-validator</artifactId>
-      <version>${commons-validator.version}</version>
     </dependency>
   </dependencies>
 

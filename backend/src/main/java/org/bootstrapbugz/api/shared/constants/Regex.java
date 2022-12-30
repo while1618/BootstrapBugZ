@@ -36,6 +36,11 @@ public class Regex {
    * */
   public static final String USERNAME = "^(?=[a-zA-Z0-9._]{2,16}$)(?!.*[_.]{2})[^_.].*[^_.]$";
   /*
+   * Email Regex base on this article:
+   * https://www.baeldung.com/java-email-validation-regex#regular-expression-by-rfc-5322-for-email-validation
+   * */
+  public static final String EMAIL = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+  /*
    * At least one letter
    * At least one number
    * It can have a special characters
