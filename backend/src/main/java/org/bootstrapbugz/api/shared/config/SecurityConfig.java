@@ -11,20 +11,19 @@ import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
   private static final String[] USERS_WHITELIST = {Path.USERS, Path.USERS + "/**"};
   private static final String[] AUTH_WHITELIST = {
     Path.AUTH + "/sign-up",
@@ -56,24 +55,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     this.messageService = messageService;
   }
 
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
-  }
-
-  @Bean(BeanIds.AUTHENTICATION_MANAGER)
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
-
   @Bean
   public PasswordEncoder bCryptPasswordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.cors()
         .and()
         .csrf()
@@ -81,12 +69,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .addFilter(
-            new AuthenticationFilter(
-                authenticationManager(), accessTokenService, refreshTokenService, messageService))
-        .addFilter(
-            new AuthorizationFilter(
-                authenticationManager(), accessTokenService, userDetailsService))
+        .apply(
+            CustomDSL.customDsl(
+                userDetailsService, accessTokenService, refreshTokenService, messageService))
+        .and()
         .exceptionHandling()
         .authenticationEntryPoint(customAuthenticationEntryPoint)
         .and()
@@ -97,5 +83,43 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll()
         .anyRequest()
         .authenticated();
+    return http.build();
+  }
+}
+
+class CustomDSL extends AbstractHttpConfigurer<CustomDSL, HttpSecurity> {
+  private final CustomUserDetailsService userDetailsService;
+  private final AccessTokenService accessTokenService;
+  private final RefreshTokenService refreshTokenService;
+  private final MessageService messageService;
+
+  private CustomDSL(
+      CustomUserDetailsService userDetailsService,
+      AccessTokenService accessTokenService,
+      RefreshTokenService refreshTokenService,
+      MessageService messageService) {
+    this.userDetailsService = userDetailsService;
+    this.accessTokenService = accessTokenService;
+    this.refreshTokenService = refreshTokenService;
+    this.messageService = messageService;
+  }
+
+  @Override
+  public void configure(HttpSecurity http) {
+    final var authenticationManager = http.getSharedObject(AuthenticationManager.class);
+    http.addFilter(
+        new AuthenticationFilter(
+            authenticationManager, accessTokenService, refreshTokenService, messageService));
+    http.addFilter(
+        new AuthorizationFilter(authenticationManager, accessTokenService, userDetailsService));
+  }
+
+  public static CustomDSL customDsl(
+      CustomUserDetailsService userDetailsService,
+      AccessTokenService accessTokenService,
+      RefreshTokenService refreshTokenService,
+      MessageService messageService) {
+    return new CustomDSL(
+        userDetailsService, accessTokenService, refreshTokenService, messageService);
   }
 }
