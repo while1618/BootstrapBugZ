@@ -11,7 +11,7 @@ import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
+import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.user.model.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,8 +25,9 @@ import org.springframework.test.web.servlet.ResultActions;
 public class TestUtil {
   private TestUtil() {}
 
-  public static void checkErrorMessages(ErrorResponse expectedResponse, ResultActions resultActions)
+  public static void checkErrorMessages(ErrorMessage expectedResponse, ResultActions resultActions)
       throws Exception {
+    var test = resultActions.andReturn().getResponse().getContentAsString();
     var actualResponse =
         new JSONObject(resultActions.andReturn().getResponse().getContentAsString());
     assertThat(actualResponse.getInt("status")).isEqualTo(expectedResponse.getStatus());

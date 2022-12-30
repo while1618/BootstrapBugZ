@@ -3,7 +3,7 @@ package org.bootstrapbugz.api.shared.config;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;

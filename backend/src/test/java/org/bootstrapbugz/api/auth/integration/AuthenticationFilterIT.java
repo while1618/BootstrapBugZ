@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
+import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,7 +41,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
   @Test
   void signInShouldThrowUnauthorized_wrongCredentials() throws Exception {
     var signInRequest = new SignInRequest("wrong", "qwerty123");
-    var expectedErrorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED);
+    var expectedErrorResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
     expectedErrorResponse.addDetails("Invalid credentials.");
     var resultActions =
         mockMvc
@@ -61,7 +61,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
   void signInShouldThrowForbidden_userLockedAndUserNotActivated(String username, String message)
       throws Exception {
     var signInRequest = new SignInRequest(username, "qwerty123");
-    var expectedErrorResponse = new ErrorResponse(HttpStatus.FORBIDDEN);
+    var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
     expectedErrorResponse.addDetails(message);
     var resultActions =
         mockMvc

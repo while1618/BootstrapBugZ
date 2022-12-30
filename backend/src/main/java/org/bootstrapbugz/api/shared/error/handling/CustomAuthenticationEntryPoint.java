@@ -1,10 +1,10 @@
 package org.bootstrapbugz.api.shared.error.handling;
 
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
+import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -18,7 +18,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
   public void commence(
       HttpServletRequest request, HttpServletResponse response, AuthenticationException e) {
     try {
-      final var errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED);
+      final var errorResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
       errorResponse.addDetails(e.getMessage());
       response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
       response.setStatus(HttpStatus.UNAUTHORIZED.value());

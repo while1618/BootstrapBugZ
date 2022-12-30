@@ -3,14 +3,15 @@ package org.bootstrapbugz.api.shared.error.handling;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
-import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -27,38 +28,39 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @Override
-  @Nonnull
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex,
       @Nonnull HttpHeaders headers,
-      @Nonnull HttpStatus status,
+      @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
-    final var errorResponse = new ErrorResponse(status);
+    final var status = (HttpStatus) statusCode;
+    final var errorResponse = new ErrorMessage(status);
     final var result = ex.getBindingResult();
     result
         .getFieldErrors()
         .forEach(error -> errorResponse.addDetails(error.getField(), error.getDefaultMessage()));
     result.getGlobalErrors().forEach(error -> errorResponse.addDetails(error.getDefaultMessage()));
-    headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
-    return new ResponseEntity<>(errorResponse, headers, status);
+    return new ResponseEntity<>(errorResponse, setHeaders(), status);
+  }
+
+  private HttpHeaders setHeaders() {
+    final var header = new HttpHeaders();
+    header.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
+    return header;
   }
 
   private ResponseEntity<Object> createErrorResponseEntityWithoutField(
       HttpStatus status, String message) {
-    final var errorResponse = new ErrorResponse(status);
+    final var errorResponse = new ErrorMessage(status);
     errorResponse.addDetails(message);
-    final var header = new HttpHeaders();
-    header.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
-    return new ResponseEntity<>(errorResponse, header, status);
+    return new ResponseEntity<>(errorResponse, setHeaders(), status);
   }
 
   private ResponseEntity<Object> createErrorResponseEntityWithField(
       HttpStatus status, String field, String message) {
-    final var errorResponse = new ErrorResponse(status);
+    final var errorResponse = new ErrorMessage(status);
     errorResponse.addDetails(field, message);
-    final var header = new HttpHeaders();
-    header.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
-    return new ResponseEntity<>(errorResponse, header, status);
+    return new ResponseEntity<>(errorResponse, setHeaders(), status);
   }
 
   @ExceptionHandler({BadRequestException.class})
@@ -102,39 +104,37 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @Override
-  @Nonnull
   protected ResponseEntity<Object> handleMissingServletRequestParameter(
       MissingServletRequestParameterException ex,
       @Nonnull HttpHeaders headers,
-      @Nonnull HttpStatus status,
+      @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
     return createErrorResponseEntityWithoutField(
-        status, ex.getParameterName() + " parameter is missing");
+        (HttpStatus) statusCode, ex.getParameterName() + " parameter is missing");
   }
 
   @Override
-  @Nonnull
   protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
       HttpRequestMethodNotSupportedException ex,
       @Nonnull HttpHeaders headers,
-      @Nonnull HttpStatus status,
+      @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
     final var builder = new StringBuilder();
     builder.append(ex.getMethod());
     builder.append(" method is not supported for this request. Supported methods are ");
     Objects.requireNonNull(ex.getSupportedHttpMethods())
         .forEach(t -> builder.append(t).append(" "));
-    return createErrorResponseEntityWithoutField(status, builder.toString());
+    return createErrorResponseEntityWithoutField((HttpStatus) statusCode, builder.toString());
   }
 
   @Override
-  @Nonnull
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
       HttpMessageNotReadableException ex,
       @Nonnull HttpHeaders headers,
-      @Nonnull HttpStatus status,
+      @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
-    return createErrorResponseEntityWithoutField(status, ex.getMostSpecificCause().getMessage());
+    return createErrorResponseEntityWithoutField(
+        (HttpStatus) statusCode, ex.getMostSpecificCause().getMessage());
   }
 
   @ExceptionHandler({MethodArgumentTypeMismatchException.class})

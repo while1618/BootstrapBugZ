@@ -1,6 +1,6 @@
 package org.bootstrapbugz.api.auth.payload.request;
 
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

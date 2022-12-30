@@ -1,7 +1,7 @@
 package org.bootstrapbugz.api.auth.validator.impl;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.apache.commons.beanutils.BeanUtils;
 import org.bootstrapbugz.api.auth.validator.FieldMatch;
 

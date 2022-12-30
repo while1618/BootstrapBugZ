@@ -1,6 +1,6 @@
 package org.bootstrapbugz.api.user.controller;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;

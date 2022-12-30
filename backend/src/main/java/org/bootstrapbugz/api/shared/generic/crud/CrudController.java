@@ -1,6 +1,6 @@
 package org.bootstrapbugz.api.shared.generic.crud;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.bootstrapbugz.api.shared.generic.crud.request.DeleteRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.shared.error.response;
+package org.bootstrapbugz.api.shared.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorResponse {
+public class ErrorMessage {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
   private final LocalDateTime timestamp;
 
@@ -24,7 +24,7 @@ public class ErrorResponse {
   private final String error;
   private final List<Detail> details;
 
-  public ErrorResponse(HttpStatus status) {
+  public ErrorMessage(HttpStatus status) {
     this.timestamp = LocalDateTime.now();
     this.status = status.value();
     this.error = status.getReasonPhrase();

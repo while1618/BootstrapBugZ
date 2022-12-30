@@ -23,7 +23,7 @@ public abstract class DatabaseContainers {
     registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
     registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
     registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-    registry.add("spring.redis.host", redisContainer::getHost);
-    registry.add("spring.redis.port", redisContainer::getFirstMappedPort);
+    registry.add("spring.data.redis.host", redisContainer::getHost);
+    registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
   }
 }

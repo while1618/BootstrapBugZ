@@ -1,9 +1,9 @@
 package org.bootstrapbugz.api.shared.error.handling;
 
 import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
+import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public final class CustomFilterExceptionHandler {
   public static void handleException(
       HttpServletResponse response, String message, HttpStatus status) {
     try {
-      final var errorResponse = new ErrorResponse(status);
+      final var errorResponse = new ErrorMessage(status);
       errorResponse.addDetails(message);
       response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
       response.setStatus(status.value());

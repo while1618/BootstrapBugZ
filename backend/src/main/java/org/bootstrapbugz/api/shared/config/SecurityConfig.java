@@ -11,7 +11,7 @@ import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
   private static final String[] USERS_WHITELIST = {Path.USERS, Path.USERS + "/**"};
   private static final String[] AUTH_WHITELIST = {
@@ -62,12 +62,13 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.cors()
-        .and()
-        .csrf()
-        .disable()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+    http.authorizeHttpRequests()
+        .requestMatchers(AUTH_WHITELIST)
+        .permitAll()
+        .requestMatchers(USERS_WHITELIST)
+        .permitAll()
+        .anyRequest()
+        .authenticated()
         .and()
         .apply(
             CustomDSL.customDsl(
@@ -76,13 +77,13 @@ public class SecurityConfig {
         .exceptionHandling()
         .authenticationEntryPoint(customAuthenticationEntryPoint)
         .and()
-        .authorizeRequests()
-        .antMatchers(AUTH_WHITELIST)
-        .permitAll()
-        .antMatchers(USERS_WHITELIST)
-        .permitAll()
-        .anyRequest()
-        .authenticated();
+        .cors()
+        .and()
+        .csrf()
+        .disable()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
     return http.build();
   }
 }

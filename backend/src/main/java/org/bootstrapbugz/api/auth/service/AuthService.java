@@ -1,6 +1,6 @@
 package org.bootstrapbugz.api.auth.service;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;

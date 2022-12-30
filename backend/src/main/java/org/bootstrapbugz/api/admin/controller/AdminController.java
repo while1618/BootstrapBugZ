@@ -1,6 +1,6 @@
 package org.bootstrapbugz.api.admin.controller;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.admin.service.AdminService;

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.6</version>
+    <version>3.0.1</version>
     <relativePath/>
     <!-- lookup parent from repository -->
   </parent>
@@ -25,7 +26,7 @@
     <commons-beanutils.version>1.9.4</commons-beanutils.version>
     <commons-validator.version>1.7</commons-validator.version>
     <jacoco.version>0.8.7</jacoco.version>
-    <jedis.version>3.8.0</jedis.version>
+    <jedis.version>4.3.1</jedis.version>
     <testcontainers.version>1.17.6</testcontainers.version>
     <maven-compiler-plugin.version>3.9.0</maven-compiler-plugin.version>
   </properties>
@@ -68,6 +69,10 @@
         <exclusion>
           <groupId>org.junit.vintage</groupId>
           <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.vaadin.external.google</groupId>
+          <artifactId>android-json</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -152,7 +157,7 @@
             </path>
           </annotationProcessorPaths>
           <compilerArgs>
-            <compilerArg> -Amapstruct.defaultComponentModel=spring
+            <compilerArg>-Amapstruct.defaultComponentModel=spring
             </compilerArg>
           </compilerArgs>
         </configuration>

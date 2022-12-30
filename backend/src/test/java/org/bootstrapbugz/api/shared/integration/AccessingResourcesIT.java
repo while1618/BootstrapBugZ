@@ -14,7 +14,7 @@ import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
+import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
@@ -37,17 +37,17 @@ import org.springframework.test.web.servlet.MockMvc;
 @ActiveProfiles("test")
 @SpringBootTest
 class AccessingResourcesIT extends DatabaseContainers {
-  private static ErrorResponse expectedForbiddenResponse;
-  private static ErrorResponse expectedUnauthorizedResponse;
+  private static ErrorMessage expectedForbiddenResponse;
+  private static ErrorMessage expectedUnauthorizedResponse;
 
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
   @BeforeAll
   static void setUp() {
-    expectedForbiddenResponse = new ErrorResponse(HttpStatus.FORBIDDEN);
-    expectedForbiddenResponse.addDetails("Access is denied");
-    expectedUnauthorizedResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED);
+    expectedForbiddenResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
+    expectedForbiddenResponse.addDetails("Access Denied");
+    expectedUnauthorizedResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
     expectedUnauthorizedResponse.addDetails(
         "Full authentication is required to access this resource");
   }

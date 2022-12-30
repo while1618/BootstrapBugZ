@@ -10,7 +10,7 @@ import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
+import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.util.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
@@ -108,7 +108,7 @@ class ProfileControllerIT extends DatabaseContainers {
     var resultActions =
         performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
             .andExpect(status().isConflict());
-    var expectedErrorResponse = new ErrorResponse(HttpStatus.CONFLICT);
+    var expectedErrorResponse = new ErrorMessage(HttpStatus.CONFLICT);
     expectedErrorResponse.addDetails("username", "Username already exists.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
@@ -122,7 +122,7 @@ class ProfileControllerIT extends DatabaseContainers {
     var resultActions =
         performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
             .andExpect(status().isConflict());
-    var expectedErrorResponse = new ErrorResponse(HttpStatus.CONFLICT);
+    var expectedErrorResponse = new ErrorMessage(HttpStatus.CONFLICT);
     expectedErrorResponse.addDetails("email", "Email already exists.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
@@ -136,7 +136,7 @@ class ProfileControllerIT extends DatabaseContainers {
     var resultActions =
         performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
             .andExpect(status().isBadRequest());
-    var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
+    var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("firstName", "Invalid first name.");
     expectedErrorResponse.addDetails("lastName", "Invalid last name.");
     expectedErrorResponse.addDetails("username", "Invalid username.");
@@ -162,7 +162,7 @@ class ProfileControllerIT extends DatabaseContainers {
     var resultActions =
         performChangePassword(changePasswordRequest, signInDTO.getAccessToken())
             .andExpect(status().isBadRequest());
-    var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
+    var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("oldPassword", "Wrong old password.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
@@ -175,7 +175,7 @@ class ProfileControllerIT extends DatabaseContainers {
     var resultActions =
         performChangePassword(changePasswordRequest, signInDTO.getAccessToken())
             .andExpect(status().isBadRequest());
-    var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
+    var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("Passwords do not match.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
@@ -188,7 +188,7 @@ class ProfileControllerIT extends DatabaseContainers {
     var resultActions =
         performChangePassword(changePasswordRequest, signInDTO.getAccessToken())
             .andExpect(status().isBadRequest());
-    var expectedErrorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST);
+    var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("newPassword", "Invalid password.");
     expectedErrorResponse.addDetails("oldPassword", "Invalid password.");
     expectedErrorResponse.addDetails("confirmNewPassword", "Invalid password.");

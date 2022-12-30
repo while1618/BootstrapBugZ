@@ -2,7 +2,7 @@ package org.bootstrapbugz.api.auth.util;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;

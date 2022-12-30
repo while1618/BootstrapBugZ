@@ -728,7 +728,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: "#/components/schemas/ErrorMessage"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 400
@@ -743,7 +743,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: "#/components/schemas/ErrorMessage"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 404
@@ -755,7 +755,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: "#/components/schemas/ErrorMessage"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 401
@@ -767,7 +767,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: "#/components/schemas/ErrorMessage"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 403
@@ -779,7 +779,7 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            $ref: "#/components/schemas/ErrorMessage"
           example:
             timestamp: 18-10-2021 04:00:44
             status: 409
@@ -936,7 +936,7 @@ components:
         refreshToken:
           type: string
           format: JWT
-    ErrorResponse:
+    ErrorMessage:
       type: object
       properties:
         timestamp:
