@@ -13,7 +13,7 @@ import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.response.ErrorResponse;
 import org.bootstrapbugz.api.shared.util.TestUtil;
-import org.bootstrapbugz.api.user.model.Role;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.junit.jupiter.api.Test;
@@ -101,7 +101,7 @@ class UserControllerIT extends DatabaseContainers {
             "user@bootstrapbugz.com",
             true,
             true,
-            Set.of(new RoleDTO(Role.RoleName.USER.name())));
+            Set.of(new RoleDTO(RoleName.USER.name())));
     performFindUserByUsername("user", signInDTO.getAccessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
