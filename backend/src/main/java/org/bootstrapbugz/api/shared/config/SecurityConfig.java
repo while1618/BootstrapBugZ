@@ -105,6 +105,15 @@ class CustomDSL extends AbstractHttpConfigurer<CustomDSL, HttpSecurity> {
     this.messageService = messageService;
   }
 
+  public static CustomDSL customDsl(
+      CustomUserDetailsService userDetailsService,
+      AccessTokenService accessTokenService,
+      RefreshTokenService refreshTokenService,
+      MessageService messageService) {
+    return new CustomDSL(
+        userDetailsService, accessTokenService, refreshTokenService, messageService);
+  }
+
   @Override
   public void configure(HttpSecurity http) {
     final var authenticationManager = http.getSharedObject(AuthenticationManager.class);
@@ -113,14 +122,5 @@ class CustomDSL extends AbstractHttpConfigurer<CustomDSL, HttpSecurity> {
             authenticationManager, accessTokenService, refreshTokenService, messageService));
     http.addFilter(
         new AuthorizationFilter(authenticationManager, accessTokenService, userDetailsService));
-  }
-
-  public static CustomDSL customDsl(
-      CustomUserDetailsService userDetailsService,
-      AccessTokenService accessTokenService,
-      RefreshTokenService refreshTokenService,
-      MessageService messageService) {
-    return new CustomDSL(
-        userDetailsService, accessTokenService, refreshTokenService, messageService);
   }
 }

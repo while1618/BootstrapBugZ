@@ -1,8 +1,8 @@
 package org.bootstrapbugz.api.shared.error.handling;
 
-import java.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.springframework.http.HttpStatus;

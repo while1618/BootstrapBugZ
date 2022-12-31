@@ -1,9 +1,9 @@
 package org.bootstrapbugz.api.shared.config;
 
+import jakarta.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import jakarta.annotation.PostConstruct;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;

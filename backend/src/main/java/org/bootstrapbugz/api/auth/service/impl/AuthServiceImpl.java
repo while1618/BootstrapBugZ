@@ -1,7 +1,7 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
-import java.util.Collections;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
