@@ -2,7 +2,6 @@ package org.bootstrapbugz.api.shared.error.handling;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
@@ -30,9 +29,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex,
-      @Nonnull HttpHeaders headers,
-      @Nonnull HttpStatusCode statusCode,
-      @Nonnull WebRequest request) {
+      HttpHeaders headers,
+      HttpStatusCode statusCode,
+      WebRequest request) {
     final var status = (HttpStatus) statusCode;
     final var errorResponse = new ErrorMessage(status);
     final var result = ex.getBindingResult();
@@ -106,9 +105,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @Override
   protected ResponseEntity<Object> handleMissingServletRequestParameter(
       MissingServletRequestParameterException ex,
-      @Nonnull HttpHeaders headers,
-      @Nonnull HttpStatusCode statusCode,
-      @Nonnull WebRequest request) {
+      HttpHeaders headers,
+      HttpStatusCode statusCode,
+      WebRequest request) {
     return createErrorResponseEntityWithoutField(
         (HttpStatus) statusCode, ex.getParameterName() + " parameter is missing");
   }
@@ -116,9 +115,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @Override
   protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
       HttpRequestMethodNotSupportedException ex,
-      @Nonnull HttpHeaders headers,
-      @Nonnull HttpStatusCode statusCode,
-      @Nonnull WebRequest request) {
+      HttpHeaders headers,
+      HttpStatusCode statusCode,
+      WebRequest request) {
     final var builder = new StringBuilder();
     builder.append(ex.getMethod());
     builder.append(" method is not supported for this request. Supported methods are ");
@@ -130,9 +129,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
       HttpMessageNotReadableException ex,
-      @Nonnull HttpHeaders headers,
-      @Nonnull HttpStatusCode statusCode,
-      @Nonnull WebRequest request) {
+      HttpHeaders headers,
+      HttpStatusCode statusCode,
+      WebRequest request) {
     return createErrorResponseEntityWithoutField(
         (HttpStatus) statusCode, ex.getMostSpecificCause().getMessage());
   }
