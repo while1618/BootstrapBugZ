@@ -27,7 +27,6 @@ public class TestUtil {
 
   public static void checkErrorMessages(ErrorMessage expectedResponse, ResultActions resultActions)
       throws Exception {
-    var test = resultActions.andReturn().getResponse().getContentAsString();
     var actualResponse =
         new JSONObject(resultActions.andReturn().getResponse().getContentAsString());
     assertThat(actualResponse.getInt("status")).isEqualTo(expectedResponse.getStatus());
