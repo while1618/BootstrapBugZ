@@ -25,18 +25,6 @@ import org.springframework.test.context.ActiveProfiles;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryIT extends DatabaseContainers {
-  private final User expectedUser =
-      new User(
-          2L,
-          "User",
-          "User",
-          "user",
-          "user@bootstrapbugz.com",
-          null,
-          true,
-          true,
-          Collections.singleton(new Role(RoleName.USER)));
-
   private final Role userRole = new Role(RoleName.USER);
   private final Role adminRole = new Role(RoleName.ADMIN);
   private final User user =
@@ -57,6 +45,17 @@ class UserRepositoryIT extends DatabaseContainers {
           .setPassword("qwerty123")
           .setActivated(true)
           .setRoles(Set.of(userRole, adminRole));
+  private final User expectedUser =
+      new User(
+          2L,
+          "User",
+          "User",
+          "user",
+          "user@bootstrapbugz.com",
+          null,
+          true,
+          true,
+          Collections.singleton(userRole));
 
   @Autowired private UserRepository userRepository;
   @Autowired private RoleRepository roleRepository;
@@ -85,7 +84,7 @@ class UserRepositoryIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByEmail() {
-    var actualUser = userRepository.findByEmail("user@bootstrapbugz.com").orElseThrow();
+    final var actualUser = userRepository.findByEmail("user@bootstrapbugz.com").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
         .ignoringFields("id")
@@ -96,7 +95,7 @@ class UserRepositoryIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername() {
-    var actualUser = userRepository.findByUsername("user").orElseThrow();
+    final var actualUser = userRepository.findByUsername("user").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
         .ignoringFields("id")
@@ -107,7 +106,7 @@ class UserRepositoryIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsernameWithRoles() {
-    var actualUser = userRepository.findByUsernameWithRoles("user").orElseThrow();
+    final var actualUser = userRepository.findByUsernameWithRoles("user").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
         .ignoringFields("id")
@@ -118,7 +117,7 @@ class UserRepositoryIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsernameOrEmail() {
-    var actualUser = userRepository.findByUsernameOrEmail("user", "user").orElseThrow();
+    final var actualUser = userRepository.findByUsernameOrEmail("user", "user").orElseThrow();
     assertThat(actualUser)
         .usingRecursiveComparison()
         .ignoringFields("id")

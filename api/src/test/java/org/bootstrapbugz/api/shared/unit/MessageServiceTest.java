@@ -22,7 +22,7 @@ class MessageServiceTest {
   void itShouldGetMessage() {
     when(messageSource.getMessage("{token.invalid}", null, LocaleContextHolder.getLocale()))
         .thenReturn("Invalid token.");
-    String actualMessage = messageService.getMessage("{token.invalid}");
+    final var actualMessage = messageService.getMessage("{token.invalid}");
     assertThat(actualMessage).isEqualTo("Invalid token.");
   }
 }

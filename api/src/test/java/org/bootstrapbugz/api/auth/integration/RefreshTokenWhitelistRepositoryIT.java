@@ -44,14 +44,14 @@ class RefreshTokenWhitelistRepositoryIT extends DatabaseContainers {
 
   @Test
   void itShouldFindByUserIdAndIpAddress() {
-    var refreshToken =
+    final var refreshToken =
         refreshTokenWhitelistRepository.findByUserIdAndIpAddress(23L, "ip3").orElseThrow();
     assertThat(refreshToken).isEqualTo(third);
   }
 
   @Test
   void itShouldFindAllByUserId() {
-    var refreshTokens = refreshTokenWhitelistRepository.findAllByUserId(22L);
+    final var refreshTokens = refreshTokenWhitelistRepository.findAllByUserId(22L);
     assertThat(refreshTokens)
         .usingRecursiveComparison()
         .ignoringCollectionOrder()

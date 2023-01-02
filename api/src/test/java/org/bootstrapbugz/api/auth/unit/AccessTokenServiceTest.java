@@ -44,13 +44,13 @@ class AccessTokenServiceTest {
 
   @Test
   void itShouldCreateToken() {
-    String token = accessTokenService.create(1L, Collections.emptySet());
+    final var token = accessTokenService.create(1L, Collections.emptySet());
     assertThat(token).isNotNull();
   }
 
   @Test
   void itShouldCheckToken_userNotInBlacklist() {
-    String token = accessTokenService.create(1L, Collections.emptySet());
+    final var token = accessTokenService.create(1L, Collections.emptySet());
     when(accessTokenBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.empty());
     accessTokenService.check(token);
@@ -58,8 +58,8 @@ class AccessTokenServiceTest {
 
   @Test
   void itShouldCheckToken_userInBlacklistButTokenIsIssuedAfter() {
-    var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
-    String token = accessTokenService.create(1L, Collections.emptySet());
+    final var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var token = accessTokenService.create(1L, Collections.emptySet());
     when(accessTokenBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     accessTokenService.check(token);
@@ -67,7 +67,7 @@ class AccessTokenServiceTest {
 
   @Test
   void checkTokenShouldThrowUnauthorized_tokenInvalidated() {
-    String token = accessTokenService.create(1L, Collections.emptySet());
+    final var token = accessTokenService.create(1L, Collections.emptySet());
     when(accessTokenBlacklistRepository.existsById(token)).thenReturn(true);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> accessTokenService.check(token))
@@ -77,8 +77,8 @@ class AccessTokenServiceTest {
 
   @Test
   void checkTokenShouldThrowUnauthorized_userInBlacklist() {
-    String token = accessTokenService.create(1L, Collections.emptySet());
-    var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var token = accessTokenService.create(1L, Collections.emptySet());
+    final var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
     when(accessTokenBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
@@ -89,8 +89,8 @@ class AccessTokenServiceTest {
 
   @Test
   void itShouldInvalidateToken() {
-    String token = accessTokenService.create(1L, Collections.emptySet());
-    var expectedAccessTokenBlacklist = new AccessTokenBlacklist(token, 1000);
+    final var token = accessTokenService.create(1L, Collections.emptySet());
+    final var expectedAccessTokenBlacklist = new AccessTokenBlacklist(token, 1000);
     accessTokenService.invalidate(token);
     verify(accessTokenBlacklistRepository, times(1))
         .save(accessTokenBlacklistArgumentCaptor.capture());
@@ -100,7 +100,7 @@ class AccessTokenServiceTest {
 
   @Test
   void itShouldInvalidateAllTokens() {
-    var expectedUserBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var expectedUserBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
     accessTokenService.invalidateAllByUser(1L);
     verify(userBlacklistRepository, times(1)).save(userBlacklistArgumentCaptor.capture());
     assertThat(userBlacklistArgumentCaptor.getValue().getUserId())

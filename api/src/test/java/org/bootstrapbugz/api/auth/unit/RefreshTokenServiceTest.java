@@ -41,8 +41,8 @@ class RefreshTokenServiceTest {
 
   @Test
   void itShouldCreateToken() {
-    String actualRefreshToken = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
-    var expectedRefreshToken = new RefreshTokenWhitelist(actualRefreshToken, 1L, "ip1", 1000);
+    final var actualRefreshToken = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
+    final var expectedRefreshToken = new RefreshTokenWhitelist(actualRefreshToken, 1L, "ip1", 1000);
     verify(refreshTokenWhitelistRepository, times(1)).save(refreshTokenArgumentCaptor.capture());
     assertThat(refreshTokenArgumentCaptor.getValue().getRefreshToken())
         .isEqualTo(expectedRefreshToken.getRefreshToken());
@@ -54,14 +54,14 @@ class RefreshTokenServiceTest {
 
   @Test
   void itShouldCheckRefreshToken() {
-    String refreshToken = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
+    final var refreshToken = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
     when(refreshTokenWhitelistRepository.existsById(refreshToken)).thenReturn(true);
     refreshTokenService.check(refreshToken);
   }
 
   @Test
   void checkRefreshTokenShouldThrowUnauthorized_refreshTokenNotInRedis() {
-    String refreshToken = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
+    final var refreshToken = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
     when(refreshTokenWhitelistRepository.existsById(refreshToken)).thenReturn(false);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> refreshTokenService.check(refreshToken))
@@ -71,23 +71,23 @@ class RefreshTokenServiceTest {
 
   @Test
   void itShouldFindRefreshToken() {
-    var refreshToken = new RefreshTokenWhitelist("token123", 1L, "ip1", 1000);
+    final var refreshToken = new RefreshTokenWhitelist("token123", 1L, "ip1", 1000);
     when(refreshTokenWhitelistRepository.findByUserIdAndIpAddress(1L, "ip1"))
         .thenReturn(Optional.of(refreshToken));
-    String token = refreshTokenService.findByUserAndIpAddress(1L, "ip1");
+    final var token = refreshTokenService.findByUserAndIpAddress(1L, "ip1");
     assertThat(token).isNotNull();
   }
 
   @Test
   void itShouldDeleteRefreshToken() {
-    String refreshToken = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
+    final var refreshToken = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
     refreshTokenService.delete(refreshToken);
     verify(refreshTokenWhitelistRepository, times(1)).deleteById(any(String.class));
   }
 
   @Test
   void itShouldDeleteRefreshTokenByUserAndIpAddress() {
-    var refreshToken = new RefreshTokenWhitelist("token123", 1L, "ip1", 1000);
+    final var refreshToken = new RefreshTokenWhitelist("token123", 1L, "ip1", 1000);
     when(refreshTokenWhitelistRepository.findByUserIdAndIpAddress(1L, "ip1"))
         .thenReturn(Optional.of(refreshToken));
     refreshTokenService.deleteByUserAndIpAddress(1L, "ip1");
@@ -96,8 +96,8 @@ class RefreshTokenServiceTest {
 
   @Test
   void itShouldDeleteAllRefreshTokensByUser() {
-    var refreshToken1 = new RefreshTokenWhitelist("token123", 1L, "ip1", 1000);
-    var refreshToken2 = new RefreshTokenWhitelist("token321", 1L, "ip2", 1000);
+    final var refreshToken1 = new RefreshTokenWhitelist("token123", 1L, "ip1", 1000);
+    final var refreshToken2 = new RefreshTokenWhitelist("token321", 1L, "ip2", 1000);
     when(refreshTokenWhitelistRepository.findAllByUserId(1L))
         .thenReturn(List.of(refreshToken1, refreshToken2));
     refreshTokenService.deleteAllByUser(1L);

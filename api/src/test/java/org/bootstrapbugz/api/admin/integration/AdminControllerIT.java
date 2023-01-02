@@ -47,7 +47,7 @@ class AdminControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldUpdateUsersRoles() throws Exception {
-    var updateRoleRequest =
+    final var updateRoleRequest =
         new UpdateRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
         .perform(
@@ -66,7 +66,7 @@ class AdminControllerIT extends DatabaseContainers {
     "activate, not.activated",
   })
   void itShouldLockUnlockDeactivateActivateUsers(String path, String username) throws Exception {
-    var adminRequest = new AdminRequest(Set.of(username));
+    final var adminRequest = new AdminRequest(Set.of(username));
     mockMvc
         .perform(
             put(Path.ADMIN + "/users/" + path)
@@ -78,7 +78,7 @@ class AdminControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldDeleteUsers() throws Exception {
-    var adminRequest = new AdminRequest(Set.of("for.update.2"));
+    final var adminRequest = new AdminRequest(Set.of("for.update.2"));
     mockMvc
         .perform(
             delete(Path.ADMIN + "/users/delete")

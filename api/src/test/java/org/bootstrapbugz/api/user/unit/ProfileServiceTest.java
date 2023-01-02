@@ -67,9 +67,9 @@ class ProfileServiceTest {
 
   @Test
   void itShouldUpdateUser_newUsernameAndEmail() {
-    var expectedUser =
+    final var expectedUser =
         new User(1L, "User", "User", "user", "user@user.com", password, false, true, roles);
-    var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
+    final var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
     when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(false);
@@ -80,9 +80,9 @@ class ProfileServiceTest {
 
   @Test
   void itShouldUpdateUser_sameUsernameAndEmail() {
-    var expectedUser =
+    final var expectedUser =
         new User(1L, "User", "User", "test", "test@test.com", password, true, true, roles);
-    var updateUserRequest = new UpdateProfileRequest("User", "User", "test", "test@test.com");
+    final var updateUserRequest = new UpdateProfileRequest("User", "User", "test", "test@test.com");
     when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     profileService.update(updateUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
@@ -91,7 +91,7 @@ class ProfileServiceTest {
 
   @Test
   void updateUserShouldThrowBadRequest_usernameExists() {
-    var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
+    final var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
     when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
@@ -102,7 +102,7 @@ class ProfileServiceTest {
 
   @Test
   void updateUserShouldThrowBadRequest_emailExists() {
-    var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
+    final var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
     when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(true);
@@ -114,7 +114,8 @@ class ProfileServiceTest {
 
   @Test
   void itShouldChangePassword() {
-    var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
+    final var changePasswordRequest =
+        new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
     when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
     profileService.changePassword(changePasswordRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
@@ -128,7 +129,7 @@ class ProfileServiceTest {
   @Test
   void changePasswordShouldThrownBadRequest_wrongOldPassword() {
     when(messageService.getMessage("oldPassword.invalid")).thenReturn("Wrong old password.");
-    var changePasswordRequest =
+    final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123456", "qwerty1234", "qwerty1234");
     when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
     assertThatThrownBy(() -> profileService.changePassword(changePasswordRequest))

@@ -54,10 +54,10 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void updateProfileShouldThrowUnauthorized_userNotSignedIn() throws Exception {
-    var updateUserRequest =
+    final var updateUserRequest =
         new UpdateProfileRequest(
             "Updated", "Updated", "for.update.2", "for.update.2@bootstrapbugz.com");
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.PROFILE + "/update")
@@ -69,8 +69,9 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void changePasswordShouldThrowUnauthorized_userNotSignedIn() throws Exception {
-    var changePasswordRequest = new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
-    var resultActions =
+    final var changePasswordRequest =
+        new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.PROFILE + "/change-password")
@@ -82,9 +83,9 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void changeUsersRolesShouldThrowUnauthorized_userNotSignedIn() throws Exception {
-    var updateRoleRequest =
+    final var updateRoleRequest =
         new UpdateRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.ADMIN + "/users/update-role")
@@ -96,10 +97,11 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void changeUsersRolesShouldThrowForbidden_signedInUserIsNotAdmin() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var updateRoleRequest =
+    final var signInDTO =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var updateRoleRequest =
         new UpdateRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.ADMIN + "/users/update-role")
@@ -119,8 +121,8 @@ class AccessingResourcesIT extends DatabaseContainers {
   })
   void lockUnlockDeactivateActivateUsersShouldThrowUnauthorized_userNotSignedIn(
       String path, String username) throws Exception {
-    var adminRequest = new AdminRequest(Set.of(username));
-    var resultActions =
+    final var adminRequest = new AdminRequest(Set.of(username));
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.ADMIN + "/users/" + path)
@@ -139,9 +141,10 @@ class AccessingResourcesIT extends DatabaseContainers {
   })
   void lockUnlockDeactivateActivateUsersShouldThrowForbidden_signedInUserIsNotAdmin(
       String path, String username) throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var adminRequest = new AdminRequest(Set.of(username));
-    var resultActions =
+    final var signInDTO =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var adminRequest = new AdminRequest(Set.of(username));
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.ADMIN + "/users/" + path)
@@ -154,8 +157,8 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void deleteUsersShouldThrowUnauthorized_userNotSignedIn() throws Exception {
-    var adminRequest = new AdminRequest(Set.of("for.update.2"));
-    var resultActions =
+    final var adminRequest = new AdminRequest(Set.of("for.update.2"));
+    final var resultActions =
         mockMvc
             .perform(
                 delete(Path.ADMIN + "/users/delete")
@@ -167,9 +170,10 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void deleteUsersShouldThrowForbidden_signedInUserIsNotAdmin() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var adminRequest = new AdminRequest(Set.of("for.update.2"));
-    var resultActions =
+    final var signInDTO =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var adminRequest = new AdminRequest(Set.of("for.update.2"));
+    final var resultActions =
         mockMvc
             .perform(
                 delete(Path.ADMIN + "/users/delete")
@@ -182,7 +186,7 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void receiveSignedInUserShouldThrowUnauthorized_userNotSignedIn() throws Exception {
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(get(Path.AUTH + "/signed-in-user").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
@@ -191,7 +195,7 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void signOutShouldThrowUnauthorized_userNotSignedIn() throws Exception {
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(post(Path.AUTH + "/sign-out").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
@@ -200,7 +204,7 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void signOutFromAllDevicesShouldThrowUnauthorized_userNotSignedIn() throws Exception {
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/sign-out-from-all-devices")

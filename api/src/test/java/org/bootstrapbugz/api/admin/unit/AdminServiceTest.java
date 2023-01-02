@@ -51,9 +51,9 @@ class AdminServiceTest {
 
   @Test
   void itShouldUpdateUsersRoles() {
-    var updateRolesRequest =
+    final var updateRolesRequest =
         new UpdateRoleRequest(Collections.singleton("test"), Set.of(RoleName.USER, RoleName.ADMIN));
-    var expectedUser =
+    final var expectedUser =
         new User(2L, "Test", "Test", "test", "test@test.com", null, true, true, adminRoles);
     when(userRepository.findAllByUsernameIn(updateRolesRequest.getUsernames()))
         .thenReturn(List.of(user));
@@ -66,8 +66,8 @@ class AdminServiceTest {
 
   @Test
   void itShouldLockUsers() {
-    var adminRequest = new AdminRequest(Collections.singleton("test"));
-    var expectedUser =
+    final var adminRequest = new AdminRequest(Collections.singleton("test"));
+    final var expectedUser =
         new User(2L, "Test", "Test", "test", "test@test.com", null, true, false, userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames())).thenReturn(List.of(user));
     adminService.lock(adminRequest);
@@ -77,8 +77,8 @@ class AdminServiceTest {
 
   @Test
   void itShouldUnlockUsers() {
-    var adminRequest = new AdminRequest(Collections.singleton("test2"));
-    var expectedUser =
+    final var adminRequest = new AdminRequest(Collections.singleton("test2"));
+    final var expectedUser =
         new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, false, true, userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
         .thenReturn(List.of(restricted));
@@ -89,8 +89,8 @@ class AdminServiceTest {
 
   @Test
   void itShouldActivateUsers() {
-    var adminRequest = new AdminRequest(Collections.singleton("test2"));
-    var expectedUser =
+    final var adminRequest = new AdminRequest(Collections.singleton("test2"));
+    final var expectedUser =
         new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, true, false, userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
         .thenReturn(List.of(restricted));
@@ -101,8 +101,8 @@ class AdminServiceTest {
 
   @Test
   void itShouldDeactivateUsers() {
-    var adminRequest = new AdminRequest(Collections.singleton("test"));
-    var expectedUser =
+    final var adminRequest = new AdminRequest(Collections.singleton("test"));
+    final var expectedUser =
         new User(2L, "Test", "Test", "test", "test@test.com", null, false, true, userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames())).thenReturn(List.of(user));
     adminService.deactivate(adminRequest);
@@ -112,7 +112,7 @@ class AdminServiceTest {
 
   @Test
   void itShouldDeleteUsers() {
-    var adminRequest = new AdminRequest(Set.of("admin", "test", "test2"));
+    final var adminRequest = new AdminRequest(Set.of("admin", "test", "test2"));
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
         .thenReturn(List.of(admin, user, restricted));
     adminService.delete(adminRequest);

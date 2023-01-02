@@ -27,7 +27,7 @@ public class TestUtil {
 
   public static void checkErrorMessages(ErrorMessage expectedResponse, ResultActions resultActions)
       throws Exception {
-    var actualResponse =
+    final var actualResponse =
         new JSONObject(resultActions.andReturn().getResponse().getContentAsString());
     assertThat(actualResponse.getInt("status")).isEqualTo(expectedResponse.getStatus());
     assertThat(actualResponse.getString("error")).isEqualTo(expectedResponse.getError());
@@ -39,14 +39,14 @@ public class TestUtil {
 
   public static SignInDTO signIn(
       MockMvc mockMvc, ObjectMapper objectMapper, SignInRequest signInRequest) throws Exception {
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/sign-in")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(signInRequest)))
             .andExpect(status().isOk());
-    var signInDTO =
+    final var signInDTO =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), SignInDTO.class);
     signInDTO.setAccessToken(JwtUtil.addBearer(signInDTO.getAccessToken()));

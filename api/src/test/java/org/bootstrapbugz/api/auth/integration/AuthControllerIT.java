@@ -49,13 +49,13 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldSignUp() throws Exception {
-    var signUpRequest =
+    final var signUpRequest =
         new SignUpRequest(
             "Test", "Test", "test", "test@bootstrapbugz.com", "qwerty123", "qwerty123");
-    var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserDTO =
+    final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
+    final var expectedUserDTO =
         new UserDTO(8L, "Test", "Test", "test", "test@bootstrapbugz.com", false, true, roleDTOs);
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/sign-up")
@@ -63,7 +63,7 @@ class AuthControllerIT extends DatabaseContainers {
                     .content(objectMapper.writeValueAsString(signUpRequest)))
             .andExpect(status().isCreated())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    var actualUserDTO =
+    final var actualUserDTO =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), UserDTO.class);
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
@@ -71,17 +71,17 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void signUpShouldThrowBadRequest_invalidParameters() throws Exception {
-    var signUpRequest =
+    final var signUpRequest =
         new SignUpRequest(
             "Test1", "Test1", "user", "user@bootstrapbugz.com", "qwerty123", "qwerty12");
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/sign-up")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(signUpRequest)))
             .andExpect(status().isBadRequest());
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("firstName", "Invalid first name.");
     expectedErrorResponse.addDetails("lastName", "Invalid last name.");
     expectedErrorResponse.addDetails("username", "Username already exists.");
@@ -92,7 +92,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldResendConfirmationEmail() throws Exception {
-    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("not.activated");
+    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("not.activated");
     mockMvc
         .perform(
             post(Path.AUTH + "/resend-confirmation-email")
@@ -103,10 +103,10 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resendConfirmationEmailShouldThrowResourceNotFound_userNotFound() throws Exception {
-    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("unknown");
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.NOT_FOUND);
+    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("unknown");
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.NOT_FOUND);
     expectedErrorResponse.addDetails("User not found.");
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/resend-confirmation-email")
@@ -118,10 +118,10 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resendConfirmationEmailShouldThrowForbidden_userAlreadyActivated() throws Exception {
-    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("user");
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
+    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("user");
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
     expectedErrorResponse.addDetails("User already activated.");
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/resend-confirmation-email")
@@ -133,8 +133,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldConfirmRegistration() throws Exception {
-    String token = confirmRegistrationTokenService.create(3L); // not.activated
-    var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
+    final var token = confirmRegistrationTokenService.create(3L); // not.activated
+    final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     mockMvc
         .perform(
             put(Path.AUTH + "/confirm-registration")
@@ -145,41 +145,42 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_invalidToken() throws Exception {
-    String token = confirmRegistrationTokenService.create(10L); // unknown
-    var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
-    var resultActions =
+    final var token = confirmRegistrationTokenService.create(10L); // unknown
+    final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.AUTH + "/confirm-registration")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
             .andExpect(status().isForbidden());
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
     expectedErrorResponse.addDetails("Invalid token.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
   void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() throws Exception {
-    String token = confirmRegistrationTokenService.create(2L); // user
-    var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
-    var resultActions =
+    final var token = confirmRegistrationTokenService.create(2L); // user
+    final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.AUTH + "/confirm-registration")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
             .andExpect(status().isForbidden());
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
     expectedErrorResponse.addDetails("User already activated.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
   void itShouldRefreshToken() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var refreshTokenRequest = new RefreshTokenRequest(signInDTO.getRefreshToken());
-    var resultActions =
+    final var signInDTO =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var refreshTokenRequest = new RefreshTokenRequest(signInDTO.getRefreshToken());
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/refresh-token")
@@ -187,7 +188,7 @@ class AuthControllerIT extends DatabaseContainers {
                     .content(objectMapper.writeValueAsString(refreshTokenRequest)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    var refreshTokenDTO =
+    final var refreshTokenDTO =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), RefreshTokenDTO.class);
     assertThat(refreshTokenDTO.getAccessToken()).isNotEqualTo(signInDTO.getAccessToken());
@@ -196,7 +197,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldSignOut() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out")
@@ -208,9 +210,9 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   private void jwtShouldBeInvalid(String token) throws Exception {
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
     expectedErrorResponse.addDetails("Full authentication is required to access this resource");
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 get(Path.AUTH + "/signed-in-user")
@@ -221,10 +223,10 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   private void refreshTokenShouldBeInvalid(String refreshToken) throws Exception {
-    var refreshTokenRequest = new RefreshTokenRequest(refreshToken);
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
+    final var refreshTokenRequest = new RefreshTokenRequest(refreshToken);
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
     expectedErrorResponse.addDetails("Invalid token.");
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/refresh-token")
@@ -236,7 +238,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldSignOutFromAllDevices() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices")
@@ -249,7 +252,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldForgotPassword() throws Exception {
-    var forgotPasswordRequest = new ForgotPasswordRequest("user@bootstrapbugz.com");
+    final var forgotPasswordRequest = new ForgotPasswordRequest("user@bootstrapbugz.com");
     mockMvc
         .perform(
             post(Path.AUTH + "/forgot-password")
@@ -260,10 +263,10 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void forgotPasswordShouldThrowResourceNotFound_userNotFound() throws Exception {
-    var forgotPasswordRequest = new ForgotPasswordRequest("unknown@bootstrapbugz.com");
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.NOT_FOUND);
+    final var forgotPasswordRequest = new ForgotPasswordRequest("unknown@bootstrapbugz.com");
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.NOT_FOUND);
     expectedErrorResponse.addDetails("User not found.");
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/forgot-password")
@@ -275,8 +278,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldResetPassword() throws Exception {
-    String token = forgotPasswordTokenService.create(5L); // for.update.1
-    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
+    final var token = forgotPasswordTokenService.create(5L); // for.update.1
+    final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
             put(Path.AUTH + "/reset-password")
@@ -288,43 +291,44 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    String token = forgotPasswordTokenService.create(6L); // for.update.2
-    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty123", "qwerty1234");
-    var resultActions =
+    final var token = forgotPasswordTokenService.create(6L); // for.update.2
+    final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty123", "qwerty1234");
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.AUTH + "/reset-password")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(resetPasswordRequest)))
             .andExpect(status().isBadRequest());
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("Passwords do not match.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
   void resetPasswordShouldThrowForbidden_invalidToken() throws Exception {
-    String token = forgotPasswordTokenService.create(10L); // unknown
-    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
-    var resultActions =
+    final var token = forgotPasswordTokenService.create(10L); // unknown
+    final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
+    final var resultActions =
         mockMvc
             .perform(
                 put(Path.AUTH + "/reset-password")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(resetPasswordRequest)))
             .andExpect(status().isForbidden());
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
     expectedErrorResponse.addDetails("Invalid token.");
     TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
   void itShouldRetrieveSignedInUser() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserDTO =
+    final var signInDTO =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
+    final var expectedUserDTO =
         new UserDTO(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, roleDTOs);
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 get(Path.AUTH + "/signed-in-user")
@@ -332,7 +336,7 @@ class AuthControllerIT extends DatabaseContainers {
                     .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    var actualUserDTO =
+    final var actualUserDTO =
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), UserDTO.class);
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);

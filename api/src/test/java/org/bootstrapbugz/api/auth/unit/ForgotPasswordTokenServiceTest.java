@@ -35,29 +35,29 @@ class ForgotPasswordTokenServiceTest {
 
   @Test
   void itShouldCreateToken() {
-    String token = forgotPasswordTokenService.create(1L);
+    final var token = forgotPasswordTokenService.create(1L);
     assertThat(token).isNotNull();
   }
 
   @Test
   void itShouldCheckToken_userNotInBlacklist() {
-    String token = forgotPasswordTokenService.create(1L);
+    final var token = forgotPasswordTokenService.create(1L);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.empty());
     forgotPasswordTokenService.check(token);
   }
 
   @Test
   void itShouldCheckToken_userInBlacklistButTokenIsIssuedAfter() {
-    var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
-    String token = forgotPasswordTokenService.create(1L);
+    final var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var token = forgotPasswordTokenService.create(1L);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     forgotPasswordTokenService.check(token);
   }
 
   @Test
   void checkTokenShouldThrowUnauthorized_userInBlacklist() {
-    String token = forgotPasswordTokenService.create(1L);
-    var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var token = forgotPasswordTokenService.create(1L);
+    final var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> forgotPasswordTokenService.check(token))

@@ -23,9 +23,9 @@ class EmailServiceTest {
 
   @Test
   void itShouldSendHtmlEmail() {
-    String to = "user";
-    String subject = "subject";
-    String body =
+    final var to = "user";
+    final var subject = "subject";
+    final var body =
         "<html><head><title>Title</title></head><body><p>This is an html email.</p></body></html>";
     when(mailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
     emailService.sendHtmlEmail(to, subject, body);

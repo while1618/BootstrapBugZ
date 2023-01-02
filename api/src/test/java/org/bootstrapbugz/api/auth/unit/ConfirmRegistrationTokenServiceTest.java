@@ -25,13 +25,13 @@ class ConfirmRegistrationTokenServiceTest {
 
   @Test
   void itShouldCreateToken() {
-    String token = confirmRegistrationTokenService.create(1L);
+    final var token = confirmRegistrationTokenService.create(1L);
     assertThat(token).isNotNull();
   }
 
   @Test
   void itShouldCheckRefreshToken() {
-    String token = confirmRegistrationTokenService.create(1L);
+    final var token = confirmRegistrationTokenService.create(1L);
     confirmRegistrationTokenService.check(token);
   }
 }

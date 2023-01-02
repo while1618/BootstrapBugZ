@@ -32,7 +32,8 @@ class AuthenticationFilterIT extends DatabaseContainers {
 
   @Test
   void itShouldSignIn() throws Exception {
-    var signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO =
+        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     assertThat(signInDTO.getUserDTO().getUsername()).isEqualTo("user");
     assertThat(signInDTO.getAccessToken()).isNotNull();
     assertThat(signInDTO.getRefreshToken()).isNotNull();
@@ -40,10 +41,10 @@ class AuthenticationFilterIT extends DatabaseContainers {
 
   @Test
   void signInShouldThrowUnauthorized_wrongCredentials() throws Exception {
-    var signInRequest = new SignInRequest("wrong", "qwerty123");
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
+    final var signInRequest = new SignInRequest("wrong", "qwerty123");
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
     expectedErrorResponse.addDetails("Invalid credentials.");
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/sign-in")
@@ -60,10 +61,10 @@ class AuthenticationFilterIT extends DatabaseContainers {
   })
   void signInShouldThrowForbidden_userLockedAndUserNotActivated(String username, String message)
       throws Exception {
-    var signInRequest = new SignInRequest(username, "qwerty123");
-    var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
+    final var signInRequest = new SignInRequest(username, "qwerty123");
+    final var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
     expectedErrorResponse.addDetails(message);
-    var resultActions =
+    final var resultActions =
         mockMvc
             .perform(
                 post(Path.AUTH + "/sign-in")

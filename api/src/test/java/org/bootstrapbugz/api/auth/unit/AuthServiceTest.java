@@ -116,20 +116,20 @@ class AuthServiceTest {
 
   @Test
   void itShouldSignUp() {
-    var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserDTO =
+    final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
+    final var expectedUserDTO =
         new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDTOs);
-    var signUpRequest =
+    final var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@test.com", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(role));
     when(userRepository.save(any(User.class))).thenReturn(user);
-    var actualUserDTO = authService.signUp(signUpRequest);
+    final var actualUserDTO = authService.signUp(signUpRequest);
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test
   void itShouldResendConfirmationEmail() {
-    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
+    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
     when(userRepository.findByUsernameOrEmail("test", "test")).thenReturn(Optional.of(user));
     authService.resendConfirmationEmail(resendConfirmationEmailRequest);
     verify(eventPublisher, times(1)).publishEvent(any(OnSendJwtEmail.class));
@@ -137,7 +137,7 @@ class AuthServiceTest {
 
   @Test
   void resendConfirmationEmailShouldThrowResourceNotFound_userNotFound() {
-    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
+    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
     when(messageService.getMessage("user.notFound")).thenReturn("User not found.");
     assertThatThrownBy(() -> authService.resendConfirmationEmail(resendConfirmationEmailRequest))
         .isInstanceOf(ResourceNotFoundException.class)
@@ -146,7 +146,7 @@ class AuthServiceTest {
 
   @Test
   void resendConfirmationEmailShouldThrowForbidden_userAlreadyActivated() {
-    var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
+    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     user.setActivated(true);
     when(userRepository.findByUsernameOrEmail("test", "test")).thenReturn(Optional.of(user));
@@ -157,9 +157,9 @@ class AuthServiceTest {
 
   @Test
   void itShouldConfirmRegistration() {
-    var expectedUser =
+    final var expectedUser =
         new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
-    String token = confirmRegistrationTokenService.create(1L);
+    final var token = confirmRegistrationTokenService.create(1L);
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.confirmRegistration(new ConfirmRegistrationRequest(token));
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
@@ -168,7 +168,7 @@ class AuthServiceTest {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_invalid() {
-    String token = confirmRegistrationTokenService.create(1L);
+    final var token = confirmRegistrationTokenService.create(1L);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)))
         .isInstanceOf(ForbiddenException.class)
@@ -177,7 +177,7 @@ class AuthServiceTest {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() {
-    String token = confirmRegistrationTokenService.create(1L);
+    final var token = confirmRegistrationTokenService.create(1L);
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     user.setActivated(true);
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -188,12 +188,12 @@ class AuthServiceTest {
 
   @Test
   void itShouldRefreshToken() {
-    var request = new MockHttpServletRequest();
+    final var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
-    String token = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
+    final var token = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
     when(refreshTokenWhitelistRepository.existsById(token)).thenReturn(true);
-    var refreshTokenRequest = new RefreshTokenRequest(token);
-    var refreshTokenDTO = authService.refreshToken(refreshTokenRequest, request);
+    final var refreshTokenRequest = new RefreshTokenRequest(token);
+    final var refreshTokenDTO = authService.refreshToken(refreshTokenRequest, request);
     assertThat(refreshTokenDTO.getAccessToken()).isNotNull();
     assertThat(refreshTokenDTO.getRefreshToken()).isNotNull();
   }
@@ -201,8 +201,8 @@ class AuthServiceTest {
   @Test
   void itShouldSignOut() {
     TestUtil.setAuth(auth, securityContext, user);
-    String token = accessTokenService.create(1L, Collections.emptySet());
-    var request = new MockHttpServletRequest();
+    final var token = accessTokenService.create(1L, Collections.emptySet());
+    final var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
     request.addHeader(AuthUtil.AUTH_HEADER, token);
     assertDoesNotThrow(() -> authService.signOut(request));
@@ -216,7 +216,7 @@ class AuthServiceTest {
 
   @Test
   void itShouldForgotPassword() {
-    var forgotPasswordRequest = new ForgotPasswordRequest("test@test.com");
+    final var forgotPasswordRequest = new ForgotPasswordRequest("test@test.com");
     when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user));
     authService.forgotPassword(forgotPasswordRequest);
     verify(eventPublisher, times(1)).publishEvent(any(OnSendJwtEmail.class));
@@ -224,7 +224,7 @@ class AuthServiceTest {
 
   @Test
   void forgotPasswordShouldThrowResourceNotFound_userNotFound() {
-    var forgotPasswordRequest = new ForgotPasswordRequest("test@test.com");
+    final var forgotPasswordRequest = new ForgotPasswordRequest("test@test.com");
     when(messageService.getMessage("user.notFound")).thenReturn("User not found.");
     assertThatThrownBy(() -> authService.forgotPassword(forgotPasswordRequest))
         .isInstanceOf(ResourceNotFoundException.class)
@@ -233,8 +233,8 @@ class AuthServiceTest {
 
   @Test
   void itShouldResetPassword() {
-    String token = forgotPasswordTokenService.create(1L);
-    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
+    final var token = forgotPasswordTokenService.create(1L);
+    final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.resetPassword(resetPasswordRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
@@ -246,8 +246,8 @@ class AuthServiceTest {
 
   @Test
   void resetPasswordShouldThrowForbidden_invalid() {
-    String token = forgotPasswordTokenService.create(1L);
-    var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
+    final var token = forgotPasswordTokenService.create(1L);
+    final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.resetPassword(resetPasswordRequest))
         .isInstanceOf(ForbiddenException.class)
@@ -257,10 +257,10 @@ class AuthServiceTest {
   @Test
   void itShouldReceiveSignedInUser() {
     TestUtil.setAuth(auth, securityContext, user);
-    var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
-    var expectedUserDTO =
+    final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
+    final var expectedUserDTO =
         new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDTOs);
-    var actualUserDTO = authService.signedInUser();
+    final var actualUserDTO = authService.signedInUser();
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
