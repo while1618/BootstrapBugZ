@@ -13,7 +13,14 @@ module.exports = {
     browser: true,
     node: true,
   },
-  ignorePatterns: ['.eslintrc.cjs'],
+  ignorePatterns: [
+    '.eslintrc.cjs',
+    '.prettierrc.cjs',
+    'postcss.config.cjs',
+    'tailwind.config.cjs',
+    'svelte.config.js',
+    'vite.config.ts',
+  ],
   plugins: ['import', '@typescript-eslint'],
   extends: [
     'eslint:recommended',
