@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2022,
@@ -13,15 +14,14 @@ module.exports = {
     node: true,
   },
   ignorePatterns: ['.eslintrc.cjs'],
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['import', '@typescript-eslint'],
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
     'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:@typescript-eslint/recommended',
     'plugin:svelte/recommended',
-    'plugin:svelte/prettier',
     'plugin:prettier/recommended',
-    'prettier',
   ],
   overrides: [
     {
@@ -33,7 +33,7 @@ module.exports = {
     },
   ],
   rules: {
-    'prettier/prettier': 'error',
     'no-console': 'error',
+    'import/no-unresolved': 'error',
   },
 };
