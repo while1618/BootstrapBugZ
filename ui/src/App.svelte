@@ -1,12 +1,10 @@
 <script lang="ts">
+  import Navbar from './lib/Navbar.svelte';
 </script>
 
-<svelte:head>
-  <link href="https://fonts.googleapis.com/css?family=Rowdies" rel="stylesheet" />
-</svelte:head>
-
-<main>
-  <div class="flex h-screen items-center justify-center bg-white dark:bg-slate-800">
+<main class="bg-white dark:bg-gray-800">
+  <Navbar />
+  <div class="flex h-screen items-center justify-center">
     <h1 class="text-3xl font-bold dark:text-white">BootstrapBugZ</h1>
   </div>
 </main>
