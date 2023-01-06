@@ -10,15 +10,13 @@ module.exports = {
   },
   env: {
     browser: true,
-    es2017: true,
+    es2022: true,
     node: true,
   },
-  ignorePatterns: ['*.cjs', '*.config.*'],
+  ignorePatterns: ['*.cjs', 'vite.config.ts', 'svelte.config.js', 'playwright.config.ts'],
   plugins: ['@typescript-eslint'],
   extends: [
     'eslint:recommended',
-    'plugin:import/recommended',
-    'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
     'plugin:svelte/recommended',
     'plugin:prettier/recommended',
@@ -34,6 +32,5 @@ module.exports = {
   ],
   rules: {
     'no-console': 'error',
-    'import/no-unresolved': 'error',
   },
 };
