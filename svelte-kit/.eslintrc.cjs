@@ -9,19 +9,12 @@ module.exports = {
     extraFileExtensions: ['.svelte'],
   },
   env: {
-    es6: true,
     browser: true,
+    es2017: true,
     node: true,
   },
-  ignorePatterns: [
-    '.eslintrc.cjs',
-    '.prettierrc.cjs',
-    'postcss.config.cjs',
-    'tailwind.config.cjs',
-    'svelte.config.js',
-    'vite.config.ts',
-  ],
-  plugins: ['import', '@typescript-eslint'],
+  ignorePatterns: ['*.cjs', '*.config.*'],
+  plugins: ['@typescript-eslint'],
   extends: [
     'eslint:recommended',
     'plugin:import/recommended',

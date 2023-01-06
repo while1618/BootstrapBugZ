@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const config = {
   content: [
     './src/**/*.{html,js,svelte,ts}',
     './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}',
@@ -13,3 +13,5 @@ module.exports = {
   plugins: [require('flowbite/plugin')],
   darkMode: 'class',
 };
+
+module.exports = config;
