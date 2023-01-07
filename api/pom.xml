@@ -29,6 +29,7 @@
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     <spotless.version>2.29.0</spotless.version>
     <google-java-format.version>1.15.0</google-java-format.version>
+    <springdoc.version>2.0.2</springdoc.version>
   </properties>
 
   <dependencies>
@@ -117,6 +118,11 @@
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
       <version>${mapstruct.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc.version}</version>
     </dependency>
   </dependencies>
 

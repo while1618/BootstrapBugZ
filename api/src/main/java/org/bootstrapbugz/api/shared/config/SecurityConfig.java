@@ -24,6 +24,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+  private static final String[] SWAGGER_WHITELIST = {
+    "/swagger-ui/**", "/v3/api-docs/**", "/openapi.yml"
+  };
   private static final String[] USERS_WHITELIST = {Path.USERS, Path.USERS + "/**"};
   private static final String[] AUTH_WHITELIST = {
     Path.AUTH + "/sign-up",
@@ -63,6 +66,8 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests()
+        .requestMatchers(SWAGGER_WHITELIST)
+        .permitAll()
         .requestMatchers(AUTH_WHITELIST)
         .permitAll()
         .requestMatchers(USERS_WHITELIST)
