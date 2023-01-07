@@ -2,7 +2,7 @@
   import { Button, DarkMode, Navbar, NavBrand, NavHamburger, NavLi, NavUl } from 'flowbite-svelte';
 </script>
 
-<Navbar let:hidden let:toggle>
+<Navbar color="none" class="bg-gray-50 dark:bg-gray-900" let:hidden let:toggle>
   <NavBrand href="/">
     <img
       src="https://flowbite.com/docs/images/logo.svg"
