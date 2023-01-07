@@ -32,7 +32,7 @@
       </Label>
       <Label class="space-y-2">
         <div class="flex justify-between">
-          <span>Confirm Password</span>
+          <span>Confirm password</span>
         </div>
         <Input type="password" name="confirmPassword" required />
       </Label>

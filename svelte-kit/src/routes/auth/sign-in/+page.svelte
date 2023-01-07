@@ -9,7 +9,7 @@
         Sign in to BootstrapBugZ
       </h3>
       <Label class="space-y-2">
-        <span>Username or Email</span>
+        <span>Username or email</span>
         <Input name="usernameOrEmail" required />
       </Label>
       <Label class="space-y-2">
