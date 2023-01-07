@@ -10,12 +10,14 @@
       </h3>
       <Label class="space-y-2">
         <span>Username or Email</span>
-        <Input type="email" name="email" required />
+        <Input name="usernameOrEmail" required />
       </Label>
       <Label class="space-y-2">
         <div class="flex justify-between">
           <span>Password</span>
-          <a href="/" class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
+          <a
+            href="/auth/forgot-password"
+            class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
             >Forgot password?</a
           >
         </div>
@@ -23,8 +25,9 @@
       </Label>
       <Button type="submit" class="w-full">Sign in</Button>
       <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-        Not registered? <a href="/" class="text-blue-700 hover:underline dark:text-blue-500"
-          >Create an account</a
+        Not registered? <a
+          href="/auth/sign-up"
+          class="text-blue-700 hover:underline dark:text-blue-500">Create an account</a
         >
       </div>
     </form>
