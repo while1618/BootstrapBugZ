@@ -13,16 +13,18 @@
       BootstrapBugZ
     </span>
   </NavBrand>
-  <div class="flex md:order-2">
+  <div class="flex gap-2 md:order-2">
     <Button size="sm">Get started</Button>
     <DarkMode />
     <NavHamburger on:click={toggle} />
   </div>
   <NavUl {hidden} class="order-1">
     <NavLi href="/" active={true}>Home</NavLi>
-    <NavLi href="/about">About</NavLi>
-    <NavLi href="/services">Services</NavLi>
-    <NavLi href="/pricing">Pricing</NavLi>
-    <NavLi href="/contact">Contact</NavLi>
+    <NavLi href="/auth/sign-in">Sign In</NavLi>
+    <NavLi href="/auth/sign-up">Sign Up</NavLi>
+    <NavLi href="/auth/forgot-password">Forgot Password</NavLi>
+    <NavLi href="/auth/reset-password">Reset Password</NavLi>
+    <NavLi href="/user/john.doe">Profile</NavLi>
+    <NavLi href="/user/settings">Settings</NavLi>
   </NavUl>
 </Navbar>
