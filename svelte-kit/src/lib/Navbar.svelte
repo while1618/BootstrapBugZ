@@ -20,10 +20,10 @@
   </div>
   <NavUl {hidden} class="order-1">
     <NavLi href="/" active={true}>Home</NavLi>
-    <NavLi href="/auth/sign-in">Sign In</NavLi>
-    <NavLi href="/auth/sign-up">Sign Up</NavLi>
-    <NavLi href="/auth/forgot-password">Forgot Password</NavLi>
-    <NavLi href="/auth/reset-password">Reset Password</NavLi>
+    <NavLi href="/auth/sign-in">Sign in</NavLi>
+    <NavLi href="/auth/sign-up">Sign up</NavLi>
+    <NavLi href="/auth/forgot-password">Forgot password</NavLi>
+    <NavLi href="/auth/reset-password">Reset password</NavLi>
     <NavLi href="/user/john.doe">Profile</NavLi>
     <NavLi href="/user/settings">Settings</NavLi>
   </NavUl>
