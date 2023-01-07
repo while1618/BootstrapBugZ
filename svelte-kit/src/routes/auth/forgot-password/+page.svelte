@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Card, Input, Label } from 'flowbite-svelte';
+  import { Button, Card, FloatingLabelInput } from 'flowbite-svelte';
 </script>
 
 <div class="flex justify-center pt-10">
@@ -8,10 +8,14 @@
       <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
         Forgot password
       </h3>
-      <Label class="space-y-2">
-        <span>Email</span>
-        <Input name="email" required />
-      </Label>
+      <FloatingLabelInput
+        class="space-y-2"
+        style="standard"
+        id="email"
+        name="email"
+        type="email"
+        label="Email"
+      />
       <Button type="submit" class="w-full">Send</Button>
     </form>
   </Card>

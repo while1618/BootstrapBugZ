@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, Card, Input, Label } from 'flowbite-svelte';
+  import { Button, Card, FloatingLabelInput } from 'flowbite-svelte';
 </script>
 
 <div class="flex justify-center pt-10">
@@ -8,26 +8,34 @@
       <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
         Sign in to BootstrapBugZ
       </h3>
-      <Label class="space-y-2">
-        <span>Username or email</span>
-        <Input name="usernameOrEmail" required />
-      </Label>
-      <Label class="space-y-2">
-        <div class="flex justify-between">
-          <span>Password</span>
-          <a
-            href="/auth/forgot-password"
-            class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
-            >Forgot password?</a
+      <FloatingLabelInput
+        class="space-y-2"
+        style="standard"
+        id="usernameOrEmail"
+        name="usernameOrEmail"
+        type="text"
+        label="Username or email"
+      />
+      <FloatingLabelInput
+        class="space-y-2"
+        style="standard"
+        id="password"
+        name="password"
+        type="password"
+        label="Password"
+      />
+      <Button type="submit" class="w-full">Sign in</Button>
+      <div class="flex justify-center text-sm font-medium text-gray-500 dark:text-gray-300">
+        <div>
+          Not registered? <a
+            href="/auth/sign-up"
+            class="text-blue-700 hover:underline dark:text-blue-500">Sign up</a
           >
         </div>
-        <Input type="password" name="password" required />
-      </Label>
-      <Button type="submit" class="w-full">Sign in</Button>
-      <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-        Not registered? <a
-          href="/auth/sign-up"
-          class="text-blue-700 hover:underline dark:text-blue-500">Create an account</a
+        <a
+          href="/auth/forgot-password"
+          class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
+          >Forgot password?</a
         >
       </div>
     </form>
