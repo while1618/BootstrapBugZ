@@ -2,7 +2,6 @@
   import github from '$lib/images/github-mark.svg';
   import {
     Avatar,
-    Button,
     DarkMode,
     Dropdown,
     DropdownDivider,
@@ -25,8 +24,6 @@
     </span>
   </NavBrand>
   <div class="flex items-center gap-2">
-    <Button outline size="sm" href="/auth/sign-in">Sign in</Button>
-    <Button size="sm" href="/auth/sign-up">Sign up</Button>
     <Avatar id="avatar-menu" src={github} />
     <DarkMode />
   </div>

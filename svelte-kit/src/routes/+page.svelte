@@ -1,7 +1,9 @@
 <script lang="ts">
+  import NoAuthNavbar from '$lib/navbar/NoAuthNavbar.svelte';
   import { Card } from 'flowbite-svelte';
 </script>
 
+<NoAuthNavbar />
 <div class="flex justify-center pt-10">
   <Card
     size="sm"
