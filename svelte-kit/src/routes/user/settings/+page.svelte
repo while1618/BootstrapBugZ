@@ -3,7 +3,11 @@
 </script>
 
 <div class="flex justify-center pt-10">
-  <Card size="md" class="w-full">
+  <Card
+    size="md"
+    color="none"
+    class="w-full border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800"
+  >
     <Tabs style="underline" class="justify-center">
       <TabItem open title="Update profile">
         <form class="flex flex-col space-y-6" action="/">

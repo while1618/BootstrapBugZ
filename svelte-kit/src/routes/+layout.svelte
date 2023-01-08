@@ -3,7 +3,7 @@
   import '../app.css';
 </script>
 
-<div class="flex h-screen flex-col dark:bg-gray-800">
+<div class="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
   <Navbar />
   <slot />
 </div>
