@@ -1,8 +1,19 @@
 <script lang="ts">
-  import { Button, DarkMode, Navbar, NavBrand, NavHamburger, NavLi, NavUl } from 'flowbite-svelte';
+  import github from '$lib/images/github-mark.svg';
+  import {
+    Avatar,
+    Button,
+    DarkMode,
+    Dropdown,
+    DropdownDivider,
+    DropdownHeader,
+    DropdownItem,
+    Navbar,
+    NavBrand,
+  } from 'flowbite-svelte';
 </script>
 
-<Navbar color="none" let:hidden let:toggle>
+<Navbar color="none">
   <NavBrand href="/">
     <img
       src="https://flowbite.com/docs/images/logo.svg"
@@ -13,18 +24,21 @@
       BootstrapBugZ
     </span>
   </NavBrand>
-  <div class="flex gap-2 md:order-2">
-    <Button size="sm">Get started</Button>
+  <div class="flex items-center gap-2">
+    <Button outline size="sm" href="/auth/sign-in">Sign in</Button>
+    <Button size="sm" href="/auth/sign-up">Sign up</Button>
+    <Avatar id="avatar-menu" src={github} />
     <DarkMode />
-    <NavHamburger on:click={toggle} />
   </div>
-  <NavUl {hidden} class="order-1">
-    <NavLi href="/" active={true}>Home</NavLi>
-    <NavLi href="/auth/sign-in">Sign in</NavLi>
-    <NavLi href="/auth/sign-up">Sign up</NavLi>
-    <NavLi href="/auth/forgot-password">Forgot password</NavLi>
-    <NavLi href="/auth/reset-password">Reset password</NavLi>
-    <NavLi href="/user/john.doe">Profile</NavLi>
-    <NavLi href="/user/settings">Settings</NavLi>
-  </NavUl>
+  <Dropdown placement="bottom" triggeredBy="#avatar-menu">
+    <DropdownHeader>
+      <span class="block text-sm"> Bonnie Green </span>
+      <span class="block truncate text-sm font-medium"> name@flowbite.com </span>
+    </DropdownHeader>
+    <DropdownItem href="/user/john.doe">Profile</DropdownItem>
+    <DropdownItem href="/">Dashboard</DropdownItem>
+    <DropdownItem href="/user/settings">Settings</DropdownItem>
+    <DropdownDivider />
+    <DropdownItem>Sign out</DropdownItem>
+  </Dropdown>
 </Navbar>
