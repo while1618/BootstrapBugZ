@@ -28,7 +28,7 @@
         type="password"
         label="Confirm password"
       />
-      <Button type="submit" class="w-full">Reset password</Button>
+      <Button type="submit">Reset password</Button>
     </form>
   </Card>
 </div>

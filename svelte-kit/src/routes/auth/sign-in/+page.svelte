@@ -28,7 +28,7 @@
         type="password"
         label="Password"
       />
-      <Button type="submit" class="w-full">Sign in</Button>
+      <Button type="submit">Sign in</Button>
       <div class="flex justify-center text-sm font-medium text-gray-500 dark:text-gray-300">
         <div>
           Not registered? <a

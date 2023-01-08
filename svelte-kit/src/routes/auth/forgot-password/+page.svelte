@@ -20,7 +20,7 @@
         type="email"
         label="Email"
       />
-      <Button type="submit" class="w-full">Send</Button>
+      <Button type="submit">Send</Button>
     </form>
   </Card>
 </div>

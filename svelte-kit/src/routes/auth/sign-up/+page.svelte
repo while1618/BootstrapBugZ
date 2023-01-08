@@ -60,7 +60,7 @@
         type="password"
         label="Confirm password"
       />
-      <Button type="submit" class="w-full">Sign up</Button>
+      <Button type="submit">Sign up</Button>
     </form>
   </Card>
 </div>
