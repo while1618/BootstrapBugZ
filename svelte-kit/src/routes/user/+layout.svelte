@@ -1,6 +1,6 @@
 <script>
-  import UserNavbar from '$lib/navbar/UserNavbar.svelte';
+  import AuthNavbar from '$lib/navbar/AuthNavbar.svelte';
 </script>
 
-<UserNavbar />
+<AuthNavbar />
 <slot />

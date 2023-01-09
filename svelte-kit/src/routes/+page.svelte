@@ -1,13 +1,13 @@
 <script lang="ts">
+  import AuthNavbar from '$lib/navbar/AuthNavbar.svelte';
   import NoAuthNavbar from '$lib/navbar/NoAuthNavbar.svelte';
-  import UserNavbar from '$lib/navbar/UserNavbar.svelte';
   import { Button, Card } from 'flowbite-svelte';
 
   let signedIn = false;
 </script>
 
 {#if signedIn}
-  <UserNavbar />
+  <AuthNavbar />
 {:else}
   <NoAuthNavbar />
 {/if}
