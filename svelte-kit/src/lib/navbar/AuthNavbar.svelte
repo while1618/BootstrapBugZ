@@ -39,7 +39,7 @@
     <Avatar border class="hidden md:flex" id="avatar-menu" src={avatar} />
     <Dropdown placement="bottom" triggeredBy="#avatar-menu">
       <DropdownHeader>
-        <a href="/" class="block text-sm">@while1618</a>
+        <a href="/user/while1618" class="block text-sm">@while1618</a>
       </DropdownHeader>
       <DropdownItem href="/">Dashboard</DropdownItem>
       <DropdownItem href="/user/settings">Settings</DropdownItem>
@@ -56,7 +56,7 @@
       <Sidebar>
         <SidebarWrapper>
           <SidebarGroup>
-            <SidebarItem label="@while1618" href="/">
+            <SidebarItem label="@while1618" href="/user/while1618">
               <svelte:fragment slot="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
