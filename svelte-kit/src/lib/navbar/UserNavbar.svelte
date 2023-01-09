@@ -1,5 +1,5 @@
 <script lang="ts">
-  import avatar from '$lib/images/avatar.svg';
+  import avatar from '$lib/images/avatar.jpg';
   import logo from '$lib/images/BootstrapBugZ.png';
   import {
     Avatar,
@@ -36,7 +36,7 @@
     </span>
   </NavBrand>
   <div class="flex md:gap-2">
-    <Avatar class="hidden md:flex" id="avatar-menu" src={avatar} />
+    <Avatar border class="hidden md:flex" id="avatar-menu" src={avatar} />
     <Dropdown placement="bottom" triggeredBy="#avatar-menu">
       <DropdownHeader>
         <a href="/" class="block text-sm">@while1618</a>
