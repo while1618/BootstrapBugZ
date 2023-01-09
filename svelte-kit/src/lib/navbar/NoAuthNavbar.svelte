@@ -32,24 +32,18 @@
       <Button size="sm" href="/auth/sign-up">Sign up</Button>
     </div>
     <DarkMode />
-    <div class="flex md:hidden">
-      <NavHamburger on:click={() => (hidden = false)} />
-      <Drawer placement="right" transitionType="fly" {transitionParams} bind:hidden id="sidebar">
-        <div class="flex items-center">
-          <h5
-            class="mb-4 inline-flex items-center text-base font-semibold text-gray-500 dark:text-gray-400"
-          >
-            Menu
-          </h5>
-          <CloseButton on:click={() => (hidden = true)} class="mb-4 dark:text-white" />
-        </div>
-        <div class="flex flex-col gap-2">
-          <Button on:click={() => (hidden = true)} outline size="sm" href="/auth/sign-in"
-            >Sign in</Button
-          >
-          <Button on:click={() => (hidden = true)} size="sm" href="/auth/sign-up">Sign up</Button>
-        </div>
-      </Drawer>
-    </div>
+    <NavHamburger on:click={() => (hidden = false)} />
+    <Drawer placement="right" transitionType="fly" {transitionParams} bind:hidden>
+      <div class="flex items-center">
+        <h5 class="mb-4 inline-flex font-semibold text-gray-500 dark:text-gray-400">Menu</h5>
+        <CloseButton on:click={() => (hidden = true)} class="mb-4 dark:text-white" />
+      </div>
+      <div class="flex flex-col gap-2">
+        <Button on:click={() => (hidden = true)} outline size="sm" href="/auth/sign-in"
+          >Sign in</Button
+        >
+        <Button on:click={() => (hidden = true)} size="sm" href="/auth/sign-up">Sign up</Button>
+      </div>
+    </Drawer>
   </div>
 </Navbar>
