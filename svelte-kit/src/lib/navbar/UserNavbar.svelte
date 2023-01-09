@@ -1,4 +1,5 @@
 <script lang="ts">
+  import logo from '$lib/images/BootstrapBugZ.png';
   import github from '$lib/images/github-mark.svg';
   import {
     Avatar,
@@ -14,11 +15,7 @@
 
 <Navbar color="none">
   <NavBrand href="/">
-    <img
-      src="https://flowbite.com/docs/images/logo.svg"
-      class="mr-3 h-6 sm:h-9"
-      alt="Flowbite Logo"
-    />
+    <img src={logo} class="h-16" alt="BootstrapBugZ Logo" />
     <span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
       BootstrapBugZ
     </span>
