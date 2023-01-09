@@ -10,7 +10,7 @@
       BootstrapBugZ
     </span>
   </NavBrand>
-  <div class="flex items-center gap-2">
+  <div class="flex gap-2">
     <Button outline size="sm" href="/auth/sign-in">Sign in</Button>
     <Button size="sm" href="/auth/sign-up">Sign up</Button>
     <DarkMode />

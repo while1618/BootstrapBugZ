@@ -20,7 +20,7 @@
       BootstrapBugZ
     </span>
   </NavBrand>
-  <div class="flex items-center gap-2">
+  <div class="flex gap-2">
     <Avatar id="avatar-menu" src={github} />
     <DarkMode />
   </div>
