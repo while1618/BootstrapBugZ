@@ -1,7 +1,7 @@
 <script lang="ts">
-  import LockIcon from '$lib/icons/lock.svelte';
-  import TrashIcon from '$lib/icons/trash.svelte';
-  import XCircleIcon from '$lib/icons/x-circle.svelte';
+  import LockIcon from '$lib/icons/lock-icon.svelte';
+  import TrashIcon from '$lib/icons/trash-icon.svelte';
+  import XCircleIcon from '$lib/icons/x-circle-icon.svelte';
   import {
     Checkbox,
     TableBody,
