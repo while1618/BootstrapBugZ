@@ -1,6 +1,6 @@
 <script lang="ts">
-  import AuthNavbar from '$lib/navbar/AuthNavbar.svelte';
-  import NoAuthNavbar from '$lib/navbar/NoAuthNavbar.svelte';
+  import AuthNavbar from '$lib/components/navbar/AuthNavbar.svelte';
+  import NoAuthNavbar from '$lib/components/navbar/NoAuthNavbar.svelte';
   import { Button, Card } from 'flowbite-svelte';
 
   let signedIn = false;
