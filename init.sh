@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# self delete this script after execution
+rm -- "$0"
+
 clear
 echo "What is the name of your app: "
 APP_NAME=$(gum input --placeholder "")
@@ -26,5 +29,6 @@ clear
 echo "Name of your app is: $APP_NAME"
 echo "You picked $BACKEND for the backend, and $FRONEND for the frontend."
 
-# self delete this script after execution
-rm -- "$0"
+git add -A
+git commit -m "Initial commit."
+git push
