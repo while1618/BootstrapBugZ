@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
   import { Button, Card, FloatingLabelInput } from 'flowbite-svelte';
   import type { ActionData } from './$types';
 
@@ -19,7 +20,7 @@
     color="none"
     class="w-full border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800"
   >
-    <form class="flex flex-col space-y-6" method="POST" action="?/signIn">
+    <form class="flex flex-col space-y-6" method="POST" action="?/signIn" use:enhance>
       <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
         Sign in to BootstrapBugZ
       </h3>
