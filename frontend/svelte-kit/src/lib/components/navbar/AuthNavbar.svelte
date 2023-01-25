@@ -42,9 +42,9 @@
   <div class="flex md:gap-2">
     <Avatar border class="hidden md:flex" id="avatar-menu" src={avatar} />
     <Dropdown placement="bottom" triggeredBy="#avatar-menu">
-      <DropdownItem href="/user/while1618" class="flex items-center gap-2">
+      <DropdownItem href="/user/john.doe" class="flex items-center gap-2">
         <ProfileIcon />
-        while1618
+        john.doe
       </DropdownItem>
       <DropdownDivider />
       <DropdownItem href="/" class="flex items-center gap-2">
@@ -77,7 +77,7 @@
       <Sidebar>
         <SidebarWrapper>
           <SidebarGroup>
-            <SidebarItem label="while1618" href="/user/while1618">
+            <SidebarItem label="john.doe" href="/user/john.doe">
               <svelte:fragment slot="icon">
                 <ProfileIcon />
               </svelte:fragment>
