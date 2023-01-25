@@ -1,6 +1,6 @@
-import type { Role } from './role';
+import type { RoleDTO } from './role';
 
-export interface User {
+export interface UserDTO {
   id: number;
   firstName: string;
   lastName: string;
@@ -8,5 +8,5 @@ export interface User {
   email: string;
   activated: boolean;
   nonLocked: boolean;
-  roles: Role;
+  roles: RoleDTO[];
 }

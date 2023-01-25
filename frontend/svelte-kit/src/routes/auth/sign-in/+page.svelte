@@ -1,6 +1,17 @@
 <script lang="ts">
   import { Button, Card, FloatingLabelInput } from 'flowbite-svelte';
+  import type { ActionData } from './$types';
+
+  export let form: ActionData;
 </script>
+
+{#if form?.errorMessage}
+  <p>{form.errorMessage.error}</p>
+{/if}
+
+{#if form?.signInDTO}
+  <p>{form.signInDTO.user.username}</p>
+{/if}
 
 <div class="flex justify-center pt-10">
   <Card
@@ -8,7 +19,7 @@
     color="none"
     class="w-full border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800"
   >
-    <form class="flex flex-col space-y-6" action="/">
+    <form class="flex flex-col space-y-6" method="POST" action="?/signIn">
       <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
         Sign in to BootstrapBugZ
       </h3>
