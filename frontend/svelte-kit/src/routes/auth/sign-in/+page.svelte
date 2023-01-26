@@ -6,14 +6,6 @@
   export let form: ActionData;
 </script>
 
-{#if form?.errorMessage}
-  <p>{form.errorMessage.error}</p>
-{/if}
-
-{#if form?.signInDTO}
-  <p>{form.signInDTO.user.username}</p>
-{/if}
-
 <div class="flex justify-center pt-10">
   <Card
     size="sm"
@@ -40,6 +32,9 @@
         type="password"
         label="Password"
       />
+      {#if form?.errorMessage}
+        <p class="text-red-600">{form.errorMessage.details[0].message}</p>
+      {/if}
       <Button type="submit">Sign in</Button>
       <div class="flex justify-center text-sm font-medium text-gray-500 dark:text-gray-300">
         <div>

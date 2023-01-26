@@ -1,5 +1,4 @@
 <script>
-  import { enhance } from '$app/forms';
   import { Button, Card, FloatingLabelInput, TabItem, Tabs } from 'flowbite-svelte';
 </script>
 
@@ -12,7 +11,7 @@
     <Tabs style="underline" class="justify-center">
       <TabItem open title="Update profile">
         <div class="flex justify-center">
-          <form class="flex w-2/3 flex-col space-y-6" action="/" use:enhance>
+          <form class="flex w-2/3 flex-col space-y-6">
             <FloatingLabelInput
               class="space-y-2"
               style="standard"
@@ -51,7 +50,7 @@
       </TabItem>
       <TabItem title="Change password">
         <div class="flex justify-center">
-          <form class="flex w-2/3 flex-col space-y-6" action="/" use:enhance>
+          <form class="flex w-2/3 flex-col space-y-6">
             <FloatingLabelInput
               class="space-y-2"
               style="standard"
