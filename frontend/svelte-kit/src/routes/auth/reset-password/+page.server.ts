@@ -6,14 +6,14 @@ export const actions = {
   resetPassword: async ({ fetch, request }) => {
     const formData = await request.formData();
     const response = await fetch(`http://localhost:8080/v1/auth/reset-password`, {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify(resetPasswordRequest(formData)),
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    if (response.status !== 200) {
+    if (response.status !== 204) {
       const errorMessage = (await response.json()) as ErrorMessage;
       return fail(response.status, { errorMessage });
     }

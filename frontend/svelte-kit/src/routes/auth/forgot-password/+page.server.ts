@@ -13,7 +13,7 @@ export const actions = {
       },
     });
 
-    if (response.status !== 200) {
+    if (response.status !== 204) {
       const errorMessage = (await response.json()) as ErrorMessage;
       return fail(response.status, { errorMessage });
     }
