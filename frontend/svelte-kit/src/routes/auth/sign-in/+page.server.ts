@@ -6,11 +6,13 @@ import type { Actions } from './$types';
 export const actions = {
   signIn: async ({ request }) => {
     const formData = await request.formData();
-    const usernameOrEmail = formData.get('usernameOrEmail');
-    const password = formData.get('password');
+    const signInRequest = {
+      usernameOrEmail: formData.get('usernameOrEmail'),
+      password: formData.get('password'),
+    };
     const response = await fetch(`http://localhost:8080/v1/auth/sign-in`, {
       method: 'POST',
-      body: JSON.stringify({ usernameOrEmail, password }),
+      body: JSON.stringify(signInRequest),
       headers: {
         'Content-Type': 'application/json',
       },
