@@ -21,7 +21,7 @@ export const actions = {
   signIn: async ({ fetch, request }) => {
     const formData = await request.formData();
     const signInRequest = getSignInRequest(formData);
-    const errors = await checkSignInRequest(signInRequest);
+    const errors = checkSignInRequest(signInRequest);
     if (!isObjectEmpty(errors)) return fail(400, { errors });
 
     const response = await fetch(`${API_URL}/auth/sign-in`, {
@@ -52,7 +52,7 @@ const getSignInRequest = (formData: FormData): SignInRequest => {
   } as SignInRequest;
 };
 
-const checkSignInRequest = async (request: SignInRequest): Promise<SignInErrors> => {
+const checkSignInRequest = (request: SignInRequest): SignInErrors => {
   const errors: SignInErrors = {
     usernameOrEmail: null,
     password: null,
