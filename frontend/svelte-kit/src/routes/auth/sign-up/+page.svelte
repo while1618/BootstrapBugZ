@@ -94,6 +94,9 @@
           <p class="mt-2 text-sm text-red-600">{form.errors.confirmPassword}</p>
         {/if}
       </div>
+      {#if form?.errorMessage}
+        <p class="mt-2 text-sm text-red-600">Unexpected error occurred.</p>
+      {/if}
       <Button type="submit">Sign up</Button>
     </form>
   </Card>

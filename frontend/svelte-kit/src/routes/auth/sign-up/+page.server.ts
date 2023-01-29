@@ -45,6 +45,7 @@ export const actions = {
 
     if (response.status !== 201) {
       const errorMessage = (await response.json()) as ErrorMessage;
+      console.log(errorMessage);
       return fail(response.status, { errorMessage });
     }
 
