@@ -1,0 +1,22 @@
+{
+  "firstName.invalid": "Invalid first name.",
+  "lastName.invalid": "Invalid last name.",
+  "username.invalid": "Invalid username.",
+  "usernameOrEmail.invalid": "Invalid username or email.",
+  "username.exists": "Username already exists.",
+  "email.invalid": "Invalid email.",
+  "email.exists": "Email already exists.",
+  "password.invalid": "Invalid password.",
+  "password.doNotMatch": "Passwords do not match.",
+  "token.invalid": "Invalid token.",
+  "user.notFound": "User not found.",
+  "user.activated": "User already activated.",
+  "user.notActivated": "User not activated.",
+  "user.locked": "User locked.",
+  "usernames.empty": "Usernames not provided.",
+  "roles.empty": "Roles not provided.",
+  "role.notFound": "Role not found.",
+  "signIn.invalid": "Invalid credentials.",
+  "oldPassword.invalid": "Wrong old password.",
+  "ids.empty": "Ids not provided."
+}

@@ -18,7 +18,7 @@ public class Regex {
    *
    * */
   public static final String FIRST_AND_LAST_NAME =
-      "^[^0-9_!¡?÷?¿/\\\\+=@#$%ˆ&*(){}\\[\\]|~<>;:]{2,}$";
+      "^[^0-9_!¡?÷¿/\\\\+=@#$%ˆ&*(){}\\[\\]|~<>;:]{2,}$";
   /*
    * Between 2 and 16 characters long
    * It supports only letters, numbers, dot and underscore
@@ -54,10 +54,6 @@ public class Regex {
    *
    * */
   public static final String PASSWORD = "^(?=.*\\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$";
-  /*
-   * It supports any string
-   * */
-  public static final String ANYTHING = "[\\s\\S]+";
 
   private Regex() {}
 }
