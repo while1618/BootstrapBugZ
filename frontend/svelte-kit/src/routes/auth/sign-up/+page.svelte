@@ -16,72 +16,84 @@
       <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
         Sign up to BootstrapBugZ
       </h3>
-      <FloatingLabelInput
-        class="space-y-2"
-        style="standard"
-        id="firstName"
-        name="firstName"
-        type="text"
-        label="First name"
-      />
-      {#if form?.errors?.firstName}
-        <p class="text-red-600">{form.errors.firstName}</p>
-      {/if}
-      <FloatingLabelInput
-        class="space-y-2"
-        style="standard"
-        id="lastName"
-        name="lastName"
-        type="text"
-        label="Last name"
-      />
-      {#if form?.errors?.lastName}
-        <p class="text-red-600">{form.errors.lastName}</p>
-      {/if}
-      <FloatingLabelInput
-        class="space-y-2"
-        style="standard"
-        id="username"
-        name="username"
-        type="text"
-        label="Username"
-      />
-      {#if form?.errors?.username}
-        <p class="text-red-600">{form.errors.username}</p>
-      {/if}
-      <FloatingLabelInput
-        class="space-y-2"
-        style="standard"
-        id="email"
-        name="email"
-        type="email"
-        label="Email"
-      />
-      {#if form?.errors?.email}
-        <p class="text-red-600">{form.errors.email}</p>
-      {/if}
-      <FloatingLabelInput
-        class="space-y-2"
-        style="standard"
-        id="password"
-        name="password"
-        type="password"
-        label="Password"
-      />
-      {#if form?.errors?.password}
-        <p class="text-red-600">{form.errors.password}</p>
-      {/if}
-      <FloatingLabelInput
-        class="space-y-2"
-        style="standard"
-        id="confirmPassword"
-        name="confirmPassword"
-        type="password"
-        label="Confirm password"
-      />
-      {#if form?.errors?.confirmPassword}
-        <p class="text-red-600">{form.errors.confirmPassword}</p>
-      {/if}
+      <div>
+        <FloatingLabelInput
+          class="space-y-2"
+          style="standard"
+          id="firstName"
+          name="firstName"
+          type="text"
+          label="First name"
+        />
+        {#if form?.errors?.firstName}
+          <p class="mt-2 text-sm text-red-600">{form.errors.firstName}</p>
+        {/if}
+      </div>
+      <div>
+        <FloatingLabelInput
+          class="space-y-2"
+          style="standard"
+          id="lastName"
+          name="lastName"
+          type="text"
+          label="Last name"
+        />
+        {#if form?.errors?.lastName}
+          <p class="mt-2 text-sm text-red-600">{form.errors.lastName}</p>
+        {/if}
+      </div>
+      <div>
+        <FloatingLabelInput
+          class="space-y-2"
+          style="standard"
+          id="username"
+          name="username"
+          type="text"
+          label="Username"
+        />
+        {#if form?.errors?.username}
+          <p class="mt-2 text-sm text-red-600">{form.errors.username}</p>
+        {/if}
+      </div>
+      <div>
+        <FloatingLabelInput
+          class="space-y-2"
+          style="standard"
+          id="email"
+          name="email"
+          type="email"
+          label="Email"
+        />
+        {#if form?.errors?.email}
+          <p class="mt-2 text-sm text-red-600">{form.errors.email}</p>
+        {/if}
+      </div>
+      <div>
+        <FloatingLabelInput
+          class="space-y-2"
+          style="standard"
+          id="password"
+          name="password"
+          type="password"
+          label="Password"
+        />
+        {#if form?.errors?.password}
+          <p class="mt-2 text-sm text-red-600">{form.errors.password}</p>
+        {/if}
+      </div>
+      <div>
+        <FloatingLabelInput
+          class="space-y-2"
+          style="standard"
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          label="Confirm password"
+        />
+        {#if form?.errors?.confirmPassword}
+          <p class="mt-2 text-sm text-red-600">{form.errors.confirmPassword}</p>
+        {/if}
+      </div>
       <Button type="submit">Sign up</Button>
     </form>
   </Card>
