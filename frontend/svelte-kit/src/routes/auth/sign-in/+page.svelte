@@ -16,24 +16,36 @@
       <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
         Sign in to BootstrapBugZ
       </h3>
-      <FloatingLabelInput
-        class="space-y-2"
-        style="standard"
-        id="usernameOrEmail"
-        name="usernameOrEmail"
-        type="text"
-        label="Username or email"
-      />
-      <FloatingLabelInput
-        class="space-y-2"
-        style="standard"
-        id="password"
-        name="password"
-        type="password"
-        label="Password"
-      />
+      <div>
+        <FloatingLabelInput
+          class="space-y-2"
+          style="standard"
+          id="usernameOrEmail"
+          name="usernameOrEmail"
+          type="text"
+          label="Username or email"
+        />
+        {#if form?.errors?.usernameOrEmail}
+          <p class="mt-2 text-sm text-red-600">{form.errors.usernameOrEmail}</p>
+        {/if}
+      </div>
+      <div>
+        <FloatingLabelInput
+          class="space-y-2"
+          style="standard"
+          id="password"
+          name="password"
+          type="password"
+          label="Password"
+        />
+        {#if form?.errors?.password}
+          <p class="mt-2 text-sm text-red-600">{form.errors.password}</p>
+        {/if}
+      </div>
       {#if form?.errorMessage}
-        <p class="text-red-600">{form.errorMessage.details[0].message}</p>
+        {#each form.errorMessage.details as error}
+          <p class="mt-2 text-sm text-red-600">{error.message}</p>
+        {/each}
       {/if}
       <Button type="submit">Sign in</Button>
       <div class="flex justify-center text-sm font-medium text-gray-500 dark:text-gray-300">
