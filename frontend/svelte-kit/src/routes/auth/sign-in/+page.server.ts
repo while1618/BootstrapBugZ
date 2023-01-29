@@ -1,3 +1,4 @@
+import { API_URL } from '$lib/apis/api';
 import type { ErrorMessage } from '$lib/models/error-message';
 import type { SignInDTO } from '$lib/models/sign-in';
 import { fail, redirect } from '@sveltejs/kit';
@@ -7,7 +8,7 @@ import type { Actions } from './$types';
 export const actions = {
   signIn: async ({ fetch, request }) => {
     const formData = await request.formData();
-    const response = await fetch(`http://localhost:8080/v1/auth/sign-in`, {
+    const response = await fetch(`${API_URL}/auth/sign-in`, {
       method: 'POST',
       body: JSON.stringify(signInRequest(formData)),
       headers: {
