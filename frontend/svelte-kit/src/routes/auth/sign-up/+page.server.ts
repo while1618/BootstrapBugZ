@@ -19,7 +19,7 @@ interface SignUpRequest {
   confirmPassword: string;
 }
 
-export interface SignUpErrors {
+interface SignUpErrors {
   firstName: string | null;
   lastName: string | null;
   username: string | null;

@@ -95,7 +95,9 @@
         {/if}
       </div>
       {#if form?.errorMessage}
-        <p class="mt-2 text-sm text-red-600">Unexpected error occurred.</p>
+        {#each form.errorMessage.details as error}
+          <p class="mt-2 text-sm text-red-600">{error.message}</p>
+        {/each}
       {/if}
       <Button type="submit">Sign up</Button>
     </form>
