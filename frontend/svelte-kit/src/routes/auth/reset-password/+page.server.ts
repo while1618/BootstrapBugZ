@@ -58,6 +58,7 @@ const checkResetPasswordRequest = (request: ResetPasswordRequest): ResetPassword
   };
 
   if (request.accessToken === '') errors.accessToken = en['token.invalid'];
+  //TODO: check if token is JWT
   if (!PASSWORD_REGEX.test(request.password)) errors.password = en['password.invalid'];
   if (!PASSWORD_REGEX.test(request.confirmPassword))
     errors.confirmPassword = en['password.invalid'];
