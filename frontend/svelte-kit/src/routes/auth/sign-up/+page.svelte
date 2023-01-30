@@ -93,12 +93,12 @@
         {#if form?.errors?.confirmPassword}
           <p class="mt-2 text-sm text-red-600">{form.errors.confirmPassword}</p>
         {/if}
+        {#if form?.errorMessage}
+          {#each form.errorMessage.details as error}
+            <p class="mt-2 text-sm text-red-600">{error.message}</p>
+          {/each}
+        {/if}
       </div>
-      {#if form?.errorMessage}
-        {#each form.errorMessage.details as error}
-          <p class="mt-2 text-sm text-red-600">{error.message}</p>
-        {/each}
-      {/if}
       <Button type="submit">Sign up</Button>
     </form>
   </Card>

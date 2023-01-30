@@ -41,12 +41,12 @@
         {#if form?.errors?.password}
           <p class="mt-2 text-sm text-red-600">{form.errors.password}</p>
         {/if}
+        {#if form?.errorMessage}
+          {#each form.errorMessage.details as error}
+            <p class="mt-2 text-sm text-red-600">{error.message}</p>
+          {/each}
+        {/if}
       </div>
-      {#if form?.errorMessage}
-        {#each form.errorMessage.details as error}
-          <p class="mt-2 text-sm text-red-600">{error.message}</p>
-        {/each}
-      {/if}
       <Button type="submit">Sign in</Button>
       <div class="flex justify-center text-sm font-medium text-gray-500 dark:text-gray-300">
         <div>
