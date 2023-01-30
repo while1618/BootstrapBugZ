@@ -1,6 +1,9 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import { Button, Card, FloatingLabelInput } from 'flowbite-svelte';
+  import type { ActionData } from './$types';
+
+  export let form: ActionData;
 </script>
 
 <div class="flex justify-center pt-10">
@@ -13,14 +16,24 @@
       <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
         Forgot password
       </h3>
-      <FloatingLabelInput
-        class="space-y-2"
-        style="standard"
-        id="email"
-        name="email"
-        type="email"
-        label="Email"
-      />
+      <div>
+        <FloatingLabelInput
+          class="space-y-2"
+          style="standard"
+          id="email"
+          name="email"
+          type="email"
+          label="Email"
+        />
+        {#if form?.errors?.email}
+          <p class="mt-2 text-sm text-red-600">{form.errors.email}</p>
+        {/if}
+      </div>
+      {#if form?.errorMessage}
+        {#each form.errorMessage.details as error}
+          <p class="mt-2 text-sm text-red-600">{error.message}</p>
+        {/each}
+      {/if}
       <Button type="submit">Send</Button>
     </form>
   </Card>

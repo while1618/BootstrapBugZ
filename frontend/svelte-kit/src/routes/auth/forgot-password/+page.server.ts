@@ -1,14 +1,28 @@
 import { API_URL } from '$lib/apis/api';
+import en from '$lib/i18n/en.json';
 import type { ErrorMessage } from '$lib/models/error-message';
+import { EMAIL_REGEX } from '$lib/regex/regex';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
+
+interface ForgotPasswordRequest {
+  email: string;
+}
+
+interface ForgotPasswordErrors {
+  email: string | null;
+}
 
 export const actions = {
   forgotPassword: async ({ fetch, request }) => {
     const formData = await request.formData();
+    const forgotPasswordRequest = getForgotPasswordRequest(formData);
+    const errors = await checkForgotPasswordRequest(forgotPasswordRequest);
+    if (!isObjectEmpty(errors)) return fail(400, { errors });
+
     const response = await fetch(`${API_URL}/auth/forgot-password`, {
       method: 'POST',
-      body: JSON.stringify(forgotPasswordRequest(formData)),
+      body: JSON.stringify(forgotPasswordRequest),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -16,6 +30,7 @@ export const actions = {
 
     if (response.status !== 204) {
       const errorMessage = (await response.json()) as ErrorMessage;
+      console.log(errorMessage);
       return fail(response.status, { errorMessage });
     }
 
@@ -23,8 +38,26 @@ export const actions = {
   },
 } satisfies Actions;
 
-const forgotPasswordRequest = (request: FormData) => {
+const getForgotPasswordRequest = (request: FormData): ForgotPasswordRequest => {
   return {
     email: request.get('email'),
+  } as ForgotPasswordRequest;
+};
+
+const checkForgotPasswordRequest = async (
+  request: ForgotPasswordRequest
+): Promise<ForgotPasswordErrors> => {
+  const errors: ForgotPasswordErrors = {
+    email: null,
   };
+
+  if (request.email === '') errors.email = en['email.invalid'];
+  if (!EMAIL_REGEX.test(request.email)) errors.email = en['email.invalid'];
+
+  return errors;
+};
+
+const isObjectEmpty = (obj: object): boolean => {
+  const values = Object.values(obj);
+  return values.every((val) => val === null);
 };
