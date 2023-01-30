@@ -18,9 +18,9 @@ interface ResetPasswordErrors {
 }
 
 export const actions = {
-  resetPassword: async ({ fetch, request }) => {
+  resetPassword: async ({ fetch, request, url }) => {
     const formData = await request.formData();
-    const resetPasswordRequest = getResetPasswordRequest(formData);
+    const resetPasswordRequest = getResetPasswordRequest(formData, url);
     const errors = checkResetPasswordRequest(resetPasswordRequest);
     if (!isObjectEmpty(errors)) return fail(400, { errors });
 
@@ -42,9 +42,9 @@ export const actions = {
   },
 } satisfies Actions;
 
-const getResetPasswordRequest = (request: FormData): ResetPasswordRequest => {
+const getResetPasswordRequest = (request: FormData, url: URL): ResetPasswordRequest => {
   return {
-    accessToken: '',
+    accessToken: url.searchParams.get('accessToken'),
     password: request.get('password'),
     confirmPassword: request.get('confirmPassword'),
   } as ResetPasswordRequest;

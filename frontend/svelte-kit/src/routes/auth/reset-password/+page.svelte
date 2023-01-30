@@ -1,9 +1,11 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import { page } from '$app/stores';
   import { Button, Card, FloatingLabelInput } from 'flowbite-svelte';
   import type { ActionData } from './$types';
 
   export let form: ActionData;
+  export let accessToken = $page.url.searchParams.get('accessToken');
 </script>
 
 <div class="flex justify-center pt-10">
@@ -12,7 +14,12 @@
     color="none"
     class="w-full border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800"
   >
-    <form class="flex flex-col space-y-6" method="POST" action="?/resetPassword" use:enhance>
+    <form
+      class="flex flex-col space-y-6"
+      method="POST"
+      action="?/resetPassword&accessToken={accessToken}"
+      use:enhance
+    >
       <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
         Reset password
       </h3>
