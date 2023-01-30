@@ -4,7 +4,6 @@ import type { ErrorMessage } from '$lib/models/error-message';
 import type { SignInDTO } from '$lib/models/sign-in';
 import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
 import { fail, redirect } from '@sveltejs/kit';
-import { signedInUser } from '../../../stores/user';
 import type { Actions } from './$types';
 
 interface SignInRequest {
@@ -39,7 +38,7 @@ export const actions = {
     }
 
     const signInDTO = (await response.json()) as SignInDTO;
-    signedInUser.set(signInDTO.user);
+    //TODO: save user somewhere
 
     throw redirect(302, '/');
   },
