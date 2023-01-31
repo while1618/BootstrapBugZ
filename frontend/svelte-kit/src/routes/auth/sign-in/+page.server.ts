@@ -17,7 +17,7 @@ interface SignInErrors {
 }
 
 export const actions = {
-  signIn: async ({ fetch, request }) => {
+  signIn: async ({ fetch, request, cookies }) => {
     const formData = await request.formData();
     const signInRequest = getSignInRequest(formData);
     const errors = checkSignInRequest(signInRequest);
@@ -38,7 +38,22 @@ export const actions = {
     }
 
     const signInDTO = (await response.json()) as SignInDTO;
-    //TODO: save user somewhere
+
+    cookies.set('accessToken', signInDTO.accessToken, {
+      httpOnly: true,
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24, // 1 day
+    });
+
+    cookies.set('refreshToken', signInDTO.refreshToken, {
+      httpOnly: true,
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24, // 1 day
+    });
 
     throw redirect(302, '/');
   },
