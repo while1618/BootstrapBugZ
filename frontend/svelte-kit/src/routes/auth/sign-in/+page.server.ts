@@ -44,7 +44,7 @@ export const actions = {
       path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 900, // 15min
     });
 
     cookies.set('refreshToken', signInDTO.refreshToken, {
@@ -52,7 +52,7 @@ export const actions = {
       path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 604800, // 7 days
     });
 
     throw redirect(302, '/');
