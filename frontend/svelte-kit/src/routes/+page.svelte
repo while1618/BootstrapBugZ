@@ -1,12 +1,13 @@
 <script lang="ts">
   import AuthNavbar from '$lib/components/navbar/AuthNavbar.svelte';
   import NoAuthNavbar from '$lib/components/navbar/NoAuthNavbar.svelte';
-  import { Button, Card } from 'flowbite-svelte';
+  import { Card } from 'flowbite-svelte';
+  import type { PageServerData } from './$types';
 
-  let signedIn = false;
+  export let data: PageServerData;
 </script>
 
-{#if signedIn}
+{#if data.user}
   <AuthNavbar />
 {:else}
   <NoAuthNavbar />
@@ -21,7 +22,6 @@
     <div class="flex justify-center">
       <h1 class="text-lg dark:text-white">BootstrapBugZ</h1>
     </div>
-    <Button on:click={() => (signedIn = !signedIn)}>Switch Navbar</Button>
   </Card>
 </div>
 
