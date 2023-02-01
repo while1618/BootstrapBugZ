@@ -3,6 +3,7 @@ import en from '$lib/i18n/en.json';
 import type { ErrorMessage } from '$lib/models/error-message';
 import type { SignInDTO } from '$lib/models/sign-in';
 import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
+import { isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -79,9 +80,4 @@ const checkSignInRequest = (request: SignInRequest): SignInErrors => {
   if (!PASSWORD_REGEX.test(request.password)) errors.password = en['password.invalid'];
 
   return errors;
-};
-
-const isObjectEmpty = (obj: object): boolean => {
-  const values = Object.values(obj);
-  return values.every((val) => val === null);
 };

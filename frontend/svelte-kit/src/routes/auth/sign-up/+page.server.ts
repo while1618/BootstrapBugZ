@@ -7,6 +7,7 @@ import {
   PASSWORD_REGEX,
   USERNAME_REGEX,
 } from '$lib/regex/regex';
+import { isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -100,9 +101,4 @@ const checkSignUpRequest = async (request: SignUpRequest): Promise<SignUpErrors>
     errors.confirmPassword = en['password.doNotMatch'];
 
   return errors;
-};
-
-const isObjectEmpty = (obj: object): boolean => {
-  const values = Object.values(obj);
-  return values.every((val) => val === null);
 };

@@ -2,6 +2,7 @@ import { API_URL } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import type { ErrorMessage } from '$lib/models/error-message';
 import { EMAIL_REGEX } from '$lib/regex/regex';
+import { isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -55,9 +56,4 @@ const checkForgotPasswordRequest = async (
   if (!EMAIL_REGEX.test(request.email)) errors.email = en['email.invalid'];
 
   return errors;
-};
-
-const isObjectEmpty = (obj: object): boolean => {
-  const values = Object.values(obj);
-  return values.every((val) => val === null);
 };
