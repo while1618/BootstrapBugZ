@@ -4,7 +4,7 @@ import type { ErrorMessage } from '$lib/models/error-message';
 import type { SignInDTO } from '$lib/models/sign-in';
 import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
 import { isObjectEmpty } from '$lib/utils/util';
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, redirect, type Cookies } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
 interface SignInRequest {
@@ -38,27 +38,30 @@ export const actions = {
       return fail(response.status, { errorMessage });
     }
 
-    const signInDTO = (await response.json()) as SignInDTO;
-
-    cookies.set('accessToken', signInDTO.accessToken, {
-      httpOnly: true,
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 900, // 15min
-    });
-
-    cookies.set('refreshToken', signInDTO.refreshToken, {
-      httpOnly: true,
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 604800, // 7 days
-    });
+    const { accessToken, refreshToken } = (await response.json()) as SignInDTO;
+    setCookies(cookies, accessToken, refreshToken);
 
     throw redirect(302, '/');
   },
 } satisfies Actions;
+
+const setCookies = (cookies: Cookies, accessToken: string, refreshToken: string): void => {
+  cookies.set('accessToken', accessToken, {
+    httpOnly: true,
+    path: '/',
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 60 * 15, // 15mins
+  });
+
+  cookies.set('refreshToken', refreshToken, {
+    httpOnly: true,
+    path: '/',
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+  });
+};
 
 const getSignInRequest = (formData: FormData): SignInRequest => {
   return {
