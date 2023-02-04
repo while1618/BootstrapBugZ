@@ -39,7 +39,7 @@ export const actions = {
       return fail(response.status, { errorMessage });
     }
 
-    throw redirect(302, '/auth/sign-in');
+    throw redirect(303, '/auth/sign-in');
   },
 } satisfies Actions;
 

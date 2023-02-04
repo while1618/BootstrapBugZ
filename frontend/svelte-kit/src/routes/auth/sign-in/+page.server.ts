@@ -41,7 +41,7 @@ export const actions = {
     const { accessToken, refreshToken } = (await response.json()) as SignInDTO;
     setCookies(cookies, accessToken, refreshToken);
 
-    throw redirect(302, '/');
+    throw redirect(303, '/');
   },
 } satisfies Actions;
 
