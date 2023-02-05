@@ -19,7 +19,7 @@ public class ConfirmRegistrationEmail implements JwtEmail {
       final var template =
           new ClassPathResource("templates/email/confirm-registration.html").getFile();
       final var link =
-          environment.getProperty("ui.app.url") + "/auth/confirm-registration?accessToken=" + token;
+          environment.getProperty("ui.app.url") + "/auth/confirm-registration?token=" + token;
       final var body =
           Files.asCharSource(template, StandardCharsets.UTF_8)
               .read()

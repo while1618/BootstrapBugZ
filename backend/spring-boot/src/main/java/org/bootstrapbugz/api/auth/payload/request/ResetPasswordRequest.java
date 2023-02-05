@@ -16,7 +16,7 @@ import org.bootstrapbugz.api.shared.constants.Regex;
 @FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
 public class ResetPasswordRequest {
   @NotBlank(message = "{token.invalid}")
-  private String accessToken;
+  private String token;
 
   @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
   private String password;

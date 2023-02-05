@@ -12,5 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ConfirmRegistrationRequest {
   @NotBlank(message = "{token.invalid}")
-  private String accessToken;
+  private String token;
 }

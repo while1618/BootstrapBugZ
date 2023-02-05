@@ -104,7 +104,7 @@ paths:
             schema:
               $ref: "#/components/schemas/ConfirmRegistrationRequest"
             example:
-              accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
+              token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
       responses:
         204:
           description: Confirm Registration Success
@@ -251,7 +251,7 @@ paths:
             schema:
               $ref: "#/components/schemas/ResetPasswordRequest"
             example:
-              accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
+              token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
               password: qwerty321
               confirmPassword: qwerty321
       responses:

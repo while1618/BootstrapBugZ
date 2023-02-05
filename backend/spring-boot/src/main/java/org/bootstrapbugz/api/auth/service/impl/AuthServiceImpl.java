@@ -65,8 +65,8 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public UserDTO signUp(SignUpRequest signUpRequest) {
     final var user = createUser(signUpRequest);
-    final var accessToken = confirmRegistrationTokenService.create(user.getId());
-    confirmRegistrationTokenService.sendToEmail(user, accessToken);
+    final var token = confirmRegistrationTokenService.create(user.getId());
+    confirmRegistrationTokenService.sendToEmail(user, token);
     return userMapper.userToUserDTO(user);
   }
 
@@ -98,19 +98,19 @@ public class AuthServiceImpl implements AuthService {
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     if (user.isActivated())
       throw new ForbiddenException(messageService.getMessage("user.activated"));
-    final var accessToken = confirmRegistrationTokenService.create(user.getId());
-    confirmRegistrationTokenService.sendToEmail(user, accessToken);
+    final var token = confirmRegistrationTokenService.create(user.getId());
+    confirmRegistrationTokenService.sendToEmail(user, token);
   }
 
   @Override
   public void confirmRegistration(ConfirmRegistrationRequest confirmRegistrationRequest) {
     final var user =
         userRepository
-            .findById(JwtUtil.getUserId(confirmRegistrationRequest.getAccessToken()))
+            .findById(JwtUtil.getUserId(confirmRegistrationRequest.getToken()))
             .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
     if (user.isActivated())
       throw new ForbiddenException(messageService.getMessage("user.activated"));
-    confirmRegistrationTokenService.check(confirmRegistrationRequest.getAccessToken());
+    confirmRegistrationTokenService.check(confirmRegistrationRequest.getToken());
     user.setActivated(true);
     userRepository.save(user);
   }
@@ -151,17 +151,17 @@ public class AuthServiceImpl implements AuthService {
             .findByEmail(forgotPasswordRequest.getEmail())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    final var accessToken = resetPasswordTokenService.create(user.getId());
-    resetPasswordTokenService.sendToEmail(user, accessToken);
+    final var token = resetPasswordTokenService.create(user.getId());
+    resetPasswordTokenService.sendToEmail(user, token);
   }
 
   @Override
   public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
     final var user =
         userRepository
-            .findById(JwtUtil.getUserId(resetPasswordRequest.getAccessToken()))
+            .findById(JwtUtil.getUserId(resetPasswordRequest.getToken()))
             .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
-    resetPasswordTokenService.check(resetPasswordRequest.getAccessToken());
+    resetPasswordTokenService.check(resetPasswordRequest.getToken());
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
     accessTokenService.invalidateAllByUser(user.getId());
     refreshTokenService.deleteAllByUser(user.getId());

@@ -77,8 +77,8 @@ public class ProfileServiceImpl implements ProfileService {
     user.setActivated(false);
     accessTokenService.invalidateAllByUser(user.getId());
     refreshTokenService.deleteAllByUser(user.getId());
-    final var accessToken = confirmRegistrationTokenService.create(user.getId());
-    confirmRegistrationTokenService.sendToEmail(user, accessToken);
+    final var token = confirmRegistrationTokenService.create(user.getId());
+    confirmRegistrationTokenService.sendToEmail(user, token);
   }
 
   @Override
