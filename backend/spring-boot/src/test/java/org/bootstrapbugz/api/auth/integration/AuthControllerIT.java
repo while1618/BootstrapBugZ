@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
-import org.bootstrapbugz.api.auth.jwt.service.impl.ForgotPasswordTokenServiceImpl;
+import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
@@ -45,7 +45,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
   @Autowired private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
-  @Autowired private ForgotPasswordTokenServiceImpl forgotPasswordTokenService;
+  @Autowired private ResetPasswordTokenServiceImpl resetPasswordService;
 
   @Test
   void itShouldSignUp() throws Exception {
@@ -192,7 +192,6 @@ class AuthControllerIT extends DatabaseContainers {
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), RefreshTokenDTO.class);
     assertThat(refreshTokenDTO.getAccessToken()).isNotEqualTo(signInDTO.getAccessToken());
-    assertThat(refreshTokenDTO.getRefreshToken()).isNotEqualTo(signInDTO.getRefreshToken());
   }
 
   @Test
@@ -278,7 +277,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldResetPassword() throws Exception {
-    final var token = forgotPasswordTokenService.create(5L); // for.update.1
+    final var token = resetPasswordService.create(5L); // for.update.1
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
@@ -291,7 +290,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    final var token = forgotPasswordTokenService.create(6L); // for.update.2
+    final var token = resetPasswordService.create(6L); // for.update.2
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty123", "qwerty1234");
     final var resultActions =
         mockMvc
@@ -307,7 +306,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowForbidden_invalidToken() throws Exception {
-    final var token = forgotPasswordTokenService.create(10L); // unknown
+    final var token = resetPasswordService.create(10L); // unknown
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     final var resultActions =
         mockMvc

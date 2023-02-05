@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
@@ -46,11 +45,8 @@ public class TestUtil {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(signInRequest)))
             .andExpect(status().isOk());
-    final var signInDTO =
-        objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(), SignInDTO.class);
-    signInDTO.setAccessToken(JwtUtil.addBearer(signInDTO.getAccessToken()));
-    return signInDTO;
+    return objectMapper.readValue(
+        resultActions.andReturn().getResponse().getContentAsString(), SignInDTO.class);
   }
 
   public static void setAuth(Authentication auth, SecurityContext securityContext, User user) {

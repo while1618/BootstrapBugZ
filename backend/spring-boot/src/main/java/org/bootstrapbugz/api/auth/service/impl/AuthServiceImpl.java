@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
-import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.ResetPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
   private final ConfirmRegistrationTokenService confirmRegistrationTokenService;
-  private final ForgotPasswordTokenService forgotPasswordTokenService;
+  private final ResetPasswordTokenService resetPasswordTokenService;
 
   public AuthServiceImpl(
       UserRepository userRepository,
@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
       ConfirmRegistrationTokenService confirmRegistrationTokenService,
-      ForgotPasswordTokenService forgotPasswordTokenService) {
+      ResetPasswordTokenService resetPasswordTokenService) {
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
     this.messageService = messageService;
@@ -59,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
     this.confirmRegistrationTokenService = confirmRegistrationTokenService;
-    this.forgotPasswordTokenService = forgotPasswordTokenService;
+    this.resetPasswordTokenService = resetPasswordTokenService;
   }
 
   @Override
@@ -151,8 +151,8 @@ public class AuthServiceImpl implements AuthService {
             .findByEmail(forgotPasswordRequest.getEmail())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    final var accessToken = forgotPasswordTokenService.create(user.getId());
-    forgotPasswordTokenService.sendToEmail(user, accessToken);
+    final var accessToken = resetPasswordTokenService.create(user.getId());
+    resetPasswordTokenService.sendToEmail(user, accessToken);
   }
 
   @Override
@@ -161,7 +161,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findById(JwtUtil.getUserId(resetPasswordRequest.getAccessToken()))
             .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
-    forgotPasswordTokenService.check(resetPasswordRequest.getAccessToken());
+    resetPasswordTokenService.check(resetPasswordRequest.getAccessToken());
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
     accessTokenService.invalidateAllByUser(user.getId());
     refreshTokenService.deleteAllByUser(user.getId());

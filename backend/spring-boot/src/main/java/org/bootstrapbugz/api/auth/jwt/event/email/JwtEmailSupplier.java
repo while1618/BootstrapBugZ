@@ -11,7 +11,7 @@ public class JwtEmailSupplier {
 
   static {
     emailType.put(JwtPurpose.CONFIRM_REGISTRATION_TOKEN, ConfirmRegistrationEmail::new);
-    emailType.put(JwtPurpose.FORGOT_PASSWORD_TOKEN, ForgotPasswordEmail::new);
+    emailType.put(JwtPurpose.RESET_PASSWORD_TOKEN, ForgotPasswordEmail::new);
   }
 
   public JwtEmail supplyEmail(JwtPurpose jwtPurpose) {

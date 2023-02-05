@@ -17,7 +17,7 @@ import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenWhitelistRepo
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.impl.AccessTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
-import org.bootstrapbugz.api.auth.jwt.service.impl.ForgotPasswordTokenServiceImpl;
+import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.RefreshTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
@@ -72,7 +72,7 @@ class AuthServiceTest {
   private AccessTokenServiceImpl accessTokenService;
   private RefreshTokenServiceImpl refreshTokenService;
   private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
-  private ForgotPasswordTokenServiceImpl forgotPasswordTokenService;
+  private ResetPasswordTokenServiceImpl resetPasswordTokenService;
 
   private AuthServiceImpl authService;
 
@@ -91,12 +91,12 @@ class AuthServiceTest {
     refreshTokenService =
         new RefreshTokenServiceImpl(refreshTokenWhitelistRepository, messageService);
     confirmRegistrationTokenService = new ConfirmRegistrationTokenServiceImpl(eventPublisher);
-    forgotPasswordTokenService =
-        new ForgotPasswordTokenServiceImpl(userBlacklistRepository, messageService, eventPublisher);
+    resetPasswordTokenService =
+        new ResetPasswordTokenServiceImpl(userBlacklistRepository, messageService, eventPublisher);
     ReflectionTestUtils.setField(accessTokenService, "secret", "secret");
     ReflectionTestUtils.setField(refreshTokenService, "secret", "secret");
     ReflectionTestUtils.setField(confirmRegistrationTokenService, "secret", "secret");
-    ReflectionTestUtils.setField(forgotPasswordTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(resetPasswordTokenService, "secret", "secret");
     authService =
         new AuthServiceImpl(
             userRepository,
@@ -107,7 +107,7 @@ class AuthServiceTest {
             accessTokenService,
             refreshTokenService,
             confirmRegistrationTokenService,
-            forgotPasswordTokenService);
+            resetPasswordTokenService);
     password = bCryptPasswordEncoder.encode("qwerty123");
     role = new Role(RoleName.USER);
     roles = Set.of(role);
@@ -233,7 +233,7 @@ class AuthServiceTest {
 
   @Test
   void itShouldResetPassword() {
-    final var token = forgotPasswordTokenService.create(1L);
+    final var token = resetPasswordTokenService.create(1L);
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.resetPassword(resetPasswordRequest);
@@ -246,7 +246,7 @@ class AuthServiceTest {
 
   @Test
   void resetPasswordShouldThrowForbidden_invalid() {
-    final var token = forgotPasswordTokenService.create(1L);
+    final var token = resetPasswordTokenService.create(1L);
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.resetPassword(resetPasswordRequest))

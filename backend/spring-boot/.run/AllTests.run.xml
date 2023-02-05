@@ -25,7 +25,7 @@
       <pattern testClass="org.bootstrapbugz.api.auth.unit.AccessTokenServiceTest" />
       <pattern testClass="org.bootstrapbugz.api.auth.unit.RefreshTokenServiceTest" />
       <pattern testClass="org.bootstrapbugz.api.auth.unit.ConfirmRegistrationTokenServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.ForgotPasswordTokenServiceTest" />
+      <pattern testClass="org.bootstrapbugz.api.auth.unit.ResetPasswordTokenServiceTest" />
       <pattern testClass="org.bootstrapbugz.api.admin.unit.AdminServiceTest" />
       <pattern testClass="org.bootstrapbugz.api.shared.unit.EmailServiceTest" />
       <pattern testClass="org.bootstrapbugz.api.shared.unit.MessageServiceTest" />

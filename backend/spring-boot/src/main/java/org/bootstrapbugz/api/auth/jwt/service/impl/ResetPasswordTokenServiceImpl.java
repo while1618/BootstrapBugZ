@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.Date;
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
-import org.bootstrapbugz.api.auth.jwt.service.ForgotPasswordTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.ResetPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
@@ -16,8 +16,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ForgotPasswordTokenServiceImpl implements ForgotPasswordTokenService {
-  private static final JwtPurpose PURPOSE = JwtPurpose.FORGOT_PASSWORD_TOKEN;
+public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService {
+  private static final JwtPurpose PURPOSE = JwtPurpose.RESET_PASSWORD_TOKEN;
 
   private final UserBlacklistRepository userBlacklistRepository;
   private final MessageService messageService;
@@ -29,7 +29,7 @@ public class ForgotPasswordTokenServiceImpl implements ForgotPasswordTokenServic
   @Value("${jwt.forgot-password-token.duration}")
   private int tokenDuration;
 
-  public ForgotPasswordTokenServiceImpl(
+  public ResetPasswordTokenServiceImpl(
       UserBlacklistRepository userBlacklistRepository,
       MessageService messageService,
       ApplicationEventPublisher eventPublisher) {
