@@ -2,7 +2,6 @@ package org.bootstrapbugz.api.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
 import java.time.Instant;
-import java.util.Date;
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.ResetPasswordTokenService;
@@ -44,7 +43,7 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
         .withClaim("userId", userId)
         .withClaim("issuedAt", Instant.now().toString())
         .withClaim("purpose", PURPOSE.name())
-        .withExpiresAt(new Date(System.currentTimeMillis() + tokenDuration * 1000L))
+        .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
         .sign(JwtUtil.getAlgorithm(secret));
   }
 
@@ -57,7 +56,7 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
   private void isInUserBlacklist(String token) {
     final var userInBlacklist = userBlacklistRepository.findById(JwtUtil.getUserId(token));
     if (userInBlacklist.isPresent()
-        && Instant.parse(JwtUtil.getIssuedAt(token)).isBefore(userInBlacklist.get().getUpdatedAt()))
+        && JwtUtil.getIssuedAt(token).isBefore(userInBlacklist.get().getUpdatedAt()))
       throw new ForbiddenException(messageService.getMessage("token.invalid"));
   }
 

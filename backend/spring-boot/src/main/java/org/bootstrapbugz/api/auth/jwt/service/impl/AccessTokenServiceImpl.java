@@ -2,7 +2,6 @@ package org.bootstrapbugz.api.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.redis.model.AccessTokenBlacklist;
 import org.bootstrapbugz.api.auth.jwt.redis.model.UserBlacklist;
@@ -47,7 +46,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         .withClaim("issuedAt", Instant.now().toString())
         .withClaim("roles", roleDTOs.stream().map(RoleDTO::getName).toList())
         .withClaim("purpose", PURPOSE.name())
-        .withExpiresAt(new Date(System.currentTimeMillis() + tokenDuration * 1000L))
+        .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
         .sign(JwtUtil.getAlgorithm(secret));
   }
 
@@ -66,7 +65,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   private void isInUserBlacklist(String token) {
     final var userInBlacklist = userBlacklistRepository.findById(JwtUtil.getUserId(token));
     if (userInBlacklist.isPresent()
-        && Instant.parse(JwtUtil.getIssuedAt(token)).isBefore(userInBlacklist.get().getUpdatedAt()))
+        && JwtUtil.getIssuedAt(token).isBefore(userInBlacklist.get().getUpdatedAt()))
       throw new UnauthorizedException(messageService.getMessage("token.invalid"));
   }
 

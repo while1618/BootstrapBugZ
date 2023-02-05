@@ -2,7 +2,6 @@ package org.bootstrapbugz.api.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
 import java.time.Instant;
-import java.util.Date;
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
@@ -34,7 +33,7 @@ public class ConfirmRegistrationTokenServiceImpl implements ConfirmRegistrationT
         .withClaim("userId", userId)
         .withClaim("issuedAt", Instant.now().toString())
         .withClaim("purpose", PURPOSE.name())
-        .withExpiresAt(new Date(System.currentTimeMillis() + tokenDuration * 1000L))
+        .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
         .sign(JwtUtil.getAlgorithm(secret));
   }
 
