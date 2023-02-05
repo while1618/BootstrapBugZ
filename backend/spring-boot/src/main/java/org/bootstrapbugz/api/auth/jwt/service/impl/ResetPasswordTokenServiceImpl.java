@@ -40,7 +40,7 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
   @Override
   public String create(Long userId) {
     return JWT.create()
-        .withClaim("userId", userId)
+        .withIssuer(userId.toString())
         .withClaim("issuedAt", Instant.now().toString())
         .withClaim("purpose", PURPOSE.name())
         .withExpiresAt(Instant.now().plusSeconds(tokenDuration))

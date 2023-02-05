@@ -35,7 +35,7 @@ public class JwtUtil {
   }
 
   public static Long getUserId(String token) {
-    return JWT.decode(token).getClaim("userId").asLong();
+    return Long.parseLong(JWT.decode(token).getIssuer());
   }
 
   public static Set<RoleDTO> getRoleDTOs(String token) {
