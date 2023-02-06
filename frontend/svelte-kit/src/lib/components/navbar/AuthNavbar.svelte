@@ -62,10 +62,12 @@
         Settings
       </DropdownItem>
       <DropdownDivider />
-      <DropdownItem href="/auth/sign-out" class="flex items-center gap-2">
-        <SignOutIcon />
-        Sign out
-      </DropdownItem>
+      <form method="POST" action="/auth/sign-out">
+        <DropdownItem class="flex items-center gap-2">
+          <SignOutIcon />
+          Sign out
+        </DropdownItem>
+      </form>
     </Dropdown>
     <DarkMode />
     <NavHamburger on:click={() => (hidden = false)} />

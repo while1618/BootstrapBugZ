@@ -3,7 +3,7 @@ import type { ErrorMessage } from '$lib/models/error-message';
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET = (async ({ fetch, locals, cookies }) => {
+export const POST = (async ({ fetch, locals, cookies }) => {
   if (!locals.userId) throw redirect(302, '/');
 
   const response = await fetch(`${API_URL}/auth/sign-out`, {
