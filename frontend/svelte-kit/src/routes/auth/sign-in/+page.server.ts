@@ -50,6 +50,8 @@ export const actions = {
 } satisfies Actions;
 
 const setCookies = (cookies: Cookies, accessToken: string, refreshToken: string): void => {
+  //TODO: set maxAge from jwt payload
+
   cookies.set('accessToken', accessToken, {
     httpOnly: true,
     path: '/',
