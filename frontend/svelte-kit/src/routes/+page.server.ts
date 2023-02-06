@@ -2,7 +2,9 @@ import { API_URL } from '$lib/apis/api';
 import type { UserDTO } from '$lib/models/user';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ fetch, cookies }) => {
+export const load = (async ({ fetch, cookies, locals }) => {
+  if (!locals.userId) return { user: null };
+
   const response = await fetch(`${API_URL}/auth/signed-in-user`, {
     headers: {
       Authorization: cookies.get('accessToken') || '',

@@ -5,7 +5,7 @@ import type { SignInDTO } from '$lib/models/sign-in';
 import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
 import { isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect, type Cookies } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 
 interface SignInRequest {
   usernameOrEmail: string;
@@ -16,6 +16,10 @@ interface SignInErrors {
   usernameOrEmail: string | null;
   password: string | null;
 }
+
+export const load = (({ locals }) => {
+  if (locals.userId) throw redirect(302, '/');
+}) satisfies PageServerLoad;
 
 export const actions = {
   signIn: async ({ fetch, request, cookies }) => {

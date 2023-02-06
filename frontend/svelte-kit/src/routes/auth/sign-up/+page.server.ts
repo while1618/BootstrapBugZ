@@ -9,7 +9,7 @@ import {
 } from '$lib/regex/regex';
 import { isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 
 interface SignUpRequest {
   firstName: string;
@@ -28,6 +28,10 @@ interface SignUpErrors {
   password: string | null;
   confirmPassword: string | null;
 }
+
+export const load = (({ locals }) => {
+  if (locals.userId) throw redirect(302, '/');
+}) satisfies PageServerLoad;
 
 export const actions = {
   signUp: async ({ fetch, request }) => {

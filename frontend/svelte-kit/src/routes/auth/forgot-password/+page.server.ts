@@ -4,7 +4,7 @@ import type { ErrorMessage } from '$lib/models/error-message';
 import { EMAIL_REGEX } from '$lib/regex/regex';
 import { isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 
 interface ForgotPasswordRequest {
   email: string;
@@ -13,6 +13,10 @@ interface ForgotPasswordRequest {
 interface ForgotPasswordErrors {
   email: string | null;
 }
+
+export const load = (({ locals }) => {
+  if (locals.userId) throw redirect(302, '/');
+}) satisfies PageServerLoad;
 
 export const actions = {
   forgotPassword: async ({ fetch, request }) => {

@@ -62,7 +62,7 @@
         Settings
       </DropdownItem>
       <DropdownDivider />
-      <DropdownItem href="/" class="flex items-center gap-2">
+      <DropdownItem href="/auth/sign-out" class="flex items-center gap-2">
         <SignOutIcon />
         Sign out
       </DropdownItem>

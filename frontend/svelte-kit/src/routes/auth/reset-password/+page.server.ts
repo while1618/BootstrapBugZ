@@ -4,19 +4,23 @@ import type { ErrorMessage } from '$lib/models/error-message';
 import { PASSWORD_REGEX } from '$lib/regex/regex';
 import { isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 
 interface ResetPasswordRequest {
-  accessToken: string;
+  token: string;
   password: string;
   confirmPassword: string;
 }
 
 interface ResetPasswordErrors {
-  accessToken: string | null;
+  token: string | null;
   password: string | null;
   confirmPassword: string | null;
 }
+
+export const load = (({ locals }) => {
+  if (locals.userId) throw redirect(302, '/');
+}) satisfies PageServerLoad;
 
 export const actions = {
   resetPassword: async ({ fetch, request, url }) => {
@@ -45,7 +49,7 @@ export const actions = {
 
 const getResetPasswordRequest = (request: FormData, url: URL): ResetPasswordRequest => {
   return {
-    accessToken: url.searchParams.get('accessToken'),
+    token: url.searchParams.get('token'),
     password: request.get('password'),
     confirmPassword: request.get('confirmPassword'),
   } as ResetPasswordRequest;
@@ -53,13 +57,12 @@ const getResetPasswordRequest = (request: FormData, url: URL): ResetPasswordRequ
 
 const checkResetPasswordRequest = (request: ResetPasswordRequest): ResetPasswordErrors => {
   const errors: ResetPasswordErrors = {
-    accessToken: null,
+    token: null,
     password: null,
     confirmPassword: null,
   };
 
-  if (request.accessToken === '') errors.accessToken = en['token.invalid'];
-  //TODO: check if token is JWT
+  if (request.token === '') errors.token = en['token.invalid'];
   if (!PASSWORD_REGEX.test(request.password)) errors.password = en['password.invalid'];
   if (!PASSWORD_REGEX.test(request.confirmPassword))
     errors.confirmPassword = en['password.invalid'];
