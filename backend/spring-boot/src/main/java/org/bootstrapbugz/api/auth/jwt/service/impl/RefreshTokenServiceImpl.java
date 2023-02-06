@@ -38,9 +38,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     final var token =
         JWT.create()
             .withIssuer(userId.toString())
-            .withClaim("issuedAt", Instant.now().toString())
             .withClaim("roles", roleDTOs.stream().map(RoleDTO::getName).toList())
             .withClaim("purpose", PURPOSE.name())
+            .withClaim("issuedAt", Instant.now().toEpochMilli())
             .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
             .sign(JwtUtil.getAlgorithm(secret));
     refreshTokenWhitelistRepository.save(

@@ -43,7 +43,7 @@ public class JwtUtil {
   }
 
   public static Instant getIssuedAt(String token) {
-    return Instant.parse(JWT.decode(token).getClaim("issuedAt").asString());
+    return Instant.ofEpochMilli(JWT.decode(token).getClaim("issuedAt").asLong());
   }
 
   public enum JwtPurpose {

@@ -192,6 +192,7 @@ class AuthControllerIT extends DatabaseContainers {
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), RefreshTokenDTO.class);
     assertThat(refreshTokenDTO.getAccessToken()).isNotEqualTo(signInDTO.getAccessToken());
+    assertThat(refreshTokenDTO.getRefreshToken()).isNotEqualTo(signInDTO.getRefreshToken());
   }
 
   @Test

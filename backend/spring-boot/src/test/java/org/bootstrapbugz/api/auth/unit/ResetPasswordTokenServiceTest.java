@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.bootstrapbugz.api.auth.jwt.redis.model.UserBlacklist;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
@@ -48,7 +49,7 @@ class ResetPasswordTokenServiceTest {
 
   @Test
   void itShouldCheckToken_userInBlacklistButTokenIsIssuedAfter() {
-    final var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var userBlacklist = new UserBlacklist().setUserId(1L).setTimeToLive(1000);
     final var token = resetPasswordTokenService.create(1L);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     resetPasswordTokenService.check(token);
@@ -57,7 +58,11 @@ class ResetPasswordTokenServiceTest {
   @Test
   void checkTokenShouldThrowUnauthorized_userInBlacklist() {
     final var token = resetPasswordTokenService.create(1L);
-    final var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var userBlacklist =
+        new UserBlacklist()
+            .setUserId(1L)
+            .setTimeToLive(1000)
+            .setUpdatedAt(Instant.now().truncatedTo(ChronoUnit.MILLIS).plusMillis(1));
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> resetPasswordTokenService.check(token))

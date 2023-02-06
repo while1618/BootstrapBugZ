@@ -41,8 +41,8 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
   public String create(Long userId) {
     return JWT.create()
         .withIssuer(userId.toString())
-        .withClaim("issuedAt", Instant.now().toString())
         .withClaim("purpose", PURPOSE.name())
+        .withClaim("issuedAt", Instant.now().toEpochMilli())
         .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
         .sign(JwtUtil.getAlgorithm(secret));
   }

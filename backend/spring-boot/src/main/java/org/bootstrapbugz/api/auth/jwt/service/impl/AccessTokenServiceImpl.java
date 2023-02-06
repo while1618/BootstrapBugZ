@@ -43,9 +43,9 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   public String create(Long userId, Set<RoleDTO> roleDTOs) {
     return JWT.create()
         .withIssuer(userId.toString())
-        .withClaim("issuedAt", Instant.now().toString())
         .withClaim("roles", roleDTOs.stream().map(RoleDTO::getName).toList())
         .withClaim("purpose", PURPOSE.name())
+        .withClaim("issuedAt", Instant.now().toEpochMilli())
         .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
         .sign(JwtUtil.getAlgorithm(secret));
   }
@@ -76,6 +76,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
   @Override
   public void invalidateAllByUser(Long userId) {
-    userBlacklistRepository.save(new UserBlacklist(userId, Instant.now(), tokenDuration));
+    userBlacklistRepository.save(
+        new UserBlacklist().setUserId(userId).setTimeToLive(tokenDuration));
   }
 }

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Optional;
 import org.bootstrapbugz.api.auth.jwt.redis.model.AccessTokenBlacklist;
@@ -58,7 +59,7 @@ class AccessTokenServiceTest {
 
   @Test
   void itShouldCheckToken_userInBlacklistButTokenIsIssuedAfter() {
-    final var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var userBlacklist = new UserBlacklist().setUserId(1L).setTimeToLive(1000);
     final var token = accessTokenService.create(1L, Collections.emptySet());
     when(accessTokenBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
@@ -78,7 +79,11 @@ class AccessTokenServiceTest {
   @Test
   void checkTokenShouldThrowUnauthorized_userInBlacklist() {
     final var token = accessTokenService.create(1L, Collections.emptySet());
-    final var userBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var userBlacklist =
+        new UserBlacklist()
+            .setUserId(1L)
+            .setTimeToLive(1000)
+            .setUpdatedAt(Instant.now().truncatedTo(ChronoUnit.MILLIS).plusMillis(1));
     when(accessTokenBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
@@ -100,7 +105,7 @@ class AccessTokenServiceTest {
 
   @Test
   void itShouldInvalidateAllTokens() {
-    final var expectedUserBlacklist = new UserBlacklist(1L, Instant.now(), 1000);
+    final var expectedUserBlacklist = new UserBlacklist().setUserId(1L).setTimeToLive(1000);
     accessTokenService.invalidateAllByUser(1L);
     verify(userBlacklistRepository, times(1)).save(userBlacklistArgumentCaptor.capture());
     assertThat(userBlacklistArgumentCaptor.getValue().getUserId())
