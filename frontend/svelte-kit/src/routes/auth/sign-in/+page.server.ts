@@ -3,7 +3,7 @@ import en from '$lib/i18n/en.json';
 import type { ErrorMessage } from '$lib/models/error-message';
 import type { SignInDTO } from '$lib/models/sign-in';
 import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
-import { isObjectEmpty } from '$lib/utils/util';
+import { decodeJWT, isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect, type Cookies } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -43,29 +43,32 @@ export const actions = {
     }
 
     const { accessToken, refreshToken } = (await response.json()) as SignInDTO;
-    setCookies(cookies, accessToken, refreshToken);
+    setAccessTokenCookie(cookies, accessToken);
+    setRefreshTokenCookie(cookies, refreshToken);
 
     throw redirect(303, '/');
   },
 } satisfies Actions;
 
-const setCookies = (cookies: Cookies, accessToken: string, refreshToken: string): void => {
-  //TODO: set maxAge from jwt payload
-
+const setAccessTokenCookie = (cookies: Cookies, accessToken: string): void => {
+  const { exp } = decodeJWT(accessToken);
   cookies.set('accessToken', accessToken, {
     httpOnly: true,
     path: '/',
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 60 * 15, // 15mins
+    maxAge: exp - Date.now() / 1000,
   });
+};
 
+const setRefreshTokenCookie = (cookies: Cookies, refreshToken: string): void => {
+  const { exp } = decodeJWT(refreshToken);
   cookies.set('refreshToken', refreshToken, {
     httpOnly: true,
     path: '/',
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: exp - Date.now() / 1000,
   });
 };
 
