@@ -18,7 +18,7 @@ interface SignInErrors {
 }
 
 export const load = (({ locals }) => {
-  if (locals.userId) throw redirect(302, '/');
+  if (locals.user) throw redirect(302, '/');
 }) satisfies PageServerLoad;
 
 export const actions = {

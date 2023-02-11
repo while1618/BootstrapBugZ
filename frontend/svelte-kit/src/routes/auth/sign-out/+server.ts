@@ -4,7 +4,7 @@ import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const POST = (async ({ fetch, locals, cookies }) => {
-  if (!locals.userId) throw redirect(302, '/');
+  if (!locals.user) throw redirect(302, '/');
 
   const response = await fetch(`${API_URL}/auth/sign-out`, {
     method: 'POST',
@@ -17,12 +17,12 @@ export const POST = (async ({ fetch, locals, cookies }) => {
   if (response.status !== 204) {
     const errorMessage = (await response.json()) as ErrorMessage;
     console.log(errorMessage);
-    return new Response(String(errorMessage));
+    return new Response(String(errorMessage.error));
   }
 
   cookies.delete('accessToken', { path: '/' });
   cookies.delete('refreshToken', { path: '/' });
-  locals.userId = null;
+  locals.user = null;
 
   throw redirect(303, '/');
 }) satisfies RequestHandler;

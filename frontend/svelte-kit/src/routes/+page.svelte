@@ -1,17 +1,6 @@
 <script lang="ts">
-  import AuthNavbar from '$lib/components/navbar/AuthNavbar.svelte';
-  import NoAuthNavbar from '$lib/components/navbar/NoAuthNavbar.svelte';
   import { Card } from 'flowbite-svelte';
-  import type { PageServerData } from './$types';
-
-  export let data: PageServerData;
 </script>
-
-{#if data.user}
-  <AuthNavbar />
-{:else}
-  <NoAuthNavbar />
-{/if}
 
 <div class="flex justify-center pt-10">
   <Card
