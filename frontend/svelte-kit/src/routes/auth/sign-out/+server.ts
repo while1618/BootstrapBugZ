@@ -20,8 +20,8 @@ export const POST = (async ({ fetch, locals, cookies }) => {
     return new Response(String(errorMessage));
   }
 
-  cookies.delete('accessToken');
-  cookies.delete('refreshToken');
+  cookies.delete('accessToken', { path: '/' });
+  cookies.delete('refreshToken', { path: '/' });
   locals.userId = null;
 
   throw redirect(303, '/');
