@@ -3,6 +3,6 @@ export interface RoleDTO {
 }
 
 export enum RoleName {
-  USER,
-  ADMIN,
+  USER = 'USER',
+  ADMIN = 'ADMIN',
 }
