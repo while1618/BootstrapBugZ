@@ -57,7 +57,7 @@ const setAccessTokenCookie = (cookies: Cookies, accessToken: string): void => {
     path: '/',
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: exp - Date.now() / 1000,
+    expires: new Date(exp + 1000),
   });
 };
 
@@ -68,7 +68,7 @@ const setRefreshTokenCookie = (cookies: Cookies, refreshToken: string): void => 
     path: '/',
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: exp - Date.now() / 1000,
+    expires: new Date(exp * 1000),
   });
 };
 
