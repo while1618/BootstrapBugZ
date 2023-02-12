@@ -11,41 +11,12 @@
     TableHeadCell,
     TableSearch,
   } from 'flowbite-svelte';
+  import type { PageServerData } from './$types';
+
+  export let data: PageServerData;
   let searchTerm = '';
-  let users = [
-    {
-      id: 1,
-      firstName: 'Admin',
-      lastName: 'Admin',
-      username: 'admin',
-      email: 'admin@localhost.com',
-      activated: true,
-      nonLocker: true,
-      roles: ['USER', 'ADMIN'],
-    },
-    {
-      id: 2,
-      firstName: 'John',
-      lastName: 'Doe',
-      username: 'john.doe',
-      email: 'john.doe@localhost.com',
-      activated: true,
-      nonLocker: true,
-      roles: ['USER'],
-    },
-    {
-      id: 3,
-      firstName: 'Jane',
-      lastName: 'Doe',
-      username: 'jane.doe',
-      email: 'jane.doe@localhost.com',
-      activated: true,
-      nonLocker: true,
-      roles: ['USER'],
-    },
-  ];
-  $: filteredItems = users.filter(
-    (item) => item.username.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+  $: filteredUsers = data.users.filter(
+    (user) => user.username.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
   );
 </script>
 
@@ -59,22 +30,26 @@
       <TableHeadCell>username</TableHeadCell>
       <TableHeadCell>Email</TableHeadCell>
       <TableHeadCell>Activated</TableHeadCell>
-      <TableHeadCell>Non locked</TableHeadCell>
+      <TableHeadCell>Locked</TableHeadCell>
       <TableHeadCell>Roles</TableHeadCell>
       <TableHeadCell>Actions</TableHeadCell>
     </TableHead>
     <TableBody>
-      {#each filteredItems as item}
+      {#each filteredUsers as user}
         <TableBodyRow>
           <TableBodyCell class="w-10"><Checkbox /></TableBodyCell>
-          <TableBodyCell>{item.id}</TableBodyCell>
-          <TableBodyCell>{item.firstName}</TableBodyCell>
-          <TableBodyCell>{item.lastName}</TableBodyCell>
-          <TableBodyCell>{item.username}</TableBodyCell>
-          <TableBodyCell>{item.email}</TableBodyCell>
-          <TableBodyCell>{item.activated}</TableBodyCell>
-          <TableBodyCell>{item.nonLocker}</TableBodyCell>
-          <TableBodyCell>{item.roles}</TableBodyCell>
+          <TableBodyCell>{user.id}</TableBodyCell>
+          <TableBodyCell>{user.firstName}</TableBodyCell>
+          <TableBodyCell>{user.lastName}</TableBodyCell>
+          <TableBodyCell>{user.username}</TableBodyCell>
+          <TableBodyCell>{user.email}</TableBodyCell>
+          <TableBodyCell>{user.activated}</TableBodyCell>
+          <TableBodyCell>{!user.nonLocked}</TableBodyCell>
+          <TableBodyCell
+            >{#each user.roles as role}
+              {role.name}
+            {/each}</TableBodyCell
+          >
           <TableBodyCell>
             <div class="flex gap-2">
               <a href="/" class="font-medium text-red-600 hover:underline dark:text-red-500">
