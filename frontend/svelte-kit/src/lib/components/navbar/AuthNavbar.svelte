@@ -1,8 +1,8 @@
 <script lang="ts">
-  import DashboardIcon from '$lib/icons/dashboard-icon.svelte';
-  import ProfileIcon from '$lib/icons/profile-icon.svelte';
-  import SettingsIcon from '$lib/icons/settings-icon.svelte';
-  import SignOutIcon from '$lib/icons/sign-out-icon.svelte';
+  import DashboardIcon from '$lib/icons/dashboard.svelte';
+  import ProfileIcon from '$lib/icons/profile.svelte';
+  import SettingsIcon from '$lib/icons/settings.svelte';
+  import SignOutIcon from '$lib/icons/sign-out.svelte';
   import avatar from '$lib/images/avatar.jpg';
   import logo from '$lib/images/BootstrapBugZ.png';
   import {

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import LockIcon from '$lib/icons/lock-icon.svelte';
-  import TrashIcon from '$lib/icons/trash-icon.svelte';
-  import XCircleIcon from '$lib/icons/x-circle-icon.svelte';
+  import LockClosedIcon from '$lib/icons/lock-closed.svelte';
+  import TrashIcon from '$lib/icons/trash.svelte';
+  import XCircleIcon from '$lib/icons/x-circle.svelte';
   import {
     Checkbox,
     TableBody,
@@ -56,7 +56,7 @@
                 <XCircleIcon />
               </a>
               <a href="/" class="font-medium text-blue-600 hover:underline dark:text-blue-500">
-                <LockIcon />
+                <LockClosedIcon />
               </a>
               <a href="/" class="font-medium text-red-600 hover:underline dark:text-red-500">
                 <TrashIcon />
