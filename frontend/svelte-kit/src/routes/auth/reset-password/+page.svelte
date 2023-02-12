@@ -5,7 +5,7 @@
   import type { ActionData } from './$types';
 
   export let form: ActionData;
-  export let accessToken = $page.url.searchParams.get('accessToken');
+  export let token = $page.url.searchParams.get('token');
 </script>
 
 <div class="flex justify-center pt-10">
@@ -17,7 +17,7 @@
     <form
       class="flex flex-col space-y-6"
       method="POST"
-      action="?/resetPassword&accessToken={accessToken}"
+      action="?/resetPassword&token={token}"
       use:enhance
     >
       <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
@@ -48,8 +48,8 @@
         {#if form?.errors?.confirmPassword}
           <p class="mt-2 text-sm text-red-600">{form.errors.confirmPassword}</p>
         {/if}
-        {#if form?.errors?.accessToken}
-          <p class="mt-2 text-sm text-red-600">{form.errors.accessToken}</p>
+        {#if form?.errors?.token}
+          <p class="mt-2 text-sm text-red-600">{form.errors.token}</p>
         {/if}
         {#if form?.errorMessage}
           {#each form.errorMessage.details as error}
