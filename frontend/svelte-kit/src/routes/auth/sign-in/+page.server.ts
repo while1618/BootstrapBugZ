@@ -57,7 +57,7 @@ const setAccessTokenCookie = (cookies: Cookies, accessToken: string): void => {
     path: '/',
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    expires: new Date(exp + 1000),
+    expires: new Date(exp * 1000),
   });
 };
 
