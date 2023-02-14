@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  api:
+    image: 'api:latest'
+    build: .
+    ports:
+      - '18080:8080'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/bootstrapbugz
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_PASSWORD: root
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: 'postgres'
+    ports:
+      - '15432:5432'
+    environment:
+      POSTGRES_DB: bootstrapbugz
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+
+  redis:
+    image: 'redis'
+    ports:
+      - '16379:6379'
+    command: redis-server --requirepass root
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
