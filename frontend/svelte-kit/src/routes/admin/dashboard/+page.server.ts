@@ -20,6 +20,7 @@ export const load = (async ({ cookies, fetch }) => {
   }
 
   const users = (await response.json()) as UserDTO[];
+  users.sort((a, b) => a.id - b.id);
 
   return { users };
 }) satisfies PageServerLoad;
