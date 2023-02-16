@@ -51,7 +51,11 @@
           <TableBodyCell>{user.username}</TableBodyCell>
           <TableBodyCell>{user.email}</TableBodyCell>
           <TableBodyCell>
-            <form method="POST" action="?/activate&state={user.activated}" use:enhance>
+            <form
+              method="POST"
+              action="?/{user.activated ? 'deactivate' : 'activate'}&username={user.username}"
+              use:enhance
+            >
               {#if user.activated}
                 <button class=" text-green-600 dark:text-green-500">
                   <CheckCircleIcon />
@@ -64,7 +68,11 @@
             </form>
           </TableBodyCell>
           <TableBodyCell>
-            <form method="POST" action="?/lock&state={user.nonLocked}" use:enhance>
+            <form
+              method="POST"
+              action="?/{user.nonLocked ? 'lock' : 'unlock'}&username={user.username}"
+              use:enhance
+            >
               {#if user.nonLocked}
                 <button class="text-blue-600 dark:text-blue-500">
                   <LockOpenIcon />
@@ -90,7 +98,7 @@
             </div>
           </TableBodyCell>
           <TableBodyCell class="w-10">
-            <form method="POST" action="?/delete" use:enhance>
+            <form method="POST" action="?/delete&username={user.username}" use:enhance>
               <button class="text-red-600 dark:text-red-500">
                 <TrashIcon />
               </button>
