@@ -27,16 +27,16 @@ export const load = (async ({ cookies, fetch }) => {
 
 export const actions = {
   activate: async ({ fetch, cookies, url }) => {
-    await performAction('activate', cookies, url);
+    await performAction('activate', cookies, url, fetch);
   },
   deactivate: async ({ fetch, cookies, url }) => {
-    await performAction('deactivate', cookies, url);
+    await performAction('deactivate', cookies, url, fetch);
   },
   lock: async ({ fetch, cookies, url }) => {
-    await performAction('lock', cookies, url);
+    await performAction('lock', cookies, url, fetch);
   },
   unlock: async ({ fetch, cookies, url }) => {
-    await performAction('unlock', cookies, url);
+    await performAction('unlock', cookies, url, fetch);
   },
   delete: async ({ fetch, cookies, url }) => {
     const username = url.searchParams.get('username');
@@ -57,7 +57,7 @@ export const actions = {
   },
 } satisfies Actions;
 
-const performAction = async (path: string, cookies: Cookies, url: URL) => {
+const performAction = async (path: string, cookies: Cookies, url: URL, fetch: any) => {
   const username = url.searchParams.get('username');
   const response = await fetch(`${API_URL}/admin/users/${path}`, {
     method: 'PUT',
