@@ -10,7 +10,7 @@ const config = {
       sans: ['Rowdies', 'sans-serif'],
     },
   },
-  plugins: [require('flowbite/plugin')],
+  plugins: [],
   darkMode: 'class',
 };
 
