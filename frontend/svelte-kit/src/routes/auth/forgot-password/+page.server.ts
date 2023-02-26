@@ -1,4 +1,4 @@
-import { API_URL } from '$lib/apis/api';
+import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import type { ErrorMessage } from '$lib/models/error-message';
 import { EMAIL_REGEX } from '$lib/regex/regex';
@@ -19,18 +19,16 @@ export const load = (({ locals }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  forgotPassword: async ({ fetch, request }) => {
+  forgotPassword: async ({ request }) => {
     const formData = await request.formData();
     const forgotPasswordRequest = getForgotPasswordRequest(formData);
     const errors = await checkForgotPasswordRequest(forgotPasswordRequest);
     if (!isObjectEmpty(errors)) return fail(400, { errors });
 
-    const response = await fetch(`${API_URL}/auth/forgot-password`, {
-      method: 'POST',
+    const response = await makeRequest({
+      method: HttpRequest.POST,
+      path: '/auth/forgot-password',
       body: JSON.stringify(forgotPasswordRequest),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
 
     if (response.status !== 204) {

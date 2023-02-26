@@ -1,4 +1,4 @@
-import { API_URL } from '$lib/apis/api';
+import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import type { ErrorMessage } from '$lib/models/error-message';
 import {
@@ -34,18 +34,16 @@ export const load = (({ locals }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  signUp: async ({ fetch, request }) => {
+  signUp: async ({ request }) => {
     const formData = await request.formData();
     const signUpRequest = getSignUpRequest(formData);
     const errors = await checkSignUpRequest(signUpRequest);
     if (!isObjectEmpty(errors)) return fail(400, { errors });
 
-    const response = await fetch(`${API_URL}/auth/sign-up`, {
-      method: 'POST',
+    const response = await makeRequest({
+      method: HttpRequest.POST,
+      path: '/auth/sign-up',
       body: JSON.stringify(signUpRequest),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
 
     if (response.status !== 201) {
@@ -84,17 +82,19 @@ const checkSignUpRequest = async (request: SignUpRequest): Promise<SignUpErrors>
   if (!FIRST_AND_LAST_NAME_REGEX.test(request.lastName)) errors.lastName = en['lastName.invalid'];
 
   if (!USERNAME_REGEX.test(request.username)) errors.username = en['username.invalid'];
-  const usernameAvailabilityResponse = await fetch(
-    `${API_URL}/auth/username-availability?username=${request.username}`
-  );
+  const usernameAvailabilityResponse = await makeRequest({
+    method: HttpRequest.GET,
+    path: `/auth/username-availability?username=${request.username}`,
+  });
   const usernameAvailable = (await usernameAvailabilityResponse.json()) as boolean;
   if (!usernameAvailable) errors.username = en['username.exists'];
 
   if (request.email === '') errors.email = en['email.invalid'];
   if (!EMAIL_REGEX.test(request.email)) errors.email = en['email.invalid'];
-  const emailAvailabilityResponse = await fetch(
-    `${API_URL}/auth/email-availability?email=${request.email}`
-  );
+  const emailAvailabilityResponse = await makeRequest({
+    method: HttpRequest.GET,
+    path: `/auth/email-availability?email=${request.email}`,
+  });
   const emailAvailable = (await emailAvailabilityResponse.json()) as boolean;
   if (!emailAvailable) errors.email = en['email.exists'];
 

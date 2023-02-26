@@ -1,4 +1,4 @@
-import { API_URL } from '$lib/apis/api';
+import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import type { ErrorMessage } from '$lib/models/error-message';
 import { PASSWORD_REGEX } from '$lib/regex/regex';
@@ -23,18 +23,16 @@ export const load = (({ locals }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  resetPassword: async ({ fetch, request, url }) => {
+  resetPassword: async ({ request, url }) => {
     const formData = await request.formData();
     const resetPasswordRequest = getResetPasswordRequest(formData, url);
     const errors = checkResetPasswordRequest(resetPasswordRequest);
     if (!isObjectEmpty(errors)) return fail(400, { errors });
 
-    const response = await fetch(`${API_URL}/auth/reset-password`, {
-      method: 'PUT',
+    const response = await makeRequest({
+      method: HttpRequest.PUT,
+      path: '/auth/reset-password',
       body: JSON.stringify(resetPasswordRequest),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
 
     if (response.status !== 204) {

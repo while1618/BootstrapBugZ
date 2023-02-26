@@ -1,16 +1,14 @@
-import { API_URL } from '$lib/apis/api';
+import { HttpRequest, makeRequest } from '$lib/apis/api';
 import type { ErrorMessage } from '$lib/models/error-message';
 import type { UserDTO } from '$lib/models/user';
 import { error, fail, type Cookies } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({ cookies, fetch }) => {
-  const response = await fetch(`${API_URL}/users`, {
-    method: 'GET',
-    headers: {
-      Authorization: cookies.get('accessToken') || '',
-      'Content-Type': 'application/json',
-    },
+export const load = (async ({ cookies }) => {
+  const response = await makeRequest({
+    method: HttpRequest.GET,
+    path: '/users',
+    auth: cookies.get('accessToken') || '',
   });
 
   if (response.status !== 200) {
@@ -26,27 +24,25 @@ export const load = (async ({ cookies, fetch }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  activate: async ({ fetch, cookies, url }) => {
-    await performAction('activate', cookies, url, fetch);
+  activate: async ({ cookies, url }) => {
+    await performAction('activate', cookies, url);
   },
-  deactivate: async ({ fetch, cookies, url }) => {
-    await performAction('deactivate', cookies, url, fetch);
+  deactivate: async ({ cookies, url }) => {
+    await performAction('deactivate', cookies, url);
   },
-  lock: async ({ fetch, cookies, url }) => {
-    await performAction('lock', cookies, url, fetch);
+  lock: async ({ cookies, url }) => {
+    await performAction('lock', cookies, url);
   },
-  unlock: async ({ fetch, cookies, url }) => {
-    await performAction('unlock', cookies, url, fetch);
+  unlock: async ({ cookies, url }) => {
+    await performAction('unlock', cookies, url);
   },
-  delete: async ({ fetch, cookies, url }) => {
+  delete: async ({ cookies, url }) => {
     const username = url.searchParams.get('username');
-    const response = await fetch(`${API_URL}/admin/users/delete`, {
-      method: 'DELETE',
+    const response = await makeRequest({
+      method: HttpRequest.PUT,
+      path: '/admin/users/delete',
       body: JSON.stringify({ usernames: [username] }),
-      headers: {
-        Authorization: cookies.get('accessToken') || '',
-        'Content-Type': 'application/json',
-      },
+      auth: cookies.get('accessToken') || '',
     });
 
     if (response.status !== 204) {
@@ -57,15 +53,13 @@ export const actions = {
   },
 } satisfies Actions;
 
-const performAction = async (path: string, cookies: Cookies, url: URL, fetch: any) => {
+const performAction = async (path: string, cookies: Cookies, url: URL) => {
   const username = url.searchParams.get('username');
-  const response = await fetch(`${API_URL}/admin/users/${path}`, {
-    method: 'PUT',
+  const response = await makeRequest({
+    method: HttpRequest.PUT,
+    path: `/admin/users/${path}`,
     body: JSON.stringify({ usernames: [username] }),
-    headers: {
-      Authorization: cookies.get('accessToken') || '',
-      'Content-Type': 'application/json',
-    },
+    auth: cookies.get('accessToken') || '',
   });
 
   if (response.status !== 204) {

@@ -1,17 +1,15 @@
-import { API_URL } from '$lib/apis/api';
+import { HttpRequest, makeRequest } from '$lib/apis/api';
 import type { ErrorMessage } from '$lib/models/error-message';
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const POST = (async ({ fetch, locals, cookies }) => {
+export const POST = (async ({ locals, cookies }) => {
   if (!locals.user) throw redirect(302, '/');
 
-  const response = await fetch(`${API_URL}/auth/sign-out-from-all-devices`, {
-    method: 'POST',
-    headers: {
-      Authorization: cookies.get('accessToken') || '',
-      'Content-Type': 'application/json',
-    },
+  const response = await makeRequest({
+    method: HttpRequest.POST,
+    path: '/auth/sign-out-from-all-devices',
+    auth: cookies.get('accessToken') || '',
   });
 
   if (response.status !== 204) {

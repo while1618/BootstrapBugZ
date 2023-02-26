@@ -1,9 +1,12 @@
-import { API_URL } from '$lib/apis/api';
+import { HttpRequest, makeRequest } from '$lib/apis/api';
 import type { UserDTO } from '$lib/models/user';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ fetch, params }) => {
-  const response = await fetch(`${API_URL}/users/${params.name}`);
+export const load = (async ({ params }) => {
+  const response = await makeRequest({
+    method: HttpRequest.GET,
+    path: `/users/${params.name}`,
+  });
   const user = (await response.json()) as UserDTO;
 
   return { user };

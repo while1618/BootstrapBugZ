@@ -1,4 +1,4 @@
-import { API_URL } from '$lib/apis/api';
+import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import type { ErrorMessage } from '$lib/models/error-message';
 import type { SignInDTO } from '$lib/models/sign-in';
@@ -22,18 +22,16 @@ export const load = (({ locals }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  signIn: async ({ fetch, request, cookies }) => {
+  signIn: async ({ request, cookies }) => {
     const formData = await request.formData();
     const signInRequest = getSignInRequest(formData);
     const errors = checkSignInRequest(signInRequest);
     if (!isObjectEmpty(errors)) return fail(400, { errors });
 
-    const response = await fetch(`${API_URL}/auth/sign-in`, {
-      method: 'POST',
+    const response = await makeRequest({
+      method: HttpRequest.PUT,
+      path: '/auth/sign-in',
       body: JSON.stringify(signInRequest),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
 
     if (response.status !== 200) {

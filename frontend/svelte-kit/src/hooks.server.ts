@@ -1,4 +1,4 @@
-import { API_URL } from '$lib/apis/api';
+import { HttpRequest, makeRequest } from '$lib/apis/api';
 import type { ErrorMessage } from '$lib/models/error-message';
 import { RoleName } from '$lib/models/role';
 import type { UserDTO } from '$lib/models/user';
@@ -16,12 +16,10 @@ export const handle = (async ({ event, resolve }) => {
   }
 
   if (accessToken) {
-    const response = await fetch(`${API_URL}/auth/signed-in-user`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: accessToken,
-      },
+    const response = await makeRequest({
+      method: HttpRequest.GET,
+      path: '/auth/signed-in-user',
+      auth: accessToken,
     });
 
     if (response.status !== 200) {

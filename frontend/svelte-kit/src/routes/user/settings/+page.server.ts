@@ -1,4 +1,4 @@
-import { API_URL } from '$lib/apis/api';
+import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import type { ErrorMessage } from '$lib/models/error-message';
 import {
@@ -39,19 +39,17 @@ interface ProfileErrors {
 }
 
 export const actions = {
-  update: async ({ fetch, request, cookies }) => {
+  update: async ({ request, cookies }) => {
     const formData = await request.formData();
     const updateUserRequest = getUpdateUserRequest(formData);
     const errors = await checkProfileErrors(updateUserRequest);
     if (!isObjectEmpty(errors)) return fail(400, { errors });
 
-    const response = await fetch(`${API_URL}/profile/update`, {
-      method: 'PUT',
+    const response = await makeRequest({
+      method: HttpRequest.PUT,
+      path: '/profile/update',
       body: JSON.stringify(updateUserRequest),
-      headers: {
-        Authorization: cookies.get('accessToken') || '',
-        'Content-Type': 'application/json',
-      },
+      auth: cookies.get('accessToken') || '',
     });
 
     if (response.status !== 200) {
@@ -60,7 +58,7 @@ export const actions = {
       return fail(response.status, { errorMessage });
     }
   },
-  changePassword: async ({ fetch, request, cookies, locals }) => {
+  changePassword: async ({ request, cookies, locals }) => {
     const formData = await request.formData();
     const changePasswordRequest = getChangePasswordRequest(formData);
     const errors = await checkProfileErrors(changePasswordRequest);
@@ -68,13 +66,11 @@ export const actions = {
 
     console.log(JSON.stringify(changePasswordRequest));
 
-    const response = await fetch(`${API_URL}/profile/change-password`, {
-      method: 'PUT',
+    const response = await makeRequest({
+      method: HttpRequest.PUT,
+      path: '/profile/change-password',
       body: JSON.stringify(changePasswordRequest),
-      headers: {
-        Authorization: cookies.get('accessToken') || '',
-        'Content-Type': 'application/json',
-      },
+      auth: cookies.get('accessToken') || '',
     });
 
     if (response.status !== 204) {
