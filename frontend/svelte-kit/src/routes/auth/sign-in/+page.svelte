@@ -1,9 +1,11 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import en from '$lib/i18n/en.json';
   import { Button, Card, FloatingLabelInput } from 'flowbite-svelte';
   import type { ActionData } from './$types';
 
   export let form: ActionData;
+  let usernameOrEmail = '';
 </script>
 
 <div class="flex justify-center pt-10">
@@ -24,6 +26,7 @@
           name="usernameOrEmail"
           type="text"
           label="Username or email"
+          bind:value={usernameOrEmail}
         />
         {#if form?.errors?.usernameOrEmail}
           <p class="mt-2 text-sm text-red-600">{form.errors.usernameOrEmail}</p>
@@ -43,7 +46,16 @@
         {/if}
         {#if form?.errorMessage}
           {#each form.errorMessage.details as error}
-            <p class="mt-2 text-sm text-red-600">{error.message}</p>
+            <div class="mt-2 flex justify-center text-sm">
+              <p class="text-red-600">{error.message}</p>
+              {#if error.message === en['user.notActivated']}
+                <a
+                  href="/auth/resend-confirmation-email?usernameOrEmail={usernameOrEmail}"
+                  class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
+                  >Resend confirmation email</a
+                >
+              {/if}
+            </div>
           {/each}
         {/if}
       </div>
