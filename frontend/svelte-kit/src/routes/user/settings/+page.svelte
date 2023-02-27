@@ -135,9 +135,7 @@
       </TabItem>
       <TabItem title="Logged in devices">
         <div class="flex justify-center">
-          <form method="POST" action="/auth/sign-out-from-all-devices">
-            <Button type="submit" class="w-2/3">Sign out from all devices</Button>
-          </form>
+          <Button href="/auth/sign-out-from-all-devices">Sign out from all devices</Button>
         </div>
       </TabItem>
     </Tabs>
