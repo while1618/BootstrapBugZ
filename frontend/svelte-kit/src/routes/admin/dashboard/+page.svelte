@@ -21,7 +21,7 @@
 
   export let data: PageServerData;
   let searchTerm = '';
-  $: filteredUsers = data.users.filter(
+  $: filteredUsers = data?.users.filter(
     (user) => user.username.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
   );
   let changeRoleModal = false;
@@ -53,7 +53,7 @@
           <TableBodyCell>
             <form
               method="POST"
-              action="?/{user.activated ? 'deactivate' : 'activate'}&username={user.username}"
+              action="?/{user.activated ? 'deactivate' : 'activate'}&usernames={user.username}"
               use:enhance
             >
               {#if user.activated}
@@ -70,7 +70,7 @@
           <TableBodyCell>
             <form
               method="POST"
-              action="?/{user.nonLocked ? 'lock' : 'unlock'}&username={user.username}"
+              action="?/{user.nonLocked ? 'lock' : 'unlock'}&usernames={user.username}"
               use:enhance
             >
               {#if user.nonLocked}
@@ -98,7 +98,7 @@
             </div>
           </TableBodyCell>
           <TableBodyCell class="w-10">
-            <form method="POST" action="?/delete&username={user.username}" use:enhance>
+            <form method="POST" action="?/delete&usernames={user.username}" use:enhance>
               <button class="text-red-600 dark:text-red-500">
                 <TrashIcon />
               </button>

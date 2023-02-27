@@ -25,11 +25,11 @@ export const actions = {
   deactivate: ({ cookies, url }) => {
     performAction(HttpRequest.PUT, 'deactivate', cookies, url);
   },
-  lock: ({ cookies, url }) => {
-    performAction(HttpRequest.PUT, 'lock', cookies, url);
-  },
   unlock: ({ cookies, url }) => {
     performAction(HttpRequest.PUT, 'unlock', cookies, url);
+  },
+  lock: ({ cookies, url }) => {
+    performAction(HttpRequest.PUT, 'lock', cookies, url);
   },
   delete: ({ cookies, url }) => {
     performAction(HttpRequest.DELETE, 'delete', cookies, url);
@@ -37,11 +37,11 @@ export const actions = {
 } satisfies Actions;
 
 const performAction = async (method: HttpRequest, path: string, cookies: Cookies, url: URL) => {
-  const username = url.searchParams.get('username');
+  const usernames = url.searchParams.get('usernames')?.split(',');
   const response = await makeRequest({
     method,
     path: `/admin/users/${path}`,
-    body: JSON.stringify({ usernames: [username] }),
+    body: JSON.stringify({ usernames }),
     auth: cookies.get('accessToken'),
   });
 
