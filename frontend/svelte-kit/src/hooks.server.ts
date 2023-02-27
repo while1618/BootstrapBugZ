@@ -1,5 +1,4 @@
 import { HttpRequest, makeRequest } from '$lib/apis/api';
-import type { ErrorMessage } from '$lib/models/error-message';
 import { RoleName } from '$lib/models/role';
 import type { UserDTO } from '$lib/models/user';
 import { decodeJWT } from '$lib/utils/util';
@@ -22,13 +21,9 @@ export const handle = (async ({ event, resolve }) => {
       auth: accessToken,
     });
 
-    if (response.status !== 200) {
-      const errorMessage = (await response.json()) as ErrorMessage;
-      console.log(errorMessage);
-      return new Response(String(errorMessage.error));
-    }
+    if ('error' in response) return new Response(String(response.error));
 
-    event.locals.user = (await response.json()) as UserDTO;
+    event.locals.user = response as UserDTO;
   }
 
   return resolve(event);

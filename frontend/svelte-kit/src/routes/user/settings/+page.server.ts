@@ -1,6 +1,5 @@
 import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
-import type { ErrorMessage } from '$lib/models/error-message';
 import {
   EMAIL_REGEX,
   FIRST_AND_LAST_NAME_REGEX,
@@ -49,14 +48,10 @@ export const actions = {
       method: HttpRequest.PUT,
       path: '/profile/update',
       body: JSON.stringify(updateUserRequest),
-      auth: cookies.get('accessToken') || '',
+      auth: cookies.get('accessToken'),
     });
 
-    if (response.status !== 200) {
-      const errorMessage = (await response.json()) as ErrorMessage;
-      console.log(errorMessage);
-      return fail(response.status, { errorMessage });
-    }
+    if ('error' in response) return fail(response.status, { errorMessage: response });
   },
   changePassword: async ({ request, cookies, locals }) => {
     const formData = await request.formData();
@@ -70,14 +65,10 @@ export const actions = {
       method: HttpRequest.PUT,
       path: '/profile/change-password',
       body: JSON.stringify(changePasswordRequest),
-      auth: cookies.get('accessToken') || '',
+      auth: cookies.get('accessToken'),
     });
 
-    if (response.status !== 204) {
-      const errorMessage = (await response.json()) as ErrorMessage;
-      console.log(errorMessage);
-      return fail(response.status, { errorMessage });
-    }
+    if ('error' in response) return fail(response.status, { errorMessage: response });
 
     cookies.delete('accessToken', { path: '/' });
     cookies.delete('refreshToken', { path: '/' });

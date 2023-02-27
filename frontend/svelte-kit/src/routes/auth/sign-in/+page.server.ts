@@ -1,6 +1,5 @@
 import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
-import type { ErrorMessage } from '$lib/models/error-message';
 import type { SignInDTO } from '$lib/models/sign-in';
 import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
 import { decodeJWT, isObjectEmpty } from '$lib/utils/util';
@@ -29,18 +28,14 @@ export const actions = {
     if (!isObjectEmpty(errors)) return fail(400, { errors });
 
     const response = await makeRequest({
-      method: HttpRequest.PUT,
+      method: HttpRequest.POST,
       path: '/auth/sign-in',
       body: JSON.stringify(signInRequest),
     });
 
-    if (response.status !== 200) {
-      const errorMessage = (await response.json()) as ErrorMessage;
-      console.log(errorMessage);
-      return fail(response.status, { errorMessage });
-    }
+    if ('error' in response) return fail(response.status, { errorMessage: response });
 
-    const { accessToken, refreshToken } = (await response.json()) as SignInDTO;
+    const { accessToken, refreshToken } = response as SignInDTO;
     setAccessTokenCookie(cookies, accessToken);
     setRefreshTokenCookie(cookies, refreshToken);
 

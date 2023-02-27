@@ -1,6 +1,5 @@
 import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
-import type { ErrorMessage } from '$lib/models/error-message';
 import { PASSWORD_REGEX } from '$lib/regex/regex';
 import { isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
@@ -35,11 +34,7 @@ export const actions = {
       body: JSON.stringify(resetPasswordRequest),
     });
 
-    if (response.status !== 204) {
-      const errorMessage = (await response.json()) as ErrorMessage;
-      console.log(errorMessage);
-      return fail(response.status, { errorMessage });
-    }
+    if ('error' in response) return fail(response.status, { errorMessage: response });
 
     throw redirect(303, '/auth/sign-in');
   },

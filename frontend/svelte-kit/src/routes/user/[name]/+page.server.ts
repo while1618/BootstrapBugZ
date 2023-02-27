@@ -7,7 +7,8 @@ export const load = (async ({ params }) => {
     method: HttpRequest.GET,
     path: `/users/${params.name}`,
   });
-  const user = (await response.json()) as UserDTO;
 
-  return { user };
+  if ('error' in response) return new Response(String(response.error));
+
+  return { user: response as UserDTO };
 }) satisfies PageServerLoad;

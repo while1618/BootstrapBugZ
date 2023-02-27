@@ -1,5 +1,4 @@
 import { HttpRequest, makeRequest } from '$lib/apis/api';
-import type { ErrorMessage } from '$lib/models/error-message';
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
@@ -9,14 +8,10 @@ export const POST = (async ({ locals, cookies }) => {
   const response = await makeRequest({
     method: HttpRequest.POST,
     path: '/auth/sign-out',
-    auth: cookies.get('accessToken') || '',
+    auth: cookies.get('accessToken'),
   });
 
-  if (response.status !== 204) {
-    const errorMessage = (await response.json()) as ErrorMessage;
-    console.log(errorMessage);
-    return new Response(String(errorMessage.error));
-  }
+  if ('error' in response) return new Response(String(response.error));
 
   cookies.delete('accessToken', { path: '/' });
   cookies.delete('refreshToken', { path: '/' });
