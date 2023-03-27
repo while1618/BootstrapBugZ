@@ -29,7 +29,7 @@
           bind:value={usernameOrEmail}
         />
         {#if form?.errors?.usernameOrEmail}
-          <p class="mt-2 text-sm text-red-600">{form.errors.usernameOrEmail}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.usernameOrEmail[0]}</p>
         {/if}
       </div>
       <div>
@@ -42,11 +42,11 @@
           label="Password"
         />
         {#if form?.errors?.password}
-          <p class="mt-2 text-sm text-red-600">{form.errors.password}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.password[0]}</p>
         {/if}
         {#if form?.errorMessage}
           {#each form.errorMessage.details as error}
-            <div class="mt-2 flex justify-center text-sm">
+            <div class="mt-2 flex text-sm">
               <p class="text-red-600">{error.message}</p>
               {#if error.message === en['user.notActivated']}
                 <a
