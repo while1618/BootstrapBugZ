@@ -25,6 +25,10 @@ specifiers:
   typescript: 5.0.2
   vite: 4.2.1
   vitest: 0.29.7
+  zod: ^3.21.4
+
+dependencies:
+  zod: 3.21.4
 
 devDependencies:
   '@playwright/test': 1.32.1
@@ -2668,3 +2672,7 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
+
+  /zod/3.21.4:
+    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: false
