@@ -43,6 +43,6 @@
   },
   "type": "module",
   "dependencies": {
-    "zod": "^3.21.4"
+    "zod": "3.21.4"
   }
 }
