@@ -33,7 +33,7 @@
           label="Password"
         />
         {#if form?.errors?.password}
-          <p class="mt-2 text-sm text-red-600">{form.errors.password}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.password[0]}</p>
         {/if}
       </div>
       <div>
@@ -46,10 +46,10 @@
           label="Confirm password"
         />
         {#if form?.errors?.confirmPassword}
-          <p class="mt-2 text-sm text-red-600">{form.errors.confirmPassword}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.confirmPassword[0]}</p>
         {/if}
         {#if form?.errors?.token}
-          <p class="mt-2 text-sm text-red-600">{form.errors.token}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.token[0]}</p>
         {/if}
         {#if form?.errorMessage}
           {#each form.errorMessage.details as error}
