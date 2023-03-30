@@ -1,3 +1,4 @@
+<!-- TODO: fix typings -->
 <script lang="ts">
   import { enhance } from '$app/forms';
   import { Button, Card, FloatingLabelInput, TabItem, Tabs } from 'flowbite-svelte';
@@ -26,7 +27,7 @@
                 label="First name"
               />
               {#if form?.errors?.firstName}
-                <p class="mt-2 text-sm text-red-600">{form.errors.firstName}</p>
+                <p class="mt-2 text-sm text-red-600">{form.errors.firstName[0]}</p>
               {/if}
             </div>
             <div>
@@ -39,7 +40,7 @@
                 label="Last name"
               />
               {#if form?.errors?.lastName}
-                <p class="mt-2 text-sm text-red-600">{form.errors.lastName}</p>
+                <p class="mt-2 text-sm text-red-600">{form.errors.lastName[0]}</p>
               {/if}
             </div>
             <div>
@@ -52,7 +53,7 @@
                 label="Username"
               />
               {#if form?.errors?.username}
-                <p class="mt-2 text-sm text-red-600">{form.errors.username}</p>
+                <p class="mt-2 text-sm text-red-600">{form.errors.username[0]}</p>
               {/if}
             </div>
             <div>
@@ -65,10 +66,10 @@
                 label="Email"
               />
               {#if form?.errors?.email}
-                <p class="mt-2 text-sm text-red-600">{form.errors.email}</p>
+                <p class="mt-2 text-sm text-red-600">{form.errors.email[0]}</p>
               {/if}
-              {#if form?.errorMessage}
-                {#each form.errorMessage.details as error}
+              {#if form?.updateErrorMessage}
+                {#each form.updateErrorMessage.details as error}
                   <p class="mt-2 text-sm text-red-600">{error.message}</p>
                 {/each}
               {/if}
@@ -95,7 +96,7 @@
                 label="Old password"
               />
               {#if form?.errors?.oldPassword}
-                <p class="mt-2 text-sm text-red-600">{form.errors.oldPassword}</p>
+                <p class="mt-2 text-sm text-red-600">{form.errors.oldPassword[0]}</p>
               {/if}
             </div>
             <div>
@@ -108,7 +109,7 @@
                 label="New password"
               />
               {#if form?.errors?.newPassword}
-                <p class="mt-2 text-sm text-red-600">{form.errors.newPassword}</p>
+                <p class="mt-2 text-sm text-red-600">{form.errors.newPassword[0]}</p>
               {/if}
             </div>
             <div>
@@ -121,10 +122,10 @@
                 label="Confirm password"
               />
               {#if form?.errors?.confirmNewPassword}
-                <p class="mt-2 text-sm text-red-600">{form.errors.confirmNewPassword}</p>
+                <p class="mt-2 text-sm text-red-600">{form.errors.confirmNewPassword[0]}</p>
               {/if}
-              {#if form?.errorMessage}
-                {#each form.errorMessage.details as error}
+              {#if form?.changePasswordErrorMessage}
+                {#each form.changePasswordErrorMessage.details as error}
                   <p class="mt-2 text-sm text-red-600">{error.message}</p>
                 {/each}
               {/if}

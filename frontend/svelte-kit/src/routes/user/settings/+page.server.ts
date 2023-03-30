@@ -6,69 +6,67 @@ import {
   PASSWORD_REGEX,
   USERNAME_REGEX,
 } from '$lib/regex/regex';
-import { isObjectEmpty } from '$lib/utils/util';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { z } from 'zod';
 import type { PageServerLoad } from './$types';
+
+const updateUserSchema = z.object({
+  firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: en['firstName.invalid'] }),
+  lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: en['lastName.invalid'] }),
+  username: z.string().regex(USERNAME_REGEX, { message: en['username.invalid'] }),
+  email: z.string().regex(EMAIL_REGEX, { message: en['email.invalid'] }),
+});
+
+const changePasswordSchema = z
+  .object({
+    oldPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
+    newPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
+    confirmNewPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
+  })
+  .superRefine(({ newPassword, confirmNewPassword }, ctx) => {
+    if (newPassword !== confirmNewPassword) {
+      ctx.addIssue({
+        code: 'custom',
+        message: en['password.doNotMatch'],
+        path: ['confirmNewPassword'],
+      });
+    }
+  });
 
 export const load = (({ locals }) => {
   if (!locals.user) throw redirect(302, '/');
 }) satisfies PageServerLoad;
 
-interface UpdateUserRequest {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-}
-
-interface ChangePasswordRequest {
-  oldPassword: string;
-  newPassword: string;
-  confirmNewPassword: string;
-}
-
-interface ProfileErrors {
-  firstName: string | null;
-  lastName: string | null;
-  username: string | null;
-  email: string | null;
-  oldPassword: string | null;
-  newPassword: string | null;
-  confirmNewPassword: string | null;
-}
-
 export const actions = {
   update: async ({ request, cookies }) => {
-    const formData = await request.formData();
-    const updateUserRequest = getUpdateUserRequest(formData);
-    const errors = await checkProfileErrors(updateUserRequest);
-    if (!isObjectEmpty(errors)) return fail(400, { errors });
+    const formData = Object.fromEntries(await request.formData());
+    const updateUserForm = updateUserSchema.safeParse(formData);
+    if (!updateUserForm.success)
+      return fail(400, { errors: updateUserForm.error.flatten().fieldErrors });
 
     const response = await makeRequest({
       method: HttpRequest.PUT,
       path: '/profile/update',
-      body: JSON.stringify(updateUserRequest),
+      body: JSON.stringify(updateUserForm.data),
       auth: cookies.get('accessToken'),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response) return fail(response.status, { updateErrorMessage: response });
   },
   changePassword: async ({ request, cookies, locals }) => {
-    const formData = await request.formData();
-    const changePasswordRequest = getChangePasswordRequest(formData);
-    const errors = await checkProfileErrors(changePasswordRequest);
-    if (!isObjectEmpty(errors)) return fail(400, { errors });
-
-    console.log(JSON.stringify(changePasswordRequest));
+    const formData = Object.fromEntries(await request.formData());
+    const changePasswordForm = changePasswordSchema.safeParse(formData);
+    if (!changePasswordForm.success)
+      return fail(400, { errors: changePasswordForm.error.flatten().fieldErrors });
 
     const response = await makeRequest({
       method: HttpRequest.PUT,
       path: '/profile/change-password',
-      body: JSON.stringify(changePasswordRequest),
+      body: JSON.stringify(changePasswordForm.data),
       auth: cookies.get('accessToken'),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response) return fail(response.status, { changePasswordErrorMessage: response });
 
     cookies.delete('accessToken', { path: '/' });
     cookies.delete('refreshToken', { path: '/' });
@@ -77,58 +75,3 @@ export const actions = {
     throw redirect(303, '/');
   },
 } satisfies Actions;
-
-const getUpdateUserRequest = (request: FormData): UpdateUserRequest => {
-  return {
-    firstName: request.get('firstName'),
-    lastName: request.get('lastName'),
-    username: request.get('username'),
-    email: request.get('email'),
-  } as UpdateUserRequest;
-};
-
-const getChangePasswordRequest = (request: FormData): ChangePasswordRequest => {
-  return {
-    oldPassword: request.get('oldPassword'),
-    newPassword: request.get('newPassword'),
-    confirmNewPassword: request.get('confirmNewPassword'),
-  } as ChangePasswordRequest;
-};
-
-const checkProfileErrors = async (
-  request: UpdateUserRequest | ChangePasswordRequest
-): Promise<ProfileErrors> => {
-  const errors: ProfileErrors = {
-    firstName: null,
-    lastName: null,
-    username: null,
-    email: null,
-    oldPassword: null,
-    newPassword: null,
-    confirmNewPassword: null,
-  };
-
-  if ('firstName' in request && !FIRST_AND_LAST_NAME_REGEX.test(request.firstName))
-    errors.firstName = en['firstName.invalid'];
-  if ('lastName' in request && !FIRST_AND_LAST_NAME_REGEX.test(request.lastName))
-    errors.lastName = en['lastName.invalid'];
-
-  if ('username' in request && !USERNAME_REGEX.test(request.username))
-    errors.username = en['username.invalid'];
-
-  if ('email' in request && request.email === '') errors.email = en['email.invalid'];
-  if ('email' in request && !EMAIL_REGEX.test(request.email)) errors.email = en['email.invalid'];
-
-  if ('newPassword' in request && !PASSWORD_REGEX.test(request.newPassword))
-    errors.newPassword = en['password.invalid'];
-  if ('confirmNewPassword' in request && !PASSWORD_REGEX.test(request.confirmNewPassword))
-    errors.confirmNewPassword = en['password.invalid'];
-  if (
-    'newPassword' in request &&
-    'confirmNewPassword' in request &&
-    request.newPassword !== request.confirmNewPassword
-  )
-    errors.confirmNewPassword = en['password.doNotMatch'];
-
-  return errors;
-};
