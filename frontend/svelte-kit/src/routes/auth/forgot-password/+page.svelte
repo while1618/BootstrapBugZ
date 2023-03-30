@@ -26,7 +26,7 @@
           label="Email"
         />
         {#if form?.errors?.email}
-          <p class="mt-2 text-sm text-red-600">{form.errors.email}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.email[0]}</p>
         {/if}
         {#if form?.errorMessage}
           {#each form.errorMessage.details as error}

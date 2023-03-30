@@ -26,7 +26,7 @@
           label="First name"
         />
         {#if form?.errors?.firstName}
-          <p class="mt-2 text-sm text-red-600">{form.errors.firstName}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.firstName[0]}</p>
         {/if}
       </div>
       <div>
@@ -39,7 +39,7 @@
           label="Last name"
         />
         {#if form?.errors?.lastName}
-          <p class="mt-2 text-sm text-red-600">{form.errors.lastName}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.lastName[0]}</p>
         {/if}
       </div>
       <div>
@@ -52,7 +52,7 @@
           label="Username"
         />
         {#if form?.errors?.username}
-          <p class="mt-2 text-sm text-red-600">{form.errors.username}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.username[0]}</p>
         {/if}
       </div>
       <div>
@@ -65,7 +65,7 @@
           label="Email"
         />
         {#if form?.errors?.email}
-          <p class="mt-2 text-sm text-red-600">{form.errors.email}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.email[0]}</p>
         {/if}
       </div>
       <div>
@@ -78,7 +78,7 @@
           label="Password"
         />
         {#if form?.errors?.password}
-          <p class="mt-2 text-sm text-red-600">{form.errors.password}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.password[0]}</p>
         {/if}
       </div>
       <div>
@@ -91,7 +91,7 @@
           label="Confirm password"
         />
         {#if form?.errors?.confirmPassword}
-          <p class="mt-2 text-sm text-red-600">{form.errors.confirmPassword}</p>
+          <p class="mt-2 text-sm text-red-600">{form.errors.confirmPassword[0]}</p>
         {/if}
         {#if form?.errorMessage}
           {#each form.errorMessage.details as error}
