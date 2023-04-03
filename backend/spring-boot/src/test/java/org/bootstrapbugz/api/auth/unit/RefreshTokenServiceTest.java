@@ -37,6 +37,7 @@ class RefreshTokenServiceTest {
   @BeforeEach
   public void setUp() {
     ReflectionTestUtils.setField(refreshTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(refreshTokenService, "tokenDuration", 604800);
   }
 
   @Test

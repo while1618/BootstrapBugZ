@@ -41,6 +41,7 @@ class AccessTokenServiceTest {
   @BeforeEach
   public void setUp() {
     ReflectionTestUtils.setField(accessTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(accessTokenService, "tokenDuration", 900);
   }
 
   @Test

@@ -21,6 +21,7 @@ class ConfirmRegistrationTokenServiceTest {
   @BeforeEach
   public void setUp() {
     ReflectionTestUtils.setField(confirmRegistrationTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(confirmRegistrationTokenService, "tokenDuration", 900);
   }
 
   @Test

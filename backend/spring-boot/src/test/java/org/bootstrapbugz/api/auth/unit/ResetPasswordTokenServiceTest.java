@@ -32,6 +32,7 @@ class ResetPasswordTokenServiceTest {
   @BeforeEach
   public void setUp() {
     ReflectionTestUtils.setField(resetPasswordTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(resetPasswordTokenService, "tokenDuration", 900);
   }
 
   @Test
