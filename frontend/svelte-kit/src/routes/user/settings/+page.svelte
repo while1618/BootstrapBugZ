@@ -4,7 +4,23 @@
   import { Button, Card, FloatingLabelInput, TabItem, Tabs } from 'flowbite-svelte';
   import type { ActionData } from './$types';
 
+  type NameErrors = {
+    firstName?: string[] | undefined;
+    lastName?: string[] | undefined;
+    username?: string[] | undefined;
+    email?: string[] | undefined;
+  };
+
+  type PasswordErrors = {
+    oldPassword?: string[] | undefined;
+    newPassword?: string[] | undefined;
+    confirmNewPassword?: string[] | undefined;
+  };
+
   export let form: ActionData;
+
+  $: nameErrors = form?.errors as NameErrors | undefined;
+  $: passwordErrors = form?.errors as PasswordErrors | undefined;
 </script>
 
 <div class="flex justify-center pt-10">
@@ -26,8 +42,8 @@
                 type="text"
                 label="First name"
               />
-              {#if form?.errors?.firstName}
-                <p class="mt-2 text-sm text-red-600">{form.errors.firstName[0]}</p>
+              {#if nameErrors}
+                <p class="mt-2 text-sm text-red-600">{nameErrors.firstName?.[0]}</p>
               {/if}
             </div>
             <div>
@@ -39,8 +55,8 @@
                 type="text"
                 label="Last name"
               />
-              {#if form?.errors?.lastName}
-                <p class="mt-2 text-sm text-red-600">{form.errors.lastName[0]}</p>
+              {#if nameErrors}
+                <p class="mt-2 text-sm text-red-600">{nameErrors.lastName?.[0]}</p>
               {/if}
             </div>
             <div>
@@ -52,8 +68,8 @@
                 type="text"
                 label="Username"
               />
-              {#if form?.errors?.username}
-                <p class="mt-2 text-sm text-red-600">{form.errors.username[0]}</p>
+              {#if nameErrors}
+                <p class="mt-2 text-sm text-red-600">{nameErrors.username?.[0]}</p>
               {/if}
             </div>
             <div>
@@ -65,8 +81,8 @@
                 type="email"
                 label="Email"
               />
-              {#if form?.errors?.email}
-                <p class="mt-2 text-sm text-red-600">{form.errors.email[0]}</p>
+              {#if nameErrors}
+                <p class="mt-2 text-sm text-red-600">{nameErrors.email?.[0]}</p>
               {/if}
               {#if form?.updateErrorMessage}
                 {#each form.updateErrorMessage.details as error}
@@ -95,8 +111,8 @@
                 type="password"
                 label="Old password"
               />
-              {#if form?.errors?.oldPassword}
-                <p class="mt-2 text-sm text-red-600">{form.errors.oldPassword[0]}</p>
+              {#if passwordErrors}
+                <p class="mt-2 text-sm text-red-600">{passwordErrors.oldPassword?.[0]}</p>
               {/if}
             </div>
             <div>
@@ -108,8 +124,8 @@
                 type="password"
                 label="New password"
               />
-              {#if form?.errors?.newPassword}
-                <p class="mt-2 text-sm text-red-600">{form.errors.newPassword[0]}</p>
+              {#if passwordErrors}
+                <p class="mt-2 text-sm text-red-600">{passwordErrors.newPassword?.[0]}</p>
               {/if}
             </div>
             <div>
@@ -121,8 +137,8 @@
                 type="password"
                 label="Confirm password"
               />
-              {#if form?.errors?.confirmNewPassword}
-                <p class="mt-2 text-sm text-red-600">{form.errors.confirmNewPassword[0]}</p>
+              {#if passwordErrors}
+                <p class="mt-2 text-sm text-red-600">{passwordErrors.confirmNewPassword?.[0]}</p>
               {/if}
               {#if form?.changePasswordErrorMessage}
                 {#each form.changePasswordErrorMessage.details as error}
