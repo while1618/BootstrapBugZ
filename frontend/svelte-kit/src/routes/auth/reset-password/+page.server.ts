@@ -1,3 +1,4 @@
+import { JWT_SECRET } from '$env/static/private';
 import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import { PASSWORD_REGEX } from '$lib/regex/regex';
@@ -15,7 +16,7 @@ const resetPasswordSchema = z
   .object({
     token: z.string().refine((value) => {
       try {
-        jwt.verify(removeBearerPrefix(value), 'secret');
+        jwt.verify(removeBearerPrefix(value), JWT_SECRET);
         return true;
       } catch (e) {
         return false;

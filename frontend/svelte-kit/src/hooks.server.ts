@@ -1,3 +1,4 @@
+import { JWT_SECRET } from '$env/static/private';
 import { HttpRequest, makeRequest } from '$lib/apis/api';
 import type { JwtPayload } from '$lib/models/jwt-payload';
 import type { RefreshTokenDTO } from '$lib/models/refresh-token';
@@ -23,7 +24,7 @@ export const handle = (async ({ event, resolve }) => {
 async function tryToGetSignedInUser(cookies: Cookies, locals: App.Locals): Promise<void> {
   try {
     const accessToken = cookies.get('accessToken') ?? '';
-    const payload = jwt.verify(removeBearerPrefix(accessToken), 'secret') as JwtPayload;
+    const payload = jwt.verify(removeBearerPrefix(accessToken), JWT_SECRET) as JwtPayload;
     locals.userId = payload.iss;
   } catch (error) {
     await tryToRefreshToken(cookies, locals);
