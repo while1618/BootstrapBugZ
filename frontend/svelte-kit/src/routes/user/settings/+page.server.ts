@@ -8,7 +8,6 @@ import {
 } from '$lib/regex/regex';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { z } from 'zod';
-import type { PageServerLoad } from './$types';
 
 const updateUserSchema = z.object({
   firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: en['firstName.invalid'] }),
@@ -32,10 +31,6 @@ const changePasswordSchema = z
       });
     }
   });
-
-export const load = (({ locals }) => {
-  if (!locals.userId) throw redirect(302, '/');
-}) satisfies PageServerLoad;
 
 export const actions = {
   update: async ({ request, cookies }) => {

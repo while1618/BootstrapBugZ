@@ -10,6 +10,10 @@ import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
+export const load = (({ locals }) => {
+  if (locals.userId) throw redirect(302, '/');
+}) satisfies PageServerLoad;
+
 const signUpSchema = z
   .object({
     firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: en['firstName.invalid'] }),
@@ -46,10 +50,6 @@ const signUpSchema = z
       });
     }
   });
-
-export const load = (({ locals }) => {
-  if (locals.userId) throw redirect(302, '/');
-}) satisfies PageServerLoad;
 
 export const actions = {
   signUp: async ({ request }) => {

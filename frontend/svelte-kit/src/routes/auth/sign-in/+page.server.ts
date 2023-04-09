@@ -7,6 +7,10 @@ import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
+export const load = (({ locals }) => {
+  if (locals.userId) throw redirect(302, '/');
+}) satisfies PageServerLoad;
+
 const signInSchema = z.object({
   usernameOrEmail: z
     .string()
@@ -16,10 +20,6 @@ const signInSchema = z.object({
     ),
   password: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
 });
-
-export const load = (({ locals }) => {
-  if (locals.userId) throw redirect(302, '/');
-}) satisfies PageServerLoad;
 
 export const actions = {
   signIn: async ({ request, cookies }) => {

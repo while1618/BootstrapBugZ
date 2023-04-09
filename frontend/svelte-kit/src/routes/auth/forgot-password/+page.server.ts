@@ -5,13 +5,13 @@ import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
-const forgotPasswordSchema = z.object({
-  email: z.string().regex(EMAIL_REGEX, { message: en['email.invalid'] }),
-});
-
 export const load = (({ locals }) => {
   if (locals.userId) throw redirect(302, '/');
 }) satisfies PageServerLoad;
+
+const forgotPasswordSchema = z.object({
+  email: z.string().regex(EMAIL_REGEX, { message: en['email.invalid'] }),
+});
 
 export const actions = {
   forgotPassword: async ({ request }) => {

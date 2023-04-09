@@ -7,6 +7,10 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
+export const load = (({ locals }) => {
+  if (locals.userId) throw redirect(302, '/');
+}) satisfies PageServerLoad;
+
 const resetPasswordSchema = z
   .object({
     token: z.string().refine((value) => {
@@ -29,10 +33,6 @@ const resetPasswordSchema = z
       });
     }
   });
-
-export const load = (({ locals }) => {
-  if (locals.userId) throw redirect(302, '/');
-}) satisfies PageServerLoad;
 
 export const actions = {
   resetPassword: async ({ request, url }) => {

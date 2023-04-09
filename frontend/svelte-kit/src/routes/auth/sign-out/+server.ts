@@ -3,8 +3,6 @@ import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET = (async ({ locals, cookies }) => {
-  if (!locals.userId) throw redirect(302, '/');
-
   const response = await makeRequest({
     method: HttpRequest.POST,
     path: '/auth/sign-out',
