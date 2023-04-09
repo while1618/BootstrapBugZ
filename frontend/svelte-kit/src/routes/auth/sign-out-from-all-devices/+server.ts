@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET = (async ({ locals, cookies }) => {
-  if (!locals.user) throw redirect(302, '/');
+  if (!locals.userId) throw redirect(302, '/');
 
   const response = await makeRequest({
     method: HttpRequest.POST,
@@ -15,7 +15,7 @@ export const GET = (async ({ locals, cookies }) => {
 
   cookies.delete('accessToken', { path: '/' });
   cookies.delete('refreshToken', { path: '/' });
-  locals.user = null;
+  locals.userId = null;
 
   throw redirect(303, '/');
 }) satisfies RequestHandler;

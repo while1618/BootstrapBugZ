@@ -17,12 +17,14 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
+    "jsonwebtoken": "9.0.0",
     "zod": "3.21.4"
   },
   "devDependencies": {
     "@playwright/test": "1.32.1",
     "@sveltejs/adapter-auto": "2.0.0",
     "@sveltejs/kit": "1.15.0",
+    "@types/jsonwebtoken": "9.0.1",
     "@typescript-eslint/eslint-plugin": "5.57.0",
     "@typescript-eslint/parser": "5.57.0",
     "autoprefixer": "10.4.14",

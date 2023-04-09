@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET = (async ({ locals, url }) => {
-  if (locals.user) throw redirect(302, '/');
+  if (locals.userId) throw redirect(302, '/');
 
   const usernameOrEmail = url.searchParams.get('usernameOrEmail');
   const response = await makeRequest({

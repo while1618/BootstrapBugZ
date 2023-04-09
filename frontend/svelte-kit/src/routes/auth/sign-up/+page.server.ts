@@ -48,7 +48,7 @@ const signUpSchema = z
   });
 
 export const load = (({ locals }) => {
-  if (locals.user) throw redirect(302, '/');
+  if (locals.userId) throw redirect(302, '/');
 }) satisfies PageServerLoad;
 
 export const actions = {

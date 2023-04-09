@@ -1,8 +1,9 @@
 import { HttpRequest, makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import { PASSWORD_REGEX } from '$lib/regex/regex';
-import { decodeJWT } from '$lib/utils/util';
+import { removeBearerPrefix } from '$lib/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
+import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -10,7 +11,7 @@ const resetPasswordSchema = z
   .object({
     token: z.string().refine((value) => {
       try {
-        decodeJWT(value);
+        jwt.verify(removeBearerPrefix(value), 'secret');
         return true;
       } catch (e) {
         return false;
@@ -30,7 +31,7 @@ const resetPasswordSchema = z
   });
 
 export const load = (({ locals }) => {
-  if (locals.user) throw redirect(302, '/');
+  if (locals.userId) throw redirect(302, '/');
 }) satisfies PageServerLoad;
 
 export const actions = {

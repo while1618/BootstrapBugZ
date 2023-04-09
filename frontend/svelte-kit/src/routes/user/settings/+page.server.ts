@@ -34,7 +34,7 @@ const changePasswordSchema = z
   });
 
 export const load = (({ locals }) => {
-  if (!locals.user) throw redirect(302, '/');
+  if (!locals.userId) throw redirect(302, '/');
 }) satisfies PageServerLoad;
 
 export const actions = {
@@ -70,7 +70,7 @@ export const actions = {
 
     cookies.delete('accessToken', { path: '/' });
     cookies.delete('refreshToken', { path: '/' });
-    locals.user = null;
+    locals.userId = null;
 
     throw redirect(303, '/');
   },
