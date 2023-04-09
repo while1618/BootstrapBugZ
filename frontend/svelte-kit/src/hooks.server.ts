@@ -6,52 +6,58 @@ import { removeBearerPrefix, setAccessTokenCookie, setRefreshTokenCookie } from 
 import { redirect, type Cookies, type Handle } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 
-const protectedRoutes = ['/auth/sign-out', '/auth/sign-out-from-all-devices', '/user/settings'];
+const protectedRoutes = [
+  '/auth/sign-out',
+  '/auth/sign-out-from-all-devices',
+  '/user/settings',
+  '/admin/dashboard',
+];
 
 export const handle = (async ({ event, resolve }) => {
-  try {
-    const accessToken = event.cookies.get('accessToken') ?? '';
-    const payload = jwt.verify(removeBearerPrefix(accessToken), 'secret') as JwtPayload;
-    event.locals.userId = payload.iss;
-  } catch (error) {
-    const response = await makeRequest({
-      method: HttpRequest.POST,
-      path: '/auth/refresh-token',
-      body: JSON.stringify({ refreshToken: event.cookies.get('refreshToken') }),
-    });
-
-    if ('error' in response) {
-      event.cookies.delete('accessToken', { path: '/' });
-      event.cookies.delete('refreshToken', { path: '/' });
-      event.locals.userId = null;
-    } else {
-      const { accessToken, refreshToken } = response as RefreshTokenDTO;
-      setAccessTokenCookie(event.cookies, accessToken);
-      setRefreshTokenCookie(event.cookies, refreshToken);
-      const { iss } = jwt.decode(removeBearerPrefix(accessToken)) as JwtPayload;
-      event.locals.userId = iss;
-    }
-  }
-
-  isAdminRoute(event.url, event.cookies);
-  isProtectedRoute(event.url, event.cookies);
+  await tryToGetSignedInUser(event.cookies, event.locals);
+  checkProtectedRoutes(event.url, event.cookies);
 
   return resolve(event);
 }) satisfies Handle;
 
-function isAdminRoute(url: URL, cookies: Cookies): void {
-  if (url.pathname.startsWith('/admin')) {
-    const accessToken = cookies.get('accessToken');
-    if (!accessToken) throw redirect(303, '/');
-
-    const { roles } = jwt.decode(removeBearerPrefix(accessToken)) as JwtPayload;
-    if (!roles?.includes(RoleName.ADMIN)) throw redirect(303, '/');
+async function tryToGetSignedInUser(cookies: Cookies, locals: App.Locals): Promise<void> {
+  try {
+    const accessToken = cookies.get('accessToken') ?? '';
+    const payload = jwt.verify(removeBearerPrefix(accessToken), 'secret') as JwtPayload;
+    locals.userId = payload.iss;
+  } catch (error) {
+    await tryToRefreshToken(cookies, locals);
   }
 }
 
-function isProtectedRoute(url: URL, cookies: Cookies): void {
+async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<void> {
+  const response = await makeRequest({
+    method: HttpRequest.POST,
+    path: '/auth/refresh-token',
+    body: JSON.stringify({ refreshToken: cookies.get('refreshToken') }),
+  });
+
+  if ('error' in response) {
+    cookies.delete('accessToken', { path: '/' });
+    cookies.delete('refreshToken', { path: '/' });
+    locals.userId = null;
+  } else {
+    const { accessToken, refreshToken } = response as RefreshTokenDTO;
+    setAccessTokenCookie(cookies, accessToken);
+    setRefreshTokenCookie(cookies, refreshToken);
+    const { iss } = jwt.decode(removeBearerPrefix(accessToken)) as JwtPayload;
+    locals.userId = iss;
+  }
+}
+
+function checkProtectedRoutes(url: URL, cookies: Cookies): void {
   if (protectedRoutes.includes(url.pathname)) {
     const accessToken = cookies.get('accessToken');
     if (!accessToken) throw redirect(303, '/');
+
+    if (url.pathname.startsWith('/admin')) {
+      const { roles } = jwt.decode(removeBearerPrefix(accessToken)) as JwtPayload;
+      if (!roles?.includes(RoleName.ADMIN)) throw redirect(303, '/');
+    }
   }
 }
