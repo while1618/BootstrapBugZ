@@ -3,7 +3,7 @@
   import { Button, Card, FloatingLabelInput, TabItem, Tabs } from 'flowbite-svelte';
   import type { ActionData } from './$types';
 
-  type UpdateErrors = {
+  type UpdateUserErrors = {
     firstName?: string[] | undefined;
     lastName?: string[] | undefined;
     username?: string[] | undefined;
@@ -18,7 +18,7 @@
 
   export let form: ActionData;
 
-  $: updateErrors = form?.errors as UpdateErrors | undefined;
+  $: updateUserErrors = form?.errors as UpdateUserErrors | undefined;
   $: changePasswordErrors = form?.errors as ChangePasswordErrors | undefined;
 </script>
 
@@ -41,8 +41,8 @@
                 type="text"
                 label="First name"
               />
-              {#if updateErrors && updateErrors.firstName}
-                <p class="mt-2 text-sm text-red-600">{updateErrors.firstName[0]}</p>
+              {#if updateUserErrors && updateUserErrors.firstName}
+                <p class="mt-2 text-sm text-red-600">{updateUserErrors.firstName[0]}</p>
               {/if}
             </div>
             <div>
@@ -54,8 +54,8 @@
                 type="text"
                 label="Last name"
               />
-              {#if updateErrors && updateErrors.lastName}
-                <p class="mt-2 text-sm text-red-600">{updateErrors.lastName[0]}</p>
+              {#if updateUserErrors && updateUserErrors.lastName}
+                <p class="mt-2 text-sm text-red-600">{updateUserErrors.lastName[0]}</p>
               {/if}
             </div>
             <div>
@@ -67,8 +67,8 @@
                 type="text"
                 label="Username"
               />
-              {#if updateErrors && updateErrors.username}
-                <p class="mt-2 text-sm text-red-600">{updateErrors.username[0]}</p>
+              {#if updateUserErrors && updateUserErrors.username}
+                <p class="mt-2 text-sm text-red-600">{updateUserErrors.username[0]}</p>
               {/if}
             </div>
             <div>
@@ -80,8 +80,8 @@
                 type="email"
                 label="Email"
               />
-              {#if updateErrors && updateErrors.email}
-                <p class="mt-2 text-sm text-red-600">{updateErrors.email[0]}</p>
+              {#if updateUserErrors && updateUserErrors.email}
+                <p class="mt-2 text-sm text-red-600">{updateUserErrors.email[0]}</p>
               {/if}
               {#if form?.updateErrorMessage}
                 {#each form.updateErrorMessage.details as error}
