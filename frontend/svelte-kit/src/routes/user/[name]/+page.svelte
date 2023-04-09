@@ -12,7 +12,7 @@
     class="w-full border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800"
   >
     <div class="flex justify-center">
-      <h1 class="text-lg dark:text-white">{data.user.username}</h1>
+      <h1 class="text-lg dark:text-white">{data?.user?.username}</h1>
     </div>
   </Card>
 </div>
