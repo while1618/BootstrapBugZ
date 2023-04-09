@@ -1,17 +1,16 @@
-<!-- TODO: fix typings -->
 <script lang="ts">
   import { enhance } from '$app/forms';
   import { Button, Card, FloatingLabelInput, TabItem, Tabs } from 'flowbite-svelte';
   import type { ActionData } from './$types';
 
-  type NameErrors = {
+  type UpdateErrors = {
     firstName?: string[] | undefined;
     lastName?: string[] | undefined;
     username?: string[] | undefined;
     email?: string[] | undefined;
   };
 
-  type PasswordErrors = {
+  type ChangePasswordErrors = {
     oldPassword?: string[] | undefined;
     newPassword?: string[] | undefined;
     confirmNewPassword?: string[] | undefined;
@@ -19,8 +18,8 @@
 
   export let form: ActionData;
 
-  $: nameErrors = form?.errors as NameErrors | undefined;
-  $: passwordErrors = form?.errors as PasswordErrors | undefined;
+  $: updateErrors = form?.errors as UpdateErrors | undefined;
+  $: changePasswordErrors = form?.errors as ChangePasswordErrors | undefined;
 </script>
 
 <div class="flex justify-center pt-10">
@@ -42,8 +41,8 @@
                 type="text"
                 label="First name"
               />
-              {#if nameErrors}
-                <p class="mt-2 text-sm text-red-600">{nameErrors.firstName?.[0]}</p>
+              {#if updateErrors && updateErrors.firstName}
+                <p class="mt-2 text-sm text-red-600">{updateErrors.firstName[0]}</p>
               {/if}
             </div>
             <div>
@@ -55,8 +54,8 @@
                 type="text"
                 label="Last name"
               />
-              {#if nameErrors}
-                <p class="mt-2 text-sm text-red-600">{nameErrors.lastName?.[0]}</p>
+              {#if updateErrors && updateErrors.lastName}
+                <p class="mt-2 text-sm text-red-600">{updateErrors.lastName[0]}</p>
               {/if}
             </div>
             <div>
@@ -68,8 +67,8 @@
                 type="text"
                 label="Username"
               />
-              {#if nameErrors}
-                <p class="mt-2 text-sm text-red-600">{nameErrors.username?.[0]}</p>
+              {#if updateErrors && updateErrors.username}
+                <p class="mt-2 text-sm text-red-600">{updateErrors.username[0]}</p>
               {/if}
             </div>
             <div>
@@ -81,8 +80,8 @@
                 type="email"
                 label="Email"
               />
-              {#if nameErrors}
-                <p class="mt-2 text-sm text-red-600">{nameErrors.email?.[0]}</p>
+              {#if updateErrors && updateErrors.email}
+                <p class="mt-2 text-sm text-red-600">{updateErrors.email[0]}</p>
               {/if}
               {#if form?.updateErrorMessage}
                 {#each form.updateErrorMessage.details as error}
@@ -111,8 +110,8 @@
                 type="password"
                 label="Old password"
               />
-              {#if passwordErrors}
-                <p class="mt-2 text-sm text-red-600">{passwordErrors.oldPassword?.[0]}</p>
+              {#if changePasswordErrors && changePasswordErrors.oldPassword}
+                <p class="mt-2 text-sm text-red-600">{changePasswordErrors.oldPassword[0]}</p>
               {/if}
             </div>
             <div>
@@ -124,8 +123,8 @@
                 type="password"
                 label="New password"
               />
-              {#if passwordErrors}
-                <p class="mt-2 text-sm text-red-600">{passwordErrors.newPassword?.[0]}</p>
+              {#if changePasswordErrors && changePasswordErrors.newPassword}
+                <p class="mt-2 text-sm text-red-600">{changePasswordErrors.newPassword[0]}</p>
               {/if}
             </div>
             <div>
@@ -137,8 +136,10 @@
                 type="password"
                 label="Confirm password"
               />
-              {#if passwordErrors}
-                <p class="mt-2 text-sm text-red-600">{passwordErrors.confirmNewPassword?.[0]}</p>
+              {#if changePasswordErrors && changePasswordErrors.confirmNewPassword}
+                <p class="mt-2 text-sm text-red-600">
+                  {changePasswordErrors.confirmNewPassword[0]}
+                </p>
               {/if}
               {#if form?.changePasswordErrorMessage}
                 {#each form.changePasswordErrorMessage.details as error}
