@@ -31,11 +31,8 @@ export async function makeRequest(params: RequestParams): Promise<object | Error
   opts.headers = headers;
 
   const response = await fetch(`${API_URL}${params.path}`, opts);
-  if (!response.ok) {
-    const errorMessage = (await response.json()) as ErrorMessage;
-    console.log(errorMessage);
-    return errorMessage;
-  }
+
+  if (!response.ok) return (await response.json()) as ErrorMessage;
 
   const text = await response.text();
   return text ? JSON.parse(text) : {};
