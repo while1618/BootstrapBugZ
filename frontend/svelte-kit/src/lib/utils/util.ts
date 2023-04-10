@@ -9,8 +9,8 @@ export enum HttpRequest {
   DELETE = 'DELETE',
 }
 
-export function removeBearerPrefix(jwt: string): string {
-  return jwt.replace('Bearer ', '');
+export function removeBearerPrefix(token: string): string {
+  return token.replace('Bearer ', '');
 }
 
 export function setAccessTokenCookie(cookies: Cookies, accessToken: string): void {
