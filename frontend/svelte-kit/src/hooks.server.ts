@@ -32,22 +32,25 @@ async function tryToGetSignedInUser(cookies: Cookies, locals: App.Locals): Promi
 }
 
 async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<void> {
-  const response = await makeRequest({
-    method: HttpRequest.POST,
-    path: '/auth/refresh-token',
-    body: JSON.stringify({ refreshToken: cookies.get('refreshToken') }),
-  });
+  const refreshToken = cookies.get('refreshToken');
+  if (refreshToken) {
+    const response = await makeRequest({
+      method: HttpRequest.POST,
+      path: '/auth/refresh-token',
+      body: JSON.stringify({ refreshToken }),
+    });
 
-  if ('error' in response) {
-    cookies.delete('accessToken', { path: '/' });
-    cookies.delete('refreshToken', { path: '/' });
-    locals.userId = null;
-  } else {
-    const { accessToken, refreshToken } = response as RefreshTokenDTO;
-    setAccessTokenCookie(cookies, accessToken);
-    setRefreshTokenCookie(cookies, refreshToken);
-    const { iss } = jwt.decode(removeBearerPrefix(accessToken)) as JwtPayload;
-    locals.userId = iss;
+    if ('error' in response) {
+      cookies.delete('accessToken', { path: '/' });
+      cookies.delete('refreshToken', { path: '/' });
+      locals.userId = null;
+    } else {
+      const { accessToken, refreshToken } = response as RefreshTokenDTO;
+      setAccessTokenCookie(cookies, accessToken);
+      setRefreshTokenCookie(cookies, refreshToken);
+      const { iss } = jwt.decode(removeBearerPrefix(accessToken)) as JwtPayload;
+      locals.userId = iss;
+    }
   }
 }
 
