@@ -1,4 +1,4 @@
-import type { JwtPayload } from '$lib/models/jwt-payload';
+import type { JwtPayload } from '$lib/models/auth/jwt-payload';
 import type { Cookies } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 

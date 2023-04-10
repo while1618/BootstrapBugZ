@@ -1,4 +1,4 @@
-import type { UserDTO } from './user';
+import type { UserDTO } from '../user/user';
 
 export interface SignInDTO {
   accessToken: string;

@@ -1,8 +1,8 @@
 import { JWT_SECRET } from '$env/static/private';
 import { makeRequest } from '$lib/apis/api';
-import type { JwtPayload } from '$lib/models/jwt-payload';
-import type { RefreshTokenDTO } from '$lib/models/refresh-token';
-import { RoleName } from '$lib/models/role';
+import type { JwtPayload } from '$lib/models/auth/jwt-payload';
+import type { RefreshTokenDTO } from '$lib/models/auth/refresh-token';
+import { RoleName } from '$lib/models/user/role';
 import {
   HttpRequest,
   removeBearerPrefix,

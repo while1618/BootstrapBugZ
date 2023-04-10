@@ -1,4 +1,4 @@
-import type { RoleName } from './role';
+import type { RoleName } from '../user/role';
 
 export interface JwtPayload {
   iss: string;
