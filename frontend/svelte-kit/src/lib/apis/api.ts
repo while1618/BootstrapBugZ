@@ -1,6 +1,5 @@
+import { API_URL } from '$env/static/private';
 import type { ErrorMessage } from '$lib/models/error-message';
-
-export const API_URL = 'http://localhost:18080/v1';
 
 export enum HttpRequest {
   GET = 'GET',
