@@ -10,7 +10,8 @@ export const load = (async ({ cookies }) => {
     auth: cookies.get('accessToken'),
   });
 
-  if ('error' in response) throw error(response.status, String(response.error));
+  if ('error' in response)
+    throw error(response.status, { message: response.error, status: response.status });
 
   const users = response as UserDTO[];
   users.sort((a, b) => a.id - b.id);

@@ -1,5 +1,5 @@
 import { HttpRequest, makeRequest } from '$lib/apis/api';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET = (async ({ locals, url }) => {
@@ -12,7 +12,8 @@ export const GET = (async ({ locals, url }) => {
     body: JSON.stringify({ usernameOrEmail }),
   });
 
-  if ('error' in response) return new Response(String(response.error));
+  if ('error' in response)
+    throw error(response.status, { message: response.error, status: response.status });
 
   throw redirect(303, '/auth/sign-in');
 }) satisfies RequestHandler;

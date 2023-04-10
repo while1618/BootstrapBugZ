@@ -11,10 +11,7 @@ export const load = (async ({ params, cookies }) => {
   });
 
   if ('error' in response)
-    throw error(response.status, {
-      message: response.details[0].message,
-      status: response.status,
-    });
+    throw error(response.status, { message: response.error, status: response.status });
 
   return { user: response as UserDTO };
 }) satisfies PageServerLoad;
