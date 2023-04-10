@@ -10,7 +10,11 @@ export const load = (async ({ params, cookies }) => {
     auth: cookies.get('accessToken'),
   });
 
-  if ('error' in response) throw error(response.status, response.details[0].message);
+  if ('error' in response)
+    throw error(response.status, {
+      message: response.details[0].message,
+      status: response.status,
+    });
 
   return { user: response as UserDTO };
 }) satisfies PageServerLoad;

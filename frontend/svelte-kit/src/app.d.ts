@@ -5,6 +5,10 @@ declare global {
     interface Locals {
       userId: string | null;
     }
+    interface Error {
+      message: string;
+      status: number;
+    }
   }
 }
 
