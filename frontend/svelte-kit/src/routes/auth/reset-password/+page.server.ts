@@ -51,6 +51,6 @@ export const actions = {
 
     if ('error' in response) return fail(response.status, { errorMessage: response });
 
-    throw redirect(303, '/auth/sign-in');
+    throw redirect(302, '/auth/sign-in');
   },
 } satisfies Actions;

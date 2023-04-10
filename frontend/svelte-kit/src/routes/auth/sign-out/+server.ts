@@ -16,5 +16,5 @@ export const GET = (async ({ locals, cookies }) => {
   cookies.delete('refreshToken', { path: '/' });
   locals.userId = null;
 
-  throw redirect(303, '/');
+  throw redirect(302, '/');
 }) satisfies RequestHandler;

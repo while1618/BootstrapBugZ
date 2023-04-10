@@ -39,6 +39,6 @@ export const actions = {
     setAccessTokenCookie(cookies, accessToken);
     setRefreshTokenCookie(cookies, refreshToken);
 
-    throw redirect(303, '/');
+    throw redirect(302, '/');
   },
 } satisfies Actions;

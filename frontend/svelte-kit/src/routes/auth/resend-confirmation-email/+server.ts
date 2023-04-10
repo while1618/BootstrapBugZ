@@ -15,5 +15,5 @@ export const GET = (async ({ locals, url }) => {
   if ('error' in response)
     throw error(response.status, { message: response.error, status: response.status });
 
-  throw redirect(303, '/auth/sign-in');
+  throw redirect(302, '/auth/sign-in');
 }) satisfies RequestHandler;

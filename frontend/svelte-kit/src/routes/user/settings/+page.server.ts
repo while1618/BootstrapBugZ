@@ -67,6 +67,6 @@ export const actions = {
     cookies.delete('refreshToken', { path: '/' });
     locals.userId = null;
 
-    throw redirect(303, '/');
+    throw redirect(302, '/');
   },
 } satisfies Actions;
