@@ -1,4 +1,5 @@
-import { HttpRequest, makeRequest } from '$lib/apis/api';
+import { makeRequest } from '$lib/apis/api';
+import { HttpRequest } from '$lib/utils/util';
 import { error, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 

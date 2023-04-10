@@ -1,12 +1,6 @@
 import { API_URL } from '$env/static/private';
 import type { ErrorMessage } from '$lib/models/error-message';
-
-export enum HttpRequest {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-}
+import type { HttpRequest } from '$lib/utils/util';
 
 export interface RequestParams {
   method: HttpRequest;

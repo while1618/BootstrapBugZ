@@ -2,6 +2,13 @@ import type { JwtPayload } from '$lib/models/jwt-payload';
 import type { Cookies } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 
+export enum HttpRequest {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+}
+
 export function removeBearerPrefix(jwt: string): string {
   return jwt.replace('Bearer ', '');
 }

@@ -1,6 +1,7 @@
-import { HttpRequest, makeRequest } from '$lib/apis/api';
+import { makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import { EMAIL_REGEX } from '$lib/regex/regex';
+import { HttpRequest } from '$lib/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
