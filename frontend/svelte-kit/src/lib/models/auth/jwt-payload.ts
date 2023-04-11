@@ -2,7 +2,7 @@ import type { RoleName } from '../user/role';
 
 export interface JwtPayload {
   iss: string;
-  issuedAt: number;
+  iat: number;
   exp: number;
   purpose: JwtPurpose;
   roles?: RoleName[];

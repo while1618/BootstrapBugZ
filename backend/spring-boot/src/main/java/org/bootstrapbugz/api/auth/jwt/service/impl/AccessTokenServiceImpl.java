@@ -45,7 +45,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         .withIssuer(userId.toString())
         .withClaim("roles", roleDTOs.stream().map(RoleDTO::getName).toList())
         .withClaim("purpose", PURPOSE.name())
-        .withClaim("issuedAt", Instant.now().toEpochMilli())
+        .withIssuedAt(Instant.now())
         .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
         .sign(JwtUtil.getAlgorithm(secret));
   }
@@ -65,7 +65,8 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   private void isInUserBlacklist(String token) {
     final var userInBlacklist = userBlacklistRepository.findById(JwtUtil.getUserId(token));
     if (userInBlacklist.isPresent()
-        && JwtUtil.getIssuedAt(token).isBefore(userInBlacklist.get().getUpdatedAt()))
+        && (JwtUtil.getIssuedAt(token).equals(userInBlacklist.get().getUpdatedAt())
+            || JwtUtil.getIssuedAt(token).isBefore(userInBlacklist.get().getUpdatedAt())))
       throw new UnauthorizedException(messageService.getMessage("token.invalid"));
   }
 

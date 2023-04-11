@@ -32,7 +32,7 @@ public class ConfirmRegistrationTokenServiceImpl implements ConfirmRegistrationT
     return JWT.create()
         .withIssuer(userId.toString())
         .withClaim("purpose", PURPOSE.name())
-        .withClaim("issuedAt", Instant.now().toEpochMilli())
+        .withIssuedAt(Instant.now())
         .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
         .sign(JwtUtil.getAlgorithm(secret));
   }

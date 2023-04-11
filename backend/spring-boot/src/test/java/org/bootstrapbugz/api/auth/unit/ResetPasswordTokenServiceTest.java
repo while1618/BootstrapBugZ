@@ -50,7 +50,11 @@ class ResetPasswordTokenServiceTest {
 
   @Test
   void itShouldCheckToken_userInBlacklistButTokenIsIssuedAfter() {
-    final var userBlacklist = new UserBlacklist().setUserId(1L).setTimeToLive(1000);
+    final var userBlacklist =
+        new UserBlacklist()
+            .setUserId(1L)
+            .setUpdatedAt(Instant.now().minusSeconds(1).truncatedTo(ChronoUnit.SECONDS))
+            .setTimeToLive(1000);
     final var token = resetPasswordTokenService.create(1L);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     resetPasswordTokenService.check(token);

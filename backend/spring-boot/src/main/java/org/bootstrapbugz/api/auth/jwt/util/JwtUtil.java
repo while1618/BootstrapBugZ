@@ -43,7 +43,7 @@ public class JwtUtil {
   }
 
   public static Instant getIssuedAt(String token) {
-    return Instant.ofEpochMilli(JWT.decode(token).getClaim("issuedAt").asLong());
+    return JWT.decode(token).getIssuedAtAsInstant();
   }
 
   public enum JwtPurpose {

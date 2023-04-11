@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
-import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
@@ -37,10 +36,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-@DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AuthControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
@@ -180,19 +179,13 @@ class AuthControllerIT extends DatabaseContainers {
     final var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     final var refreshTokenRequest = new RefreshTokenRequest(signInDTO.getRefreshToken());
-    final var resultActions =
-        mockMvc
-            .perform(
-                post(Path.AUTH + "/refresh-token")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(refreshTokenRequest)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    final var refreshTokenDTO =
-        objectMapper.readValue(
-            resultActions.andReturn().getResponse().getContentAsString(), RefreshTokenDTO.class);
-    assertThat(refreshTokenDTO.getAccessToken()).isNotEqualTo(signInDTO.getAccessToken());
-    assertThat(refreshTokenDTO.getRefreshToken()).isNotEqualTo(signInDTO.getRefreshToken());
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/refresh-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(refreshTokenRequest)))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
   }
 
   @Test

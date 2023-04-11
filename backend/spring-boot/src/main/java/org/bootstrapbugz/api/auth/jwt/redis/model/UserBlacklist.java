@@ -24,7 +24,7 @@ public class UserBlacklist implements Serializable {
 
   @Id private Long userId;
 
-  private Instant updatedAt = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+  private Instant updatedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
 
   @TimeToLive private long timeToLive;
 }

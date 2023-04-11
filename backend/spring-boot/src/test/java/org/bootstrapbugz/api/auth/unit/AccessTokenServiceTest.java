@@ -60,7 +60,11 @@ class AccessTokenServiceTest {
 
   @Test
   void itShouldCheckToken_userInBlacklistButTokenIsIssuedAfter() {
-    final var userBlacklist = new UserBlacklist().setUserId(1L).setTimeToLive(1000);
+    final var userBlacklist =
+        new UserBlacklist()
+            .setUserId(1L)
+            .setUpdatedAt(Instant.now().minusSeconds(1).truncatedTo(ChronoUnit.SECONDS))
+            .setTimeToLive(1000);
     final var token = accessTokenService.create(1L, Collections.emptySet());
     when(accessTokenBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));

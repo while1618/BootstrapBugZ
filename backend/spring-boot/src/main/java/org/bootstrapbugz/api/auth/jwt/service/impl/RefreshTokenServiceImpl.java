@@ -40,7 +40,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             .withIssuer(userId.toString())
             .withClaim("roles", roleDTOs.stream().map(RoleDTO::getName).toList())
             .withClaim("purpose", PURPOSE.name())
-            .withClaim("issuedAt", Instant.now().toEpochMilli())
+            .withIssuedAt(Instant.now())
             .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
             .sign(JwtUtil.getAlgorithm(secret));
     refreshTokenWhitelistRepository.save(

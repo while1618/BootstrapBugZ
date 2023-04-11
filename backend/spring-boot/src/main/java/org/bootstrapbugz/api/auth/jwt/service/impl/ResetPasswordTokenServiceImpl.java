@@ -42,7 +42,7 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
     return JWT.create()
         .withIssuer(userId.toString())
         .withClaim("purpose", PURPOSE.name())
-        .withClaim("issuedAt", Instant.now().toEpochMilli())
+        .withIssuedAt(Instant.now())
         .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
         .sign(JwtUtil.getAlgorithm(secret));
   }
@@ -56,7 +56,8 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
   private void isInUserBlacklist(String token) {
     final var userInBlacklist = userBlacklistRepository.findById(JwtUtil.getUserId(token));
     if (userInBlacklist.isPresent()
-        && JwtUtil.getIssuedAt(token).isBefore(userInBlacklist.get().getUpdatedAt()))
+        && (JwtUtil.getIssuedAt(token).equals(userInBlacklist.get().getUpdatedAt())
+            || JwtUtil.getIssuedAt(token).isBefore(userInBlacklist.get().getUpdatedAt())))
       throw new ForbiddenException(messageService.getMessage("token.invalid"));
   }
 
