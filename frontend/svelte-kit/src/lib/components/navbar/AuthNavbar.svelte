@@ -5,6 +5,8 @@
   import SignOutIcon from '$lib/icons/sign-out.svelte';
   import avatar from '$lib/images/avatar.jpg';
   import logo from '$lib/images/BootstrapBugZ.png';
+  import { RoleName } from '$lib/models/user/role';
+  import type { UserDTO } from '$lib/models/user/user';
   import {
     Avatar,
     CloseButton,
@@ -29,7 +31,8 @@
     easing: sineIn,
   };
   let hidden = true;
-  let isAdmin = true;
+  export let user: UserDTO;
+  $: isAdmin = user.roles.some((role) => role.name === RoleName.ADMIN);
 </script>
 
 <Navbar color="none">
@@ -42,7 +45,7 @@
   <div class="flex md:gap-2">
     <Avatar border class="hidden md:flex" id="avatar-menu" src={avatar} />
     <Dropdown placement="bottom" triggeredBy="#avatar-menu">
-      <DropdownItem href="/user/john.doe" class="flex items-center gap-2">
+      <DropdownItem href="/user/{user.username}" class="flex items-center gap-2">
         <ProfileIcon />
         My profile
       </DropdownItem>
@@ -77,7 +80,7 @@
       <Sidebar>
         <SidebarWrapper>
           <SidebarGroup>
-            <SidebarItem label="My profile" href="/user/john.doe">
+            <SidebarItem label="My profile" href="/user/{user.username}">
               <svelte:fragment slot="icon">
                 <ProfileIcon />
               </svelte:fragment>

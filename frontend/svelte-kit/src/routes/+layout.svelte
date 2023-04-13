@@ -9,8 +9,8 @@
 </script>
 
 <div class="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-800">
-  {#if data.userId}
-    <AuthNavbar />
+  {#if data.user}
+    <AuthNavbar user={data.user} />
   {:else}
     <NoAuthNavbar />
   {/if}
