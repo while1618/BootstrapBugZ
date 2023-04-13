@@ -44,7 +44,7 @@
     <Dropdown placement="bottom" triggeredBy="#avatar-menu">
       <DropdownItem href="/user/john.doe" class="flex items-center gap-2">
         <ProfileIcon />
-        john.doe
+        My profile
       </DropdownItem>
       <DropdownDivider />
       <DropdownItem href="/" class="flex items-center gap-2">
@@ -77,7 +77,7 @@
       <Sidebar>
         <SidebarWrapper>
           <SidebarGroup>
-            <SidebarItem label="john.doe" href="/user/john.doe">
+            <SidebarItem label="My profile" href="/user/john.doe">
               <svelte:fragment slot="icon">
                 <ProfileIcon />
               </svelte:fragment>
