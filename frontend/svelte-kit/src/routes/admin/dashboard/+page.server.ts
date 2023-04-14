@@ -14,10 +14,7 @@ export const load = (async ({ cookies }) => {
   if ('error' in response)
     throw error(response.status, { message: response.error, status: response.status });
 
-  const users = response as UserDTO[];
-  users.sort((a, b) => a.id - b.id);
-
-  return { users };
+  return { users: response as UserDTO[] };
 }) satisfies PageServerLoad;
 
 export const actions = {
