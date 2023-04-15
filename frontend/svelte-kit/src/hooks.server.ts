@@ -12,12 +12,7 @@ import {
 import { redirect, type Cookies, type Handle } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 
-const protectedRoutes = [
-  '/auth/sign-out',
-  '/auth/sign-out-from-all-devices',
-  '/user/settings',
-  '/admin/dashboard',
-];
+const protectedRoutes = ['/profile', '/admin', '/auth/sign-out', '/auth/sign-out-from-all-devices'];
 
 export const handle = (async ({ event, resolve }) => {
   await tryToGetSignedInUser(event.cookies, event.locals);
@@ -60,7 +55,7 @@ async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<
 }
 
 function checkProtectedRoutes(url: URL, cookies: Cookies): void {
-  if (protectedRoutes.includes(url.pathname)) {
+  if (protectedRoutes.some((route) => url.pathname.startsWith(route))) {
     const accessToken = cookies.get('accessToken');
     if (!accessToken) throw redirect(302, '/');
 

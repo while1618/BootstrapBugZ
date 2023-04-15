@@ -4,7 +4,6 @@
   import { RoleName } from '$lib/models/user/role';
   import { userStore } from '$lib/stores/user';
 
-  $: username = $userStore?.username;
   $: isAdmin = $userStore?.roles.some((role) => role.name === RoleName.ADMIN);
 </script>
 
@@ -25,11 +24,11 @@
         </div>
       </div>
       <ul class="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
-        <li><a href="/user/{username}">Profile</a></li>
+        <li><a href="/profile">Profile</a></li>
         {#if isAdmin}
-          <li><a href="/admin/dashboard">Admin dashboard</a></li>
+          <li><a href="/admin">Admin</a></li>
         {/if}
-        <li><a href="/user/settings/profile">Settings</a></li>
+        <li><a href="/profile/settings/edit">Settings</a></li>
         <li><a href="/auth/sign-out">Sign out</a></li>
       </ul>
     </div>
