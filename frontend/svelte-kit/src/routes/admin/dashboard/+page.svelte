@@ -1,11 +1,11 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import CheckCircleIcon from '$lib/icons/check-circle.svelte';
-  import LockClosedIcon from '$lib/icons/lock-closed.svelte';
-  import LockOpenIcon from '$lib/icons/lock-open.svelte';
-  import PencilIcon from '$lib/icons/pencil.svelte';
-  import TrashIcon from '$lib/icons/trash.svelte';
-  import XCircleIcon from '$lib/icons/x-circle.svelte';
+  import CheckCircleIcon from '$lib/icons/CheckCircle.svelte';
+  import XCircleIcon from '$lib/icons/CloseCircle.svelte';
+  import LockClosedIcon from '$lib/icons/LockClose.svelte';
+  import LockOpenIcon from '$lib/icons/LockOpen.svelte';
+  import PencilIcon from '$lib/icons/Pencil.svelte';
+  import TrashIcon from '$lib/icons/Trash.svelte';
   import type { PageServerData } from './$types';
 
   export let data: PageServerData;
