@@ -1,12 +1,12 @@
 <script lang="ts">
-  import logo from '$lib/images/BootstrapBugZ.png';
+  import logo from '$lib/images/logo.png';
 </script>
 
 <nav class="navbar bg-base-100 px-5">
   <div class="navbar-start">
     <a href="/" class="flex items-center">
       <div class="w-10 rounded-full">
-        <img src={logo} alt="BootstrapBugZLogo" />
+        <img src={logo} alt="logo" />
       </div>
       <span class="text-xl normal-case">BootstrapBugZ</span>
     </a>

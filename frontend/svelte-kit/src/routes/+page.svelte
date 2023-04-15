@@ -1,6 +1,6 @@
 <script lang="ts">
-  import GuestHome from '$lib/components/GuestHome.svelte';
-  import UserHome from '$lib/components/UserHome.svelte';
+  import GuestHome from '$lib/components/guest-home.svelte';
+  import UserHome from '$lib/components/user-home.svelte';
   import type { LayoutData } from './$types';
 
   export let data: LayoutData;

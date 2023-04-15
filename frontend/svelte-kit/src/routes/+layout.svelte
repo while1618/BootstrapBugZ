@@ -2,8 +2,8 @@
   import { userStore } from '$lib/stores/user';
   import '../app.css';
 
-  import GuestNavbar from '$lib/components/GuestNavbar.svelte';
-  import UserNavbar from '$lib/components/UserNavbar.svelte';
+  import GuestNavbar from '$lib/components/guest-navbar.svelte';
+  import UserNavbar from '$lib/components/user-navbar.svelte';
   import { beforeUpdate } from 'svelte';
   import type { LayoutData } from './$types';
 

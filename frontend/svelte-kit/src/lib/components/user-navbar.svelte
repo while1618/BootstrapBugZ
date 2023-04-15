@@ -1,6 +1,6 @@
 <script lang="ts">
   import avatar from '$lib/images/avatar.jpg';
-  import logo from '$lib/images/BootstrapBugZ.png';
+  import logo from '$lib/images/logo.png';
   import { RoleName } from '$lib/models/user/role';
   import { userStore } from '$lib/stores/user';
 
@@ -12,7 +12,7 @@
   <div class="navbar-start">
     <a href="/" class="flex items-center">
       <div class="w-10 rounded-full">
-        <img src={logo} alt="BootstrapBugZLogo" />
+        <img src={logo} alt="logo" />
       </div>
       <span class="text-xl normal-case">BootstrapBugZ</span>
     </a>
