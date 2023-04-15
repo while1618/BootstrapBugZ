@@ -13,8 +13,7 @@ export const GET = (async ({ locals, url }) => {
     body: JSON.stringify({ usernameOrEmail }),
   });
 
-  if ('error' in response)
-    throw error(response.status, { message: response.error, status: response.status });
+  if ('error' in response) throw error(response.status, { message: response.error });
 
   throw redirect(302, '/auth/sign-in');
 }) satisfies RequestHandler;

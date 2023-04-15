@@ -10,8 +10,7 @@ export const GET = (async ({ locals, cookies }) => {
     auth: cookies.get('accessToken'),
   });
 
-  if ('error' in response)
-    throw error(response.status, { message: response.error, status: response.status });
+  if ('error' in response) throw error(response.status, { message: response.error });
 
   cookies.delete('accessToken', { path: '/' });
   cookies.delete('refreshToken', { path: '/' });
