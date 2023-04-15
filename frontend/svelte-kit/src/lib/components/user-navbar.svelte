@@ -1,4 +1,8 @@
 <script lang="ts">
+  import ChartIcon from '$lib/icons/chart.svelte';
+  import ProfileIcon from '$lib/icons/profile.svelte';
+  import SettingsIcon from '$lib/icons/settings.svelte';
+  import SignOutIcon from '$lib/icons/sign-out.svelte';
   import avatar from '$lib/images/avatar.jpg';
   import logo from '$lib/images/logo.png';
   import { RoleName } from '$lib/models/user/role';
@@ -24,12 +28,12 @@
         </div>
       </div>
       <ul class="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
-        <li><a href="/profile">Profile</a></li>
+        <li><a href="/profile"><ProfileIcon /> Profile</a></li>
         {#if isAdmin}
-          <li><a href="/admin">Admin</a></li>
+          <li><a href="/admin"><ChartIcon /> Admin</a></li>
         {/if}
-        <li><a href="/profile/settings/edit">Settings</a></li>
-        <li><a href="/auth/sign-out">Sign out</a></li>
+        <li><a href="/profile/settings/edit"><SettingsIcon /> Settings</a></li>
+        <li><a href="/auth/sign-out"><SignOutIcon /> Sign out</a></li>
       </ul>
     </div>
   </div>
