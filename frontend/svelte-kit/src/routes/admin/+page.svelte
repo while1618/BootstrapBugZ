@@ -1,8 +1,8 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import CheckCircleIcon from '$lib/icons/check-circle.svelte';
-  import XCircleIcon from '$lib/icons/close-circle.svelte';
-  import LockClosedIcon from '$lib/icons/lock-close.svelte';
+  import CloseCircleIcon from '$lib/icons/close-circle.svelte';
+  import LockCloseIcon from '$lib/icons/lock-close.svelte';
   import LockOpenIcon from '$lib/icons/lock-open.svelte';
   import PencilIcon from '$lib/icons/pencil.svelte';
   import TrashIcon from '$lib/icons/trash.svelte';
@@ -46,7 +46,7 @@
                 </button>
               {:else}
                 <button class="text-red-600 dark:text-red-500">
-                  <XCircleIcon />
+                  <CloseCircleIcon />
                 </button>
               {/if}
             </form>
@@ -63,7 +63,7 @@
                 </button>
               {:else}
                 <button class="text-red-600 dark:text-red-500">
-                  <LockClosedIcon />
+                  <LockCloseIcon />
                 </button>
               {/if}
             </form>
