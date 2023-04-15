@@ -6,51 +6,35 @@
   import PencilIcon from '$lib/icons/pencil.svelte';
   import TrashIcon from '$lib/icons/trash.svelte';
   import XCircleIcon from '$lib/icons/x-circle.svelte';
-  import {
-    Button,
-    Checkbox,
-    Modal,
-    TableBody,
-    TableBodyCell,
-    TableBodyRow,
-    TableHead,
-    TableHeadCell,
-    TableSearch,
-  } from 'flowbite-svelte';
   import type { PageServerData } from './$types';
 
   export let data: PageServerData;
-  let searchTerm = '';
-  $: filteredUsers = data?.users.filter(
-    (user) => user.username.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-  );
-  let changeRoleModal = false;
 </script>
 
-<div class="pl-10 pr-10">
-  <TableSearch placeholder="Search by maker name" hoverable={true} bind:inputValue={searchTerm}>
-    <TableHead>
-      <TableHeadCell />
-      <TableHeadCell>ID</TableHeadCell>
-      <TableHeadCell>First name</TableHeadCell>
-      <TableHeadCell>Last name</TableHeadCell>
-      <TableHeadCell>username</TableHeadCell>
-      <TableHeadCell>Email</TableHeadCell>
-      <TableHeadCell>Activated</TableHeadCell>
-      <TableHeadCell>Locked</TableHeadCell>
-      <TableHeadCell>Roles</TableHeadCell>
-      <TableHeadCell />
-    </TableHead>
-    <TableBody>
-      {#each filteredUsers as user}
-        <TableBodyRow>
-          <TableBodyCell class="w-10"><Checkbox /></TableBodyCell>
-          <TableBodyCell>{user.id}</TableBodyCell>
-          <TableBodyCell>{user.firstName}</TableBodyCell>
-          <TableBodyCell>{user.lastName}</TableBodyCell>
-          <TableBodyCell>{user.username}</TableBodyCell>
-          <TableBodyCell>{user.email}</TableBodyCell>
-          <TableBodyCell>
+<div class="overflow-x-auto p-10">
+  <table class="table-zebra table w-full">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Activated</th>
+        <th>Locked</th>
+        <th>Roles</th>
+        <th />
+      </tr>
+    </thead>
+    <tbody>
+      {#each data.users as user}
+        <tr>
+          <th>{user.id}</th>
+          <th>{user.firstName}</th>
+          <th>{user.lastName}</th>
+          <th>{user.username}</th>
+          <th>{user.email}</th>
+          <th>
             <form
               method="POST"
               action="?/{user.activated ? 'deactivate' : 'activate'}&usernames={user.username}"
@@ -66,8 +50,8 @@
                 </button>
               {/if}
             </form>
-          </TableBodyCell>
-          <TableBodyCell>
+          </th>
+          <th>
             <form
               method="POST"
               action="?/{user.nonLocked ? 'lock' : 'unlock'}&usernames={user.username}"
@@ -83,45 +67,26 @@
                 </button>
               {/if}
             </form>
-          </TableBodyCell>
-          <TableBodyCell>
+          </th>
+          <th>
             <div class="flex gap-2">
               {#each user.roles as role}
                 {`${role.name} `}
               {/each}
-              <button
-                on:click={() => (changeRoleModal = true)}
-                class="text-blue-600 dark:text-blue-500"
-              >
+              <button on:click={() => alert('modal')} class="text-blue-600 dark:text-blue-500">
                 <PencilIcon />
               </button>
             </div>
-          </TableBodyCell>
-          <TableBodyCell class="w-10">
+          </th>
+          <th>
             <form method="POST" action="?/delete&usernames={user.username}" use:enhance>
               <button class="text-red-600 dark:text-red-500">
                 <TrashIcon />
               </button>
             </form>
-          </TableBodyCell>
-        </TableBodyRow>
+          </th>
+        </tr>
       {/each}
-    </TableBody>
-  </TableSearch>
+    </tbody>
+  </table>
 </div>
-
-<Modal bind:open={changeRoleModal} size="xs" autoclose={false} class="w-full">
-  <form class="flex flex-col space-y-6" action="?/change-role">
-    <h3 class="p-0 text-xl font-medium text-gray-900 dark:text-white">Change user roles</h3>
-    <ul
-      class="divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white dark:divide-gray-600 dark:border-gray-600 dark:bg-gray-800"
-    >
-      <li><Checkbox class="p-3">ADMIN</Checkbox></li>
-      <li><Checkbox class="p-3">USER</Checkbox></li>
-    </ul>
-    <Button type="submit" class="w-full1">Change</Button>
-  </form>
-</Modal>
-
-<style>
-</style>

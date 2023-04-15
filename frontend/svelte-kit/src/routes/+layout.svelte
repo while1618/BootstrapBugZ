@@ -2,8 +2,8 @@
   import { userStore } from '$lib/stores/user';
   import '../app.css';
 
-  import AuthNavbar from '$lib/components/navbar/AuthNavbar.svelte';
-  import NoAuthNavbar from '$lib/components/navbar/NoAuthNavbar.svelte';
+  import GuestNavbar from '$lib/components/GuestNavbar.svelte';
+  import UserNavbar from '$lib/components/UserNavbar.svelte';
   import { beforeUpdate } from 'svelte';
   import type { LayoutData } from './$types';
 
@@ -13,11 +13,11 @@
   });
 </script>
 
-<div class="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-800">
+<div class="flex h-screen flex-col overflow-hidden bg-base-200">
   {#if data.user}
-    <AuthNavbar />
+    <UserNavbar />
   {:else}
-    <NoAuthNavbar />
+    <GuestNavbar />
   {/if}
   <slot />
 </div>

@@ -8,7 +8,7 @@
 <div class="hero min-h-screen">
   <div class="hero-content text-center">
     <div class="max-w-md">
-      <form class="flex flex-col gap-4" method="POST" action="?/signUp" use:enhance>
+      <form class="flex flex-col gap-4" method="POST" action="?/updateProfile" use:enhance>
         <div class="form-control w-full max-w-xs">
           <label for="firstName" class="label">
             <span class="label-text">First name</span>
@@ -77,40 +77,6 @@
           {/if}
         </div>
 
-        <div class="form-control w-full max-w-xs">
-          <label for="password" class="label">
-            <span class="label-text">Password</span>
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="input-bordered input w-full max-w-xs"
-          />
-          {#if form?.errors?.password}
-            <label for="password" class="label">
-              <span class="label-text text-error">{form.errors.password[0]}</span>
-            </label>
-          {/if}
-        </div>
-
-        <div class="form-control w-full max-w-xs">
-          <label for="confirmPassword" class="label">
-            <span class="label-text">Confirm password</span>
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            class="input-bordered input w-full max-w-xs"
-          />
-          {#if form?.errors?.confirmPassword}
-            <label for="confirmPassword" class="label">
-              <span class="label-text text-error">{form.errors.confirmPassword[0]}</span>
-            </label>
-          {/if}
-        </div>
-
         {#if form?.errorMessage}
           {#each form.errorMessage.details as error}
             <div class="flex">
@@ -119,7 +85,7 @@
           {/each}
         {/if}
 
-        <button class="btn-primary btn">Sign up</button>
+        <button class="btn-primary btn">Update</button>
       </form>
     </div>
   </div>

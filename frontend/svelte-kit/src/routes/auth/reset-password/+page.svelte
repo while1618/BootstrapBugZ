@@ -1,66 +1,71 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import { page } from '$app/stores';
-  import { Button, Card, FloatingLabelInput } from 'flowbite-svelte';
   import type { ActionData } from './$types';
 
   export let form: ActionData;
   export let token = $page.url.searchParams.get('token');
 </script>
 
-<div class="flex justify-center pt-10">
-  <Card
-    size="sm"
-    color="none"
-    class="w-full border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800"
-  >
-    <form
-      class="flex flex-col space-y-6"
-      method="POST"
-      action="?/resetPassword&token={token}"
-      use:enhance
-    >
-      <h3 class="grid justify-items-center p-0 text-xl font-medium text-gray-900 dark:text-white">
-        Reset password
-      </h3>
-      <div>
-        <FloatingLabelInput
-          class="space-y-2"
-          style="standard"
-          id="password"
-          name="password"
-          type="password"
-          label="Password"
-        />
-        {#if form?.errors?.password}
-          <p class="mt-2 text-sm text-red-600">{form.errors.password[0]}</p>
-        {/if}
-      </div>
-      <div>
-        <FloatingLabelInput
-          class="space-y-2"
-          style="standard"
-          id="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          label="Confirm password"
-        />
-        {#if form?.errors?.confirmPassword}
-          <p class="mt-2 text-sm text-red-600">{form.errors.confirmPassword[0]}</p>
-        {/if}
+<div class="hero min-h-screen">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <form
+        class="flex flex-col gap-4"
+        method="POST"
+        action="?/resetPassword&token={token}"
+        use:enhance
+      >
+        <div class="form-control w-full max-w-xs">
+          <label for="password" class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="input-bordered input w-full max-w-xs"
+          />
+          {#if form?.errors?.password}
+            <label for="password" class="label">
+              <span class="label-text text-error">{form.errors.password[0]}</span>
+            </label>
+          {/if}
+        </div>
+
+        <div class="form-control w-full max-w-xs">
+          <label for="confirmPassword" class="label">
+            <span class="label-text">Confirm password</span>
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            class="input-bordered input w-full max-w-xs"
+          />
+          {#if form?.errors?.confirmPassword}
+            <label for="confirmPassword" class="label">
+              <span class="label-text text-error">{form.errors.confirmPassword[0]}</span>
+            </label>
+          {/if}
+        </div>
+
         {#if form?.errors?.token}
-          <p class="mt-2 text-sm text-red-600">{form.errors.token[0]}</p>
+          <div class="flex">
+            <p class="label-text text-error">{form.errors.token[0]}</p>
+          </div>
         {/if}
+
         {#if form?.errorMessage}
           {#each form.errorMessage.details as error}
-            <p class="mt-2 text-sm text-red-600">{error.message}</p>
+            <div class="flex">
+              <p class="label-text text-error">{error.message}</p>
+            </div>
           {/each}
         {/if}
-      </div>
-      <Button type="submit">Reset password</Button>
-    </form>
-  </Card>
-</div>
 
-<style>
-</style>
+        <button class="btn-primary btn">Reset password</button>
+      </form>
+    </div>
+  </div>
+</div>
