@@ -8,7 +8,6 @@ const config = {
     },
   },
   plugins: [require('daisyui')],
-  darkMode: 'class',
 };
 
 module.exports = config;
