@@ -52,7 +52,7 @@
               <p class="label-text text-error">{error.message}</p>
               {#if error.message === en['user.notActivated']}
                 <a
-                  href="/resend-confirmation-email?usernameOrEmail={usernameOrEmail}"
+                  href="/auth/resend-confirmation-email?usernameOrEmail={usernameOrEmail}"
                   class="label-text text-info hover:underline"
                 >
                   Resend confirmation email
@@ -66,9 +66,9 @@
 
         <div class="flex gap-4">
           <span class="label-text">
-            Not registered? <a href="/sign-up" class="text-info hover:underline">Sign up</a>
+            Not registered? <a href="/auth/sign-up" class="text-info hover:underline">Sign up</a>
           </span>
-          <a href="/forgot-password" class="label-text ml-auto text-info hover:underline">
+          <a href="/auth/forgot-password" class="label-text ml-auto text-info hover:underline">
             Forgot password?
           </a>
         </div>
