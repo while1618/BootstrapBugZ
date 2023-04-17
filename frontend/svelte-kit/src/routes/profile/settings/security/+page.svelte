@@ -69,6 +69,9 @@
         {/if}
 
         <button class="btn-primary btn">Change password</button>
+        <a href="/auth/sign-out-from-all-devices" class="btn-primary btn">
+          Sign out form all devices
+        </a>
       </form>
     </div>
   </div>
