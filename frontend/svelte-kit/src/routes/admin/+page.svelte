@@ -9,6 +9,8 @@
   import type { PageServerData } from './$types';
 
   export let data: PageServerData;
+  let isModalOpen = false;
+  let selectedUser = '';
 </script>
 
 <div class="overflow-x-auto p-10">
@@ -79,14 +81,31 @@
             </div>
           </th>
           <th>
-            <form method="POST" action="?/delete&usernames={user.username}" use:enhance>
-              <button class="text-red-600 dark:text-red-500">
-                <TrashIcon />
-              </button>
-            </form>
+            <button
+              class="text-red-600 dark:text-red-500"
+              on:click={() => {
+                isModalOpen = true;
+                selectedUser = user.username;
+              }}
+            >
+              <TrashIcon />
+            </button>
           </th>
         </tr>
       {/each}
     </tbody>
   </table>
+</div>
+
+<div class="modal" class:modal-open={isModalOpen}>
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Delete user</h3>
+    <p class="py-4">Are you sure you want to delete user?</p>
+    <div class="modal-action">
+      <form method="POST" action="?/delete&usernames={selectedUser}" use:enhance>
+        <button class="btn" on:click={() => (isModalOpen = false)}>Yes</button>
+      </form>
+      <button class="btn" on:click={() => (isModalOpen = false)}>No</button>
+    </div>
+  </div>
 </div>
