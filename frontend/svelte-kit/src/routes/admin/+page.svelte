@@ -1,5 +1,6 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import Modal from '$lib/components/modal.svelte';
   import CheckCircleIcon from '$lib/icons/check-circle.svelte';
   import CloseCircleIcon from '$lib/icons/close-circle.svelte';
   import LockCloseIcon from '$lib/icons/lock-close.svelte';
@@ -9,7 +10,7 @@
   import type { PageServerData } from './$types';
 
   export let data: PageServerData;
-  let isModalOpen = false;
+  let showModal = false;
   let selectedUser = '';
 </script>
 
@@ -84,7 +85,7 @@
             <button
               class="text-red-600 dark:text-red-500"
               on:click={() => {
-                isModalOpen = true;
+                showModal = true;
                 selectedUser = user.username;
               }}
             >
@@ -97,15 +98,13 @@
   </table>
 </div>
 
-<div class="modal" class:modal-open={isModalOpen}>
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Delete user</h3>
+<Modal title="Delete user" open={showModal} on:close={() => (showModal = false)}>
+  <svelte:fragment slot="body">
     <p class="py-4">Are you sure you want to delete user?</p>
-    <div class="modal-action">
-      <form method="POST" action="?/delete&usernames={selectedUser}" use:enhance>
-        <button class="btn" on:click={() => (isModalOpen = false)}>Yes</button>
-      </form>
-      <button class="btn" on:click={() => (isModalOpen = false)}>No</button>
-    </div>
-  </div>
-</div>
+  </svelte:fragment>
+  <svelte:fragment slot="yesAction">
+    <form method="POST" action="?/delete&usernames={selectedUser}" use:enhance>
+      <button class="btn" on:click={() => (showModal = false)}>Yes</button>
+    </form>
+  </svelte:fragment>
+</Modal>
