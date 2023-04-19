@@ -102,9 +102,9 @@
   <svelte:fragment slot="body">
     <p class="py-4">Are you sure you want to delete user?</p>
   </svelte:fragment>
-  <svelte:fragment slot="yesAction">
+  <svelte:fragment slot="confirmAction">
     <form method="POST" action="?/delete&usernames={selectedUser}" use:enhance>
-      <button class="btn" on:click={() => (showModal = false)}>Yes</button>
+      <button class="btn" on:click={() => (showModal = false)}>Delete</button>
     </form>
   </svelte:fragment>
 </Modal>

@@ -11,8 +11,8 @@
     <h3 class="text-lg font-bold">{title}</h3>
     <slot name="body" />
     <div class="modal-action">
-      <slot name="yesAction" />
-      <button class="btn" on:click={() => dispatch('close')}>No</button>
+      <slot name="confirmAction" />
+      <button class="btn text-error" on:click={() => dispatch('close')}>Cancel</button>
     </div>
   </div>
 </div>
