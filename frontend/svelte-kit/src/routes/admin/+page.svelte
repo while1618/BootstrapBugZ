@@ -10,8 +10,12 @@
   import type { PageServerData } from './$types';
 
   export let data: PageServerData;
-  let openModal = false;
   let selectedUser = '';
+  let open = false;
+
+  function toggleModal(): void {
+    open = !open;
+  }
 </script>
 
 <div class="overflow-x-auto p-10">
@@ -85,7 +89,7 @@
             <button
               class="text-red-600 dark:text-red-500"
               on:click|stopPropagation={() => {
-                openModal = true;
+                toggleModal();
                 selectedUser = user.username;
               }}
             >
@@ -98,13 +102,13 @@
   </table>
 </div>
 
-<Modal bind:openModal title="Delete user" closeButtonText="Cancel">
+<Modal bind:open title="Delete user" closeButtonText="Cancel">
   <svelte:fragment slot="body">
     <p class="py-4">Are you sure you want to delete user?</p>
   </svelte:fragment>
   <svelte:fragment slot="confirmAction">
     <form method="POST" action="?/delete&usernames={selectedUser}" use:enhance>
-      <button class="btn text-error" on:click={() => (openModal = false)}>Delete</button>
+      <button class="btn text-error" on:click={toggleModal}>Delete</button>
     </form>
   </svelte:fragment>
 </Modal>

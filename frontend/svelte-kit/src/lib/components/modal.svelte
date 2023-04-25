@@ -1,16 +1,32 @@
 <script lang="ts">
-  export let openModal = false;
+  export let open = false;
   export let title = '';
   export let closeButtonText = '';
+
+  function closeModal(): void {
+    open = false;
+  }
+
+  function handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') closeModal();
+  }
 </script>
 
-<div class="modal modal-bottom sm:modal-middle" class:modal-open={openModal}>
+<svelte:window on:keydown={handleKeyDown} />
+
+<div
+  class="modal modal-bottom sm:modal-middle"
+  class:modal-open={open}
+  on:click|self={closeModal}
+  on:keydown={handleKeyDown}
+  tabindex="-1"
+>
   <div class="modal-box">
     <h3 class="text-lg font-bold">{title}</h3>
     <slot name="body" />
     <div class="modal-action">
       <slot name="confirmAction" />
-      <button class="btn" on:click={() => (openModal = false)}>{closeButtonText}</button>
+      <button class="btn" on:click={closeModal}>{closeButtonText}</button>
     </div>
   </div>
 </div>
