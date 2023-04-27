@@ -102,13 +102,14 @@
   </table>
 </div>
 
-<Modal bind:open title="Delete user" closeButtonText="Cancel">
+<Modal bind:open title="Delete user">
   <svelte:fragment slot="body">
-    <p class="py-4">Are you sure you want to delete user?</p>
+    <p class="py-4">Are you sure you want to delete {selectedUser}?</p>
   </svelte:fragment>
-  <svelte:fragment slot="confirmAction">
+  <svelte:fragment slot="actions">
     <form method="POST" action="?/delete&usernames={selectedUser}" use:enhance>
-      <button class="btn text-error" on:click={toggleModal}>Delete</button>
+      <button type="submit" class="btn text-error" on:click={toggleModal}>Delete</button>
+      <button type="button" class="btn" on:click={toggleModal}>Cancel</button>
     </form>
   </svelte:fragment>
 </Modal>

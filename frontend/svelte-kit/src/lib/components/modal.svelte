@@ -1,7 +1,6 @@
 <script lang="ts">
   export let open = false;
   export let title = '';
-  export let closeButtonText = '';
 
   function closeModal(): void {
     open = false;
@@ -25,8 +24,7 @@
     <h3 class="text-lg font-bold">{title}</h3>
     <slot name="body" />
     <div class="modal-action">
-      <slot name="confirmAction" />
-      <button class="btn" on:click={closeModal}>{closeButtonText}</button>
+      <slot name="actions" />
     </div>
   </div>
 </div>
