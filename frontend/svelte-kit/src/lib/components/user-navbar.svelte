@@ -32,7 +32,7 @@
         {#if isAdmin}
           <li><a href="/admin"><ChartIcon /> Admin</a></li>
         {/if}
-        <li><a href="/profile/settings/edit"><SettingsIcon /> Settings</a></li>
+        <li><a href="/profile/settings/personal"><SettingsIcon /> Settings</a></li>
         <li><a href="/auth/sign-out"><SignOutIcon /> Sign out</a></li>
       </ul>
     </div>
