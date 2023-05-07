@@ -18,11 +18,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 @ExtendWith(MockitoExtension.class)
 class EmailServiceTest {
   @Mock private JavaMailSender mailSender;
-
   @InjectMocks private EmailServiceImpl emailService;
 
   @Test
-  void itShouldSendHtmlEmail() {
+  void sendHtmlEmail() {
     final var to = "user";
     final var subject = "subject";
     final var body =

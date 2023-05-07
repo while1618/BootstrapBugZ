@@ -15,11 +15,10 @@ import org.springframework.context.i18n.LocaleContextHolder;
 @ExtendWith(MockitoExtension.class)
 class MessageServiceTest {
   @Mock private MessageSource messageSource;
-
   @InjectMocks private MessageServiceImpl messageService;
 
   @Test
-  void itShouldGetMessage() {
+  void getMessage() {
     when(messageSource.getMessage("{token.invalid}", null, LocaleContextHolder.getLocale()))
         .thenReturn("Invalid token.");
     final var actualMessage = messageService.getMessage("{token.invalid}");
