@@ -29,6 +29,7 @@
         <th>Email</th>
         <th>Activated</th>
         <th>Locked</th>
+        <th>Created at</th>
         <th>Roles</th>
         <th />
       </tr>
@@ -75,6 +76,7 @@
               {/if}
             </form>
           </th>
+          <th>{user.createdAt}</th>
           <th>
             <div class="flex gap-2">
               {#each user.roles as role}

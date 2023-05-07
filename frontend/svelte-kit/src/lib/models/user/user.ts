@@ -8,5 +8,6 @@ export interface UserDTO {
   email: string;
   activated: boolean;
   nonLocked: boolean;
+  createdAt: Date;
   roles: RoleDTO[];
 }
