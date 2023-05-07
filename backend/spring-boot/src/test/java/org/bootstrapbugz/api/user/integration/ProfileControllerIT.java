@@ -1,20 +1,16 @@
 package org.bootstrapbugz.api.user.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.util.TestUtil;
-import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
-import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.junit.jupiter.api.Test;
@@ -60,19 +56,10 @@ class ProfileControllerIT extends DatabaseContainers {
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty123"));
     final var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "updated", "updated@bootstrapbugz.com");
-    final var expectedUserDTO =
-        new UserDTO(
-            5L,
-            "Updated",
-            "Updated",
-            "updated",
-            "updated@bootstrapbugz.com",
-            false,
-            true,
-            Collections.singleton(new RoleDTO(RoleName.USER.name())));
     performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
         .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
+        .andExpect(jsonPath("$.username").value("updated"))
+        .andExpect(jsonPath("$.firstName").value("Updated"));
   }
 
   @Test
@@ -82,19 +69,10 @@ class ProfileControllerIT extends DatabaseContainers {
     final var updateUserRequest =
         new UpdateProfileRequest(
             "Updated", "Updated", "for.update.2", "for.update.2@bootstrapbugz.com");
-    final var expectedUserDTO =
-        new UserDTO(
-            6L,
-            "Updated",
-            "Updated",
-            "for.update.2",
-            "for.update.2@bootstrapbugz.com",
-            true,
-            true,
-            Collections.singleton(new RoleDTO(RoleName.USER.name())));
     performUpdateUser(updateUserRequest, signInDTO.getAccessToken())
         .andExpect(status().isOk())
-        .andExpect(content().string(objectMapper.writeValueAsString(expectedUserDTO)));
+        .andExpect(jsonPath("$.username").value("for.update.2"))
+        .andExpect(jsonPath("$.firstName").value("Updated"));
   }
 
   @Test

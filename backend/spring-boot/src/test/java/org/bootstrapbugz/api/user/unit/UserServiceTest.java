@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,9 +34,29 @@ class UserServiceTest {
   private final Set<Role> userRoles = Set.of(new Role(RoleName.USER));
   private final Set<Role> adminRoles = Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN));
   private final User user =
-      new User(1L, "Test", "Test", "test", "test@test.com", null, true, true, userRoles);
+      new User(
+          1L,
+          "Test",
+          "Test",
+          "test",
+          "test@test.com",
+          null,
+          true,
+          true,
+          LocalDateTime.now(),
+          userRoles);
   private final User admin =
-      new User(2L, "Admin", "Admin", "admin", "admin@admin.com", null, true, true, adminRoles);
+      new User(
+          2L,
+          "Admin",
+          "Admin",
+          "admin",
+          "admin@admin.com",
+          null,
+          true,
+          true,
+          LocalDateTime.now(),
+          adminRoles);
   @Mock private UserRepository userRepository;
   @Mock private RoleRepository roleRepository;
   @Mock private MessageService messageService;
@@ -48,8 +69,9 @@ class UserServiceTest {
   void itShouldFindAllUsersWithoutRolesAndEmails() {
     final var expectedUserDTOs =
         List.of(
-            new UserDTO(1L, "Test", "Test", "test", null, true, true, null),
-            new UserDTO(2L, "Admin", "Admin", "admin", null, true, true, null));
+            new UserDTO(1L, "Test", "Test", "test", null, true, true, LocalDateTime.now(), null),
+            new UserDTO(
+                2L, "Admin", "Admin", "admin", null, true, true, LocalDateTime.now(), null));
     when(userRepository.findAll()).thenReturn(List.of(user, admin));
     final var actualUserDTOs = userService.findAll();
     assertThat(actualUserDTOs).isEqualTo(expectedUserDTOs);
@@ -63,9 +85,26 @@ class UserServiceTest {
         Set.of(new RoleDTO(RoleName.USER.name()), new RoleDTO(RoleName.ADMIN.name()));
     final var expectedUserDTOs =
         List.of(
-            new UserDTO(1L, "Test", "Test", "test", "test@test.com", true, true, userRoleDTOs),
             new UserDTO(
-                2L, "Admin", "Admin", "admin", "admin@admin.com", true, true, adminRoleDTOs));
+                1L,
+                "Test",
+                "Test",
+                "test",
+                "test@test.com",
+                true,
+                true,
+                LocalDateTime.now(),
+                userRoleDTOs),
+            new UserDTO(
+                2L,
+                "Admin",
+                "Admin",
+                "admin",
+                "admin@admin.com",
+                true,
+                true,
+                LocalDateTime.now(),
+                adminRoleDTOs));
     when(userRepository.findAllWithRoles()).thenReturn(List.of(user, admin));
     final var actualUserDTOs = userService.findAll();
     assertThat(actualUserDTOs).isEqualTo(expectedUserDTOs);
@@ -75,7 +114,8 @@ class UserServiceTest {
   void itShouldFindUserByUsername_showEmail() {
     TestUtil.setAuth(auth, securityContext, user);
     final var expectedUserDTO =
-        new UserDTO(1L, "Test", "Test", "test", "test@test.com", true, true, null);
+        new UserDTO(
+            1L, "Test", "Test", "test", "test@test.com", true, true, LocalDateTime.now(), null);
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(user));
     final var actualUserDTO = userService.findByUsername("test");
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
@@ -83,7 +123,8 @@ class UserServiceTest {
 
   @Test
   void itShouldFindUserByUsername_hideEmail() {
-    final var expectedUserDTO = new UserDTO(2L, "Admin", "Admin", "admin", null, true, true, null);
+    final var expectedUserDTO =
+        new UserDTO(2L, "Admin", "Admin", "admin", null, true, true, LocalDateTime.now(), null);
     when(userRepository.findByUsername("admin")).thenReturn(Optional.of(admin));
     final var actualUserDTO = userService.findByUsername("admin");
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
@@ -94,7 +135,16 @@ class UserServiceTest {
     TestUtil.setAuth(auth, securityContext, admin);
     final var userRoleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
     final var expectedUserDTO =
-        new UserDTO(1L, "Test", "Test", "test", "test@test.com", true, true, userRoleDTOs);
+        new UserDTO(
+            1L,
+            "Test",
+            "Test",
+            "test",
+            "test@test.com",
+            true,
+            true,
+            LocalDateTime.now(),
+            userRoleDTOs);
     when(userRepository.findByUsernameWithRoles("test")).thenReturn(Optional.of(user));
     final var actualUserDTO = userService.findByUsername("test");
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);

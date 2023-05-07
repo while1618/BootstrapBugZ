@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
@@ -53,7 +54,16 @@ class AuthControllerIT extends DatabaseContainers {
             "Test", "Test", "test", "test@bootstrapbugz.com", "qwerty123", "qwerty123");
     final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
     final var expectedUserDTO =
-        new UserDTO(8L, "Test", "Test", "test", "test@bootstrapbugz.com", false, true, roleDTOs);
+        new UserDTO(
+            8L,
+            "Test",
+            "Test",
+            "test",
+            "test@bootstrapbugz.com",
+            false,
+            true,
+            LocalDateTime.now(),
+            roleDTOs);
     final var resultActions =
         mockMvc
             .perform(
@@ -320,7 +330,16 @@ class AuthControllerIT extends DatabaseContainers {
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
     final var expectedUserDTO =
-        new UserDTO(2L, "User", "User", "user", "user@bootstrapbugz.com", true, true, roleDTOs);
+        new UserDTO(
+            2L,
+            "User",
+            "User",
+            "user",
+            "user@bootstrapbugz.com",
+            true,
+            true,
+            LocalDateTime.now(),
+            roleDTOs);
     final var resultActions =
         mockMvc
             .perform(

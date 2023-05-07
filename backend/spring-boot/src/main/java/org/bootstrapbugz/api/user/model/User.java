@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,8 @@ public class User implements Serializable {
 
   private boolean nonLocked = true;
 
+  private LocalDateTime createdAt = LocalDateTime.now();
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "user_roles",
@@ -77,6 +80,6 @@ public class User implements Serializable {
   @Override
   public int hashCode() {
     return Objects.hashCode(
-        id, firstName, lastName, username, email, password, activated, nonLocked, roles);
+        id, firstName, lastName, username, email, password, activated, nonLocked, createdAt, roles);
   }
 }

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -34,11 +35,41 @@ class AdminServiceTest {
   private final Set<Role> userRoles = Set.of(new Role(RoleName.USER));
   private final Set<Role> adminRoles = Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN));
   private final User admin =
-      new User(1L, "Admin", "Admin", "admin", "admin@admin.com", null, true, true, adminRoles);
+      new User(
+          1L,
+          "Admin",
+          "Admin",
+          "admin",
+          "admin@admin.com",
+          null,
+          true,
+          true,
+          LocalDateTime.now(),
+          adminRoles);
   private final User user =
-      new User(2L, "Test", "Test", "test", "test@test.com", null, true, true, userRoles);
+      new User(
+          2L,
+          "Test",
+          "Test",
+          "test",
+          "test@test.com",
+          null,
+          true,
+          true,
+          LocalDateTime.now(),
+          userRoles);
   private final User restricted =
-      new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, false, false, userRoles);
+      new User(
+          3L,
+          "Test 2",
+          "Test 2",
+          "test2",
+          "test2@test.com",
+          null,
+          false,
+          false,
+          LocalDateTime.now(),
+          userRoles);
 
   @Mock private UserRepository userRepository;
   @Mock private RoleRepository roleRepository;
@@ -54,7 +85,17 @@ class AdminServiceTest {
     final var updateRolesRequest =
         new UpdateRoleRequest(Collections.singleton("test"), Set.of(RoleName.USER, RoleName.ADMIN));
     final var expectedUser =
-        new User(2L, "Test", "Test", "test", "test@test.com", null, true, true, adminRoles);
+        new User(
+            2L,
+            "Test",
+            "Test",
+            "test",
+            "test@test.com",
+            null,
+            true,
+            true,
+            LocalDateTime.now(),
+            adminRoles);
     when(userRepository.findAllByUsernameIn(updateRolesRequest.getUsernames()))
         .thenReturn(List.of(user));
     when(roleRepository.findAllByNameIn(updateRolesRequest.getRoleNames()))
@@ -68,7 +109,17 @@ class AdminServiceTest {
   void itShouldLockUsers() {
     final var adminRequest = new AdminRequest(Collections.singleton("test"));
     final var expectedUser =
-        new User(2L, "Test", "Test", "test", "test@test.com", null, true, false, userRoles);
+        new User(
+            2L,
+            "Test",
+            "Test",
+            "test",
+            "test@test.com",
+            null,
+            true,
+            false,
+            LocalDateTime.now(),
+            userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames())).thenReturn(List.of(user));
     adminService.lock(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
@@ -79,7 +130,17 @@ class AdminServiceTest {
   void itShouldUnlockUsers() {
     final var adminRequest = new AdminRequest(Collections.singleton("test2"));
     final var expectedUser =
-        new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, false, true, userRoles);
+        new User(
+            3L,
+            "Test 2",
+            "Test 2",
+            "test2",
+            "test2@test.com",
+            null,
+            false,
+            true,
+            LocalDateTime.now(),
+            userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
         .thenReturn(List.of(restricted));
     adminService.unlock(adminRequest);
@@ -91,7 +152,17 @@ class AdminServiceTest {
   void itShouldActivateUsers() {
     final var adminRequest = new AdminRequest(Collections.singleton("test2"));
     final var expectedUser =
-        new User(3L, "Test 2", "Test 2", "test2", "test2@test.com", null, true, false, userRoles);
+        new User(
+            3L,
+            "Test 2",
+            "Test 2",
+            "test2",
+            "test2@test.com",
+            null,
+            true,
+            false,
+            LocalDateTime.now(),
+            userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
         .thenReturn(List.of(restricted));
     adminService.activate(adminRequest);
@@ -103,7 +174,17 @@ class AdminServiceTest {
   void itShouldDeactivateUsers() {
     final var adminRequest = new AdminRequest(Collections.singleton("test"));
     final var expectedUser =
-        new User(2L, "Test", "Test", "test", "test@test.com", null, false, true, userRoles);
+        new User(
+            2L,
+            "Test",
+            "Test",
+            "test",
+            "test@test.com",
+            null,
+            false,
+            true,
+            LocalDateTime.now(),
+            userRoles);
     when(userRepository.findAllByUsernameIn(adminRequest.getUsernames())).thenReturn(List.of(user));
     adminService.deactivate(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());

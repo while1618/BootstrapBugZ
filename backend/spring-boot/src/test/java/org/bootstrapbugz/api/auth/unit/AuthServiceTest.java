@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -115,14 +116,34 @@ class AuthServiceTest {
     password = bCryptPasswordEncoder.encode("qwerty123");
     role = new Role(RoleName.USER);
     roles = Set.of(role);
-    user = new User(1L, "Test", "Test", "test", "test@test.com", password, false, true, roles);
+    user =
+        new User(
+            1L,
+            "Test",
+            "Test",
+            "test",
+            "test@test.com",
+            password,
+            false,
+            true,
+            LocalDateTime.now(),
+            roles);
   }
 
   @Test
   void itShouldSignUp() {
     final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
     final var expectedUserDTO =
-        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDTOs);
+        new UserDTO(
+            1L,
+            "Test",
+            "Test",
+            "test",
+            "test@test.com",
+            false,
+            true,
+            LocalDateTime.now(),
+            roleDTOs);
     final var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@test.com", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(role));
@@ -162,7 +183,17 @@ class AuthServiceTest {
   @Test
   void itShouldConfirmRegistration() {
     final var expectedUser =
-        new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
+        new User(
+            1L,
+            "Test",
+            "Test",
+            "test",
+            "test@test.com",
+            password,
+            true,
+            true,
+            LocalDateTime.now(),
+            roles);
     final var token = confirmRegistrationTokenService.create(1L);
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
     authService.confirmRegistration(new ConfirmRegistrationRequest(token));
@@ -263,7 +294,16 @@ class AuthServiceTest {
     TestUtil.setAuth(auth, securityContext, user);
     final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
     final var expectedUserDTO =
-        new UserDTO(1L, "Test", "Test", "test", "test@test.com", false, true, roleDTOs);
+        new UserDTO(
+            1L,
+            "Test",
+            "Test",
+            "test",
+            "test@test.com",
+            false,
+            true,
+            LocalDateTime.now(),
+            roleDTOs);
     final var actualUserDTO = authService.signedInUser();
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }

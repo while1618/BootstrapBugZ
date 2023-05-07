@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.user.integration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +56,7 @@ class UserRepositoryIT extends DatabaseContainers {
           null,
           true,
           true,
+          LocalDateTime.now(),
           Collections.singleton(userRole));
 
   @Autowired private UserRepository userRepository;
@@ -89,6 +91,7 @@ class UserRepositoryIT extends DatabaseContainers {
         .usingRecursiveComparison()
         .ignoringFields("id")
         .ignoringFields("password")
+        .ignoringFields("createdAt")
         .ignoringFields("roles")
         .isEqualTo(expectedUser);
   }
@@ -100,6 +103,7 @@ class UserRepositoryIT extends DatabaseContainers {
         .usingRecursiveComparison()
         .ignoringFields("id")
         .ignoringFields("password")
+        .ignoringFields("createdAt")
         .ignoringFields("roles")
         .isEqualTo(expectedUser);
   }
@@ -111,6 +115,7 @@ class UserRepositoryIT extends DatabaseContainers {
         .usingRecursiveComparison()
         .ignoringFields("id")
         .ignoringFields("password")
+        .ignoringFields("createdAt")
         .ignoringFields("roles.id")
         .isEqualTo(expectedUser);
   }
@@ -122,6 +127,7 @@ class UserRepositoryIT extends DatabaseContainers {
         .usingRecursiveComparison()
         .ignoringFields("id")
         .ignoringFields("password")
+        .ignoringFields("createdAt")
         .ignoringFields("roles")
         .isEqualTo(expectedUser);
   }

@@ -17,9 +17,10 @@ CREATE TABLE users
     last_name  varchar(128) NOT NULL,
     username   varchar(128) NOT NULL,
     email      varchar(128) NOT NULL,
-    password   VARCHAR(128) NOT NULL,
+    password   varchar(128) NOT NULL,
     activated  boolean      NOT NULL,
-    non_locked boolean      NOT NULL
+    non_locked boolean      NOT NULL,
+    created_at timestamp    NOT NULL
 );
 
 CREATE TABLE user_roles

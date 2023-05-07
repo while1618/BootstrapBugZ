@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -61,14 +62,35 @@ class ProfileServiceTest {
   void setUp() {
     password = bCryptPasswordEncoder.encode("qwerty123");
     roles = Collections.singleton(new Role(RoleName.USER));
-    user = new User(1L, "Test", "Test", "test", "test@test.com", password, true, true, roles);
+    user =
+        new User(
+            1L,
+            "Test",
+            "Test",
+            "test",
+            "test@test.com",
+            password,
+            true,
+            true,
+            LocalDateTime.now(),
+            roles);
     TestUtil.setAuth(auth, securityContext, user);
   }
 
   @Test
   void itShouldUpdateUser_newUsernameAndEmail() {
     final var expectedUser =
-        new User(1L, "User", "User", "user", "user@user.com", password, false, true, roles);
+        new User(
+            1L,
+            "User",
+            "User",
+            "user",
+            "user@user.com",
+            password,
+            false,
+            true,
+            LocalDateTime.now(),
+            roles);
     final var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
     when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
@@ -81,7 +103,17 @@ class ProfileServiceTest {
   @Test
   void itShouldUpdateUser_sameUsernameAndEmail() {
     final var expectedUser =
-        new User(1L, "User", "User", "test", "test@test.com", password, true, true, roles);
+        new User(
+            1L,
+            "User",
+            "User",
+            "test",
+            "test@test.com",
+            password,
+            true,
+            true,
+            LocalDateTime.now(),
+            roles);
     final var updateUserRequest = new UpdateProfileRequest("User", "User", "test", "test@test.com");
     when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
     profileService.update(updateUserRequest);
