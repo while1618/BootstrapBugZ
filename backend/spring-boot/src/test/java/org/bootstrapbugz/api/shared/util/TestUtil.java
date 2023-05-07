@@ -6,11 +6,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Set;
 import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
+import org.bootstrapbugz.api.user.model.Role;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,5 +56,27 @@ public class TestUtil {
     when(securityContext.getAuthentication()).thenReturn(auth);
     SecurityContextHolder.setContext(securityContext);
     when(auth.getPrincipal()).thenReturn(UserPrincipal.create(user));
+  }
+
+  public static User getAdminUser() {
+    return new User()
+        .setId(1L)
+        .setFirstName("Admin")
+        .setLastName("Admin")
+        .setUsername("admin")
+        .setEmail("admin@localhost")
+        .setActivated(true)
+        .setRoles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
+  }
+
+  public static User getTestUser() {
+    return new User()
+        .setId(2L)
+        .setFirstName("Test")
+        .setLastName("Test")
+        .setUsername("test")
+        .setEmail("test@localhost")
+        .setActivated(true)
+        .setRoles(Set.of(new Role(RoleName.USER)));
   }
 }

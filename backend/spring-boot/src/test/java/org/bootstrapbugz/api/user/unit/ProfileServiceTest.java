@@ -6,13 +6,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
+import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -36,6 +35,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,52 +47,33 @@ class ProfileServiceTest {
   @Mock private AccessTokenService accessTokenService;
   @Mock private RefreshTokenService refreshTokenService;
   @Mock private ConfirmRegistrationTokenService confirmRegistrationTokenService;
+  @InjectMocks private ProfileServiceImpl profileService;
   @Mock private Authentication auth;
   @Mock private SecurityContext securityContext;
-
-  @InjectMocks private ProfileServiceImpl profileService;
-
   @Captor private ArgumentCaptor<User> userArgumentCaptor;
-
-  private String password;
-  private Set<Role> roles;
-  private User user;
 
   @BeforeEach
   void setUp() {
-    password = bCryptPasswordEncoder.encode("qwerty123");
-    roles = Collections.singleton(new Role(RoleName.USER));
-    user =
-        new User(
-            1L,
-            "Test",
-            "Test",
-            "test",
-            "test@test.com",
-            password,
-            true,
-            true,
-            LocalDateTime.now(),
-            roles);
-    TestUtil.setAuth(auth, securityContext, user);
+    when(securityContext.getAuthentication()).thenReturn(auth);
+    SecurityContextHolder.setContext(securityContext);
+    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(TestUtil.getTestUser()));
   }
 
   @Test
-  void itShouldUpdateUser_newUsernameAndEmail() {
+  void updateUser_newUsernameAndEmail() {
     final var expectedUser =
-        new User(
-            1L,
-            "User",
-            "User",
-            "user",
-            "user@user.com",
-            password,
-            false,
-            true,
-            LocalDateTime.now(),
-            roles);
-    final var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
-    when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
+        new User()
+            .setId(2L)
+            .setFirstName("User")
+            .setLastName("User")
+            .setUsername("user")
+            .setEmail("user@localhost")
+            .setActivated(false)
+            .setRoles(Set.of(new Role(RoleName.USER)));
+    final var updateUserRequest =
+        new UpdateProfileRequest("User", "User", "user", "user@localhost");
+    when(userRepository.findByUsernameWithRoles("test"))
+        .thenReturn(Optional.of(TestUtil.getTestUser()));
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(false);
     profileService.update(updateUserRequest);
@@ -101,30 +82,31 @@ class ProfileServiceTest {
   }
 
   @Test
-  void itShouldUpdateUser_sameUsernameAndEmail() {
+  void updateUser_sameUsernameAndEmail() {
     final var expectedUser =
-        new User(
-            1L,
-            "User",
-            "User",
-            "test",
-            "test@test.com",
-            password,
-            true,
-            true,
-            LocalDateTime.now(),
-            roles);
-    final var updateUserRequest = new UpdateProfileRequest("User", "User", "test", "test@test.com");
-    when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
+        new User()
+            .setId(2L)
+            .setFirstName("User")
+            .setLastName("User")
+            .setUsername("test")
+            .setEmail("test@localhost")
+            .setActivated(true)
+            .setRoles(Set.of(new Role(RoleName.USER)));
+    final var updateUserRequest =
+        new UpdateProfileRequest("User", "User", "test", "test@localhost");
+    when(userRepository.findByUsernameWithRoles("test"))
+        .thenReturn(Optional.of(TestUtil.getTestUser()));
     profileService.update(updateUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
   }
 
   @Test
-  void updateUserShouldThrowBadRequest_usernameExists() {
-    final var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
-    when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
+  void updateUser_throwBadRequest_usernameExists() {
+    final var updateUserRequest =
+        new UpdateProfileRequest("Test", "Test", "admin", "test@localhost");
+    when(userRepository.findByUsernameWithRoles("test"))
+        .thenReturn(Optional.of(TestUtil.getTestUser()));
     when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> profileService.update(updateUserRequest))
@@ -133,10 +115,11 @@ class ProfileServiceTest {
   }
 
   @Test
-  void updateUserShouldThrowBadRequest_emailExists() {
-    final var updateUserRequest = new UpdateProfileRequest("User", "User", "user", "user@user.com");
-    when(userRepository.findByUsernameWithRoles(user.getUsername())).thenReturn(Optional.of(user));
-    when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
+  void updateUser_throwBadRequest_emailExists() {
+    final var updateUserRequest =
+        new UpdateProfileRequest("Test", "Test", "test", "admin@localhost");
+    when(userRepository.findByUsernameWithRoles("test"))
+        .thenReturn(Optional.of(TestUtil.getTestUser()));
     when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> profileService.update(updateUserRequest))
@@ -145,10 +128,12 @@ class ProfileServiceTest {
   }
 
   @Test
-  void itShouldChangePassword() {
+  void changePassword() {
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
-    when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+    final var testUser = TestUtil.getTestUser();
+    testUser.setPassword(bCryptPasswordEncoder.encode("qwerty123"));
+    when(userRepository.findByUsername("test")).thenReturn(Optional.of(testUser));
     profileService.changePassword(changePasswordRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(
@@ -159,11 +144,11 @@ class ProfileServiceTest {
   }
 
   @Test
-  void changePasswordShouldThrownBadRequest_wrongOldPassword() {
+  void changePassword_thrownBadRequest_wrongOldPassword() {
     when(messageService.getMessage("oldPassword.invalid")).thenReturn("Wrong old password.");
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123456", "qwerty1234", "qwerty1234");
-    when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+    when(userRepository.findByUsername("test")).thenReturn(Optional.of(TestUtil.getTestUser()));
     assertThatThrownBy(() -> profileService.changePassword(changePasswordRequest))
         .isInstanceOf(BadRequestException.class)
         .hasMessage("Wrong old password.");
