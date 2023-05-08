@@ -15,7 +15,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class ConfirmRegistrationTokenServiceTest {
   @Mock private ApplicationEventPublisher eventPublisher;
-
   @InjectMocks private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
 
   @BeforeEach
@@ -25,13 +24,13 @@ class ConfirmRegistrationTokenServiceTest {
   }
 
   @Test
-  void itShouldCreateToken() {
+  void createToken() {
     final var token = confirmRegistrationTokenService.create(1L);
     assertThat(token).isNotNull();
   }
 
   @Test
-  void itShouldCheckRefreshToken() {
+  void checkRefreshToken() {
     final var token = confirmRegistrationTokenService.create(1L);
     confirmRegistrationTokenService.check(token);
   }

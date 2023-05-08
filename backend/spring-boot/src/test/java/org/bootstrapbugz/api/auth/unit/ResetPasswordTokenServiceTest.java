@@ -26,7 +26,6 @@ class ResetPasswordTokenServiceTest {
   @Mock private UserBlacklistRepository userBlacklistRepository;
   @Mock private MessageService messageService;
   @Mock private ApplicationEventPublisher eventPublisher;
-
   @InjectMocks private ResetPasswordTokenServiceImpl resetPasswordTokenService;
 
   @BeforeEach
@@ -36,24 +35,24 @@ class ResetPasswordTokenServiceTest {
   }
 
   @Test
-  void itShouldCreateToken() {
+  void createToken() {
     final var token = resetPasswordTokenService.create(1L);
     assertThat(token).isNotNull();
   }
 
   @Test
-  void itShouldCheckToken_userNotInBlacklist() {
+  void checkToken_userNotInBlacklist() {
     final var token = resetPasswordTokenService.create(1L);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.empty());
     resetPasswordTokenService.check(token);
   }
 
   @Test
-  void itShouldCheckToken_userInBlacklistButTokenIsIssuedAfter() {
+  void checkToken_userInBlacklist_tokenIssuedAfterUserBlacklisted() {
     final var userBlacklist =
         new UserBlacklist()
             .setUserId(1L)
-            .setUpdatedAt(Instant.now().minusSeconds(1).truncatedTo(ChronoUnit.SECONDS))
+            .setUpdatedAt(Instant.now().truncatedTo(ChronoUnit.SECONDS).minusSeconds(10))
             .setTimeToLive(1000);
     final var token = resetPasswordTokenService.create(1L);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
@@ -61,13 +60,13 @@ class ResetPasswordTokenServiceTest {
   }
 
   @Test
-  void checkTokenShouldThrowUnauthorized_userInBlacklist() {
+  void checkToken_throwUnauthorized_userInBlacklist() {
     final var token = resetPasswordTokenService.create(1L);
     final var userBlacklist =
         new UserBlacklist()
             .setUserId(1L)
-            .setTimeToLive(1000)
-            .setUpdatedAt(Instant.now().truncatedTo(ChronoUnit.MILLIS).plusMillis(1));
+            .setUpdatedAt(Instant.now().truncatedTo(ChronoUnit.SECONDS).plusSeconds(10))
+            .setTimeToLive(1000);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> resetPasswordTokenService.check(token))
