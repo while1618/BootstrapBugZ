@@ -63,18 +63,19 @@ class AuthServiceTest {
   @Mock private MessageService messageService;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
   @Spy private UserMapperImpl userMapper;
-  private AccessTokenServiceImpl accessTokenService;
   @Mock private AccessTokenBlacklistRepository accessTokenBlacklistRepository;
   @Mock private UserBlacklistRepository userBlacklistRepository;
-  private RefreshTokenServiceImpl refreshTokenService;
   @Mock private RefreshTokenWhitelistRepository refreshTokenWhitelistRepository;
-  private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
   @Mock private ApplicationEventPublisher eventPublisher;
-  private ResetPasswordTokenServiceImpl resetPasswordTokenService;
-  private AuthServiceImpl authService;
   @Mock private Authentication auth;
   @Mock private SecurityContext securityContext;
   @Captor private ArgumentCaptor<User> userArgumentCaptor;
+
+  private AccessTokenServiceImpl accessTokenService;
+  private RefreshTokenServiceImpl refreshTokenService;
+  private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
+  private ResetPasswordTokenServiceImpl resetPasswordTokenService;
+  private AuthServiceImpl authService;
 
   @BeforeEach
   public void setUp() {
@@ -86,14 +87,6 @@ class AuthServiceTest {
     confirmRegistrationTokenService = new ConfirmRegistrationTokenServiceImpl(eventPublisher);
     resetPasswordTokenService =
         new ResetPasswordTokenServiceImpl(userBlacklistRepository, messageService, eventPublisher);
-    ReflectionTestUtils.setField(accessTokenService, "secret", "secret");
-    ReflectionTestUtils.setField(accessTokenService, "tokenDuration", 900);
-    ReflectionTestUtils.setField(refreshTokenService, "secret", "secret");
-    ReflectionTestUtils.setField(refreshTokenService, "tokenDuration", 604800);
-    ReflectionTestUtils.setField(confirmRegistrationTokenService, "secret", "secret");
-    ReflectionTestUtils.setField(confirmRegistrationTokenService, "tokenDuration", 900);
-    ReflectionTestUtils.setField(resetPasswordTokenService, "secret", "secret");
-    ReflectionTestUtils.setField(resetPasswordTokenService, "tokenDuration", 900);
     authService =
         new AuthServiceImpl(
             userRepository,
@@ -105,6 +98,14 @@ class AuthServiceTest {
             refreshTokenService,
             confirmRegistrationTokenService,
             resetPasswordTokenService);
+    ReflectionTestUtils.setField(accessTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(accessTokenService, "tokenDuration", 900);
+    ReflectionTestUtils.setField(refreshTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(refreshTokenService, "tokenDuration", 604800);
+    ReflectionTestUtils.setField(confirmRegistrationTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(confirmRegistrationTokenService, "tokenDuration", 900);
+    ReflectionTestUtils.setField(resetPasswordTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(resetPasswordTokenService, "tokenDuration", 900);
   }
 
   @Test
