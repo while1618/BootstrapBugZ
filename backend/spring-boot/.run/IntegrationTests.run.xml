@@ -19,8 +19,6 @@
       <pattern testClass="org.bootstrapbugz.api.auth.integration.AuthenticationFilterIT" />
       <pattern testClass="org.bootstrapbugz.api.admin.integration.AdminControllerIT" />
       <pattern testClass="org.bootstrapbugz.api.shared.integration.AccessingResourcesIT" />
-      <pattern testClass="org.bootstrapbugz.api.user.integration.UserRepositoryIT" />
-      <pattern testClass="org.bootstrapbugz.api.auth.integration.RefreshTokenWhitelistRepositoryIT" />
     </patterns>
     <method v="2">
       <option name="Make" enabled="true" />

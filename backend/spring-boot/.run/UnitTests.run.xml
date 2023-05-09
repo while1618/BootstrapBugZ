@@ -3,7 +3,7 @@
     <module name="api" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.admin.service.*" />
+        <option name="PATTERN" value="org.bootstrapbugz.api.user.service.*" />
         <option name="ENABLED" value="true" />
       </pattern>
       <pattern>
@@ -11,7 +11,11 @@
         <option name="ENABLED" value="true" />
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.user.service.*" />
+        <option name="PATTERN" value="org.bootstrapbugz.api.admin.service.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="org.bootstrapbugz.api.auth.jwt.service.*" />
         <option name="ENABLED" value="true" />
       </pattern>
       <pattern>
@@ -20,10 +24,6 @@
       </pattern>
       <pattern>
         <option name="PATTERN" value="org.bootstrapbugz.api.shared.message.service.*" />
-        <option name="ENABLED" value="true" />
-      </pattern>
-      <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.auth.jwt.service.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
