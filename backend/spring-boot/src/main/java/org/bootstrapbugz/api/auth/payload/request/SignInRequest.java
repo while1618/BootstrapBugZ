@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bootstrapbugz.api.auth.validator.UsernameOrEmail;
 import org.bootstrapbugz.api.shared.constants.Regex;
+import org.bootstrapbugz.api.shared.validator.UsernameOrEmail;
 
 @Getter
 @Setter

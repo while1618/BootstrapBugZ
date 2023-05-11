@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.validator;
+package org.bootstrapbugz.api.shared.validator;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.TYPE;
@@ -9,7 +9,7 @@ import jakarta.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import org.bootstrapbugz.api.auth.validator.impl.FieldMatchImpl;
+import org.bootstrapbugz.api.shared.validator.impl.FieldMatchImpl;
 
 @Target({TYPE, ANNOTATION_TYPE})
 @Retention(RUNTIME)

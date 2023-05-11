@@ -1,8 +1,8 @@
-package org.bootstrapbugz.api.auth.validator.impl;
+package org.bootstrapbugz.api.shared.validator.impl;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.bootstrapbugz.api.auth.validator.FieldMatch;
+import org.bootstrapbugz.api.shared.validator.FieldMatch;
 import org.springframework.beans.BeanWrapperImpl;
 
 public class FieldMatchImpl implements ConstraintValidator<FieldMatch, Object> {

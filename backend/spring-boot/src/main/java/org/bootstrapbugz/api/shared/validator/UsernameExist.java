@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.validator;
+package org.bootstrapbugz.api.shared.validator;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -10,13 +10,13 @@ import jakarta.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import org.bootstrapbugz.api.auth.validator.impl.EmailExistImpl;
+import org.bootstrapbugz.api.shared.validator.impl.UsernameExistImpl;
 
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = EmailExistImpl.class)
+@Constraint(validatedBy = UsernameExistImpl.class)
 @Documented
-public @interface EmailExist {
+public @interface UsernameExist {
   String message() default "";
 
   Class<?>[] groups() default {};
