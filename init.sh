@@ -13,21 +13,21 @@ BACKEND=$(gum choose "spring-boot")
 
 clear
 echo "Choose your frontend: "
-FRONEND=$(gum choose "svelte-kit")
+FRONTEND=$(gum choose "svelte-kit")
 
 # delete all other folders except the choosen one
 find ./backend -mindepth 1 ! -regex "^./backend/$BACKEND\(/.*\)?" -delete
-find ./frontend -mindepth 1 ! -regex "^./frontend/$FRONEND\(/.*\)?" -delete
+find ./frontend -mindepth 1 ! -regex "^./frontend/$FRONTEND\(/.*\)?" -delete
 
 cp -r ./backend/$BACKEND/. ./backend
-cp -r ./frontend/$FRONEND/. ./frontend
+cp -r ./frontend/$FRONTEND/. ./frontend
 
 rm -rf ./backend/$BACKEND
-rm -rf ./frontend/$FRONEND
+rm -rf ./frontend/$FRONTEND
 
 clear
 echo "Name of your app is: $APP_NAME"
-echo "You picked $BACKEND for the backend, and $FRONEND for the frontend."
+echo "You picked $BACKEND for the backend, and $FRONTEND for the frontend."
 
 git add -A
 git commit -m "Initial commit."
