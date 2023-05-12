@@ -1,7 +1,7 @@
 import { makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import { PASSWORD_REGEX } from '$lib/regex/regex';
-import { HttpRequest } from '$lib/utils/util';
+import { HttpRequest, removeAuth } from '$lib/utils/util';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { z } from 'zod';
 
@@ -37,9 +37,7 @@ export const actions = {
 
     if ('error' in response) return fail(response.status, { errorMessage: response });
 
-    cookies.delete('accessToken', { path: '/' });
-    cookies.delete('refreshToken', { path: '/' });
-    locals.userId = null;
+    removeAuth(cookies, locals);
 
     throw redirect(302, '/');
   },

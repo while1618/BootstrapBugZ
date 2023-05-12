@@ -5,6 +5,7 @@ import type { RefreshTokenDTO } from '$lib/models/auth/refresh-token';
 import { RoleName } from '$lib/models/user/role';
 import {
   HttpRequest,
+  removeAuth,
   removeBearerPrefix,
   setAccessTokenCookie,
   setRefreshTokenCookie,
@@ -41,9 +42,7 @@ async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<
     });
 
     if ('error' in response) {
-      cookies.delete('accessToken', { path: '/' });
-      cookies.delete('refreshToken', { path: '/' });
-      locals.userId = null;
+      removeAuth(cookies, locals);
     } else {
       const { accessToken, refreshToken } = response as RefreshTokenDTO;
       setAccessTokenCookie(cookies, accessToken);

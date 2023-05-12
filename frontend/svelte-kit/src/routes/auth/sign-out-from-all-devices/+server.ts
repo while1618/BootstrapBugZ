@@ -1,5 +1,5 @@
 import { makeRequest } from '$lib/apis/api';
-import { HttpRequest } from '$lib/utils/util';
+import { HttpRequest, removeAuth } from '$lib/utils/util';
 import { error, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
@@ -12,9 +12,7 @@ export const GET = (async ({ locals, cookies }) => {
 
   if ('error' in response) throw error(response.status, { message: response.error });
 
-  cookies.delete('accessToken', { path: '/' });
-  cookies.delete('refreshToken', { path: '/' });
-  locals.userId = null;
+  removeAuth(cookies, locals);
 
   throw redirect(302, '/');
 }) satisfies RequestHandler;
