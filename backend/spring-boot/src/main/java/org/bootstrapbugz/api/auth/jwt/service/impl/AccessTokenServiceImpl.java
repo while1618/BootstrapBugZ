@@ -53,11 +53,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   @Override
   public void check(String token) {
     JwtUtil.verify(token, secret, PURPOSE);
-    isInJwtBlacklist(token);
+    isInAccessTokenBlacklist(token);
     isInUserBlacklist(token);
   }
 
-  private void isInJwtBlacklist(String token) {
+  private void isInAccessTokenBlacklist(String token) {
     if (accessTokenBlacklistRepository.existsById(token))
       throw new UnauthorizedException(messageService.getMessage("token.invalid"));
   }
