@@ -31,7 +31,7 @@
       <pattern testClass="org.bootstrapbugz.api.shared.unit.MessageServiceTest"/>
       <pattern testClass="org.bootstrapbugz.api.user.data.UserRepositoryIT"/>
       <pattern testClass="org.bootstrapbugz.api.user.data.RoleRepositoryIT"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.data.RefreshTokenWhitelistRepositoryIT"/>
+      <pattern testClass="org.bootstrapbugz.api.auth.data.RefreshTokenStoreRepositoryIT"/>
     </patterns>
     <method v="2">
       <option name="Make" enabled="true"/>

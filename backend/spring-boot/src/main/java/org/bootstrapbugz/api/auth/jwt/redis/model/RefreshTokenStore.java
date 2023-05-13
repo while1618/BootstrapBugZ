@@ -18,7 +18,7 @@ import org.springframework.data.redis.core.index.Indexed;
 @AllArgsConstructor
 @EqualsAndHashCode
 @RedisHash(value = "RefreshTokenWhitelist")
-public class RefreshTokenWhitelist implements Serializable {
+public class RefreshTokenStore implements Serializable {
   @Serial private static final long serialVersionUID = -1997218842142407911L;
 
   @Id private String refreshToken;

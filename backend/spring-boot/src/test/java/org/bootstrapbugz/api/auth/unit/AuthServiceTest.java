@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.AccessTokenBlacklistRepository;
-import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenWhitelistRepository;
+import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenStoreRepository;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.impl.AccessTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
@@ -65,7 +65,7 @@ class AuthServiceTest {
   @Spy private UserMapperImpl userMapper;
   @Mock private AccessTokenBlacklistRepository accessTokenBlacklistRepository;
   @Mock private UserBlacklistRepository userBlacklistRepository;
-  @Mock private RefreshTokenWhitelistRepository refreshTokenWhitelistRepository;
+  @Mock private RefreshTokenStoreRepository refreshTokenStoreRepository;
   @Mock private ApplicationEventPublisher eventPublisher;
   @Mock private Authentication auth;
   @Mock private SecurityContext securityContext;
@@ -82,8 +82,7 @@ class AuthServiceTest {
     accessTokenService =
         new AccessTokenServiceImpl(
             accessTokenBlacklistRepository, userBlacklistRepository, messageService);
-    refreshTokenService =
-        new RefreshTokenServiceImpl(refreshTokenWhitelistRepository, messageService);
+    refreshTokenService = new RefreshTokenServiceImpl(refreshTokenStoreRepository, messageService);
     confirmRegistrationTokenService = new ConfirmRegistrationTokenServiceImpl(eventPublisher);
     resetPasswordTokenService =
         new ResetPasswordTokenServiceImpl(userBlacklistRepository, messageService, eventPublisher);
@@ -204,7 +203,7 @@ class AuthServiceTest {
     final var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
     final var token = refreshTokenService.create(2L, Collections.emptySet(), "ip1");
-    when(refreshTokenWhitelistRepository.existsById(token)).thenReturn(true);
+    when(refreshTokenStoreRepository.existsById(token)).thenReturn(true);
     final var refreshTokenRequest = new RefreshTokenRequest(token);
     final var refreshTokenDTO = authService.refreshToken(refreshTokenRequest, request);
     assertThat(refreshTokenDTO.getAccessToken()).isNotNull();
