@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.shared.config;
 
-import jakarta.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -9,6 +8,8 @@ import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Profile({"dev", "test"})
 @Component
-public class DataInit {
+public class DataInit implements ApplicationRunner {
   private static final String PASSWORD = "qwerty123";
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
@@ -36,8 +37,8 @@ public class DataInit {
     this.environment = environment;
   }
 
-  @PostConstruct
-  public void init() {
+  @Override
+  public void run(ApplicationArguments args) {
     roleRepository.saveAll(List.of(userRole, adminRole));
     if (environment.getActiveProfiles()[0].equals("dev")) devUsers();
     else if (environment.getActiveProfiles()[0].equals("test")) testUsers();
