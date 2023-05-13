@@ -53,6 +53,7 @@ public class DataInit {
                 .setEmail("admin@bootstrapbugz.com")
                 .setPassword(bCryptPasswordEncoder.encode(PASSWORD))
                 .setActivated(true)
+                .setNonLocked(true)
                 .setRoles(Set.of(userRole, adminRole)),
             new User()
                 .setFirstName("John")
@@ -61,6 +62,7 @@ public class DataInit {
                 .setEmail("john.doe@bootstrapbugz.com")
                 .setPassword(bCryptPasswordEncoder.encode(PASSWORD))
                 .setActivated(true)
+                .setNonLocked(true)
                 .setRoles(Collections.singleton(userRole)),
             new User()
                 .setFirstName("Jane")
@@ -69,6 +71,7 @@ public class DataInit {
                 .setEmail("jane.doe@bootstrapbugz.com")
                 .setPassword(bCryptPasswordEncoder.encode(PASSWORD))
                 .setActivated(true)
+                .setNonLocked(true)
                 .setRoles(Collections.singleton(userRole)));
     userRepository.saveAll(users);
   }
@@ -83,6 +86,7 @@ public class DataInit {
                 .setEmail("admin@bootstrapbugz.com")
                 .setPassword(bCryptPasswordEncoder.encode(PASSWORD))
                 .setActivated(true)
+                .setNonLocked(true)
                 .setRoles(Set.of(userRole, adminRole)),
             new User()
                 .setFirstName("User")
@@ -91,6 +95,7 @@ public class DataInit {
                 .setEmail("user@bootstrapbugz.com")
                 .setPassword(bCryptPasswordEncoder.encode(PASSWORD))
                 .setActivated(true)
+                .setNonLocked(true)
                 .setRoles(Collections.singleton(userRole)),
             new User()
                 .setFirstName("Not Activated")
@@ -98,6 +103,8 @@ public class DataInit {
                 .setUsername("not.activated")
                 .setEmail("not.activated@bootstrapbugz.com")
                 .setPassword(bCryptPasswordEncoder.encode(PASSWORD))
+                .setActivated(false)
+                .setNonLocked(true)
                 .setRoles(Collections.singleton(userRole)),
             new User()
                 .setFirstName("Locked")
@@ -115,6 +122,7 @@ public class DataInit {
                 .setEmail("for.update.1@bootstrapbugz.com")
                 .setPassword(bCryptPasswordEncoder.encode(PASSWORD))
                 .setActivated(true)
+                .setNonLocked(true)
                 .setRoles(Collections.singleton(userRole)),
             new User()
                 .setFirstName("For Update 2")
@@ -123,6 +131,7 @@ public class DataInit {
                 .setEmail("for.update.2@bootstrapbugz.com")
                 .setPassword(bCryptPasswordEncoder.encode(PASSWORD))
                 .setActivated(true)
+                .setNonLocked(true)
                 .setRoles(Collections.singleton(userRole)),
             new User()
                 .setFirstName("For Update 3")
@@ -131,6 +140,7 @@ public class DataInit {
                 .setEmail("for.update.3@bootstrapbugz.com")
                 .setPassword(bCryptPasswordEncoder.encode(PASSWORD))
                 .setActivated(true)
+                .setNonLocked(true)
                 .setRoles(Collections.singleton(userRole)));
     userRepository.saveAll(users);
   }
