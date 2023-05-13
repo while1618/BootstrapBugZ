@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -22,13 +23,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Entity
-@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@Entity
+@Table(
+    name = "users",
+    indexes = {
+      @Index(name = "idx_username", columnList = "username", unique = true),
+      @Index(name = "idx_email", columnList = "email", unique = true),
+      @Index(name = "idx_username_email", columnList = "username, email")
+    })
 public class User implements Serializable {
   @Serial private static final long serialVersionUID = -7881387078460754905L;
 
@@ -37,22 +44,28 @@ public class User implements Serializable {
   @Column(name = "user_id")
   private Long id;
 
+  @Column(nullable = false)
   private String firstName;
 
+  @Column(nullable = false)
   private String lastName;
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String username;
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String email;
 
+  @Column(nullable = false)
   private String password;
 
+  @Column(nullable = false)
   private boolean activated = false;
 
+  @Column(nullable = false)
   private boolean nonLocked = true;
 
+  @Column(nullable = false)
   private LocalDateTime createdAt = LocalDateTime.now();
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -60,6 +73,7 @@ public class User implements Serializable {
       name = "user_roles",
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @Column(nullable = false)
   private Set<Role> roles = new HashSet<>();
 
   @Override

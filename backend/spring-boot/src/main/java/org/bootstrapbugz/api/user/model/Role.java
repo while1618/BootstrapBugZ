@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,11 +16,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "roles")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(
+    name = "roles",
+    indexes = @Index(name = "idx_role_name", columnList = "role_name", unique = true))
 public class Role implements Serializable {
   @Serial private static final long serialVersionUID = 3717126169522609755L;
 
@@ -28,7 +31,7 @@ public class Role implements Serializable {
   @Column(name = "role_id")
   private Long id;
 
-  @Column(unique = true, name = "role_name")
+  @Column(name = "role_name", unique = true, nullable = false)
   @Enumerated(EnumType.STRING)
   private RoleName name;
 
