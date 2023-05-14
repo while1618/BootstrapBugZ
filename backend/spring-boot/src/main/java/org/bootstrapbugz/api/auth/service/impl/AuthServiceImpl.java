@@ -132,14 +132,14 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void signOut(HttpServletRequest request) {
     refreshTokenService.deleteByUserAndIpAddress(
-        AuthUtil.findSignedInUser().getId(), AuthUtil.getUserIpAddress(request));
+        AuthUtil.findSignedInUser().id(), AuthUtil.getUserIpAddress(request));
     accessTokenService.invalidate(
         JwtUtil.removeBearer(AuthUtil.getAccessTokenFromRequest(request)));
   }
 
   @Override
   public void signOutFromAllDevices() {
-    final var userId = AuthUtil.findSignedInUser().getId();
+    final var userId = AuthUtil.findSignedInUser().id();
     refreshTokenService.deleteAllByUser(userId);
     accessTokenService.invalidateAllByUser(userId);
   }

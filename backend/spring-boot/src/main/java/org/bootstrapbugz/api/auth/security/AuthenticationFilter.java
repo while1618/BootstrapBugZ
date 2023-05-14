@@ -1,10 +1,13 @@
 package org.bootstrapbugz.api.auth.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
@@ -84,8 +87,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
       throws IOException {
     final var userDTO = AuthUtil.userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
     final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var accessToken = accessTokenService.create(userDTO.getId(), userDTO.getRoleDTOs());
-    final var refreshToken = getRefreshToken(userDTO.getId(), userDTO.getRoleDTOs(), ipAddress);
+    final var accessToken = accessTokenService.create(userDTO.id(), userDTO.roleDTOs());
+    final var refreshToken = getRefreshToken(userDTO.id(), userDTO.roleDTOs(), ipAddress);
     final var signInDTO =
         new SignInDTO()
             .setAccessToken(JwtUtil.addBearer(accessToken))
@@ -102,7 +105,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
   private void writeToResponse(HttpServletResponse response, SignInDTO signInDTO)
       throws IOException {
-    final var json = new ObjectMapper().writeValueAsString(signInDTO);
+    final var jsonMapper =
+        JsonMapper.builder()
+            .addModule(new JavaTimeModule())
+            .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))
+            .build();
+    final var json = jsonMapper.writeValueAsString(signInDTO);
     final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     out.print(json);

@@ -110,15 +110,16 @@ class AuthServiceTest {
   @Test
   void signUp() {
     final var expectedUserDTO =
-        new UserDTO()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setActivated(false)
-            .setNonLocked(true)
-            .setRoleDTOs(Set.of(new RoleDTO(RoleName.USER.name())));
+        UserDTO.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .activated(false)
+            .nonLocked(true)
+            .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
+            .build();
     final var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(new Role(RoleName.USER)));
@@ -277,15 +278,16 @@ class AuthServiceTest {
     SecurityContextHolder.setContext(securityContext);
     when(auth.getPrincipal()).thenReturn(UserPrincipal.create(TestUtil.getTestUser()));
     final var expectedUserDTO =
-        new UserDTO()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setActivated(true)
-            .setNonLocked(true)
-            .setRoleDTOs(Set.of(new RoleDTO(RoleName.USER.name())));
+        UserDTO.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .activated(true)
+            .nonLocked(true)
+            .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
+            .build();
     final var actualUserDTO = authService.signedInUser();
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }

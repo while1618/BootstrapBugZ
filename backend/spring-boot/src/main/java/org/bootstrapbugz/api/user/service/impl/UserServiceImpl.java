@@ -59,8 +59,7 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     user.setRoles(null);
     if (!(AuthUtil.isSignedIn()
-        && AuthUtil.findSignedInUser().getUsername().equals(user.getUsername())))
-      user.setEmail(null);
+        && AuthUtil.findSignedInUser().username().equals(user.getUsername()))) user.setEmail(null);
     return user;
   }
 }

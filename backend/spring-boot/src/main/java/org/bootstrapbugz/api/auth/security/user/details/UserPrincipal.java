@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.auth.security.user.details;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serial;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class UserPrincipal implements UserDetails {
   @JsonIgnore private final String password;
   private final boolean enabled;
   private final boolean accountNonLocked;
+  private final LocalDateTime createdAt;
   private final Collection<? extends GrantedAuthority> authorities;
 
   public static UserPrincipal create(User user) {
@@ -37,6 +39,7 @@ public class UserPrincipal implements UserDetails {
         user.getPassword(),
         user.isActivated(),
         user.isNonLocked(),
+        user.getCreatedAt(),
         getAuthorities(user));
   }
 

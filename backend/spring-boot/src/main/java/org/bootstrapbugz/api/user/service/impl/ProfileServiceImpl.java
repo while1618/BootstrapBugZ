@@ -50,7 +50,7 @@ public class ProfileServiceImpl implements ProfileService {
     final var userDTO = AuthUtil.findSignedInUser();
     final var user =
         userRepository
-            .findByUsernameWithRoles(userDTO.getUsername())
+            .findByUsernameWithRoles(userDTO.username())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     user.setFirstName(updateProfileRequest.getFirstName());
@@ -86,7 +86,7 @@ public class ProfileServiceImpl implements ProfileService {
     final var userDTO = AuthUtil.findSignedInUser();
     final var user =
         userRepository
-            .findByUsername(userDTO.getUsername())
+            .findByUsername(userDTO.username())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))

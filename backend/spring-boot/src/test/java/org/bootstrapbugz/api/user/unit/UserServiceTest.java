@@ -48,20 +48,22 @@ class UserServiceTest {
     when(auth.getPrincipal()).thenReturn("anonymousUser");
     final var expectedUserDTOs =
         List.of(
-            new UserDTO()
-                .setId(1L)
-                .setFirstName("Admin")
-                .setLastName("Admin")
-                .setUsername("admin")
-                .setActivated(true)
-                .setNonLocked(true),
-            new UserDTO()
-                .setId(2L)
-                .setFirstName("Test")
-                .setLastName("Test")
-                .setUsername("test")
-                .setActivated(true)
-                .setNonLocked(true));
+            UserDTO.builder()
+                .id(1L)
+                .firstName("Admin")
+                .lastName("Admin")
+                .username("admin")
+                .activated(true)
+                .nonLocked(true)
+                .build(),
+            UserDTO.builder()
+                .id(2L)
+                .firstName("Test")
+                .lastName("Test")
+                .username("test")
+                .activated(true)
+                .nonLocked(true)
+                .build());
     when(userRepository.findAll())
         .thenReturn(List.of(TestUtil.getAdminUser(), TestUtil.getTestUser()));
     final var actualUserDTOs = userService.findAll();
@@ -73,25 +75,27 @@ class UserServiceTest {
     when(auth.getPrincipal()).thenReturn(UserPrincipal.create(TestUtil.getAdminUser()));
     final var expectedUserDTOs =
         List.of(
-            new UserDTO()
-                .setId(1L)
-                .setFirstName("Admin")
-                .setLastName("Admin")
-                .setUsername("admin")
-                .setEmail("admin@localhost")
-                .setActivated(true)
-                .setNonLocked(true)
-                .setRoleDTOs(
-                    Set.of(new RoleDTO(RoleName.USER.name()), new RoleDTO(RoleName.ADMIN.name()))),
-            new UserDTO()
-                .setId(2L)
-                .setFirstName("Test")
-                .setLastName("Test")
-                .setUsername("test")
-                .setEmail("test@localhost")
-                .setActivated(true)
-                .setNonLocked(true)
-                .setRoleDTOs(Set.of(new RoleDTO(RoleName.USER.name()))));
+            UserDTO.builder()
+                .id(1L)
+                .firstName("Admin")
+                .lastName("Admin")
+                .username("admin")
+                .email("admin@localhost")
+                .activated(true)
+                .nonLocked(true)
+                .roleDTOs(
+                    Set.of(new RoleDTO(RoleName.USER.name()), new RoleDTO(RoleName.ADMIN.name())))
+                .build(),
+            UserDTO.builder()
+                .id(2L)
+                .firstName("Test")
+                .lastName("Test")
+                .username("test")
+                .email("test@localhost")
+                .activated(true)
+                .nonLocked(true)
+                .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
+                .build());
     when(userRepository.findAllWithRoles())
         .thenReturn(List.of(TestUtil.getAdminUser(), TestUtil.getTestUser()));
     final var actualUserDTOs = userService.findAll();
@@ -102,13 +106,14 @@ class UserServiceTest {
   void findUserByUsername_emailHidden() {
     when(auth.getPrincipal()).thenReturn("anonymousUser");
     final var expectedUserDTO =
-        new UserDTO()
-            .setId(1L)
-            .setFirstName("Admin")
-            .setLastName("Admin")
-            .setUsername("admin")
-            .setNonLocked(true)
-            .setActivated(true);
+        UserDTO.builder()
+            .id(1L)
+            .firstName("Admin")
+            .lastName("Admin")
+            .username("admin")
+            .nonLocked(true)
+            .activated(true)
+            .build();
     when(userRepository.findByUsername("admin")).thenReturn(Optional.of(TestUtil.getAdminUser()));
     final var actualUserDTO = userService.findByUsername("admin");
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
@@ -118,14 +123,15 @@ class UserServiceTest {
   void findUserByUsername_emailShown() {
     when(auth.getPrincipal()).thenReturn(UserPrincipal.create(TestUtil.getTestUser()));
     final var expectedUserDTO =
-        new UserDTO()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setNonLocked(true)
-            .setActivated(true);
+        UserDTO.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .nonLocked(true)
+            .activated(true)
+            .build();
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(TestUtil.getTestUser()));
     final var actualUserDTO = userService.findByUsername("test");
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
@@ -135,15 +141,16 @@ class UserServiceTest {
   void findUserByUsername_adminSignedIn() {
     when(auth.getPrincipal()).thenReturn(UserPrincipal.create(TestUtil.getAdminUser()));
     final var expectedUserDTO =
-        new UserDTO()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setNonLocked(true)
-            .setActivated(true)
-            .setRoleDTOs(Set.of(new RoleDTO(RoleName.USER.name())));
+        UserDTO.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .nonLocked(true)
+            .activated(true)
+            .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
+            .build();
     when(userRepository.findByUsernameWithRoles("test"))
         .thenReturn(Optional.of(TestUtil.getTestUser()));
     final var actualUserDTO = userService.findByUsername("test");

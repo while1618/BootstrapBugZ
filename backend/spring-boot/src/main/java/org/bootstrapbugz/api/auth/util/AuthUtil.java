@@ -22,7 +22,7 @@ public class AuthUtil {
   public static boolean isAdminSignedIn() {
     if (!isSignedIn()) return false;
     final var userDTO = findSignedInUser();
-    return userDTO.getRoleDTOs().stream()
+    return userDTO.roleDTOs().stream()
         .anyMatch(roleDTO -> roleDTO.getName().equals(RoleName.ADMIN.name()));
   }
 
@@ -32,15 +32,17 @@ public class AuthUtil {
   }
 
   public static UserDTO userPrincipalToUserDTO(UserPrincipal userPrincipal) {
-    return new UserDTO()
-        .setId(userPrincipal.getId())
-        .setFirstName(userPrincipal.getFirstName())
-        .setLastName(userPrincipal.getLastName())
-        .setUsername(userPrincipal.getUsername())
-        .setEmail(userPrincipal.getEmail())
-        .setActivated(userPrincipal.isEnabled())
-        .setNonLocked(userPrincipal.isAccountNonLocked())
-        .setRoleDTOs(getRoleDTOs(userPrincipal));
+    return UserDTO.builder()
+        .id(userPrincipal.getId())
+        .firstName(userPrincipal.getFirstName())
+        .lastName(userPrincipal.getLastName())
+        .username(userPrincipal.getUsername())
+        .email(userPrincipal.getEmail())
+        .activated(userPrincipal.isEnabled())
+        .nonLocked(userPrincipal.isAccountNonLocked())
+        .createdAt(userPrincipal.getCreatedAt())
+        .roleDTOs(getRoleDTOs(userPrincipal))
+        .build();
   }
 
   private static Set<RoleDTO> getRoleDTOs(UserPrincipal userPrincipal) {
