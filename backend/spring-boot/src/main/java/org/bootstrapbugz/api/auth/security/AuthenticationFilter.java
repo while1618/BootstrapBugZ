@@ -107,12 +107,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
   private void writeToResponse(HttpServletResponse response, SignInDTO signInDTO)
       throws IOException {
-    final var jsonMapper =
+    final var json =
         JsonMapper.builder()
             .addModule(new JavaTimeModule())
             .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))
-            .build();
-    final var json = jsonMapper.writeValueAsString(signInDTO);
+            .build()
+            .writeValueAsString(signInDTO);
     final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     out.print(json);
