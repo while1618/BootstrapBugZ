@@ -24,8 +24,8 @@
     <jwt.version>4.4.0</jwt.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <jacoco.version>0.8.8</jacoco.version>
-    <jedis.version>4.3.1</jedis.version>
-    <testcontainers.version>1.18.0</testcontainers.version>
+    <jedis.version>4.4.0</jedis.version>
+    <testcontainers.version>1.18.1</testcontainers.version>
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     <spotless.version>2.29.0</spotless.version>
     <google-java-format.version>1.15.0</google-java-format.version>
