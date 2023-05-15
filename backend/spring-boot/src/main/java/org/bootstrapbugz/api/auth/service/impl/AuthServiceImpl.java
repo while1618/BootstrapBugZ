@@ -93,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
   public void resendConfirmationEmail(ResendConfirmationEmailRequest request) {
     final var user =
         userRepository
-            .findByUsernameOrEmail(request.getUsernameOrEmail(), request.getUsernameOrEmail())
+            .findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     if (user.isActivated())
