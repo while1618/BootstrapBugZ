@@ -118,7 +118,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public RefreshTokenDTO refreshToken(
       RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
-    final var oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.getRefreshToken());
+    final var oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.refreshToken());
     refreshTokenService.check(oldRefreshToken);
     final var userId = JwtUtil.getUserId(oldRefreshToken);
     final var roleDTOs = JwtUtil.getRoleDTOs(oldRefreshToken);
