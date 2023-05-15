@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -69,21 +70,14 @@ class AuthServiceTest {
   @Mock private SecurityContext securityContext;
   @Captor private ArgumentCaptor<User> userArgumentCaptor;
 
-  private AccessTokenServiceImpl accessTokenService;
-  private RefreshTokenServiceImpl refreshTokenService;
-  private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
-  private ResetPasswordTokenServiceImpl resetPasswordTokenService;
+  @InjectMocks private AccessTokenServiceImpl accessTokenService;
+  @InjectMocks private RefreshTokenServiceImpl refreshTokenService;
+  @InjectMocks private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
+  @InjectMocks private ResetPasswordTokenServiceImpl resetPasswordTokenService;
   private AuthServiceImpl authService;
 
   @BeforeEach
   public void setUp() {
-    accessTokenService =
-        new AccessTokenServiceImpl(
-            accessTokenBlacklistRepository, userBlacklistRepository, messageService);
-    refreshTokenService = new RefreshTokenServiceImpl(refreshTokenStoreRepository, messageService);
-    confirmRegistrationTokenService = new ConfirmRegistrationTokenServiceImpl(eventPublisher);
-    resetPasswordTokenService =
-        new ResetPasswordTokenServiceImpl(userBlacklistRepository, messageService, eventPublisher);
     authService =
         new AuthServiceImpl(
             userRepository,
