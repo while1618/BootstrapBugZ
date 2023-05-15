@@ -5,10 +5,10 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
@@ -17,14 +17,14 @@ import org.springframework.data.redis.core.TimeToLive;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
+@Builder
 @RedisHash(value = "UserBlacklist")
 public class UserBlacklist implements Serializable {
   @Serial private static final long serialVersionUID = 8334740937644612692L;
 
   @Id private Long userId;
 
-  private Instant updatedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+  @Builder.Default private Instant updatedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
 
   @TimeToLive private long timeToLive;
 }

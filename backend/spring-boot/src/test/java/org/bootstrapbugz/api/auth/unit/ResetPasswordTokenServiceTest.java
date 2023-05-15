@@ -50,10 +50,11 @@ class ResetPasswordTokenServiceTest {
   @Test
   void checkToken_userInBlacklist_tokenIssuedAfterUserBlacklisted() {
     final var userBlacklist =
-        new UserBlacklist()
-            .setUserId(1L)
-            .setUpdatedAt(Instant.now().truncatedTo(ChronoUnit.SECONDS).minusSeconds(10))
-            .setTimeToLive(1000);
+        UserBlacklist.builder()
+            .userId(1L)
+            .updatedAt(Instant.now().truncatedTo(ChronoUnit.SECONDS).minusSeconds(10))
+            .timeToLive(1000)
+            .build();
     final var token = resetPasswordTokenService.create(1L);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     resetPasswordTokenService.check(token);
@@ -63,10 +64,11 @@ class ResetPasswordTokenServiceTest {
   void checkToken_throwUnauthorized_userInBlacklist() {
     final var token = resetPasswordTokenService.create(1L);
     final var userBlacklist =
-        new UserBlacklist()
-            .setUserId(1L)
-            .setUpdatedAt(Instant.now().truncatedTo(ChronoUnit.SECONDS).plusSeconds(10))
-            .setTimeToLive(1000);
+        UserBlacklist.builder()
+            .userId(1L)
+            .updatedAt(Instant.now().truncatedTo(ChronoUnit.SECONDS).plusSeconds(10))
+            .timeToLive(1000)
+            .build();
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> resetPasswordTokenService.check(token))

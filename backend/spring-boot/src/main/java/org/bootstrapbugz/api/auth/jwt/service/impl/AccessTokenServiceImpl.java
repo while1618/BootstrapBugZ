@@ -78,6 +78,6 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   @Override
   public void invalidateAllByUser(Long userId) {
     userBlacklistRepository.save(
-        new UserBlacklist().setUserId(userId).setTimeToLive(tokenDuration));
+        UserBlacklist.builder().userId(userId).timeToLive(tokenDuration).build());
   }
 }
