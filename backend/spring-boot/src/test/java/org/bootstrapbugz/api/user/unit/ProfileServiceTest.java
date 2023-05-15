@@ -138,8 +138,7 @@ class ProfileServiceTest {
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(
             bCryptPasswordEncoder.matches(
-                changePasswordRequest.getNewPassword(),
-                userArgumentCaptor.getValue().getPassword()))
+                changePasswordRequest.newPassword(), userArgumentCaptor.getValue().getPassword()))
         .isTrue();
   }
 

@@ -89,10 +89,10 @@ public class ProfileServiceImpl implements ProfileService {
             .findByUsername(userDTO.username())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    if (!bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword()))
+    if (!bCryptPasswordEncoder.matches(changePasswordRequest.oldPassword(), user.getPassword()))
       throw new BadRequestException(
           "oldPassword", messageService.getMessage("oldPassword.invalid"));
-    user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getNewPassword()));
+    user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
     accessTokenService.invalidateAllByUser(user.getId());
     refreshTokenService.deleteAllByUser(user.getId());
     userRepository.save(user);
