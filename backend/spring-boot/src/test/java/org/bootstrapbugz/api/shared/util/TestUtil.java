@@ -23,25 +23,27 @@ public class TestUtil {
   private TestUtil() {}
 
   public static User getAdminUser() {
-    return new User()
-        .setId(1L)
-        .setFirstName("Admin")
-        .setLastName("Admin")
-        .setUsername("admin")
-        .setEmail("admin@localhost")
-        .setActivated(true)
-        .setRoles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
+    return User.builder()
+        .id(1L)
+        .firstName("Admin")
+        .lastName("Admin")
+        .username("admin")
+        .email("admin@localhost")
+        .activated(true)
+        .roles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)))
+        .build();
   }
 
   public static User getTestUser() {
-    return new User()
-        .setId(2L)
-        .setFirstName("Test")
-        .setLastName("Test")
-        .setUsername("test")
-        .setEmail("test@localhost")
-        .setActivated(true)
-        .setRoles(Set.of(new Role(RoleName.USER)));
+    return User.builder()
+        .id(2L)
+        .firstName("Test")
+        .lastName("Test")
+        .username("test")
+        .email("test@localhost")
+        .activated(true)
+        .roles(Set.of(new Role(RoleName.USER)))
+        .build();
   }
 
   public static void checkErrorMessages(ErrorMessage expectedResponse, ResultActions resultActions)

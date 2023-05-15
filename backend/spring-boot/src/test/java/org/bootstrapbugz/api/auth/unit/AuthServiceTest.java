@@ -160,14 +160,15 @@ class AuthServiceTest {
   @Test
   void confirmRegistration() {
     final var expectedUser =
-        new User()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setActivated(true)
-            .setRoles(Set.of(new Role(RoleName.USER)));
+        User.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .activated(true)
+            .roles(Set.of(new Role(RoleName.USER)))
+            .build();
     final var token = confirmRegistrationTokenService.create(2L);
     final var testUser = TestUtil.getTestUser();
     testUser.setActivated(false);

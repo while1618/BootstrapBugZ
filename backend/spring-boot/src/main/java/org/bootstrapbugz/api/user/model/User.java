@@ -17,15 +17,17 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@Accessors(chain = true)
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(
     name = "users",
@@ -57,12 +59,15 @@ public class User implements Serializable {
   @Column(nullable = false)
   private String password;
 
+  @Builder.Default
   @Column(nullable = false)
   private boolean activated = false;
 
+  @Builder.Default
   @Column(nullable = false)
   private boolean nonLocked = true;
 
+  @Builder.Default
   @Column(nullable = false)
   private LocalDateTime createdAt = LocalDateTime.now();
 

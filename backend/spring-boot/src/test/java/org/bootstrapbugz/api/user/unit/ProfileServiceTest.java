@@ -60,14 +60,15 @@ class ProfileServiceTest {
   @Test
   void updateUser_newUsernameAndEmail() {
     final var expectedUser =
-        new User()
-            .setId(2L)
-            .setFirstName("User")
-            .setLastName("User")
-            .setUsername("user")
-            .setEmail("user@localhost")
-            .setActivated(false)
-            .setRoles(Set.of(new Role(RoleName.USER)));
+        User.builder()
+            .id(2L)
+            .firstName("User")
+            .lastName("User")
+            .username("user")
+            .email("user@localhost")
+            .activated(false)
+            .roles(Set.of(new Role(RoleName.USER)))
+            .build();
     final var updateUserRequest =
         new UpdateProfileRequest("User", "User", "user", "user@localhost");
     when(userRepository.findByUsernameWithRoles("test"))
@@ -82,14 +83,15 @@ class ProfileServiceTest {
   @Test
   void updateUser_sameUsernameAndEmail() {
     final var expectedUser =
-        new User()
-            .setId(2L)
-            .setFirstName("User")
-            .setLastName("User")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setActivated(true)
-            .setRoles(Set.of(new Role(RoleName.USER)));
+        User.builder()
+            .id(2L)
+            .firstName("User")
+            .lastName("User")
+            .username("test")
+            .email("test@localhost")
+            .activated(true)
+            .roles(Set.of(new Role(RoleName.USER)))
+            .build();
     final var updateUserRequest =
         new UpdateProfileRequest("User", "User", "test", "test@localhost");
     when(userRepository.findByUsernameWithRoles("test"))

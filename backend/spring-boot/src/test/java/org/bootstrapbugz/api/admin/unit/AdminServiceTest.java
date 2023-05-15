@@ -42,14 +42,15 @@ class AdminServiceTest {
     final var updateRolesRequest =
         new UpdateRoleRequest(Collections.singleton("test"), Set.of(RoleName.USER, RoleName.ADMIN));
     final var expectedUser =
-        new User()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setActivated(true)
-            .setRoles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
+        User.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .activated(true)
+            .roles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)))
+            .build();
     when(userRepository.findAllByUsernameIn(updateRolesRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
     when(roleRepository.findAllByNameIn(updateRolesRequest.roleNames()))
@@ -63,15 +64,16 @@ class AdminServiceTest {
   void lockUsers() {
     final var adminRequest = new AdminRequest(Collections.singleton("test"));
     final var expectedUser =
-        new User()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setActivated(true)
-            .setNonLocked(false)
-            .setRoles(Set.of(new Role(RoleName.USER)));
+        User.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .activated(true)
+            .nonLocked(false)
+            .roles(Set.of(new Role(RoleName.USER)))
+            .build();
     when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
     adminService.lock(adminRequest);
@@ -83,15 +85,16 @@ class AdminServiceTest {
   void unlockUsers() {
     final var adminRequest = new AdminRequest(Collections.singleton("test"));
     final var expectedUser =
-        new User()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setActivated(true)
-            .setNonLocked(true)
-            .setRoles(Set.of(new Role(RoleName.USER)));
+        User.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .activated(true)
+            .nonLocked(true)
+            .roles(Set.of(new Role(RoleName.USER)))
+            .build();
     when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
     adminService.unlock(adminRequest);
@@ -103,14 +106,15 @@ class AdminServiceTest {
   void activateUsers() {
     final var adminRequest = new AdminRequest(Collections.singleton("test2"));
     final var expectedUser =
-        new User()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setActivated(true)
-            .setRoles(Set.of(new Role(RoleName.USER)));
+        User.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .activated(true)
+            .roles(Set.of(new Role(RoleName.USER)))
+            .build();
     when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
     adminService.activate(adminRequest);
@@ -122,14 +126,15 @@ class AdminServiceTest {
   void deactivateUsers() {
     final var adminRequest = new AdminRequest(Collections.singleton("test"));
     final var expectedUser =
-        new User()
-            .setId(2L)
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setActivated(false)
-            .setRoles(Set.of(new Role(RoleName.USER)));
+        User.builder()
+            .id(2L)
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .activated(false)
+            .roles(Set.of(new Role(RoleName.USER)))
+            .build();
     when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
     adminService.deactivate(adminRequest);

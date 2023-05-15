@@ -26,21 +26,23 @@ class UserRepositoryIT extends DatabaseContainers {
     final var adminRole = roleRepository.save(new Role(RoleName.ADMIN));
     final var userRole = roleRepository.save(new Role(RoleName.USER));
     userRepository.save(
-        new User()
-            .setFirstName("Admin")
-            .setLastName("Admin")
-            .setUsername("admin")
-            .setEmail("admin@localhost")
-            .setPassword("password")
-            .setRoles(Set.of(adminRole, userRole)));
+        User.builder()
+            .firstName("Admin")
+            .lastName("Admin")
+            .username("admin")
+            .email("admin@localhost")
+            .password("password")
+            .roles(Set.of(adminRole, userRole))
+            .build());
     userRepository.save(
-        new User()
-            .setFirstName("Test")
-            .setLastName("Test")
-            .setUsername("test")
-            .setEmail("test@localhost")
-            .setPassword("password")
-            .setRoles(Set.of(userRole)));
+        User.builder()
+            .firstName("Test")
+            .lastName("Test")
+            .username("test")
+            .email("test@localhost")
+            .password("password")
+            .roles(Set.of(userRole))
+            .build());
   }
 
   @Test
