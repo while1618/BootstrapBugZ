@@ -58,7 +58,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
           new ObjectMapper().readValue(request.getInputStream(), SignInRequest.class);
       final var authToken =
           new UsernamePasswordAuthenticationToken(
-              signInRequest.getUsernameOrEmail(), signInRequest.getPassword(), new ArrayList<>());
+              signInRequest.usernameOrEmail(), signInRequest.password(), new ArrayList<>());
       return authenticationManager.authenticate(authToken);
     } catch (IOException | AuthenticationException | ResourceNotFoundException e) {
       handleException(response, e);
