@@ -106,11 +106,11 @@ public class AuthServiceImpl implements AuthService {
   public void confirmRegistration(ConfirmRegistrationRequest confirmRegistrationRequest) {
     final var user =
         userRepository
-            .findById(JwtUtil.getUserId(confirmRegistrationRequest.getToken()))
+            .findById(JwtUtil.getUserId(confirmRegistrationRequest.token()))
             .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
     if (user.isActivated())
       throw new ForbiddenException(messageService.getMessage("user.activated"));
-    confirmRegistrationTokenService.check(confirmRegistrationRequest.getToken());
+    confirmRegistrationTokenService.check(confirmRegistrationRequest.token());
     user.setActivated(true);
     userRepository.save(user);
   }
