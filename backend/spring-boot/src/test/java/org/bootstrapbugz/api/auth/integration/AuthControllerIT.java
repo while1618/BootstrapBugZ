@@ -188,7 +188,7 @@ class AuthControllerIT extends DatabaseContainers {
   void itShouldRefreshToken() throws Exception {
     final var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    final var refreshTokenRequest = new RefreshTokenRequest(signInDTO.getRefreshToken());
+    final var refreshTokenRequest = new RefreshTokenRequest(signInDTO.refreshToken());
     mockMvc
         .perform(
             post(Path.AUTH + "/refresh-token")
@@ -206,10 +206,10 @@ class AuthControllerIT extends DatabaseContainers {
         .perform(
             post(Path.AUTH + "/sign-out")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
+                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken()))
         .andExpect(status().isNoContent());
-    jwtShouldBeInvalid(signInDTO.getAccessToken());
-    refreshTokenShouldBeInvalid(signInDTO.getRefreshToken());
+    jwtShouldBeInvalid(signInDTO.accessToken());
+    refreshTokenShouldBeInvalid(signInDTO.refreshToken());
   }
 
   private void jwtShouldBeInvalid(String token) throws Exception {
@@ -247,10 +247,10 @@ class AuthControllerIT extends DatabaseContainers {
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
+                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken()))
         .andExpect(status().isNoContent());
-    jwtShouldBeInvalid(signInDTO.getAccessToken());
-    refreshTokenShouldBeInvalid(signInDTO.getRefreshToken());
+    jwtShouldBeInvalid(signInDTO.accessToken());
+    refreshTokenShouldBeInvalid(signInDTO.refreshToken());
   }
 
   @Test
@@ -345,7 +345,7 @@ class AuthControllerIT extends DatabaseContainers {
             .perform(
                 get(Path.AUTH + "/signed-in-user")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
+                    .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     final var actualUserDTO =

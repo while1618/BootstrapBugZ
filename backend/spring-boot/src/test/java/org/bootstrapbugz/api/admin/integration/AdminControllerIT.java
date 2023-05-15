@@ -53,7 +53,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/update-role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
+                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
         .andExpect(status().isNoContent());
   }
@@ -71,7 +71,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/" + path)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
+                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }
@@ -83,7 +83,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             delete(Path.ADMIN + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken())
+                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }

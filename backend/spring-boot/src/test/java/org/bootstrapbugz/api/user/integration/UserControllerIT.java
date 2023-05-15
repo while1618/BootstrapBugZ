@@ -50,7 +50,7 @@ class UserControllerIT extends DatabaseContainers {
         .perform(
             get(Path.USERS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.getAccessToken()))
+                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.length()").value(7))
@@ -69,7 +69,7 @@ class UserControllerIT extends DatabaseContainers {
   void itShouldFindUserByUsername_showEmail() throws Exception {
     final var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    performFindUserByUsername("user", signInDTO.getAccessToken())
+    performFindUserByUsername("user", signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.username").value("user"))
@@ -80,7 +80,7 @@ class UserControllerIT extends DatabaseContainers {
   void itShouldFindUserByUsername_hideEmail() throws Exception {
     final var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    performFindUserByUsername("admin", signInDTO.getAccessToken())
+    performFindUserByUsername("admin", signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.username").value("admin"))
@@ -91,7 +91,7 @@ class UserControllerIT extends DatabaseContainers {
   void itShouldFindUserByUsername_adminSignedIn() throws Exception {
     final var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
-    performFindUserByUsername("user", signInDTO.getAccessToken())
+    performFindUserByUsername("user", signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.username").value("user"))
@@ -103,7 +103,7 @@ class UserControllerIT extends DatabaseContainers {
     final var signInDTO =
         TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     final var resultActions =
-        performFindUserByUsername("unknown", signInDTO.getAccessToken())
+        performFindUserByUsername("unknown", signInDTO.accessToken())
             .andExpect(status().isNotFound());
     final var expectedErrorResponse = new ErrorMessage(HttpStatus.NOT_FOUND);
     expectedErrorResponse.addDetails("User not found.");

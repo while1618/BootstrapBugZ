@@ -90,10 +90,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     final var accessToken = accessTokenService.create(userDTO.id(), userDTO.roleDTOs());
     final var refreshToken = getRefreshToken(userDTO.id(), userDTO.roleDTOs(), ipAddress);
     final var signInDTO =
-        new SignInDTO()
-            .setAccessToken(JwtUtil.addBearer(accessToken))
-            .setRefreshToken(JwtUtil.addBearer(refreshToken))
-            .setUserDTO(userDTO);
+        SignInDTO.builder()
+            .accessToken(JwtUtil.addBearer(accessToken))
+            .refreshToken(JwtUtil.addBearer(refreshToken))
+            .userDTO(userDTO)
+            .build();
     writeToResponse(response, signInDTO);
   }
 
