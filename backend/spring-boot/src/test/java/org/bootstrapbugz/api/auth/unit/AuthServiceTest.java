@@ -207,8 +207,8 @@ class AuthServiceTest {
     when(refreshTokenStoreRepository.existsById(token)).thenReturn(true);
     final var refreshTokenRequest = new RefreshTokenRequest(token);
     final var refreshTokenDTO = authService.refreshToken(refreshTokenRequest, request);
-    assertThat(refreshTokenDTO.getAccessToken()).isNotNull();
-    assertThat(refreshTokenDTO.getRefreshToken()).isNotNull();
+    assertThat(refreshTokenDTO.accessToken()).isNotNull();
+    assertThat(refreshTokenDTO.refreshToken()).isNotNull();
   }
 
   @Test

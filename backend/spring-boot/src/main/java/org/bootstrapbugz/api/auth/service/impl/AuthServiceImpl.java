@@ -126,7 +126,10 @@ public class AuthServiceImpl implements AuthService {
     final var accessToken = accessTokenService.create(userId, roleDTOs);
     final var newRefreshToken =
         refreshTokenService.create(userId, roleDTOs, AuthUtil.getUserIpAddress(request));
-    return new RefreshTokenDTO(JwtUtil.addBearer(accessToken), JwtUtil.addBearer(newRefreshToken));
+    return RefreshTokenDTO.builder()
+        .accessToken(JwtUtil.addBearer(accessToken))
+        .refreshToken(JwtUtil.addBearer(newRefreshToken))
+        .build();
   }
 
   @Override
