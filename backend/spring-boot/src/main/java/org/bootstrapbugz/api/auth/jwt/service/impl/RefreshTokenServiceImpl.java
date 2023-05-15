@@ -50,10 +50,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   @Override
   public void check(String token) {
     JwtUtil.verify(token, secret, PURPOSE);
-    isNotInRefreshTokenWhitelist(token);
+    isInRefreshTokenStore(token);
   }
 
-  private void isNotInRefreshTokenWhitelist(String token) {
+  private void isInRefreshTokenStore(String token) {
     if (!refreshTokenStoreRepository.existsById(token))
       throw new UnauthorizedException(messageService.getMessage("token.invalid"));
   }
