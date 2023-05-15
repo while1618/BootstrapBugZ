@@ -162,10 +162,10 @@ public class AuthServiceImpl implements AuthService {
   public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
     final var user =
         userRepository
-            .findById(JwtUtil.getUserId(resetPasswordRequest.getToken()))
+            .findById(JwtUtil.getUserId(resetPasswordRequest.token()))
             .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
-    resetPasswordTokenService.check(resetPasswordRequest.getToken());
-    user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getPassword()));
+    resetPasswordTokenService.check(resetPasswordRequest.token());
+    user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.password()));
     accessTokenService.invalidateAllByUser(user.getId());
     refreshTokenService.deleteAllByUser(user.getId());
     userRepository.save(user);

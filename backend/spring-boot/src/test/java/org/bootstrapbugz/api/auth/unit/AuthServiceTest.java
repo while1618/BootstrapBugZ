@@ -258,7 +258,7 @@ class AuthServiceTest {
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(
             bCryptPasswordEncoder.matches(
-                resetPasswordRequest.getPassword(), userArgumentCaptor.getValue().getPassword()))
+                resetPasswordRequest.password(), userArgumentCaptor.getValue().getPassword()))
         .isTrue();
   }
 
