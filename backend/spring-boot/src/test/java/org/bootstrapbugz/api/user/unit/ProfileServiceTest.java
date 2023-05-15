@@ -74,8 +74,8 @@ class ProfileServiceTest {
         new UpdateProfileRequest("User", "User", "user", "user@localhost");
     when(userRepository.findByUsernameWithRoles("test"))
         .thenReturn(Optional.of(TestUtil.getTestUser()));
-    when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(false);
-    when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(false);
+    when(userRepository.existsByUsername(updateUserRequest.username())).thenReturn(false);
+    when(userRepository.existsByEmail(updateUserRequest.email())).thenReturn(false);
     profileService.update(updateUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
@@ -107,7 +107,7 @@ class ProfileServiceTest {
         new UpdateProfileRequest("Test", "Test", "admin", "test@localhost");
     when(userRepository.findByUsernameWithRoles("test"))
         .thenReturn(Optional.of(TestUtil.getTestUser()));
-    when(userRepository.existsByUsername(updateUserRequest.getUsername())).thenReturn(true);
+    when(userRepository.existsByUsername(updateUserRequest.username())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> profileService.update(updateUserRequest))
         .isInstanceOf(ConflictException.class)
@@ -120,7 +120,7 @@ class ProfileServiceTest {
         new UpdateProfileRequest("Test", "Test", "test", "admin@localhost");
     when(userRepository.findByUsernameWithRoles("test"))
         .thenReturn(Optional.of(TestUtil.getTestUser()));
-    when(userRepository.existsByEmail(updateUserRequest.getEmail())).thenReturn(true);
+    when(userRepository.existsByEmail(updateUserRequest.email())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> profileService.update(updateUserRequest))
         .isInstanceOf(ConflictException.class)

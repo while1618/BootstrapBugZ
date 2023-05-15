@@ -53,10 +53,10 @@ public class ProfileServiceImpl implements ProfileService {
             .findByUsernameWithRoles(userDTO.username())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    user.setFirstName(updateProfileRequest.getFirstName());
-    user.setLastName(updateProfileRequest.getLastName());
-    tryToSetUsername(user, updateProfileRequest.getUsername());
-    tryToSetEmail(user, updateProfileRequest.getEmail());
+    user.setFirstName(updateProfileRequest.firstName());
+    user.setLastName(updateProfileRequest.lastName());
+    tryToSetUsername(user, updateProfileRequest.username());
+    tryToSetEmail(user, updateProfileRequest.email());
     return userMapper.userToUserDTO(userRepository.save(user));
   }
 
