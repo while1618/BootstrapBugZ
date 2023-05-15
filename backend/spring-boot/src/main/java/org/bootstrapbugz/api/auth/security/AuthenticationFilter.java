@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.auth.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.FilterChain;
@@ -56,7 +55,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
       HttpServletRequest request, HttpServletResponse response) {
     try {
       final var signInRequest =
-          new ObjectMapper().readValue(request.getInputStream(), SignInRequest.class);
+          JsonMapper.builder().build().readValue(request.getInputStream(), SignInRequest.class);
       final var authToken =
           new UsernamePasswordAuthenticationToken(
               signInRequest.usernameOrEmail(), signInRequest.password(), new ArrayList<>());
