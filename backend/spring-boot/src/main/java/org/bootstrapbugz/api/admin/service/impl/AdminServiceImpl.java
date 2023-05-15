@@ -31,14 +31,14 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void activate(AdminRequest adminRequest) {
-    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.usernames());
     users.forEach(user -> user.setActivated(true));
     userRepository.saveAll(users);
   }
 
   @Override
   public void deactivate(AdminRequest adminRequest) {
-    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.usernames());
     users.forEach(
         user -> {
           user.setActivated(false);
@@ -50,14 +50,14 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void unlock(AdminRequest adminRequest) {
-    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.usernames());
     users.forEach(user -> user.setNonLocked(true));
     userRepository.saveAll(users);
   }
 
   @Override
   public void lock(AdminRequest adminRequest) {
-    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.usernames());
     users.forEach(
         user -> {
           user.setNonLocked(false);
@@ -83,7 +83,7 @@ public class AdminServiceImpl implements AdminService {
   @Override
   @Transactional
   public void delete(AdminRequest adminRequest) {
-    final var users = userRepository.findAllByUsernameIn(adminRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(adminRequest.usernames());
     users.forEach(
         user -> {
           accessTokenService.invalidateAllByUser(user.getId());

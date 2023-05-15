@@ -72,7 +72,7 @@ class AdminServiceTest {
             .setActivated(true)
             .setNonLocked(false)
             .setRoles(Set.of(new Role(RoleName.USER)));
-    when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
+    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
     adminService.lock(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
@@ -92,7 +92,7 @@ class AdminServiceTest {
             .setActivated(true)
             .setNonLocked(true)
             .setRoles(Set.of(new Role(RoleName.USER)));
-    when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
+    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
     adminService.unlock(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
@@ -111,7 +111,7 @@ class AdminServiceTest {
             .setEmail("test@localhost")
             .setActivated(true)
             .setRoles(Set.of(new Role(RoleName.USER)));
-    when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
+    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
     adminService.activate(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
@@ -130,7 +130,7 @@ class AdminServiceTest {
             .setEmail("test@localhost")
             .setActivated(false)
             .setRoles(Set.of(new Role(RoleName.USER)));
-    when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
+    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
     adminService.deactivate(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
@@ -140,7 +140,7 @@ class AdminServiceTest {
   @Test
   void deleteUsers() {
     final var adminRequest = new AdminRequest(Set.of("admin", "test"));
-    when(userRepository.findAllByUsernameIn(adminRequest.getUsernames()))
+    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser(), TestUtil.getAdminUser()));
     adminService.delete(adminRequest);
     verify(userRepository, times(2)).delete(any(User.class));
