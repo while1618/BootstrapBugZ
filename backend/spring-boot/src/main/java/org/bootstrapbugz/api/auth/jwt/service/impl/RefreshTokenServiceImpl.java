@@ -37,7 +37,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     final var token =
         JWT.create()
             .withIssuer(userId.toString())
-            .withClaim("roles", roleDTOs.stream().map(RoleDTO::getName).toList())
+            .withClaim("roles", roleDTOs.stream().map(RoleDTO::name).toList())
             .withClaim("purpose", PURPOSE.name())
             .withIssuedAt(Instant.now())
             .withExpiresAt(Instant.now().plusSeconds(tokenDuration))

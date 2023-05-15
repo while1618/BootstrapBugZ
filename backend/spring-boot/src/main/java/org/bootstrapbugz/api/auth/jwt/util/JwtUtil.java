@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import java.time.Instant;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 
 public class JwtUtil {
@@ -39,7 +40,8 @@ public class JwtUtil {
   }
 
   public static Set<RoleDTO> getRoleDTOs(String token) {
-    return Set.copyOf(JWT.decode(token).getClaim("roles").asList(RoleDTO.class));
+    final var roles = JWT.decode(token).getClaim("roles").asList(String.class);
+    return roles.stream().map(RoleDTO::new).collect(Collectors.toSet());
   }
 
   public static Instant getIssuedAt(String token) {
