@@ -151,7 +151,7 @@ public class AuthServiceImpl implements AuthService {
   public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
     final var user =
         userRepository
-            .findByEmail(forgotPasswordRequest.getEmail())
+            .findByEmail(forgotPasswordRequest.email())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     final var token = resetPasswordTokenService.create(user.getId());
