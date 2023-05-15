@@ -35,7 +35,6 @@ public class AuthServiceImpl implements AuthService {
   private final RoleRepository roleRepository;
   private final MessageService messageService;
   private final PasswordEncoder bCryptPasswordEncoder;
-  private final UserMapper userMapper;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
   private final ConfirmRegistrationTokenService confirmRegistrationTokenService;
@@ -46,7 +45,6 @@ public class AuthServiceImpl implements AuthService {
       RoleRepository roleRepository,
       MessageService messageService,
       PasswordEncoder bCryptPasswordEncoder,
-      UserMapper userMapper,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
       ConfirmRegistrationTokenService confirmRegistrationTokenService,
@@ -55,7 +53,6 @@ public class AuthServiceImpl implements AuthService {
     this.roleRepository = roleRepository;
     this.messageService = messageService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    this.userMapper = userMapper;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
     this.confirmRegistrationTokenService = confirmRegistrationTokenService;
@@ -67,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
     final var user = createUser(signUpRequest);
     final var token = confirmRegistrationTokenService.create(user.getId());
     confirmRegistrationTokenService.sendToEmail(user, token);
-    return userMapper.userToUserDTO(user);
+    return UserMapper.INSTANCE.userToUserDTO(user);
   }
 
   private User createUser(SignUpRequest signUpRequest) {

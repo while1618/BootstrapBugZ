@@ -21,6 +21,7 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
+import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -85,7 +86,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    final var userDTO = AuthUtil.userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
+    final var userDTO =
+        UserMapper.INSTANCE.userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
     final var ipAddress = AuthUtil.getUserIpAddress(request);
     final var accessToken = accessTokenService.create(userDTO.id(), userDTO.roleDTOs());
     final var refreshToken = getRefreshToken(userDTO.id(), userDTO.roleDTOs(), ipAddress);

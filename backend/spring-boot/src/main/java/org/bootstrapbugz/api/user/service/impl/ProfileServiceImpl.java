@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 public class ProfileServiceImpl implements ProfileService {
   private final UserRepository userRepository;
   private final MessageService messageService;
-  private final UserMapper userMapper;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
@@ -31,14 +30,12 @@ public class ProfileServiceImpl implements ProfileService {
   public ProfileServiceImpl(
       UserRepository userRepository,
       MessageService messageService,
-      UserMapper userMapper,
       PasswordEncoder bCryptPasswordEncoder,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
       ConfirmRegistrationTokenService confirmRegistrationTokenService) {
     this.userRepository = userRepository;
     this.messageService = messageService;
-    this.userMapper = userMapper;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
@@ -57,7 +54,7 @@ public class ProfileServiceImpl implements ProfileService {
     user.setLastName(updateProfileRequest.lastName());
     tryToSetUsername(user, updateProfileRequest.username());
     tryToSetEmail(user, updateProfileRequest.email());
-    return userMapper.userToUserDTO(userRepository.save(user));
+    return UserMapper.INSTANCE.userToUserDTO(userRepository.save(user));
   }
 
   private void tryToSetUsername(User user, String username) {

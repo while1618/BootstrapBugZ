@@ -15,33 +15,33 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final MessageService messageService;
-  private final UserMapper userMapper;
 
-  public UserServiceImpl(
-      UserRepository userRepository, MessageService messageService, UserMapper userMapper) {
+  public UserServiceImpl(UserRepository userRepository, MessageService messageService) {
     this.userRepository = userRepository;
     this.messageService = messageService;
-    this.userMapper = userMapper;
   }
 
   @Override
   public List<UserDTO> findAll() {
     if (AuthUtil.isAdminSignedIn())
-      return userRepository.findAllWithRoles().stream().map(userMapper::userToUserDTO).toList();
+      return userRepository.findAllWithRoles().stream()
+          .map(UserMapper.INSTANCE::userToUserDTO)
+          .toList();
     return userRepository.findAll().stream()
         .map(
             user -> {
               user.setRoles(null);
               user.setEmail(null);
-              return userMapper.userToUserDTO(user);
+              return UserMapper.INSTANCE.userToUserDTO(user);
             })
         .toList();
   }
 
   @Override
   public UserDTO findByUsername(String username) {
-    if (AuthUtil.isAdminSignedIn()) return userMapper.userToUserDTO(userForAdmin(username));
-    return userMapper.userToUserDTO(userForNonAdmin(username));
+    if (AuthUtil.isAdminSignedIn())
+      return UserMapper.INSTANCE.userToUserDTO(userForAdmin(username));
+    return UserMapper.INSTANCE.userToUserDTO(userForNonAdmin(username));
   }
 
   private User userForAdmin(String username) {

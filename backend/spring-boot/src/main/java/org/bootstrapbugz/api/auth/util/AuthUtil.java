@@ -1,11 +1,9 @@
 package org.bootstrapbugz.api.auth.util;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
+import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -21,34 +19,15 @@ public class AuthUtil {
 
   public static boolean isAdminSignedIn() {
     if (!isSignedIn()) return false;
-    final var userDTO = findSignedInUser();
-    return userDTO.roleDTOs().stream()
-        .anyMatch(roleDTO -> roleDTO.getName().equals(RoleName.ADMIN.name()));
+    final var auth = SecurityContextHolder.getContext().getAuthentication();
+    return ((UserPrincipal) auth.getPrincipal())
+        .getAuthorities().stream()
+            .anyMatch(authority -> authority.getAuthority().equals(RoleName.ADMIN.name()));
   }
 
   public static UserDTO findSignedInUser() {
     final var auth = SecurityContextHolder.getContext().getAuthentication();
-    return userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
-  }
-
-  public static UserDTO userPrincipalToUserDTO(UserPrincipal userPrincipal) {
-    return UserDTO.builder()
-        .id(userPrincipal.getId())
-        .firstName(userPrincipal.getFirstName())
-        .lastName(userPrincipal.getLastName())
-        .username(userPrincipal.getUsername())
-        .email(userPrincipal.getEmail())
-        .activated(userPrincipal.isEnabled())
-        .nonLocked(userPrincipal.isAccountNonLocked())
-        .createdAt(userPrincipal.getCreatedAt())
-        .roleDTOs(getRoleDTOs(userPrincipal))
-        .build();
-  }
-
-  private static Set<RoleDTO> getRoleDTOs(UserPrincipal userPrincipal) {
-    return userPrincipal.getAuthorities().stream()
-        .map(authority -> new RoleDTO(RoleName.valueOf(authority.getAuthority()).name()))
-        .collect(Collectors.toSet());
+    return UserMapper.INSTANCE.userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
   }
 
   public static String getUserIpAddress(HttpServletRequest request) {

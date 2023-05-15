@@ -16,7 +16,6 @@ import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.shared.util.TestUtil;
-import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
@@ -42,7 +41,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 class ProfileServiceTest {
   @Mock private UserRepository userRepository;
   @Mock private MessageService messageService;
-  @Spy private UserMapperImpl userMapper;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
   @Mock private AccessTokenService accessTokenService;
   @Mock private RefreshTokenService refreshTokenService;

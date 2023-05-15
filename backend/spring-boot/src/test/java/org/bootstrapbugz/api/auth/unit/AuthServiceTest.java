@@ -32,7 +32,6 @@ import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.shared.util.TestUtil;
-import org.bootstrapbugz.api.user.mapper.UserMapperImpl;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
@@ -62,7 +61,6 @@ class AuthServiceTest {
   @Mock private RoleRepository roleRepository;
   @Mock private MessageService messageService;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
-  @Spy private UserMapperImpl userMapper;
   @Mock private AccessTokenBlacklistRepository accessTokenBlacklistRepository;
   @Mock private UserBlacklistRepository userBlacklistRepository;
   @Mock private RefreshTokenStoreRepository refreshTokenStoreRepository;
@@ -92,7 +90,6 @@ class AuthServiceTest {
             roleRepository,
             messageService,
             bCryptPasswordEncoder,
-            userMapper,
             accessTokenService,
             refreshTokenService,
             confirmRegistrationTokenService,
