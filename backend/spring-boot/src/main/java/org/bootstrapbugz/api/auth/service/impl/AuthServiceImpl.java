@@ -73,11 +73,11 @@ public class AuthServiceImpl implements AuthService {
   private User createUser(SignUpRequest signUpRequest) {
     final var user =
         new User()
-            .setFirstName(signUpRequest.getFirstName())
-            .setLastName(signUpRequest.getLastName())
-            .setUsername(signUpRequest.getUsername())
-            .setEmail(signUpRequest.getEmail())
-            .setPassword(bCryptPasswordEncoder.encode(signUpRequest.getPassword()))
+            .setFirstName(signUpRequest.firstName())
+            .setLastName(signUpRequest.lastName())
+            .setUsername(signUpRequest.username())
+            .setEmail(signUpRequest.email())
+            .setPassword(bCryptPasswordEncoder.encode(signUpRequest.password()))
             .setRoles(Collections.singleton(getUserRole()));
     return userRepository.save(user);
   }
