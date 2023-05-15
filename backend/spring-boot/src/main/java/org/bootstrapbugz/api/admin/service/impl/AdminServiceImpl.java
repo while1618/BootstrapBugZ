@@ -69,10 +69,10 @@ public class AdminServiceImpl implements AdminService {
 
   @Override
   public void updateRole(UpdateRoleRequest updateRoleRequest) {
-    final var users = userRepository.findAllByUsernameIn(updateRoleRequest.getUsernames());
+    final var users = userRepository.findAllByUsernameIn(updateRoleRequest.usernames());
     users.forEach(
         user -> {
-          final var roles = roleRepository.findAllByNameIn(updateRoleRequest.getRoleNames());
+          final var roles = roleRepository.findAllByNameIn(updateRoleRequest.roleNames());
           user.setRoles(Set.copyOf(roles));
           accessTokenService.invalidateAllByUser(user.getId());
           refreshTokenService.deleteAllByUser(user.getId());

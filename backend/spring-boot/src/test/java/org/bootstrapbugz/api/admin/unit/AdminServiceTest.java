@@ -50,9 +50,9 @@ class AdminServiceTest {
             .setEmail("test@localhost")
             .setActivated(true)
             .setRoles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
-    when(userRepository.findAllByUsernameIn(updateRolesRequest.getUsernames()))
+    when(userRepository.findAllByUsernameIn(updateRolesRequest.usernames()))
         .thenReturn(List.of(TestUtil.getTestUser()));
-    when(roleRepository.findAllByNameIn(updateRolesRequest.getRoleNames()))
+    when(roleRepository.findAllByNameIn(updateRolesRequest.roleNames()))
         .thenReturn(List.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
     adminService.updateRole(updateRolesRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
