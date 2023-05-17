@@ -58,6 +58,7 @@ paths:
                 email: joe.bloggs@bootstrapbugz.com
                 activated: false
                 nonLocked: true
+                createdAt: 2023-05-18T00:51:50.758738
                 roles:
                   - name: USER
         400:
@@ -147,6 +148,7 @@ paths:
                   email: john.doe@bootstrapbugz.com
                   activated: true
                   nonLocked: true
+                  createdAt: 2023-05-18T00:51:50.758738
                   roles:
                     - name: USER
         400:
@@ -284,6 +286,7 @@ paths:
                 email: john.doe@bootstrapbugz.com
                 activated: true
                 nonLocked: true
+                createdAt: 2023-05-18T00:51:50.758738
                 roles:
                   - name: USER
         401:
@@ -509,6 +512,7 @@ paths:
                 email: joe.blow@bootstrapbugz.com
                 activated: false
                 nonLocked: true
+                createdAt: 2023-05-18T00:51:50.758738
                 roles:
                   - name: USER
         400:
@@ -730,7 +734,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorMessage"
           example:
-            timestamp: 18-10-2021 04:00:44
+            timestamp: 2023-05-18T00:51:50.758738
             status: 400
             error: Bad Request
             details:
@@ -745,7 +749,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorMessage"
           example:
-            timestamp: 18-10-2021 04:00:44
+            timestamp: 2023-05-18T00:51:50.758738
             status: 404
             error: Not Found
             details:
@@ -757,7 +761,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorMessage"
           example:
-            timestamp: 18-10-2021 04:00:44
+            timestamp: 2023-05-18T00:51:50.758738
             status: 401
             error: Unauthorized
             details:
@@ -769,7 +773,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorMessage"
           example:
-            timestamp: 18-10-2021 04:00:44
+            timestamp: 2023-05-18T00:51:50.758738
             status: 403
             error: Forbidden
             details:
@@ -781,7 +785,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorMessage"
           example:
-            timestamp: 18-10-2021 04:00:44
+            timestamp: 2023-05-18T00:51:50.758738
             status: 409
             error: Conflict
             details:
@@ -807,7 +811,7 @@ components:
     ConfirmRegistrationRequest:
       type: object
       properties:
-        accessToken:
+        token:
           type: string
           format: JWT
     ResendConfirmationEmailRequest:
@@ -837,7 +841,7 @@ components:
     ResetPasswordRequest:
       type: object
       properties:
-        accessToken:
+        token:
           type: string
           format: JWT
         password:
@@ -913,6 +917,9 @@ components:
           type: boolean
         nonLocked:
           type: boolean
+        createdAt:
+          type: string
+          format: date-time
         roles:
           type: array
           items:

@@ -1,12 +1,15 @@
 package org.bootstrapbugz.api.auth.security;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
@@ -108,11 +111,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private void writeToResponse(HttpServletResponse response, SignInDTO signInDTO)
       throws IOException {
     final var json =
-        JsonMapper.builder()
-            .addModule(new JavaTimeModule())
-            .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))
-            .build()
-            .writeValueAsString(signInDTO);
+        new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(
+                LocalDateTime.class,
+                (JsonSerializer<LocalDateTime>)
+                    (localDateTime, type, jsonSerializationContext) ->
+                        new JsonPrimitive(localDateTime.format(DateTimeFormatter.ISO_DATE_TIME)))
+            .create()
+            .toJson(signInDTO);
     final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     out.print(json);

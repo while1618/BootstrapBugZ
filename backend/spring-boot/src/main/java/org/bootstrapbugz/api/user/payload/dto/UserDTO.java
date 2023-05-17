@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.user.payload.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
+import com.google.gson.annotations.SerializedName;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Builder;
@@ -16,7 +17,7 @@ public record UserDTO(
     boolean activated,
     boolean nonLocked,
     LocalDateTime createdAt,
-    @JsonProperty("roles") Set<RoleDTO> roleDTOs) {
+    @JsonProperty("roles") @SerializedName("roles") Set<RoleDTO> roleDTOs) {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

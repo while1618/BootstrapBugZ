@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.shared.error;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,9 +16,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorMessage {
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
   private final LocalDateTime timestamp;
-
   private final int status;
   private final String error;
   private final List<Detail> details;
@@ -41,18 +38,15 @@ public class ErrorMessage {
 
   @Override
   public String toString() {
-    final var gson =
-        new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(
-                LocalDateTime.class,
-                (JsonSerializer<LocalDateTime>)
-                    (localDateTime, type, jsonSerializationContext) ->
-                        new JsonPrimitive(
-                            localDateTime.format(
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss"))))
-            .create();
-    return gson.toJson(this);
+    return new GsonBuilder()
+        .setPrettyPrinting()
+        .registerTypeAdapter(
+            LocalDateTime.class,
+            (JsonSerializer<LocalDateTime>)
+                (localDateTime, type, jsonSerializationContext) ->
+                    new JsonPrimitive(localDateTime.format(DateTimeFormatter.ISO_DATE_TIME)))
+        .create()
+        .toJson(this);
   }
 
   @Getter
