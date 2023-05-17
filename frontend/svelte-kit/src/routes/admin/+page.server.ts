@@ -1,6 +1,6 @@
-import { makeRequest } from '$lib/apis/api';
 import type { UserDTO } from '$lib/models/user/user';
-import { HttpRequest } from '$lib/utils/util';
+import { makeRequest } from '$lib/server/apis/api';
+import { HttpRequest } from '$lib/server/utils/util';
 import { error, fail, type Cookies } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 

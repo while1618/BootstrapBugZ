@@ -1,15 +1,15 @@
 import { JWT_SECRET } from '$env/static/private';
-import { makeRequest } from '$lib/apis/api';
 import type { JwtPayload } from '$lib/models/auth/jwt-payload';
 import type { RefreshTokenDTO } from '$lib/models/auth/refresh-token';
 import { RoleName } from '$lib/models/user/role';
+import { makeRequest } from '$lib/server/apis/api';
 import {
   HttpRequest,
   removeAuth,
   removeBearerPrefix,
   setAccessTokenCookie,
   setRefreshTokenCookie,
-} from '$lib/utils/util';
+} from '$lib/server/utils/util';
 import { redirect, type Cookies, type Handle } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 

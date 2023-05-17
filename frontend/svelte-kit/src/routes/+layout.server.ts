@@ -1,6 +1,6 @@
-import { makeRequest } from '$lib/apis/api';
 import type { UserDTO } from '$lib/models/user/user';
-import { HttpRequest, removeAuth } from '$lib/utils/util';
+import { makeRequest } from '$lib/server/apis/api';
+import { HttpRequest, removeAuth } from '$lib/server/utils/util';
 import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 

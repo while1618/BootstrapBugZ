@@ -1,7 +1,7 @@
-import { makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import { PASSWORD_REGEX } from '$lib/regex/regex';
-import { HttpRequest, removeAuth } from '$lib/utils/util';
+import { makeRequest } from '$lib/server/apis/api';
+import { HttpRequest, removeAuth } from '$lib/server/utils/util';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { z } from 'zod';
 

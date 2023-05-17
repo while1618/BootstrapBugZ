@@ -1,8 +1,8 @@
-import { makeRequest } from '$lib/apis/api';
 import en from '$lib/i18n/en.json';
 import type { SignInDTO } from '$lib/models/auth/sign-in';
 import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
-import { HttpRequest, setAccessTokenCookie, setRefreshTokenCookie } from '$lib/utils/util';
+import { makeRequest } from '$lib/server/apis/api';
+import { HttpRequest, setAccessTokenCookie, setRefreshTokenCookie } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';

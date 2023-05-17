@@ -1,6 +1,6 @@
 import { API_URL } from '$env/static/private';
 import type { ErrorMessage } from '$lib/models/shared/error-message';
-import type { HttpRequest } from '$lib/utils/util';
+import type { HttpRequest } from '$lib/server/utils/util';
 
 export interface RequestParams {
   method: HttpRequest;

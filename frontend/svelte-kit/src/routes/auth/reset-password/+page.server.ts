@@ -1,8 +1,8 @@
 import { JWT_SECRET } from '$env/static/private';
-import { makeRequest } from '$lib/apis/api';
+import { makeRequest } from '$lib/server/apis/api';
 import en from '$lib/i18n/en.json';
 import { PASSWORD_REGEX } from '$lib/regex/regex';
-import { HttpRequest, removeBearerPrefix } from '$lib/utils/util';
+import { HttpRequest, removeBearerPrefix } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
