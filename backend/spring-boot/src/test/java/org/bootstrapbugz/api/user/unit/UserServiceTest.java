@@ -10,7 +10,7 @@ import java.util.Set;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.shared.util.TestUtil;
+import org.bootstrapbugz.api.shared.unit.TestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;

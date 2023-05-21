@@ -15,7 +15,7 @@ import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.shared.util.TestUtil;
+import org.bootstrapbugz.api.shared.unit.TestUtil;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;

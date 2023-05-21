@@ -14,7 +14,7 @@ import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.admin.service.impl.AdminServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
-import org.bootstrapbugz.api.shared.util.TestUtil;
+import org.bootstrapbugz.api.shared.unit.TestUtil;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;

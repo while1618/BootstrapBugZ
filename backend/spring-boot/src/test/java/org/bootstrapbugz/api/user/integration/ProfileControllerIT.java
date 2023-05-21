@@ -10,7 +10,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
-import org.bootstrapbugz.api.shared.util.TestUtil;
+import org.bootstrapbugz.api.shared.integration.TestUtil;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.junit.jupiter.api.Test;
