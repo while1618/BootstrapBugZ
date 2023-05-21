@@ -39,49 +39,16 @@ public class DataInit implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) {
+    saveRoles();
+    saveUsers();
+  }
+
+  private void saveRoles() {
     roleRepository.saveAll(List.of(userRole, adminRole));
-    if (environment.getActiveProfiles()[0].equals("dev")) devUsers();
-    else if (environment.getActiveProfiles()[0].equals("test")) testUsers();
   }
 
-  private void devUsers() {
-    final var users =
-        List.of(
-            User.builder()
-                .firstName("Admin")
-                .lastName("Admin")
-                .username("admin")
-                .email("admin@bootstrapbugz.com")
-                .password(bCryptPasswordEncoder.encode(PASSWORD))
-                .activated(true)
-                .nonLocked(true)
-                .roles(Set.of(userRole, adminRole))
-                .build(),
-            User.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .username("john.doe")
-                .email("john.doe@bootstrapbugz.com")
-                .password(bCryptPasswordEncoder.encode(PASSWORD))
-                .activated(true)
-                .nonLocked(true)
-                .roles(Collections.singleton(userRole))
-                .build(),
-            User.builder()
-                .firstName("Jane")
-                .lastName("Doe")
-                .username("jane.doe")
-                .email("jane.doe@bootstrapbugz.com")
-                .password(bCryptPasswordEncoder.encode(PASSWORD))
-                .activated(true)
-                .nonLocked(true)
-                .roles(Collections.singleton(userRole))
-                .build());
-    userRepository.saveAll(users);
-  }
-
-  private void testUsers() {
-    final var users =
+  private void saveUsers() {
+    userRepository.saveAll(
         List.of(
             User.builder()
                 .firstName("Admin")
@@ -102,7 +69,39 @@ public class DataInit implements ApplicationRunner {
                 .activated(true)
                 .nonLocked(true)
                 .roles(Collections.singleton(userRole))
+                .build()));
+    if (environment.getActiveProfiles()[0].equals("dev")) devUsers();
+    else if (environment.getActiveProfiles()[0].equals("test")) testUsers();
+  }
+
+  private void devUsers() {
+    userRepository.saveAll(
+        List.of(
+            User.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .username("john.doe")
+                .email("john.doe@bootstrapbugz.com")
+                .password(bCryptPasswordEncoder.encode(PASSWORD))
+                .activated(true)
+                .nonLocked(true)
+                .roles(Collections.singleton(userRole))
                 .build(),
+            User.builder()
+                .firstName("Jane")
+                .lastName("Doe")
+                .username("jane.doe")
+                .email("jane.doe@bootstrapbugz.com")
+                .password(bCryptPasswordEncoder.encode(PASSWORD))
+                .activated(true)
+                .nonLocked(true)
+                .roles(Collections.singleton(userRole))
+                .build()));
+  }
+
+  private void testUsers() {
+    userRepository.saveAll(
+        List.of(
             User.builder()
                 .firstName("Not Activated")
                 .lastName("Not Activated")
@@ -152,7 +151,6 @@ public class DataInit implements ApplicationRunner {
                 .activated(true)
                 .nonLocked(true)
                 .roles(Collections.singleton(userRole))
-                .build());
-    userRepository.saveAll(users);
+                .build()));
   }
 }
