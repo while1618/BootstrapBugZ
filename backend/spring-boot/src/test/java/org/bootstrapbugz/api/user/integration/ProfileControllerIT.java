@@ -54,7 +54,7 @@ class ProfileControllerIT extends DatabaseContainers {
   void itShouldUpdateUser_newUsernameAndEmail() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(
-            mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty123"));
+            mockMvc, objectMapper, new SignInRequest("update1", "qwerty123"));
     final var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "updated", "updated@bootstrapbugz.com");
     performUpdateUser(updateUserRequest, signInDTO.accessToken())
@@ -67,13 +67,12 @@ class ProfileControllerIT extends DatabaseContainers {
   void itShouldUpdateUser_sameUsernameAndEmail() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(
-            mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
+            mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var updateUserRequest =
-        new UpdateProfileRequest(
-            "Updated", "Updated", "for.update.2", "for.update.2@bootstrapbugz.com");
+        new UpdateProfileRequest("Updated", "Updated", "update2", "update2@bootstrapbugz.com");
     performUpdateUser(updateUserRequest, signInDTO.accessToken())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.username").value("for.update.2"))
+        .andExpect(jsonPath("$.username").value("update2"))
         .andExpect(jsonPath("$.firstName").value("Updated"));
   }
 
@@ -81,9 +80,9 @@ class ProfileControllerIT extends DatabaseContainers {
   void updateUserShouldThrowBadRequest_usernameExists() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(
-            mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
+            mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "user", "for.update.2@bootstrapbugz.com");
+        new UpdateProfileRequest("Updated", "Updated", "user", "update2@bootstrapbugz.com");
     final var resultActions =
         performUpdateUser(updateUserRequest, signInDTO.accessToken())
             .andExpect(status().isConflict());
@@ -96,9 +95,9 @@ class ProfileControllerIT extends DatabaseContainers {
   void updateUserShouldThrowBadRequest_emailExists() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(
-            mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
+            mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "for.update.2", "user@bootstrapbugz.com");
+        new UpdateProfileRequest("Updated", "Updated", "update2", "user@bootstrapbugz.com");
     final var resultActions =
         performUpdateUser(updateUserRequest, signInDTO.accessToken())
             .andExpect(status().isConflict());
@@ -111,7 +110,7 @@ class ProfileControllerIT extends DatabaseContainers {
   void updateUserShouldThrowBadRequest_invalidParameters() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(
-            mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
+            mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var updateUserRequest =
         new UpdateProfileRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
     final var resultActions =
@@ -129,7 +128,7 @@ class ProfileControllerIT extends DatabaseContainers {
   void itShouldChangePassword() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(
-            mockMvc, objectMapper, new SignInRequest("for.update.3", "qwerty123"));
+            mockMvc, objectMapper, new SignInRequest("update3", "qwerty123"));
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
     performChangePassword(changePasswordRequest, signInDTO.accessToken())
@@ -140,7 +139,7 @@ class ProfileControllerIT extends DatabaseContainers {
   void changePasswordShouldThrowBadRequest_oldPasswordDoNotMatch() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(
-            mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
+            mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty12345", "qwerty1234", "qwerty1234");
     final var resultActions =
@@ -155,7 +154,7 @@ class ProfileControllerIT extends DatabaseContainers {
   void changePasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(
-            mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
+            mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty12345");
     final var resultActions =
@@ -170,7 +169,7 @@ class ProfileControllerIT extends DatabaseContainers {
   void changePasswordShouldThrowBadRequest_invalidParameters() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(
-            mockMvc, objectMapper, new SignInRequest("for.update.2", "qwerty123"));
+            mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var changePasswordRequest = new ChangePasswordRequest("invalid", "invalid", "invalid");
     final var resultActions =
         performChangePassword(changePasswordRequest, signInDTO.accessToken())

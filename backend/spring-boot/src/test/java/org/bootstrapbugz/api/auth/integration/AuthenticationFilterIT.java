@@ -57,7 +57,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
   @ParameterizedTest
   @CsvSource({
     "locked, User locked.",
-    "not.activated, User not activated.",
+    "deactivated, User not activated.",
   })
   void signInShouldThrowForbidden_userLockedAndUserNotActivated(String username, String message)
       throws Exception {

@@ -101,7 +101,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldResendConfirmationEmail() throws Exception {
-    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("not.activated");
+    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("deactivated");
     mockMvc
         .perform(
             post(Path.AUTH + "/resend-confirmation-email")
@@ -142,7 +142,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldConfirmRegistration() throws Exception {
-    final var token = confirmRegistrationTokenService.create(3L); // not.activated
+    final var token = confirmRegistrationTokenService.create(3L); // deactivated
     final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     mockMvc
         .perform(
@@ -281,7 +281,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldResetPassword() throws Exception {
-    final var token = resetPasswordService.create(5L); // for.update.1
+    final var token = resetPasswordService.create(5L); // update1
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
@@ -289,13 +289,12 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isNoContent());
-    IntegrationTestUtil.signIn(
-        mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty1234"));
+    IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("update1", "qwerty1234"));
   }
 
   @Test
   void resetPasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    final var token = resetPasswordService.create(6L); // for.update.2
+    final var token = resetPasswordService.create(6L); // update2
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty123", "qwerty1234");
     final var resultActions =
         mockMvc

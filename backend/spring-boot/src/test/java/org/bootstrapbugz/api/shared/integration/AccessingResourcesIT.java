@@ -93,8 +93,8 @@ class AccessingResourcesIT extends DatabaseContainers {
   @CsvSource({
     "lock, user",
     "unlock, locked",
-    "deactivate, for.update.1",
-    "activate, not.activated",
+    "deactivate, update1",
+    "activate, deactivated",
   })
   void lockUnlockDeactivateActivateUsers_throwUnauthorized_userNotSignedIn(
       String path, String username) throws Exception {
@@ -111,8 +111,8 @@ class AccessingResourcesIT extends DatabaseContainers {
   @CsvSource({
     "lock, user",
     "unlock, locked",
-    "deactivate, for.update.1",
-    "activate, not.activated",
+    "deactivate, update1",
+    "activate, deactivated",
   })
   void lockUnlockDeactivateActivateUsers_throwForbidden_userNotAdmin(String path, String username)
       throws Exception {
@@ -130,7 +130,7 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void deleteUsers_throwUnauthorized_userNotSignedIn() throws Exception {
-    final var adminRequest = new AdminRequest(Collections.singleton("for.update.2"));
+    final var adminRequest = new AdminRequest(Collections.singleton("update2"));
     mockMvc
         .perform(
             delete(Path.ADMIN + "/users/delete")
@@ -143,7 +143,7 @@ class AccessingResourcesIT extends DatabaseContainers {
   void deleteUsers_throwForbidden_userNotAdmin() throws Exception {
     final var signInDTO =
         IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
-    final var adminRequest = new AdminRequest(Collections.singleton("for.update.2"));
+    final var adminRequest = new AdminRequest(Collections.singleton("update2"));
     mockMvc
         .perform(
             delete(Path.ADMIN + "/users/delete")
