@@ -15,7 +15,7 @@ import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.shared.unit.TestUtil;
+import org.bootstrapbugz.api.shared.util.UnitTestUtil;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
@@ -54,7 +54,7 @@ class ProfileServiceTest {
   void setUp() {
     when(securityContext.getAuthentication()).thenReturn(auth);
     SecurityContextHolder.setContext(securityContext);
-    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(TestUtil.getTestUser()));
+    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
   }
 
   @Test
@@ -72,7 +72,7 @@ class ProfileServiceTest {
     final var updateUserRequest =
         new UpdateProfileRequest("User", "User", "user", "user@localhost");
     when(userRepository.findByUsernameWithRoles("test"))
-        .thenReturn(Optional.of(TestUtil.getTestUser()));
+        .thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByUsername(updateUserRequest.username())).thenReturn(false);
     when(userRepository.existsByEmail(updateUserRequest.email())).thenReturn(false);
     profileService.update(updateUserRequest);
@@ -95,7 +95,7 @@ class ProfileServiceTest {
     final var updateUserRequest =
         new UpdateProfileRequest("User", "User", "test", "test@localhost");
     when(userRepository.findByUsernameWithRoles("test"))
-        .thenReturn(Optional.of(TestUtil.getTestUser()));
+        .thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     profileService.update(updateUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
@@ -106,7 +106,7 @@ class ProfileServiceTest {
     final var updateUserRequest =
         new UpdateProfileRequest("Test", "Test", "admin", "test@localhost");
     when(userRepository.findByUsernameWithRoles("test"))
-        .thenReturn(Optional.of(TestUtil.getTestUser()));
+        .thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByUsername(updateUserRequest.username())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> profileService.update(updateUserRequest))
@@ -119,7 +119,7 @@ class ProfileServiceTest {
     final var updateUserRequest =
         new UpdateProfileRequest("Test", "Test", "test", "admin@localhost");
     when(userRepository.findByUsernameWithRoles("test"))
-        .thenReturn(Optional.of(TestUtil.getTestUser()));
+        .thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByEmail(updateUserRequest.email())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> profileService.update(updateUserRequest))
@@ -131,7 +131,7 @@ class ProfileServiceTest {
   void changePassword() {
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
-    final var testUser = TestUtil.getTestUser();
+    final var testUser = UnitTestUtil.getTestUser();
     testUser.setPassword(bCryptPasswordEncoder.encode("qwerty123"));
     when(userRepository.findByUsername("test")).thenReturn(Optional.of(testUser));
     profileService.changePassword(changePasswordRequest);
@@ -147,7 +147,7 @@ class ProfileServiceTest {
     when(messageService.getMessage("oldPassword.invalid")).thenReturn("Wrong old password.");
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123456", "qwerty1234", "qwerty1234");
-    when(userRepository.findByUsername("test")).thenReturn(Optional.of(TestUtil.getTestUser()));
+    when(userRepository.findByUsername("test")).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     assertThatThrownBy(() -> profileService.changePassword(changePasswordRequest))
         .isInstanceOf(BadRequestException.class)
         .hasMessage("Wrong old password.");

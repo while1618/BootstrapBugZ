@@ -9,7 +9,7 @@ import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
-import org.bootstrapbugz.api.shared.integration.TestUtil;
+import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -33,7 +33,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
   @Test
   void itShouldSignIn() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     assertThat(signInDTO.userDTO().username()).isEqualTo("user");
     assertThat(signInDTO.accessToken()).isNotNull();
     assertThat(signInDTO.refreshToken()).isNotNull();
@@ -51,7 +51,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(signInRequest)))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @ParameterizedTest
@@ -71,6 +71,6 @@ class AuthenticationFilterIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(signInRequest)))
             .andExpect(status().isForbidden());
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 }

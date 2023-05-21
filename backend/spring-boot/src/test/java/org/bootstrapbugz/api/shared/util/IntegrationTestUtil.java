@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.shared.integration;
+package org.bootstrapbugz.api.shared.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -15,8 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-public class TestUtil {
-  private TestUtil() {}
+public class IntegrationTestUtil {
+  private IntegrationTestUtil() {}
 
   public static void checkErrorMessages(ErrorMessage expectedResponse, ResultActions resultActions)
       throws Exception {

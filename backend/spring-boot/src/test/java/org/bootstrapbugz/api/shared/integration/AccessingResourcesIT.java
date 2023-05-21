@@ -15,6 +15,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
+import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
@@ -63,7 +64,7 @@ class AccessingResourcesIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(updateUserRequest)))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @Test
@@ -77,7 +78,7 @@ class AccessingResourcesIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(changePasswordRequest)))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @Test
@@ -91,13 +92,13 @@ class AccessingResourcesIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(updateRoleRequest)))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @Test
   void changeUsersRolesShouldThrowForbidden_signedInUserIsNotAdmin() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     final var updateRoleRequest =
         new UpdateRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
     final var resultActions =
@@ -108,7 +109,7 @@ class AccessingResourcesIT extends DatabaseContainers {
                     .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
                     .content(objectMapper.writeValueAsString(updateRoleRequest)))
             .andExpect(status().isForbidden());
-    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @ParameterizedTest
@@ -128,7 +129,7 @@ class AccessingResourcesIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(adminRequest)))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @ParameterizedTest
@@ -141,7 +142,7 @@ class AccessingResourcesIT extends DatabaseContainers {
   void lockUnlockDeactivateActivateUsersShouldThrowForbidden_signedInUserIsNotAdmin(
       String path, String username) throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     final var adminRequest = new AdminRequest(Set.of(username));
     final var resultActions =
         mockMvc
@@ -151,7 +152,7 @@ class AccessingResourcesIT extends DatabaseContainers {
                     .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
                     .content(objectMapper.writeValueAsString(adminRequest)))
             .andExpect(status().isForbidden());
-    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @Test
@@ -164,13 +165,13 @@ class AccessingResourcesIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(adminRequest)))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @Test
   void deleteUsersShouldThrowForbidden_signedInUserIsNotAdmin() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     final var adminRequest = new AdminRequest(Set.of("for.update.2"));
     final var resultActions =
         mockMvc
@@ -180,7 +181,7 @@ class AccessingResourcesIT extends DatabaseContainers {
                     .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
                     .content(objectMapper.writeValueAsString(adminRequest)))
             .andExpect(status().isForbidden());
-    TestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedForbiddenResponse, resultActions);
   }
 
   @Test
@@ -189,7 +190,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         mockMvc
             .perform(get(Path.AUTH + "/signed-in-user").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @Test
@@ -198,7 +199,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         mockMvc
             .perform(post(Path.AUTH + "/sign-out").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 
   @Test
@@ -209,6 +210,6 @@ class AccessingResourcesIT extends DatabaseContainers {
                 post(Path.AUTH + "/sign-out-from-all-devices")
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedUnauthorizedResponse, resultActions);
   }
 }

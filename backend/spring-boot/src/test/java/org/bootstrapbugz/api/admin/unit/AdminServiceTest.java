@@ -14,7 +14,7 @@ import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.admin.service.impl.AdminServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
-import org.bootstrapbugz.api.shared.unit.TestUtil;
+import org.bootstrapbugz.api.shared.util.UnitTestUtil;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
@@ -52,7 +52,7 @@ class AdminServiceTest {
             .roles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)))
             .build();
     when(userRepository.findAllByUsernameIn(updateRolesRequest.usernames()))
-        .thenReturn(List.of(TestUtil.getTestUser()));
+        .thenReturn(List.of(UnitTestUtil.getTestUser()));
     when(roleRepository.findAllByNameIn(updateRolesRequest.roleNames()))
         .thenReturn(List.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
     adminService.updateRole(updateRolesRequest);
@@ -75,7 +75,7 @@ class AdminServiceTest {
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
     when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(TestUtil.getTestUser()));
+        .thenReturn(List.of(UnitTestUtil.getTestUser()));
     adminService.lock(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));
@@ -96,7 +96,7 @@ class AdminServiceTest {
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
     when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(TestUtil.getTestUser()));
+        .thenReturn(List.of(UnitTestUtil.getTestUser()));
     adminService.unlock(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));
@@ -116,7 +116,7 @@ class AdminServiceTest {
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
     when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(TestUtil.getTestUser()));
+        .thenReturn(List.of(UnitTestUtil.getTestUser()));
     adminService.activate(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));
@@ -136,7 +136,7 @@ class AdminServiceTest {
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
     when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(TestUtil.getTestUser()));
+        .thenReturn(List.of(UnitTestUtil.getTestUser()));
     adminService.deactivate(adminRequest);
     verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));
@@ -146,7 +146,7 @@ class AdminServiceTest {
   void deleteUsers() {
     final var adminRequest = new AdminRequest(Set.of("admin", "test"));
     when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(TestUtil.getTestUser(), TestUtil.getAdminUser()));
+        .thenReturn(List.of(UnitTestUtil.getTestUser(), UnitTestUtil.getAdminUser()));
     adminService.delete(adminRequest);
     verify(userRepository, times(2)).delete(any(User.class));
   }

@@ -13,7 +13,7 @@ import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.integration.TestUtil;
+import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,8 @@ class AdminControllerIT extends DatabaseContainers {
 
   @BeforeAll
   void setUp() throws Exception {
-    signInDTO = TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    signInDTO =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
   }
 
   @Test

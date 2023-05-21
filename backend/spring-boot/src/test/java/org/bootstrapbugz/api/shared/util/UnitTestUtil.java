@@ -1,12 +1,12 @@
-package org.bootstrapbugz.api.shared.unit;
+package org.bootstrapbugz.api.shared.util;
 
 import java.util.Set;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 
-public class TestUtil {
-  private TestUtil() {}
+public class UnitTestUtil {
+  private UnitTestUtil() {}
 
   public static User getAdminUser() {
     return User.builder()

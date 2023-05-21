@@ -31,7 +31,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.shared.unit.TestUtil;
+import org.bootstrapbugz.api.shared.util.UnitTestUtil;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
@@ -114,7 +114,7 @@ class AuthServiceTest {
     final var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(new Role(RoleName.USER)));
-    final var testUser = TestUtil.getTestUser();
+    final var testUser = UnitTestUtil.getTestUser();
     testUser.setActivated(false);
     when(userRepository.save(any(User.class))).thenReturn(testUser);
     final var actualUserDTO = authService.signUp(signUpRequest);
@@ -124,7 +124,7 @@ class AuthServiceTest {
   @Test
   void resendConfirmationEmail() {
     final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
-    final var testUser = TestUtil.getTestUser();
+    final var testUser = UnitTestUtil.getTestUser();
     testUser.setActivated(false);
     when(userRepository.findByUsernameOrEmail("test", "test")).thenReturn(Optional.of(testUser));
     authService.resendConfirmationEmail(resendConfirmationEmailRequest);
@@ -145,7 +145,7 @@ class AuthServiceTest {
     final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     when(userRepository.findByUsernameOrEmail("test", "test"))
-        .thenReturn(Optional.of(TestUtil.getTestUser()));
+        .thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     assertThatThrownBy(() -> authService.resendConfirmationEmail(resendConfirmationEmailRequest))
         .isInstanceOf(ForbiddenException.class)
         .hasMessage("User already activated.");
@@ -164,7 +164,7 @@ class AuthServiceTest {
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
     final var token = confirmRegistrationTokenService.create(2L);
-    final var testUser = TestUtil.getTestUser();
+    final var testUser = UnitTestUtil.getTestUser();
     testUser.setActivated(false);
     when(userRepository.findById(2L)).thenReturn(Optional.of(testUser));
     authService.confirmRegistration(new ConfirmRegistrationRequest(token));
@@ -184,7 +184,7 @@ class AuthServiceTest {
   @Test
   void confirmRegistration_throwForbidden_userAlreadyActivated() {
     final var token = confirmRegistrationTokenService.create(2L);
-    when(userRepository.findById(2L)).thenReturn(Optional.of(TestUtil.getTestUser()));
+    when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     assertThatThrownBy(() -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)))
         .isInstanceOf(ForbiddenException.class)
@@ -207,7 +207,7 @@ class AuthServiceTest {
   void signOut() {
     when(securityContext.getAuthentication()).thenReturn(auth);
     SecurityContextHolder.setContext(securityContext);
-    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(TestUtil.getTestUser()));
+    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
     final var token = accessTokenService.create(2L, Collections.emptySet());
     final var request = new MockHttpServletRequest();
     request.addHeader("x-forwarded-for", "ip1");
@@ -219,7 +219,7 @@ class AuthServiceTest {
   void signOutFromAllDevices() {
     when(securityContext.getAuthentication()).thenReturn(auth);
     SecurityContextHolder.setContext(securityContext);
-    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(TestUtil.getTestUser()));
+    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
     assertDoesNotThrow(() -> authService.signOutFromAllDevices());
   }
 
@@ -227,7 +227,7 @@ class AuthServiceTest {
   void forgotPassword() {
     final var forgotPasswordRequest = new ForgotPasswordRequest("test@localhost");
     when(userRepository.findByEmail("test@localhost"))
-        .thenReturn(Optional.of(TestUtil.getTestUser()));
+        .thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     authService.forgotPassword(forgotPasswordRequest);
     verify(eventPublisher, times(1)).publishEvent(any(OnSendJwtEmail.class));
   }
@@ -245,7 +245,7 @@ class AuthServiceTest {
   void resetPassword() {
     final var token = resetPasswordTokenService.create(2L);
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
-    when(userRepository.findById(2L)).thenReturn(Optional.of(TestUtil.getTestUser()));
+    when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     authService.resetPassword(resetPasswordRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(
@@ -268,7 +268,7 @@ class AuthServiceTest {
   void signedInUser() {
     when(securityContext.getAuthentication()).thenReturn(auth);
     SecurityContextHolder.setContext(securityContext);
-    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(TestUtil.getTestUser()));
+    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
     final var expectedUserDTO =
         UserDTO.builder()
             .id(2L)

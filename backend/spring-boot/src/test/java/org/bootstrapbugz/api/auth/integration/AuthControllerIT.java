@@ -23,7 +23,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
-import org.bootstrapbugz.api.shared.integration.TestUtil;
+import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
@@ -96,7 +96,7 @@ class AuthControllerIT extends DatabaseContainers {
     expectedErrorResponse.addDetails("username", "Username already exists.");
     expectedErrorResponse.addDetails("email", "Email already exists.");
     expectedErrorResponse.addDetails("Passwords do not match.");
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
@@ -122,7 +122,7 @@ class AuthControllerIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
             .andExpect(status().isNotFound());
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
@@ -137,7 +137,7 @@ class AuthControllerIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
             .andExpect(status().isForbidden());
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
@@ -165,7 +165,7 @@ class AuthControllerIT extends DatabaseContainers {
             .andExpect(status().isForbidden());
     final var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
     expectedErrorResponse.addDetails("Invalid token.");
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
@@ -181,13 +181,13 @@ class AuthControllerIT extends DatabaseContainers {
             .andExpect(status().isForbidden());
     final var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
     expectedErrorResponse.addDetails("User already activated.");
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
   void itShouldRefreshToken() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     final var refreshTokenRequest = new RefreshTokenRequest(signInDTO.refreshToken());
     mockMvc
         .perform(
@@ -201,7 +201,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void itShouldSignOut() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out")
@@ -222,7 +222,7 @@ class AuthControllerIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .header(AuthUtil.AUTH_HEADER, token))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   private void refreshTokenShouldBeInvalid(String refreshToken) throws Exception {
@@ -236,13 +236,13 @@ class AuthControllerIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(refreshTokenRequest)))
             .andExpect(status().isUnauthorized());
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
   void itShouldSignOutFromAllDevices() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices")
@@ -276,7 +276,7 @@ class AuthControllerIT extends DatabaseContainers {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
             .andExpect(status().isNotFound());
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
@@ -289,7 +289,8 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isNoContent());
-    TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty1234"));
+    IntegrationTestUtil.signIn(
+        mockMvc, objectMapper, new SignInRequest("for.update.1", "qwerty1234"));
   }
 
   @Test
@@ -305,7 +306,7 @@ class AuthControllerIT extends DatabaseContainers {
             .andExpect(status().isBadRequest());
     final var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
     expectedErrorResponse.addDetails("Passwords do not match.");
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
@@ -321,13 +322,13 @@ class AuthControllerIT extends DatabaseContainers {
             .andExpect(status().isForbidden());
     final var expectedErrorResponse = new ErrorMessage(HttpStatus.FORBIDDEN);
     expectedErrorResponse.addDetails("Invalid token.");
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 
   @Test
   void itShouldRetrieveSignedInUser() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
     final var expectedUserDTO =
         new UserDTO(

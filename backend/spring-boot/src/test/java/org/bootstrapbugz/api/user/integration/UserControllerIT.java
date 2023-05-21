@@ -11,7 +11,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
-import org.bootstrapbugz.api.shared.integration.TestUtil;
+import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -45,7 +45,7 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void itShouldFindAllUsersWithRolesAndEmails() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
     mockMvc
         .perform(
             get(Path.USERS)
@@ -68,7 +68,7 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void itShouldFindUserByUsername_showEmail() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     performFindUserByUsername("user", signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -79,7 +79,7 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void itShouldFindUserByUsername_hideEmail() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     performFindUserByUsername("admin", signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -90,7 +90,7 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void itShouldFindUserByUsername_adminSignedIn() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
     performFindUserByUsername("user", signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -101,12 +101,12 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void findUserByUsernameShouldThrowResourceNotFound() throws Exception {
     final var signInDTO =
-        TestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
     final var resultActions =
         performFindUserByUsername("unknown", signInDTO.accessToken())
             .andExpect(status().isNotFound());
     final var expectedErrorResponse = new ErrorMessage(HttpStatus.NOT_FOUND);
     expectedErrorResponse.addDetails("User not found.");
-    TestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
   }
 }
