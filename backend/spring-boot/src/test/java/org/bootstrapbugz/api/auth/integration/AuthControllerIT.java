@@ -25,8 +25,10 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
+import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -46,6 +48,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Autowired private ObjectMapper objectMapper;
   @Autowired private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
   @Autowired private ResetPasswordTokenServiceImpl resetPasswordService;
+  @Autowired private UserRepository userRepository;
 
   @Test
   void itShouldSignUp() throws Exception {
@@ -142,7 +145,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldConfirmRegistration() throws Exception {
-    final var token = confirmRegistrationTokenService.create(3L); // deactivated
+    final var user = userRepository.findByUsername("deactivated").orElseThrow();
+    final var token = confirmRegistrationTokenService.create(user.getId());
     final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     mockMvc
         .perform(
@@ -154,7 +158,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_invalidToken() throws Exception {
-    final var token = confirmRegistrationTokenService.create(10L); // unknown
+    final var user = User.builder().id(10L).build();
+    final var token = confirmRegistrationTokenService.create(user.getId());
     final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     final var resultActions =
         mockMvc
@@ -170,7 +175,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_userAlreadyActivated() throws Exception {
-    final var token = confirmRegistrationTokenService.create(2L); // user
+    final var user = userRepository.findByUsername("user").orElseThrow();
+    final var token = confirmRegistrationTokenService.create(user.getId());
     final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     final var resultActions =
         mockMvc
@@ -281,7 +287,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldResetPassword() throws Exception {
-    final var token = resetPasswordService.create(5L); // update1
+    final var user = userRepository.findByUsername("update1").orElseThrow();
+    final var token = resetPasswordService.create(user.getId());
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
@@ -294,7 +301,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    final var token = resetPasswordService.create(6L); // update2
+    final var user = userRepository.findByUsername("update2").orElseThrow();
+    final var token = resetPasswordService.create(user.getId());
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty123", "qwerty1234");
     final var resultActions =
         mockMvc
@@ -310,7 +318,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowForbidden_invalidToken() throws Exception {
-    final var token = resetPasswordService.create(10L); // unknown
+    final var user = User.builder().id(10L).build();
+    final var token = resetPasswordService.create(user.getId());
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     final var resultActions =
         mockMvc
