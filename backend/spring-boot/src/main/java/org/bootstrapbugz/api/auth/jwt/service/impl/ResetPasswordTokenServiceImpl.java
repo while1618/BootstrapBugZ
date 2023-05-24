@@ -54,10 +54,12 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
   }
 
   private void isInUserBlacklist(String token) {
-    final var userInBlacklist = userBlacklistRepository.findById(JwtUtil.getUserId(token));
-    if (userInBlacklist.isPresent()
-        && (JwtUtil.getIssuedAt(token).equals(userInBlacklist.get().getUpdatedAt())
-            || JwtUtil.getIssuedAt(token).isBefore(userInBlacklist.get().getUpdatedAt())))
+    final var userId = JwtUtil.getUserId(token);
+    final var issuedAt = JwtUtil.getIssuedAt(token);
+    final var userInBlacklist = userBlacklistRepository.findById(userId);
+    if (userInBlacklist.isEmpty()) return;
+    if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt())
+        || issuedAt.equals(userInBlacklist.get().getUpdatedAt()))
       throw new ForbiddenException(messageService.getMessage("token.invalid"));
   }
 

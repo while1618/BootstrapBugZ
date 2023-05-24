@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.redis.model.RefreshTokenStore;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenStoreRepository;
@@ -59,10 +60,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   }
 
   @Override
-  public String findByUserAndIpAddress(Long userId, String ipAddress) {
-    final var refreshToken =
+  public Optional<String> findByUserAndIpAddress(Long userId, String ipAddress) {
+    final var refreshTokenStore =
         refreshTokenStoreRepository.findByUserIdAndIpAddress(userId, ipAddress);
-    return refreshToken.map(RefreshTokenStore::getRefreshToken).orElse(null);
+    return refreshTokenStore.map(RefreshTokenStore::getRefreshToken);
   }
 
   @Override

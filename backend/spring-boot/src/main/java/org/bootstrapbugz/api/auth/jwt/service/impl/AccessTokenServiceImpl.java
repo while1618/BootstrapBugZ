@@ -63,10 +63,12 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   }
 
   private void isInUserBlacklist(String token) {
-    final var userInBlacklist = userBlacklistRepository.findById(JwtUtil.getUserId(token));
-    if (userInBlacklist.isPresent()
-        && (JwtUtil.getIssuedAt(token).equals(userInBlacklist.get().getUpdatedAt())
-            || JwtUtil.getIssuedAt(token).isBefore(userInBlacklist.get().getUpdatedAt())))
+    final var userId = JwtUtil.getUserId(token);
+    final var issuedAt = JwtUtil.getIssuedAt(token);
+    final var userInBlacklist = userBlacklistRepository.findById(userId);
+    if (userInBlacklist.isEmpty()) return;
+    if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt())
+        || issuedAt.equals(userInBlacklist.get().getUpdatedAt()))
       throw new UnauthorizedException(messageService.getMessage("token.invalid"));
   }
 

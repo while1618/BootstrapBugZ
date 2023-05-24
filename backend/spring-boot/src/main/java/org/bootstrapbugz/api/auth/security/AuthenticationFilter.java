@@ -103,9 +103,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   }
 
   private String getRefreshToken(Long userId, Set<RoleDTO> roleDTOs, String ipAddress) {
-    final var refreshToken = refreshTokenService.findByUserAndIpAddress(userId, ipAddress);
-    if (refreshToken == null) return refreshTokenService.create(userId, roleDTOs, ipAddress);
-    return refreshToken;
+    return refreshTokenService
+        .findByUserAndIpAddress(userId, ipAddress)
+        .orElse(refreshTokenService.create(userId, roleDTOs, ipAddress));
   }
 
   private void writeToResponse(HttpServletResponse response, SignInDTO signInDTO)

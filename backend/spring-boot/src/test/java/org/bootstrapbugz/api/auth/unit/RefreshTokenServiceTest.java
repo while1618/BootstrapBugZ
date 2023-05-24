@@ -74,7 +74,7 @@ class RefreshTokenServiceTest {
     when(refreshTokenStoreRepository.findByUserIdAndIpAddress(1L, "ip1"))
         .thenReturn(Optional.of(refreshToken));
     final var token = refreshTokenService.findByUserAndIpAddress(1L, "ip1");
-    assertThat(token).isNotNull();
+    assertThat(token.isPresent()).isTrue();
   }
 
   @Test
