@@ -20,9 +20,9 @@ public class AuthUtil {
   public static boolean isAdminSignedIn() {
     if (!isSignedIn()) return false;
     final var auth = SecurityContextHolder.getContext().getAuthentication();
-    return ((UserPrincipal) auth.getPrincipal())
-        .getAuthorities().stream()
-            .anyMatch(authority -> authority.getAuthority().equals(RoleName.ADMIN.name()));
+    final var userPrincipal = (UserPrincipal) auth.getPrincipal();
+    return userPrincipal.getAuthorities().stream()
+        .anyMatch(authority -> authority.getAuthority().equals(RoleName.ADMIN.name()));
   }
 
   public static UserDTO findSignedInUser() {
