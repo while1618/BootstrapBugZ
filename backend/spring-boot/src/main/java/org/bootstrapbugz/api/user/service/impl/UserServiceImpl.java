@@ -23,10 +23,17 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<UserDTO> findAll() {
-    if (AuthUtil.isAdminSignedIn())
-      return userRepository.findAllWithRoles().stream()
-          .map(UserMapper.INSTANCE::userToUserDTO)
-          .toList();
+    if (AuthUtil.isAdminSignedIn()) return usersForAdmin();
+    return usersForNonAdmin();
+  }
+
+  private List<UserDTO> usersForAdmin() {
+    return userRepository.findAllWithRoles().stream()
+        .map(UserMapper.INSTANCE::userToUserDTO)
+        .toList();
+  }
+
+  private List<UserDTO> usersForNonAdmin() {
     return userRepository.findAll().stream()
         .map(
             user -> {
@@ -58,8 +65,11 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     user.setRoles(null);
-    if (!(AuthUtil.isSignedIn()
-        && AuthUtil.findSignedInUser().username().equals(user.getUsername()))) user.setEmail(null);
+    if (!isUserSameAsSignedIn(user.getUsername())) user.setEmail(null);
     return user;
+  }
+
+  private boolean isUserSameAsSignedIn(String username) {
+    return AuthUtil.isSignedIn() && AuthUtil.findSignedInUser().username().equals(username);
   }
 }
