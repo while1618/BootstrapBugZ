@@ -14,10 +14,8 @@ import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @DirtiesContext
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@TestInstance(Lifecycle.PER_CLASS)
 @SpringBootTest
 class AdminControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
@@ -39,7 +36,7 @@ class AdminControllerIT extends DatabaseContainers {
 
   private String accessToken;
 
-  @BeforeAll
+  @BeforeEach
   void setUp() throws Exception {
     final var signInRequest = new SignInRequest("admin", "qwerty123");
     accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, signInRequest).accessToken();
