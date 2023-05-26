@@ -16,8 +16,6 @@ import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
-import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
-import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -39,112 +37,92 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void updateProfile_throwUnauthorized_userNotSignedIn() throws Exception {
-    final var updateUserRequest =
-        new UpdateProfileRequest("User", "User", "user", "user@localhost");
     mockMvc
-        .perform(
-            put(Path.PROFILE + "/update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateUserRequest)))
+        .perform(put(Path.PROFILE + "/update").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
   void changePassword_throwUnauthorized_userNotSignedIn() throws Exception {
-    final var changePasswordRequest =
-        new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
     mockMvc
-        .perform(
-            put(Path.PROFILE + "/change-password")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(changePasswordRequest)))
+        .perform(put(Path.PROFILE + "/change-password").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
   void changeUsersRoles_throwUnauthorized_userNotSignedIn() throws Exception {
-    final var updateRoleRequest =
-        new UpdateRoleRequest(Collections.singleton("test"), Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
-        .perform(
-            put(Path.ADMIN + "/users/update-role")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateRoleRequest)))
+        .perform(put(Path.ADMIN + "/users/update-role").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
   void changeUsersRoles_throwForbidden_userNotAdmin() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
+    final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
     final var updateRoleRequest =
-        new UpdateRoleRequest(Collections.singleton("test"), Set.of(RoleName.USER, RoleName.ADMIN));
+        UpdateRoleRequest.builder()
+            .usernames(Collections.singleton("update1"))
+            .roleNames(Set.of(RoleName.USER, RoleName.ADMIN))
+            .build();
     mockMvc
         .perform(
             put(Path.ADMIN + "/users/update-role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
+                .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
         .andExpect(status().isForbidden());
   }
 
   @ParameterizedTest
   @CsvSource({
-    "lock, user",
-    "unlock, locked",
-    "deactivate, update1",
-    "activate, deactivated",
+    "lock",
+    "unlock",
+    "deactivate",
+    "activate",
   })
-  void lockUnlockDeactivateActivateUsers_throwUnauthorized_userNotSignedIn(
-      String path, String username) throws Exception {
-    final var adminRequest = new AdminRequest(Collections.singleton(username));
+  void lockUnlockDeactivateActivateUsers_throwUnauthorized_userNotSignedIn(String path)
+      throws Exception {
     mockMvc
-        .perform(
-            put(Path.ADMIN + "/users/" + path)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(adminRequest)))
+        .perform(put(Path.ADMIN + "/users/" + path).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
 
   @ParameterizedTest
   @CsvSource({
-    "lock, user",
+    "lock, update1",
     "unlock, locked",
-    "deactivate, update1",
+    "deactivate, update2",
     "activate, deactivated",
   })
   void lockUnlockDeactivateActivateUsers_throwForbidden_userNotAdmin(String path, String username)
       throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
+    final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
     final var adminRequest = new AdminRequest(Collections.singleton(username));
     mockMvc
         .perform(
             put(Path.ADMIN + "/users/" + path)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
+                .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isForbidden());
   }
 
   @Test
   void deleteUsers_throwUnauthorized_userNotSignedIn() throws Exception {
-    final var adminRequest = new AdminRequest(Collections.singleton("update2"));
     mockMvc
-        .perform(
-            delete(Path.ADMIN + "/users/delete")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(adminRequest)))
+        .perform(delete(Path.ADMIN + "/users/delete").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
   void deleteUsers_throwForbidden_userNotAdmin() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
-    final var adminRequest = new AdminRequest(Collections.singleton("update2"));
+    final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
+    final var adminRequest = new AdminRequest(Collections.singleton("delete1"));
     mockMvc
         .perform(
             delete(Path.ADMIN + "/users/delete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
+                .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isForbidden());
   }
