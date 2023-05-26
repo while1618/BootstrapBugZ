@@ -9,6 +9,7 @@ import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,12 @@ class UserRepositoryIT extends DatabaseContainers {
             .password("password")
             .roles(Set.of(userRole))
             .build());
+  }
+
+  @AfterEach
+  void cleanUp() {
+    userRepository.deleteAll();
+    roleRepository.deleteAll();
   }
 
   @Test

@@ -7,6 +7,7 @@ import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ class RoleRepositoryIT extends DatabaseContainers {
   void setUp() {
     roleRepository.save(new Role(RoleName.ADMIN));
     roleRepository.save(new Role(RoleName.USER));
+  }
+
+  @AfterEach
+  void cleanUp() {
+    roleRepository.deleteAll();
   }
 
   @Test
