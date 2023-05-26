@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
-import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -38,8 +37,7 @@ class AdminControllerIT extends DatabaseContainers {
 
   @BeforeEach
   void setUp() throws Exception {
-    final var signInRequest = new SignInRequest("admin", "qwerty123");
-    accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, signInRequest).accessToken();
+    accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "admin").accessToken();
   }
 
   @Test

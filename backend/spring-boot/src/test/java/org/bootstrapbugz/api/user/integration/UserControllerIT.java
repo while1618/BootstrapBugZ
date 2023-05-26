@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -37,15 +36,14 @@ class UserControllerIT extends DatabaseContainers {
         .perform(get(Path.USERS).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.length()").value(7))
+        .andExpect(jsonPath("$.length()").value(10))
         .andExpect(jsonPath("$[0].email").doesNotExist())
         .andExpect(jsonPath("$[0].roles").doesNotExist());
   }
 
   @Test
   void itShouldFindAllUsersWithRolesAndEmails() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "admin");
     mockMvc
         .perform(
             get(Path.USERS)
@@ -53,7 +51,7 @@ class UserControllerIT extends DatabaseContainers {
                 .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken()))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.length()").value(7))
+        .andExpect(jsonPath("$.length()").value(10))
         .andExpect(jsonPath("$[0].email").exists())
         .andExpect(jsonPath("$[0].roles").exists());
   }
@@ -67,8 +65,7 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_showEmail() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     performFindUserByUsername("user", signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -78,8 +75,7 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_hideEmail() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     performFindUserByUsername("admin", signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -89,8 +85,7 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldFindUserByUsername_adminSignedIn() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "admin");
     performFindUserByUsername("user", signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -100,8 +95,7 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void findUserByUsernameShouldThrowResourceNotFound() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     final var resultActions =
         performFindUserByUsername("unknown", signInDTO.accessToken())
             .andExpect(status().isNotFound());

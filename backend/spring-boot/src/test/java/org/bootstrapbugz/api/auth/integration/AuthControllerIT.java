@@ -68,7 +68,7 @@ class AuthControllerIT extends DatabaseContainers {
     final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
     final var expectedUserDTO =
         new UserDTO(
-            8L,
+            11L,
             "Test",
             "Test",
             "test",
@@ -174,7 +174,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void confirmRegistrationShouldThrowForbidden_invalidToken() throws Exception {
-    final var user = User.builder().id(10L).build();
+    final var user = User.builder().id(100L).build();
     final var token = confirmRegistrationTokenService.create(user.getId());
     final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
     final var resultActions =
@@ -208,8 +208,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldRefreshToken() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     final var refreshTokenRequest = new RefreshTokenRequest(signInDTO.refreshToken());
     mockMvc
         .perform(
@@ -222,8 +221,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldSignOut() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out")
@@ -263,8 +261,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldSignOutFromAllDevices() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices")
@@ -317,7 +314,13 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isNoContent());
-    IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("update1", "qwerty1234"));
+    final var signInRequest = new SignInRequest("update1", "qwerty1234");
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/sign-in")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(signInRequest)))
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -339,7 +342,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resetPasswordShouldThrowForbidden_invalidToken() throws Exception {
-    final var user = User.builder().id(10L).build();
+    final var user = User.builder().id(100L).build();
     final var token = resetPasswordService.create(user.getId());
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     final var resultActions =
@@ -356,8 +359,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldRetrieveSignedInUser() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
     final var expectedUserDTO =
         new UserDTO(

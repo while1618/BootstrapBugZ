@@ -30,8 +30,9 @@ public class IntegrationTestUtil {
         .isEqualTo(new JSONArray(expectedResponse.getDetails().toString()));
   }
 
-  public static SignInDTO signIn(
-      MockMvc mockMvc, ObjectMapper objectMapper, SignInRequest signInRequest) throws Exception {
+  public static SignInDTO signIn(MockMvc mockMvc, ObjectMapper objectMapper, String username)
+      throws Exception {
+    final var signInRequest = new SignInRequest(username, "qwerty123");
     final var resultActions =
         mockMvc
             .perform(
@@ -39,7 +40,7 @@ public class IntegrationTestUtil {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(signInRequest)))
             .andExpect(status().isOk());
-    return objectMapper.readValue(
-        resultActions.andReturn().getResponse().getContentAsString(), SignInDTO.class);
+    final var content = resultActions.andReturn().getResponse().getContentAsString();
+    return objectMapper.readValue(content, SignInDTO.class);
   }
 }

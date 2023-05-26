@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
-import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -76,8 +75,7 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void changeUsersRoles_throwForbidden_userNotAdmin() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     final var updateRoleRequest =
         new UpdateRoleRequest(Collections.singleton("test"), Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
@@ -116,8 +114,7 @@ class AccessingResourcesIT extends DatabaseContainers {
   })
   void lockUnlockDeactivateActivateUsers_throwForbidden_userNotAdmin(String path, String username)
       throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     final var adminRequest = new AdminRequest(Collections.singleton(username));
     mockMvc
         .perform(
@@ -141,8 +138,7 @@ class AccessingResourcesIT extends DatabaseContainers {
 
   @Test
   void deleteUsers_throwForbidden_userNotAdmin() throws Exception {
-    final var signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("user", "qwerty123"));
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
     final var adminRequest = new AdminRequest(Collections.singleton("update2"));
     mockMvc
         .perform(
