@@ -43,7 +43,10 @@ class AdminControllerIT extends DatabaseContainers {
   @Test
   void updateUsersRoles() throws Exception {
     final var updateRoleRequest =
-        new UpdateRoleRequest(Set.of("update1", "update2"), Set.of(RoleName.USER, RoleName.ADMIN));
+        UpdateRoleRequest.builder()
+            .usernames(Set.of("update1", "update2"))
+            .roleNames(Set.of(RoleName.USER, RoleName.ADMIN))
+            .build();
     mockMvc
         .perform(
             put(Path.ADMIN + "/users/update-role")

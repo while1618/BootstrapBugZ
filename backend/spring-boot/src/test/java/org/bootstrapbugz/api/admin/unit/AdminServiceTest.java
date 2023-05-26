@@ -40,7 +40,10 @@ class AdminServiceTest {
   @Test
   void updateUsersRoles() {
     final var updateRolesRequest =
-        new UpdateRoleRequest(Collections.singleton("test"), Set.of(RoleName.USER, RoleName.ADMIN));
+        UpdateRoleRequest.builder()
+            .usernames(Collections.singleton("test"))
+            .roleNames(Set.of(RoleName.USER, RoleName.ADMIN))
+            .build();
     final var expectedUser =
         User.builder()
             .id(2L)
