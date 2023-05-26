@@ -151,6 +151,36 @@ public class DataInit implements ApplicationRunner {
                 .activated(true)
                 .nonLocked(true)
                 .roles(Collections.singleton(userRole))
+                .build(),
+            User.builder()
+                .firstName("Update4")
+                .lastName("Update4")
+                .username("update4")
+                .email("update4@localhost")
+                .password(bCryptPasswordEncoder.encode(PASSWORD))
+                .activated(true)
+                .nonLocked(true)
+                .roles(Collections.singleton(userRole))
+                .build(),
+            User.builder()
+                .firstName("Delete1")
+                .lastName("Delete1")
+                .username("delete1")
+                .email("delete1@localhost")
+                .password(bCryptPasswordEncoder.encode(PASSWORD))
+                .activated(true)
+                .nonLocked(true)
+                .roles(Collections.singleton(userRole))
+                .build(),
+            User.builder()
+                .firstName("Delete2")
+                .lastName("Delete2")
+                .username("delete2")
+                .email("delete2@localhost")
+                .password(bCryptPasswordEncoder.encode(PASSWORD))
+                .activated(true)
+                .nonLocked(true)
+                .roles(Collections.singleton(userRole))
                 .build()));
   }
 }

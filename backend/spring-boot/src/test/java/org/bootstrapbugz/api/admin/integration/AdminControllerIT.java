@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
-import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
@@ -38,53 +37,53 @@ class AdminControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
-  private SignInDTO signInDTO;
+  private String accessToken;
 
   @BeforeAll
   void setUp() throws Exception {
-    signInDTO =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, new SignInRequest("admin", "qwerty123"));
+    final var signInRequest = new SignInRequest("admin", "qwerty123");
+    accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, signInRequest).accessToken();
   }
 
   @Test
-  void itShouldUpdateUsersRoles() throws Exception {
+  void updateUsersRoles() throws Exception {
     final var updateRoleRequest =
-        new UpdateRoleRequest(Set.of("user"), Set.of(RoleName.USER, RoleName.ADMIN));
+        new UpdateRoleRequest(Set.of("update1", "update2"), Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
         .perform(
             put(Path.ADMIN + "/users/update-role")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
+                .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
+        .andExpect(status().isNoContent());
+  }
+
+  @Test
+  void deleteUsers() throws Exception {
+    final var adminRequest = new AdminRequest(Set.of("delete1", "delete2"));
+    mockMvc
+        .perform(
+            delete(Path.ADMIN + "/users/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }
 
   @ParameterizedTest
   @CsvSource({
-    "lock, user",
+    "lock, update3",
     "unlock, locked",
-    "deactivate, update1",
+    "deactivate, update4",
     "activate, deactivated",
   })
-  void itShouldLockUnlockDeactivateActivateUsers(String path, String username) throws Exception {
+  void lockUnlockDeactivateActivateUsers(String path, String username) throws Exception {
     final var adminRequest = new AdminRequest(Set.of(username));
     mockMvc
         .perform(
             put(Path.ADMIN + "/users/" + path)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
-                .content(objectMapper.writeValueAsString(adminRequest)))
-        .andExpect(status().isNoContent());
-  }
-
-  @Test
-  void itShouldDeleteUsers() throws Exception {
-    final var adminRequest = new AdminRequest(Set.of("update2"));
-    mockMvc
-        .perform(
-            delete(Path.ADMIN + "/users/delete")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken())
+                .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(adminRequest)))
         .andExpect(status().isNoContent());
   }
