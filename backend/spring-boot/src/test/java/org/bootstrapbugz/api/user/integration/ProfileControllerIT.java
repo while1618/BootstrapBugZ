@@ -1,5 +1,9 @@
 package org.bootstrapbugz.api.user.integration;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -9,6 +13,7 @@ import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
+import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
@@ -17,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -31,6 +37,8 @@ import org.springframework.test.web.servlet.ResultActions;
 class ProfileControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
+
+  @MockBean private EmailService emailService;
 
   private ResultActions performUpdateUser(UpdateProfileRequest updateProfileRequest, String token)
       throws Exception {
@@ -52,6 +60,9 @@ class ProfileControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldUpdateUser_newUsernameAndEmail() throws Exception {
+    doNothing()
+        .when(emailService)
+        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
     final var signInDTO =
         IntegrationTestUtil.signIn(
             mockMvc, objectMapper, new SignInRequest("update1", "qwerty123"));
@@ -61,6 +72,8 @@ class ProfileControllerIT extends DatabaseContainers {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.username").value("updated"))
         .andExpect(jsonPath("$.firstName").value("Updated"));
+    verify(emailService, times(1))
+        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
   }
 
   @Test

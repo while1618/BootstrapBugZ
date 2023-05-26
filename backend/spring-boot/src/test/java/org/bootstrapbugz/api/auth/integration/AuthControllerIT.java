@@ -1,6 +1,10 @@
 package org.bootstrapbugz.api.auth.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -22,6 +26,7 @@ import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
+import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -33,6 +38,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -50,8 +56,13 @@ class AuthControllerIT extends DatabaseContainers {
   @Autowired private ResetPasswordTokenServiceImpl resetPasswordService;
   @Autowired private UserRepository userRepository;
 
+  @MockBean private EmailService emailService;
+
   @Test
   void itShouldSignUp() throws Exception {
+    doNothing()
+        .when(emailService)
+        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
     final var signUpRequest =
         new SignUpRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
@@ -78,6 +89,8 @@ class AuthControllerIT extends DatabaseContainers {
         objectMapper.readValue(
             resultActions.andReturn().getResponse().getContentAsString(), UserDTO.class);
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
+    verify(emailService, times(1))
+        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
   }
 
   @Test
@@ -102,6 +115,9 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldResendConfirmationEmail() throws Exception {
+    doNothing()
+        .when(emailService)
+        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
     final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("deactivated");
     mockMvc
         .perform(
@@ -109,6 +125,8 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
         .andExpect(status().isNoContent());
+    verify(emailService, times(1))
+        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
   }
 
   @Test
@@ -259,6 +277,9 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldForgotPassword() throws Exception {
+    doNothing()
+        .when(emailService)
+        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
     final var forgotPasswordRequest = new ForgotPasswordRequest("user@localhost");
     mockMvc
         .perform(
@@ -266,6 +287,8 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
         .andExpect(status().isNoContent());
+    verify(emailService, times(1))
+        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
   }
 
   @Test
