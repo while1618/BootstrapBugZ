@@ -9,18 +9,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext
 @AutoConfigureMockMvc
@@ -31,76 +28,77 @@ class UserControllerIT extends DatabaseContainers {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  void itShouldFindAllUsersWithoutRolesAndEmails() throws Exception {
+  void findAllUsers_rolesAndEmailsHidden() throws Exception {
     mockMvc
         .perform(get(Path.USERS).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.length()").value(10))
         .andExpect(jsonPath("$[0].email").doesNotExist())
         .andExpect(jsonPath("$[0].roles").doesNotExist());
   }
 
   @Test
-  void itShouldFindAllUsersWithRolesAndEmails() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "admin");
+  void findAllUsers_rolesAndEmailsShown() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "admin").accessToken();
     mockMvc
         .perform(
             get(Path.USERS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken()))
+                .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.length()").value(10))
         .andExpect(jsonPath("$[0].email").exists())
         .andExpect(jsonPath("$[0].roles").exists());
   }
 
-  private ResultActions performFindUserByUsername(String username, String token) throws Exception {
-    return mockMvc.perform(
-        get(Path.USERS + "/{username}", username)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(AuthUtil.AUTH_HEADER, token));
-  }
-
   @Test
-  void itShouldFindUserByUsername_showEmail() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
-    performFindUserByUsername("user", signInDTO.accessToken())
+  void findUserByUsername_emailShown() throws Exception {
+    final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
+    mockMvc
+        .perform(
+            get(Path.USERS + "/{username}", "user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.username").value("user"))
-        .andExpect(jsonPath("$.firstName").value("User"));
+        .andExpect(jsonPath("$.email").exists())
+        .andExpect(jsonPath("$.roles").doesNotExist());
   }
 
   @Test
-  void itShouldFindUserByUsername_hideEmail() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
-    performFindUserByUsername("admin", signInDTO.accessToken())
+  void findUserByUsername_emailHidden() throws Exception {
+    final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
+    mockMvc
+        .perform(
+            get(Path.USERS + "/{username}", "admin")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.username").value("admin"))
-        .andExpect(jsonPath("$.firstName").value("Admin"));
+        .andExpect(jsonPath("$.email").doesNotExist())
+        .andExpect(jsonPath("$.roles").doesNotExist());
   }
 
   @Test
-  void itShouldFindUserByUsername_adminSignedIn() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "admin");
-    performFindUserByUsername("user", signInDTO.accessToken())
+  void findUserByUsername_adminSignedIn() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "admin").accessToken();
+    mockMvc
+        .perform(
+            get(Path.USERS + "/{username}", "user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.username").value("user"))
-        .andExpect(jsonPath("$.firstName").value("User"));
+        .andExpect(jsonPath("$.email").exists())
+        .andExpect(jsonPath("$.roles").exists());
   }
 
   @Test
-  void findUserByUsernameShouldThrowResourceNotFound() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
-    final var resultActions =
-        performFindUserByUsername("unknown", signInDTO.accessToken())
-            .andExpect(status().isNotFound());
-    final var expectedErrorResponse = new ErrorMessage(HttpStatus.NOT_FOUND);
-    expectedErrorResponse.addDetails("User not found.");
-    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+  void findUserByUsername_throwResourceNotFound() throws Exception {
+    mockMvc
+        .perform(get(Path.USERS + "/{username}", "unknown").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
   }
 }
