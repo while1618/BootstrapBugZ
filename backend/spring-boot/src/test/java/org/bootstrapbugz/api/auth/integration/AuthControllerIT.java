@@ -53,8 +53,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void itShouldSignUp() throws Exception {
     final var signUpRequest =
-        new SignUpRequest(
-            "Test", "Test", "test", "test@bootstrapbugz.com", "qwerty123", "qwerty123");
+        new SignUpRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     final var roleDTOs = Set.of(new RoleDTO(RoleName.USER.name()));
     final var expectedUserDTO =
         new UserDTO(
@@ -62,7 +61,7 @@ class AuthControllerIT extends DatabaseContainers {
             "Test",
             "Test",
             "test",
-            "test@bootstrapbugz.com",
+            "test@localhost",
             false,
             true,
             LocalDateTime.now(),
@@ -84,8 +83,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void signUpShouldThrowBadRequest_invalidParameters() throws Exception {
     final var signUpRequest =
-        new SignUpRequest(
-            "Test1", "Test1", "user", "user@bootstrapbugz.com", "qwerty123", "qwerty12");
+        new SignUpRequest("Test1", "Test1", "user", "user@localhost", "qwerty123", "qwerty12");
     final var resultActions =
         mockMvc
             .perform(
@@ -261,7 +259,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void itShouldForgotPassword() throws Exception {
-    final var forgotPasswordRequest = new ForgotPasswordRequest("user@bootstrapbugz.com");
+    final var forgotPasswordRequest = new ForgotPasswordRequest("user@localhost");
     mockMvc
         .perform(
             post(Path.AUTH + "/forgot-password")
@@ -272,7 +270,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void forgotPasswordShouldThrowResourceNotFound_userNotFound() throws Exception {
-    final var forgotPasswordRequest = new ForgotPasswordRequest("unknown@bootstrapbugz.com");
+    final var forgotPasswordRequest = new ForgotPasswordRequest("unknown@localhost");
     final var expectedErrorResponse = new ErrorMessage(HttpStatus.NOT_FOUND);
     expectedErrorResponse.addDetails("User not found.");
     final var resultActions =
@@ -344,7 +342,7 @@ class AuthControllerIT extends DatabaseContainers {
             "User",
             "User",
             "user",
-            "user@bootstrapbugz.com",
+            "user@localhost",
             true,
             true,
             LocalDateTime.now(),
@@ -380,7 +378,7 @@ class AuthControllerIT extends DatabaseContainers {
     mockMvc
         .perform(
             get(Path.AUTH + "/email-availability")
-                .param("email", "available@bootstrapbugz.com")
+                .param("email", "available@localhost")
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))

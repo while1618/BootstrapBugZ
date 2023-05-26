@@ -56,7 +56,7 @@ class ProfileControllerIT extends DatabaseContainers {
         IntegrationTestUtil.signIn(
             mockMvc, objectMapper, new SignInRequest("update1", "qwerty123"));
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "updated", "updated@bootstrapbugz.com");
+        new UpdateProfileRequest("Updated", "Updated", "updated", "updated@localhost");
     performUpdateUser(updateUserRequest, signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.username").value("updated"))
@@ -69,7 +69,7 @@ class ProfileControllerIT extends DatabaseContainers {
         IntegrationTestUtil.signIn(
             mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "update2", "update2@bootstrapbugz.com");
+        new UpdateProfileRequest("Updated", "Updated", "update2", "update2@localhost");
     performUpdateUser(updateUserRequest, signInDTO.accessToken())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.username").value("update2"))
@@ -82,7 +82,7 @@ class ProfileControllerIT extends DatabaseContainers {
         IntegrationTestUtil.signIn(
             mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "user", "update2@bootstrapbugz.com");
+        new UpdateProfileRequest("Updated", "Updated", "user", "update2@localhost");
     final var resultActions =
         performUpdateUser(updateUserRequest, signInDTO.accessToken())
             .andExpect(status().isConflict());
@@ -97,7 +97,7 @@ class ProfileControllerIT extends DatabaseContainers {
         IntegrationTestUtil.signIn(
             mockMvc, objectMapper, new SignInRequest("update2", "qwerty123"));
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "update2", "user@bootstrapbugz.com");
+        new UpdateProfileRequest("Updated", "Updated", "update2", "user@localhost");
     final var resultActions =
         performUpdateUser(updateUserRequest, signInDTO.accessToken())
             .andExpect(status().isConflict());
