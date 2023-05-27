@@ -190,7 +190,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void signOut() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2");
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "delete1");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out")
@@ -203,7 +203,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void signOutFromAllDevices() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3");
+    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "delete2");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices")
@@ -214,12 +214,12 @@ class AuthControllerIT extends DatabaseContainers {
     invalidRefreshToken(signInDTO.refreshToken());
   }
 
-  private void invalidAccessToken(String token) throws Exception {
+  private void invalidAccessToken(String accessToken) throws Exception {
     mockMvc
         .perform(
             get(Path.AUTH + "/signed-in-user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, token))
+                .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isUnauthorized())
         .andExpect(
             content()
