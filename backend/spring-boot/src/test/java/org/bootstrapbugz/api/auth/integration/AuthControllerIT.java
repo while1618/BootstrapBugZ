@@ -148,7 +148,7 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void confirmRegistration_throwForbidden_invalidToken() throws Exception {
+  void confirmRegistration_throwBadRequest_invalidToken() throws Exception {
     final var user = User.builder().id(100L).build();
     final var token = confirmRegistrationTokenService.create(user.getId());
     final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
@@ -157,12 +157,12 @@ class AuthControllerIT extends DatabaseContainers {
             put(Path.AUTH + "/confirm-registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
-        .andExpect(status().isForbidden())
+        .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Invalid token.")));
   }
 
   @Test
-  void confirmRegistration_throwForbidden_userAlreadyActivated() throws Exception {
+  void confirmRegistration_throwConflict_userAlreadyActivated() throws Exception {
     final var user = userRepository.findByUsername("user").orElseThrow();
     final var token = confirmRegistrationTokenService.create(user.getId());
     final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
@@ -171,7 +171,7 @@ class AuthControllerIT extends DatabaseContainers {
             put(Path.AUTH + "/confirm-registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
-        .andExpect(status().isForbidden())
+        .andExpect(status().isConflict())
         .andExpect(content().string(containsString("User already activated.")));
   }
 

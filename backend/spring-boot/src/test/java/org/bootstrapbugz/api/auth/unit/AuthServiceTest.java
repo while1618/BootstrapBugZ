@@ -28,6 +28,7 @@ import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
+import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
@@ -174,21 +175,21 @@ class AuthServiceTest {
   }
 
   @Test
-  void confirmRegistration_throwForbidden_invalidToken() {
+  void confirmRegistration_throwBadRequest_invalidToken() {
     final var token = confirmRegistrationTokenService.create(2L);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)))
-        .isInstanceOf(ForbiddenException.class)
+        .isInstanceOf(BadRequestException.class)
         .hasMessage("Invalid token.");
   }
 
   @Test
-  void confirmRegistration_throwForbidden_userAlreadyActivated() {
+  void confirmRegistration_throwConfilict_userAlreadyActivated() {
     final var token = confirmRegistrationTokenService.create(2L);
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     assertThatThrownBy(() -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)))
-        .isInstanceOf(ForbiddenException.class)
+        .isInstanceOf(ConflictException.class)
         .hasMessage("User already activated.");
   }
 

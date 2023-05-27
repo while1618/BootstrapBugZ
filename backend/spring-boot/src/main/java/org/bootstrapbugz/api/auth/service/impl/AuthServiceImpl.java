@@ -16,6 +16,7 @@ import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
+import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
@@ -106,9 +107,10 @@ public class AuthServiceImpl implements AuthService {
     final var user =
         userRepository
             .findById(JwtUtil.getUserId(confirmRegistrationRequest.token()))
-            .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
+            .orElseThrow(
+                () -> new BadRequestException("token", messageService.getMessage("token.invalid")));
     if (user.isActivated())
-      throw new ForbiddenException(messageService.getMessage("user.activated"));
+      throw new ConflictException(messageService.getMessage("user.activated"));
     confirmRegistrationTokenService.check(confirmRegistrationRequest.token());
     user.setActivated(true);
     userRepository.save(user);
