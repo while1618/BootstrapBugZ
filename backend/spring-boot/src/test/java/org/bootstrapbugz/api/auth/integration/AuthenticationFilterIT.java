@@ -60,7 +60,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
     "locked, User locked.",
     "deactivated, User not activated.",
   })
-  void signIn_throwForbidden_userLockedAndUserNotActivated(String username, String message)
+  void signIn_throwForbidden_lockedDeactivatedUser(String username, String message)
       throws Exception {
     final var signInRequest = new SignInRequest(username, "qwerty123");
     mockMvc
