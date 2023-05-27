@@ -238,8 +238,6 @@ paths:
           $ref: "#/components/responses/BadRequest"
         404:
           $ref: "#/components/responses/NotFound"
-        403:
-          $ref: "#/components/responses/Forbidden"
   /auth/reset-password:
     put:
       tags:
