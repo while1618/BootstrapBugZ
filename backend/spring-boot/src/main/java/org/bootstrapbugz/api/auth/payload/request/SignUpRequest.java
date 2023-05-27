@@ -3,11 +3,13 @@ package org.bootstrapbugz.api.auth.payload.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import org.bootstrapbugz.api.shared.constants.Regex;
 import org.bootstrapbugz.api.shared.validator.EmailExist;
 import org.bootstrapbugz.api.shared.validator.FieldMatch;
 import org.bootstrapbugz.api.shared.validator.UsernameExist;
 
+@Builder
 @FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
 public record SignUpRequest(
     @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{firstName.invalid}") String firstName,
