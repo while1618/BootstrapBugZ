@@ -88,10 +88,10 @@ paths:
           description: Resend Confirmation Email Success
         400:
           $ref: "#/components/responses/BadRequest"
-        403:
-          $ref: "#/components/responses/Forbidden"
         404:
           $ref: "#/components/responses/NotFound"
+        409:
+          $ref: "#/components/responses/Conflict"
   /auth/confirm-registration:
     put:
       tags:
@@ -195,7 +195,7 @@ paths:
       operationId: signOut
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       responses:
         204:
           description: Sign Out Success
@@ -209,7 +209,7 @@ paths:
       operationId: signOutFromAllDevices
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       responses:
         204:
           description: Sign Out From All Devices Success
@@ -272,7 +272,7 @@ paths:
       summary: Signed In User
       operationId: signedInUser
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       responses:
         200:
           description: Signed In User Success
@@ -352,8 +352,8 @@ paths:
       summary: Get Users
       operationId: getUsers
       security:
-        - { }
-        - BearerAuth: [ ]
+        - {}
+        - BearerAuth: []
       responses:
         200:
           description: Get Users Success
@@ -427,8 +427,8 @@ paths:
       summary: Get User
       operationId: getUser
       security:
-        - { }
-        - BearerAuth: [ ]
+        - {}
+        - BearerAuth: []
       parameters:
         - in: path
           name: username
@@ -486,7 +486,7 @@ paths:
       operationId: updateProfile
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Update Profile Request
         required: true
@@ -531,7 +531,7 @@ paths:
       operationId: changePassword
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Change Password Request
         required: true
@@ -558,7 +558,7 @@ paths:
       operationId: activateUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Activate Users Request
         required: true
@@ -587,7 +587,7 @@ paths:
       operationId: deactivateUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Deactivate Users Request
         required: true
@@ -616,7 +616,7 @@ paths:
       operationId: unlockUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Unlock Users Request
         required: true
@@ -645,7 +645,7 @@ paths:
       operationId: lockUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Lock Users Request
         required: true
@@ -674,7 +674,7 @@ paths:
       operationId: updateUserRoles
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Update Users Roles Request
         required: true
@@ -706,7 +706,7 @@ paths:
       operationId: deleteUsers
       x-codegen-request-body-name: body
       security:
-        - BearerAuth: [ ]
+        - BearerAuth: []
       requestBody:
         description: Delete Users Request
         required: true
@@ -791,8 +791,8 @@ components:
             status: 409
             error: Conflict
             details:
-              - field: field
-                message: Field already exists.
+              - field?: field
+                message: Conflict.
   schemas:
     SignUpRequest:
       type: object

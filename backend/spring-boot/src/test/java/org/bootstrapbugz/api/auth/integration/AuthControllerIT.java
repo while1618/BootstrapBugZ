@@ -123,14 +123,14 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void resendConfirmationEmail_throwForbidden_userAlreadyActivated() throws Exception {
+  void resendConfirmationEmail_throwConflict_userAlreadyActivated() throws Exception {
     final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("user");
     mockMvc
         .perform(
             post(Path.AUTH + "/resend-confirmation-email")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
-        .andExpect(status().isForbidden())
+        .andExpect(status().isConflict())
         .andExpect(content().string(containsString("User already activated.")));
   }
 

@@ -28,6 +28,7 @@ import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
+import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -141,13 +142,13 @@ class AuthServiceTest {
   }
 
   @Test
-  void resendConfirmationEmail_throwForbidden_userAlreadyActivated() {
+  void resendConfirmationEmail_throwConflict_userAlreadyActivated() {
     final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     when(userRepository.findByUsernameOrEmail("test", "test"))
         .thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     assertThatThrownBy(() -> authService.resendConfirmationEmail(resendConfirmationEmailRequest))
-        .isInstanceOf(ForbiddenException.class)
+        .isInstanceOf(ConflictException.class)
         .hasMessage("User already activated.");
   }
 

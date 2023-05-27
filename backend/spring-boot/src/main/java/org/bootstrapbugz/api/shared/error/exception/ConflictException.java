@@ -15,4 +15,10 @@ public class ConflictException extends RuntimeException {
     this.status = HttpStatus.CONFLICT;
     this.field = field;
   }
+
+  public ConflictException(String message) {
+    super(message);
+    this.status = HttpStatus.CONFLICT;
+    this.field = null;
+  }
 }

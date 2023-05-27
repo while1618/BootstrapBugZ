@@ -16,6 +16,7 @@ import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
+import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -95,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
     if (user.isActivated())
-      throw new ForbiddenException(messageService.getMessage("user.activated"));
+      throw new ConflictException(messageService.getMessage("user.activated"));
     final var token = confirmRegistrationTokenService.create(user.getId());
     confirmRegistrationTokenService.sendToEmail(user, token);
   }
