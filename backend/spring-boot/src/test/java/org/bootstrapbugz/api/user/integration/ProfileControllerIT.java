@@ -1,10 +1,11 @@
 package org.bootstrapbugz.api.user.integration;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,7 +14,6 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.email.service.EmailService;
-import org.bootstrapbugz.api.shared.error.ErrorMessage;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
@@ -22,12 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 @DirtiesContext
 @AutoConfigureMockMvc
@@ -39,139 +37,156 @@ class ProfileControllerIT extends DatabaseContainers {
 
   @MockBean private EmailService emailService;
 
-  private ResultActions performUpdateUser(UpdateProfileRequest updateProfileRequest, String token)
-      throws Exception {
-    return mockMvc.perform(
-        put(Path.PROFILE + "/update")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(AuthUtil.AUTH_HEADER, token)
-            .content(objectMapper.writeValueAsString(updateProfileRequest)));
-  }
-
-  private ResultActions performChangePassword(
-      ChangePasswordRequest changePasswordRequest, String token) throws Exception {
-    return mockMvc.perform(
-        put(Path.PROFILE + "/change-password")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(AuthUtil.AUTH_HEADER, token)
-            .content(objectMapper.writeValueAsString(changePasswordRequest)));
-  }
-
   @Test
-  void itShouldUpdateUser_newUsernameAndEmail() throws Exception {
-    doNothing()
-        .when(emailService)
-        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update1");
+  void updateUser_newUsernameAndEmail() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update1").accessToken();
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "updated", "updated@localhost");
-    performUpdateUser(updateUserRequest, signInDTO.accessToken())
+        new UpdateProfileRequest("Updated", "Updated", "updated1", "updated1@localhost");
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(updateUserRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.username").value("updated"))
-        .andExpect(jsonPath("$.firstName").value("Updated"));
+        .andExpect(jsonPath("$.username").value("updated1"))
+        .andExpect(jsonPath("$.email").value("updated1@localhost"));
     verify(emailService, times(1))
         .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
   }
 
   @Test
-  void itShouldUpdateUser_sameUsernameAndEmail() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2");
+  void updateUser_sameUsernameAndEmail() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2").accessToken();
     final var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "update2", "update2@localhost");
-    performUpdateUser(updateUserRequest, signInDTO.accessToken())
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(updateUserRequest)))
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$.firstName").value("Updated"))
         .andExpect(jsonPath("$.username").value("update2"))
-        .andExpect(jsonPath("$.firstName").value("Updated"));
+        .andExpect(jsonPath("$.email").value("update2@localhost"));
   }
 
   @Test
-  void updateUserShouldThrowBadRequest_usernameExists() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2");
+  void updateUser_throwBadRequest_usernameExists() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "user", "update2@localhost");
-    final var resultActions =
-        performUpdateUser(updateUserRequest, signInDTO.accessToken())
-            .andExpect(status().isConflict());
-    final var expectedErrorResponse = new ErrorMessage(HttpStatus.CONFLICT);
-    expectedErrorResponse.addDetails("username", "Username already exists.");
-    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+        new UpdateProfileRequest("Updated", "Updated", "admin", "updated3@localhost");
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(updateUserRequest)))
+        .andExpect(status().isConflict())
+        .andExpect(content().string(containsString("Username already exists.")));
   }
 
   @Test
-  void updateUserShouldThrowBadRequest_emailExists() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2");
+  void updateUser_throwBadRequest_emailExists() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "update2", "user@localhost");
-    final var resultActions =
-        performUpdateUser(updateUserRequest, signInDTO.accessToken())
-            .andExpect(status().isConflict());
-    final var expectedErrorResponse = new ErrorMessage(HttpStatus.CONFLICT);
-    expectedErrorResponse.addDetails("email", "Email already exists.");
-    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+        new UpdateProfileRequest("Updated", "Updated", "updated3", "admin@localhost");
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(updateUserRequest)))
+        .andExpect(status().isConflict())
+        .andExpect(content().string(containsString("Email already exists.")));
   }
 
   @Test
-  void updateUserShouldThrowBadRequest_invalidParameters() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2");
+  void updateUser_throwBadRequest_invalidParameters() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
     final var updateUserRequest =
         new UpdateProfileRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
-    final var resultActions =
-        performUpdateUser(updateUserRequest, signInDTO.accessToken())
-            .andExpect(status().isBadRequest());
-    final var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
-    expectedErrorResponse.addDetails("firstName", "Invalid first name.");
-    expectedErrorResponse.addDetails("lastName", "Invalid last name.");
-    expectedErrorResponse.addDetails("username", "Invalid username.");
-    expectedErrorResponse.addDetails("email", "Invalid email.");
-    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(updateUserRequest)))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("Invalid first name.")))
+        .andExpect(content().string(containsString("Invalid last name.")))
+        .andExpect(content().string(containsString("Invalid username.")))
+        .andExpect(content().string(containsString("Invalid email.")));
   }
 
   @Test
-  void itShouldChangePassword() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3");
+  void changePassword() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update4").accessToken();
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
-    performChangePassword(changePasswordRequest, signInDTO.accessToken())
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isNoContent());
   }
 
   @Test
-  void changePasswordShouldThrowBadRequest_oldPasswordDoNotMatch() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2");
+  void changePassword_throwBadRequest_wrongOldPassword() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty12345", "qwerty1234", "qwerty1234");
-    final var resultActions =
-        performChangePassword(changePasswordRequest, signInDTO.accessToken())
-            .andExpect(status().isBadRequest());
-    final var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
-    expectedErrorResponse.addDetails("oldPassword", "Wrong old password.");
-    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(changePasswordRequest)))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("Wrong old password.")));
   }
 
   @Test
-  void changePasswordShouldThrowBadRequest_passwordsDoNotMatch() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2");
+  void changePassword_throwBadRequest_passwordsDoNotMatch() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty12345");
-    final var resultActions =
-        performChangePassword(changePasswordRequest, signInDTO.accessToken())
-            .andExpect(status().isBadRequest());
-    final var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
-    expectedErrorResponse.addDetails("Passwords do not match.");
-    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(changePasswordRequest)))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("Passwords do not match.")));
   }
 
   @Test
-  void changePasswordShouldThrowBadRequest_invalidParameters() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2");
+  void changePassword_throwBadRequest_invalidParameters() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
     final var changePasswordRequest = new ChangePasswordRequest("invalid", "invalid", "invalid");
-    final var resultActions =
-        performChangePassword(changePasswordRequest, signInDTO.accessToken())
-            .andExpect(status().isBadRequest());
-    final var expectedErrorResponse = new ErrorMessage(HttpStatus.BAD_REQUEST);
-    expectedErrorResponse.addDetails("newPassword", "Invalid password.");
-    expectedErrorResponse.addDetails("oldPassword", "Invalid password.");
-    expectedErrorResponse.addDetails("confirmNewPassword", "Invalid password.");
-    IntegrationTestUtil.checkErrorMessages(expectedErrorResponse, resultActions);
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .content(objectMapper.writeValueAsString(changePasswordRequest)))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("oldPassword")))
+        .andExpect(content().string(containsString("newPassword")))
+        .andExpect(content().string(containsString("confirmNewPassword")))
+        .andExpect(content().string(containsString("Invalid password.")));
   }
 }
