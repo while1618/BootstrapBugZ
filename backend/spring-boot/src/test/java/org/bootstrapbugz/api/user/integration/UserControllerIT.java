@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.user.integration;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -99,6 +100,7 @@ class UserControllerIT extends DatabaseContainers {
   void findUserByUsername_throwResourceNotFound() throws Exception {
     mockMvc
         .perform(get(Path.USERS + "/{username}", "unknown").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound());
+        .andExpect(status().isNotFound())
+        .andExpect(content().string(containsString("User not found.")));
   }
 }
