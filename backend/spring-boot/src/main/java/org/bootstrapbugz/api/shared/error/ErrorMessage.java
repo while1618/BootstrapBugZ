@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @Getter
@@ -50,11 +49,10 @@ public class ErrorMessage {
   }
 
   @Getter
-  @Setter
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private static final class Detail {
     private String field;
-    private String message;
+    private final String message;
 
     private Detail(String message) {
       this.message = message;
