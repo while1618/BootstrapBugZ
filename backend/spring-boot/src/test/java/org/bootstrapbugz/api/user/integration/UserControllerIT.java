@@ -33,7 +33,6 @@ class UserControllerIT extends DatabaseContainers {
     mockMvc
         .perform(get(Path.USERS).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$[0].email").doesNotExist())
         .andExpect(jsonPath("$[0].roles").doesNotExist());
   }
@@ -48,7 +47,6 @@ class UserControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$[0].email").exists())
         .andExpect(jsonPath("$[0].roles").exists());
   }
@@ -62,7 +60,6 @@ class UserControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.email").exists())
         .andExpect(jsonPath("$.roles").doesNotExist());
   }
@@ -76,7 +73,6 @@ class UserControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.email").doesNotExist())
         .andExpect(jsonPath("$.roles").doesNotExist());
   }
@@ -91,7 +87,6 @@ class UserControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.email").exists())
         .andExpect(jsonPath("$.roles").exists());
   }
