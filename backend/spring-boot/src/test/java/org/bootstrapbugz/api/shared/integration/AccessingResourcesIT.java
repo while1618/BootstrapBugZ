@@ -1,9 +1,11 @@
 package org.bootstrapbugz.api.shared.integration;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,25 +37,31 @@ class AccessingResourcesIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
+  private final String unauthorized = "Full authentication is required to access this resource";
+  private final String forbidden = "Access Denied";
+
   @Test
   void updateProfile_throwUnauthorized_userNotSignedIn() throws Exception {
     mockMvc
         .perform(put(Path.PROFILE + "/update").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString(unauthorized)));
   }
 
   @Test
   void changePassword_throwUnauthorized_userNotSignedIn() throws Exception {
     mockMvc
         .perform(put(Path.PROFILE + "/change-password").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString(unauthorized)));
   }
 
   @Test
   void changeUsersRoles_throwUnauthorized_userNotSignedIn() throws Exception {
     mockMvc
         .perform(put(Path.ADMIN + "/users/update-role").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString(unauthorized)));
   }
 
   @Test
@@ -70,7 +78,8 @@ class AccessingResourcesIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
-        .andExpect(status().isForbidden());
+        .andExpect(status().isForbidden())
+        .andExpect(content().string(containsString(forbidden)));
   }
 
   @ParameterizedTest
@@ -84,7 +93,8 @@ class AccessingResourcesIT extends DatabaseContainers {
       throws Exception {
     mockMvc
         .perform(put(Path.ADMIN + "/users/" + path).contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString(unauthorized)));
   }
 
   @ParameterizedTest
@@ -104,14 +114,16 @@ class AccessingResourcesIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(adminRequest)))
-        .andExpect(status().isForbidden());
+        .andExpect(status().isForbidden())
+        .andExpect(content().string(containsString(forbidden)));
   }
 
   @Test
   void deleteUsers_throwUnauthorized_userNotSignedIn() throws Exception {
     mockMvc
         .perform(delete(Path.ADMIN + "/users/delete").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString(unauthorized)));
   }
 
   @Test
@@ -124,21 +136,24 @@ class AccessingResourcesIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(adminRequest)))
-        .andExpect(status().isForbidden());
+        .andExpect(status().isForbidden())
+        .andExpect(content().string(containsString(forbidden)));
   }
 
   @Test
   void receiveSignedInUser_throwUnauthorized_userNotSignedIn() throws Exception {
     mockMvc
         .perform(get(Path.AUTH + "/signed-in-user").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString(unauthorized)));
   }
 
   @Test
   void signOut_throwUnauthorized_userNotSignedIn() throws Exception {
     mockMvc
         .perform(post(Path.AUTH + "/sign-out").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString(unauthorized)));
   }
 
   @Test
@@ -146,6 +161,7 @@ class AccessingResourcesIT extends DatabaseContainers {
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString(unauthorized)));
   }
 }
