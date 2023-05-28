@@ -52,7 +52,7 @@ public class AdminServiceImpl implements AdminService {
   public void deactivate(String username) {
     final var user = getUser(username);
     user.setActivated(false);
-    accessTokenService.invalidateAllByUser(user.getId());
+    accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
     userRepository.save(user);
   }
@@ -68,7 +68,7 @@ public class AdminServiceImpl implements AdminService {
   public void lock(String username) {
     final var user = getUser(username);
     user.setNonLocked(false);
-    accessTokenService.invalidateAllByUser(user.getId());
+    accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
     userRepository.save(user);
   }
@@ -78,7 +78,7 @@ public class AdminServiceImpl implements AdminService {
     final var user = getUser(username);
     final var roles = roleRepository.findAllByNameIn(updateRoleRequest.roleNames());
     user.setRoles(Set.copyOf(roles));
-    accessTokenService.invalidateAllByUser(user.getId());
+    accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
     userRepository.save(user);
   }
@@ -87,7 +87,7 @@ public class AdminServiceImpl implements AdminService {
   @Transactional
   public void delete(String username) {
     final var user = getUser(username);
-    accessTokenService.invalidateAllByUser(user.getId());
+    accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
     userRepository.delete(user);
   }

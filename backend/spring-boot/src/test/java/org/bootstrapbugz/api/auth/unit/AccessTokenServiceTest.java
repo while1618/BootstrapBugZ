@@ -111,7 +111,7 @@ class AccessTokenServiceTest {
   @Test
   void invalidateAllTokens() {
     final var expectedUserBlacklist = UserBlacklist.builder().userId(1L).timeToLive(1000).build();
-    accessTokenService.invalidateAllByUser(1L);
+    accessTokenService.invalidateAllByUserId(1L);
     verify(userBlacklistRepository, times(1)).save(userBlacklistArgumentCaptor.capture());
     assertThat(userBlacklistArgumentCaptor.getValue().getUserId())
         .isEqualTo(expectedUserBlacklist.getUserId());

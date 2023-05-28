@@ -10,5 +10,5 @@ public interface AccessTokenService {
 
   void invalidate(String token);
 
-  void invalidateAllByUser(Long userId);
+  void invalidateAllByUserId(Long userId);
 }

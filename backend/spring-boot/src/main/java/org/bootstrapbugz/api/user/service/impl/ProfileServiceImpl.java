@@ -72,7 +72,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     user.setEmail(email);
     user.setActivated(false);
-    accessTokenService.invalidateAllByUser(user.getId());
+    accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
     final var token = confirmRegistrationTokenService.create(user.getId());
     confirmRegistrationTokenService.sendToEmail(user, token);
@@ -90,7 +90,7 @@ public class ProfileServiceImpl implements ProfileService {
       throw new BadRequestException(
           "oldPassword", messageService.getMessage("oldPassword.invalid"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
-    accessTokenService.invalidateAllByUser(user.getId());
+    accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
     userRepository.save(user);
   }
@@ -98,7 +98,7 @@ public class ProfileServiceImpl implements ProfileService {
   @Override
   public void delete() {
     final var userDTO = AuthUtil.findSignedInUser();
-    accessTokenService.invalidateAllByUser(userDTO.id());
+    accessTokenService.invalidateAllByUserId(userDTO.id());
     refreshTokenService.deleteAllByUserId(userDTO.id());
     userRepository.deleteById(userDTO.id());
   }

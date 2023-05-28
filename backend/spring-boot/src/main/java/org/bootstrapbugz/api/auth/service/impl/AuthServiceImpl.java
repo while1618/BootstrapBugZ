@@ -144,7 +144,7 @@ public class AuthServiceImpl implements AuthService {
   public void signOutFromAllDevices() {
     final var userId = AuthUtil.findSignedInUser().id();
     refreshTokenService.deleteAllByUserId(userId);
-    accessTokenService.invalidateAllByUser(userId);
+    accessTokenService.invalidateAllByUserId(userId);
   }
 
   @Override
@@ -166,7 +166,7 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(() -> new ForbiddenException(messageService.getMessage("token.invalid")));
     resetPasswordTokenService.check(resetPasswordRequest.token());
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.password()));
-    accessTokenService.invalidateAllByUser(user.getId());
+    accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
     userRepository.save(user);
   }
