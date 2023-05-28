@@ -6,14 +6,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.admin.service.impl.AdminServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
+import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.shared.util.UnitTestUtil;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -34,16 +34,13 @@ class AdminServiceTest {
   @Mock private RoleRepository roleRepository;
   @Mock private AccessTokenService accessTokenService;
   @Mock private RefreshTokenService refreshTokenService;
+  @Mock private MessageService messageService;
   @InjectMocks private AdminServiceImpl adminService;
-  @Captor private ArgumentCaptor<Iterable<User>> userArgumentCaptor;
+  @Captor private ArgumentCaptor<User> userArgumentCaptor;
 
   @Test
-  void updateUsersRoles() {
-    final var updateRolesRequest =
-        UpdateRoleRequest.builder()
-            .usernames(Collections.singleton("test"))
-            .roleNames(Set.of(RoleName.USER, RoleName.ADMIN))
-            .build();
+  void updateUserRoles() {
+    final var updateRolesRequest = new UpdateRoleRequest(Set.of(RoleName.USER, RoleName.ADMIN));
     final var expectedUser =
         User.builder()
             .id(2L)
@@ -54,18 +51,16 @@ class AdminServiceTest {
             .activated(true)
             .roles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)))
             .build();
-    when(userRepository.findAllByUsernameIn(updateRolesRequest.usernames()))
-        .thenReturn(List.of(UnitTestUtil.getTestUser()));
+    when(userRepository.findByUsername("test")).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(roleRepository.findAllByNameIn(updateRolesRequest.roleNames()))
         .thenReturn(List.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
-    adminService.updateRole(updateRolesRequest);
-    verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));
+    adminService.updateRole("test", updateRolesRequest);
+    verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+    assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
   }
 
   @Test
-  void lockUsers() {
-    final var adminRequest = new AdminRequest(Collections.singleton("test"));
+  void lockUser() {
     final var expectedUser =
         User.builder()
             .id(2L)
@@ -77,16 +72,14 @@ class AdminServiceTest {
             .nonLocked(false)
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
-    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(UnitTestUtil.getTestUser()));
-    adminService.lock(adminRequest);
-    verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));
+    when(userRepository.findByUsername("test")).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    adminService.lock("test");
+    verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+    assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
   }
 
   @Test
-  void unlockUsers() {
-    final var adminRequest = new AdminRequest(Collections.singleton("test"));
+  void unlockUser() {
     final var expectedUser =
         User.builder()
             .id(2L)
@@ -98,16 +91,14 @@ class AdminServiceTest {
             .nonLocked(true)
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
-    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(UnitTestUtil.getTestUser()));
-    adminService.unlock(adminRequest);
-    verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));
+    when(userRepository.findByUsername("test")).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    adminService.unlock("test");
+    verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+    assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
   }
 
   @Test
-  void activateUsers() {
-    final var adminRequest = new AdminRequest(Collections.singleton("test2"));
+  void activateUser() {
     final var expectedUser =
         User.builder()
             .id(2L)
@@ -118,16 +109,14 @@ class AdminServiceTest {
             .activated(true)
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
-    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(UnitTestUtil.getTestUser()));
-    adminService.activate(adminRequest);
-    verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));
+    when(userRepository.findByUsername("test")).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    adminService.activate("test");
+    verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+    assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
   }
 
   @Test
-  void deactivateUsers() {
-    final var adminRequest = new AdminRequest(Collections.singleton("test"));
+  void deactivateUser() {
     final var expectedUser =
         User.builder()
             .id(2L)
@@ -138,19 +127,16 @@ class AdminServiceTest {
             .activated(false)
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
-    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(UnitTestUtil.getTestUser()));
-    adminService.deactivate(adminRequest);
-    verify(userRepository, times(1)).saveAll(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue()).isEqualTo(List.of(expectedUser));
+    when(userRepository.findByUsername("test")).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    adminService.deactivate("test");
+    verify(userRepository, times(1)).save(userArgumentCaptor.capture());
+    assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
   }
 
   @Test
-  void deleteUsers() {
-    final var adminRequest = new AdminRequest(Set.of("admin", "test"));
-    when(userRepository.findAllByUsernameIn(adminRequest.usernames()))
-        .thenReturn(List.of(UnitTestUtil.getTestUser(), UnitTestUtil.getAdminUser()));
-    adminService.delete(adminRequest);
-    verify(userRepository, times(2)).delete(any(User.class));
+  void deleteUser() {
+    when(userRepository.findByUsername("test")).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    adminService.delete("test");
+    verify(userRepository, times(1)).delete(any(User.class));
   }
 }

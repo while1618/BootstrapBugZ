@@ -1,18 +1,17 @@
 package org.bootstrapbugz.api.admin.service;
 
-import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 
 public interface AdminService {
-  void activate(AdminRequest adminRequest);
+  void activate(String username);
 
-  void deactivate(AdminRequest adminRequest);
+  void deactivate(String username);
 
-  void unlock(AdminRequest adminRequest);
+  void unlock(String username);
 
-  void lock(AdminRequest adminRequest);
+  void lock(String username);
 
-  void updateRole(UpdateRoleRequest updateRoleRequest);
+  void updateRole(String username, UpdateRoleRequest updateRoleRequest);
 
-  void delete(AdminRequest adminRequest);
+  void delete(String username);
 }

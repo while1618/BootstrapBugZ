@@ -1,12 +1,13 @@
 package org.bootstrapbugz.api.admin.integration;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
-import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
@@ -41,15 +42,11 @@ class AdminControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void updateUsersRoles() throws Exception {
-    final var updateRoleRequest =
-        UpdateRoleRequest.builder()
-            .usernames(Set.of("update1", "update2"))
-            .roleNames(Set.of(RoleName.USER, RoleName.ADMIN))
-            .build();
+  void updateUserRoles() throws Exception {
+    final var updateRoleRequest = new UpdateRoleRequest(Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
         .perform(
-            put(Path.ADMIN + "/users/update-role")
+            put(Path.ADMIN + "/users/{username}/update-role", "update1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
@@ -57,15 +54,37 @@ class AdminControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void deleteUsers() throws Exception {
-    final var adminRequest = new AdminRequest(Set.of("delete1", "delete2"));
+  void updateUserRoles_throwResourceNotFound_userNotFound() throws Exception {
+    final var updateRoleRequest = new UpdateRoleRequest(Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
         .perform(
-            delete(Path.ADMIN + "/users/delete")
+            put(Path.ADMIN + "/users/{username}/update-role", "unknown")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken)
-                .content(objectMapper.writeValueAsString(adminRequest)))
+                .content(objectMapper.writeValueAsString(updateRoleRequest)))
+        .andExpect(status().isNotFound())
+        .andExpect(content().string(containsString("User not found.")));
+  }
+
+  @Test
+  void deleteUser() throws Exception {
+    mockMvc
+        .perform(
+            delete(Path.ADMIN + "/users/{username}/delete", "delete1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isNoContent());
+  }
+
+  @Test
+  void deleteUser_throwResourceNotFound_userNotFound() throws Exception {
+    mockMvc
+        .perform(
+            delete(Path.ADMIN + "/users/{username}/delete", "unknown")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken))
+        .andExpect(status().isNotFound())
+        .andExpect(content().string(containsString("User not found.")));
   }
 
   @ParameterizedTest
@@ -75,14 +94,30 @@ class AdminControllerIT extends DatabaseContainers {
     "deactivate, update4",
     "activate, deactivated",
   })
-  void lockUnlockDeactivateActivateUsers(String path, String username) throws Exception {
-    final var adminRequest = new AdminRequest(Set.of(username));
+  void lockUnlockDeactivateActivateUser(String path, String username) throws Exception {
     mockMvc
         .perform(
-            put(Path.ADMIN + "/users/" + path)
+            put(Path.ADMIN + "/users/{username}/" + path, username)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken)
-                .content(objectMapper.writeValueAsString(adminRequest)))
+                .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isNoContent());
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "lock",
+    "unlock",
+    "deactivate",
+    "activate",
+  })
+  void lockUnlockDeactivateActivateUser_throwResourceNotFound_userNotFound(String path)
+      throws Exception {
+    mockMvc
+        .perform(
+            put(Path.ADMIN + "/users/{username}/" + path, "unknown")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken))
+        .andExpect(status().isNotFound())
+        .andExpect(content().string(containsString("User not found.")));
   }
 }

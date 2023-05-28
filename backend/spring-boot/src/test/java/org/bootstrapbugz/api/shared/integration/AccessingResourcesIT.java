@@ -9,9 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
 import java.util.Set;
-import org.bootstrapbugz.api.admin.payload.request.AdminRequest;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
@@ -59,7 +57,9 @@ class AccessingResourcesIT extends DatabaseContainers {
   @Test
   void changeUsersRoles_throwUnauthorized_userNotSignedIn() throws Exception {
     mockMvc
-        .perform(put(Path.ADMIN + "/users/update-role").contentType(MediaType.APPLICATION_JSON))
+        .perform(
+            put(Path.ADMIN + "/users/{username}/update-role", "update1")
+                .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized())
         .andExpect(content().string(containsString(unauthorized)));
   }
@@ -67,14 +67,10 @@ class AccessingResourcesIT extends DatabaseContainers {
   @Test
   void changeUsersRoles_throwForbidden_userNotAdmin() throws Exception {
     final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
-    final var updateRoleRequest =
-        UpdateRoleRequest.builder()
-            .usernames(Collections.singleton("update1"))
-            .roleNames(Set.of(RoleName.USER, RoleName.ADMIN))
-            .build();
+    final var updateRoleRequest = new UpdateRoleRequest(Set.of(RoleName.USER, RoleName.ADMIN));
     mockMvc
         .perform(
-            put(Path.ADMIN + "/users/update-role")
+            put(Path.ADMIN + "/users/{username}/update-role", "update1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(AuthUtil.AUTH_HEADER, accessToken)
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
@@ -92,7 +88,9 @@ class AccessingResourcesIT extends DatabaseContainers {
   void lockUnlockDeactivateActivateUsers_throwUnauthorized_userNotSignedIn(String path)
       throws Exception {
     mockMvc
-        .perform(put(Path.ADMIN + "/users/" + path).contentType(MediaType.APPLICATION_JSON))
+        .perform(
+            put(Path.ADMIN + "/users/{username}/" + path, "update1")
+                .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized())
         .andExpect(content().string(containsString(unauthorized)));
   }
@@ -107,13 +105,11 @@ class AccessingResourcesIT extends DatabaseContainers {
   void lockUnlockDeactivateActivateUsers_throwForbidden_userNotAdmin(String path, String username)
       throws Exception {
     final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
-    final var adminRequest = new AdminRequest(Collections.singleton(username));
     mockMvc
         .perform(
-            put(Path.ADMIN + "/users/" + path)
+            put(Path.ADMIN + "/users/{username}/" + path, username)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken)
-                .content(objectMapper.writeValueAsString(adminRequest)))
+                .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
   }
@@ -121,7 +117,9 @@ class AccessingResourcesIT extends DatabaseContainers {
   @Test
   void deleteUsers_throwUnauthorized_userNotSignedIn() throws Exception {
     mockMvc
-        .perform(delete(Path.ADMIN + "/users/delete").contentType(MediaType.APPLICATION_JSON))
+        .perform(
+            delete(Path.ADMIN + "/users/{username}/delete", "delete1")
+                .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized())
         .andExpect(content().string(containsString(unauthorized)));
   }
@@ -129,13 +127,11 @@ class AccessingResourcesIT extends DatabaseContainers {
   @Test
   void deleteUsers_throwForbidden_userNotAdmin() throws Exception {
     final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
-    final var adminRequest = new AdminRequest(Collections.singleton("delete1"));
     mockMvc
         .perform(
-            delete(Path.ADMIN + "/users/delete")
+            delete(Path.ADMIN + "/users/{username}/delete", "delete1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken)
-                .content(objectMapper.writeValueAsString(adminRequest)))
+                .header(AuthUtil.AUTH_HEADER, accessToken))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
   }

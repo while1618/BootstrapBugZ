@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.shared.generic.crud;
 
 import jakarta.validation.Valid;
-import org.bootstrapbugz.api.shared.generic.crud.request.DeleteRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,8 +33,8 @@ public abstract class CrudController<T, U> {
   }
 
   @DeleteMapping
-  public ResponseEntity<Void> delete(@RequestBody DeleteRequest deleteRequest) {
-    service.delete(deleteRequest);
+  public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    service.delete(id);
     return ResponseEntity.noContent().build();
   }
 }

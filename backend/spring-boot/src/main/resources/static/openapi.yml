@@ -548,142 +548,131 @@ paths:
           $ref: "#/components/responses/BadRequest"
         401:
           $ref: "#/components/responses/Unauthorized"
-  /admin/users/activate:
+  /admin/users/{username}/activate:
     put:
       tags:
         - admin
-      summary: Activate Users
-      operationId: activateUsers
-      x-codegen-request-body-name: body
+      summary: Activate User
+      operationId: activateUser
       security:
         - BearerAuth: []
-      requestBody:
-        description: Activate Users Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AdminRequest"
-            example:
-              usernames:
-                - john.doe
-                - jane.doe
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: Pass username to activate user.
+          example: john.doe
       responses:
         204:
-          description: Activate Users Success
-        400:
-          $ref: "#/components/responses/BadRequest"
+          description: Activate User Success
         401:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-  /admin/users/deactivate:
+        404:
+          $ref: "#/components/responses/NotFound"
+  /admin/users/{username}/deactivate:
     put:
       tags:
         - admin
-      summary: Deactivate Users
-      operationId: deactivateUsers
-      x-codegen-request-body-name: body
+      summary: Deactivate User
+      operationId: deactivateUser
       security:
         - BearerAuth: []
-      requestBody:
-        description: Deactivate Users Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AdminRequest"
-            example:
-              usernames:
-                - john.doe
-                - jane.doe
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: Pass username to deactivate user.
+          example: john.doe
       responses:
         204:
-          description: Deactivate Users Success
-        400:
-          $ref: "#/components/responses/BadRequest"
+          description: Deactivate User Success
         401:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-  /admin/users/unlock:
+        404:
+          $ref: "#/components/responses/NotFound"
+  /admin/users/{username}/unlock:
     put:
       tags:
         - admin
-      summary: Unlock Users
-      operationId: unlockUsers
-      x-codegen-request-body-name: body
+      summary: Unlock User
+      operationId: unlockUser
       security:
         - BearerAuth: []
-      requestBody:
-        description: Unlock Users Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AdminRequest"
-            example:
-              usernames:
-                - john.doe
-                - jane.doe
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: Pass username to unlock user.
+          example: john.doe
       responses:
         204:
-          description: Unlock Users Success
-        400:
-          $ref: "#/components/responses/BadRequest"
+          description: Unlock User Success
         401:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-  /admin/users/lock:
+        404:
+          $ref: "#/components/responses/NotFound"
+  /admin/users/{username}/lock:
     put:
       tags:
         - admin
-      summary: Lock Users
-      operationId: lockUsers
-      x-codegen-request-body-name: body
+      summary: Lock User
+      operationId: lockUser
       security:
         - BearerAuth: []
-      requestBody:
-        description: Lock Users Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AdminRequest"
-            example:
-              usernames:
-                - john.doe
-                - jane.doe
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: Pass username to lock user.
+          example: john.doe
       responses:
         204:
-          description: Lock Users Success
-        400:
-          $ref: "#/components/responses/BadRequest"
+          description: Lock User Success
         401:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-  /admin/users/update-role:
+        404:
+          $ref: "#/components/responses/NotFound"
+  /admin/users/{username}/update-role:
     put:
       tags:
         - admin
-      summary: Update Users Roles
+      summary: Update User Roles
       operationId: updateUserRoles
       x-codegen-request-body-name: body
       security:
         - BearerAuth: []
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: Pass username to update user roles.
+          example: john.doe
       requestBody:
-        description: Update Users Roles Request
+        description: Update User Roles Request
         required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateRoleRequest"
             example:
-              usernames:
-                - john.doe
-                - jane.doe
               roleNames:
                 - USER
                 - ADMIN
@@ -696,35 +685,33 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-  /admin/users/delete:
+        404:
+          $ref: "#/components/responses/NotFound"
+  /admin/users/{username}/delete:
     delete:
       tags:
         - admin
-      summary: Delete Users
-      operationId: deleteUsers
-      x-codegen-request-body-name: body
+      summary: Delete User
+      operationId: deleteUser
       security:
         - BearerAuth: []
-      requestBody:
-        description: Delete Users Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AdminRequest"
-            example:
-              usernames:
-                - john.doe
-                - jane.doe
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: Pass username to delete user.
+          example: john.doe
       responses:
         204:
           description: Delete Users Success
-        400:
-          $ref: "#/components/responses/BadRequest"
         401:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
 components:
   responses:
     BadRequest:
@@ -869,20 +856,9 @@ components:
           type: string
         confirmNewPassword:
           type: string
-    AdminRequest:
-      type: object
-      properties:
-        usernames:
-          type: array
-          items:
-            type: string
     UpdateRoleRequest:
       type: object
       properties:
-        usernames:
-          type: array
-          items:
-            type: string
         roleNames:
           type: array
           items:
