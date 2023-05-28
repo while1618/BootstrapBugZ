@@ -79,6 +79,12 @@
             Sign out form all devices
           </a>
         </div>
+        <div class="divider" />
+        <div class="card">
+          <form class="flex flex-col gap-4" method="POST" action="?/delete" use:enhance>
+            <button class="btn-error btn">Delete Account</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

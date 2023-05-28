@@ -35,11 +35,10 @@ export const actions = {
 } satisfies Actions;
 
 const performAction = async (method: HttpRequest, path: string, cookies: Cookies, url: URL) => {
-  const usernames = url.searchParams.get('usernames')?.split(',');
+  const username = url.searchParams.get('username');
   const response = await makeRequest({
     method,
-    path: `/admin/users/${path}`,
-    body: JSON.stringify({ usernames }),
+    path: `/admin/users/${username}/${path}`,
     auth: cookies.get('accessToken'),
   });
 

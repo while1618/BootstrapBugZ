@@ -38,7 +38,18 @@ export const actions = {
     if ('error' in response) return fail(response.status, { errorMessage: response });
 
     removeAuth(cookies, locals);
+    throw redirect(302, '/');
+  },
+  delete: async ({ cookies, locals }) => {
+    const response = await makeRequest({
+      method: HttpRequest.DELETE,
+      path: '/profile/delete',
+      auth: cookies.get('accessToken'),
+    });
 
+    if ('error' in response) return fail(response.status, { errorMessage: response });
+
+    removeAuth(cookies, locals);
     throw redirect(302, '/');
   },
 } satisfies Actions;

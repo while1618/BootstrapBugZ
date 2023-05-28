@@ -18,7 +18,7 @@ export async function makeRequest(params: RequestParams): Promise<object | Error
     opts.body = params.body;
   }
 
-  if (params.auth) headers = { ...headers, Authorization: params.auth };
+  if (params.auth) headers = { ...headers, Authorization: `Bearer ${params.auth}` };
 
   opts.method = params.method;
   opts.headers = headers;

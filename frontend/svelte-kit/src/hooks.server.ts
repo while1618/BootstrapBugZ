@@ -6,7 +6,6 @@ import { makeRequest } from '$lib/server/apis/api';
 import {
   HttpRequest,
   removeAuth,
-  removeBearerPrefix,
   setAccessTokenCookie,
   setRefreshTokenCookie,
 } from '$lib/server/utils/util';
@@ -25,7 +24,7 @@ export const handle = (async ({ event, resolve }) => {
 async function tryToGetSignedInUser(cookies: Cookies, locals: App.Locals): Promise<void> {
   try {
     const accessToken = cookies.get('accessToken') ?? '';
-    const payload = jwt.verify(removeBearerPrefix(accessToken), JWT_SECRET) as JwtPayload;
+    const payload = jwt.verify(accessToken, JWT_SECRET) as JwtPayload;
     locals.userId = payload.iss;
   } catch (error) {
     await tryToRefreshToken(cookies, locals);
@@ -47,7 +46,7 @@ async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<
       const { accessToken, refreshToken } = response as RefreshTokenDTO;
       setAccessTokenCookie(cookies, accessToken);
       setRefreshTokenCookie(cookies, refreshToken);
-      const { iss } = jwt.decode(removeBearerPrefix(accessToken)) as JwtPayload;
+      const { iss } = jwt.decode(accessToken) as JwtPayload;
       locals.userId = iss;
     }
   }
@@ -59,7 +58,7 @@ function checkProtectedRoutes(url: URL, cookies: Cookies): void {
     if (!accessToken) throw redirect(302, '/');
 
     if (url.pathname.startsWith('/admin')) {
-      const { roles } = jwt.decode(removeBearerPrefix(accessToken)) as JwtPayload;
+      const { roles } = jwt.decode(accessToken) as JwtPayload;
       if (!roles?.includes(RoleName.ADMIN)) throw redirect(302, '/');
     }
   }

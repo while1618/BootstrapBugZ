@@ -1,8 +1,8 @@
 import { JWT_SECRET } from '$env/static/private';
-import { makeRequest } from '$lib/server/apis/api';
 import en from '$lib/i18n/en.json';
 import { PASSWORD_REGEX } from '$lib/regex/regex';
-import { HttpRequest, removeBearerPrefix } from '$lib/server/utils/util';
+import { makeRequest } from '$lib/server/apis/api';
+import { HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
@@ -14,9 +14,9 @@ export const load = (({ locals }) => {
 
 const resetPasswordSchema = z
   .object({
-    token: z.string().refine((value) => {
+    token: z.string().refine((token) => {
       try {
-        jwt.verify(removeBearerPrefix(value), JWT_SECRET);
+        jwt.verify(token, JWT_SECRET);
         return true;
       } catch (e) {
         return false;

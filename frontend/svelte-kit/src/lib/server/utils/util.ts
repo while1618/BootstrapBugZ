@@ -9,12 +9,8 @@ export enum HttpRequest {
   DELETE = 'DELETE',
 }
 
-export function removeBearerPrefix(token: string): string {
-  return token.replace('Bearer ', '');
-}
-
 export function setAccessTokenCookie(cookies: Cookies, accessToken: string): void {
-  const { exp } = jwt.decode(removeBearerPrefix(accessToken)) as JwtPayload;
+  const { exp } = jwt.decode(accessToken) as JwtPayload;
   cookies.set('accessToken', accessToken, {
     httpOnly: true,
     path: '/',
@@ -25,7 +21,7 @@ export function setAccessTokenCookie(cookies: Cookies, accessToken: string): voi
 }
 
 export function setRefreshTokenCookie(cookies: Cookies, refreshToken: string): void {
-  const { exp } = jwt.decode(removeBearerPrefix(refreshToken)) as JwtPayload;
+  const { exp } = jwt.decode(refreshToken) as JwtPayload;
   cookies.set('refreshToken', refreshToken, {
     httpOnly: true,
     path: '/',

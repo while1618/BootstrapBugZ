@@ -45,7 +45,7 @@
           <th>
             <form
               method="POST"
-              action="?/{user.activated ? 'deactivate' : 'activate'}&usernames={user.username}"
+              action="?/{user.activated ? 'deactivate' : 'activate'}&username={user.username}"
               use:enhance
             >
               {#if user.activated}
@@ -62,7 +62,7 @@
           <th>
             <form
               method="POST"
-              action="?/{user.nonLocked ? 'lock' : 'unlock'}&usernames={user.username}"
+              action="?/{user.nonLocked ? 'lock' : 'unlock'}&username={user.username}"
               use:enhance
             >
               {#if user.nonLocked}
@@ -109,7 +109,7 @@
     <p class="py-4">Are you sure you want to delete {selectedUser}?</p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
-    <form method="POST" action="?/delete&usernames={selectedUser}" use:enhance>
+    <form method="POST" action="?/delete&username={selectedUser}" use:enhance>
       <button type="submit" class="btn text-error" on:click={toggleModal}>Delete</button>
       <button type="button" class="btn" on:click={toggleModal}>Cancel</button>
     </form>
