@@ -189,4 +189,16 @@ class ProfileControllerIT extends DatabaseContainers {
         .andExpect(content().string(containsString("confirmNewPassword")))
         .andExpect(content().string(containsString("Invalid password.")));
   }
+
+  @Test
+  void delete() throws Exception {
+    final var accessToken =
+        IntegrationTestUtil.signIn(mockMvc, objectMapper, "delete1").accessToken();
+    mockMvc
+        .perform(
+            put(Path.PROFILE + "/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthUtil.AUTH_HEADER, accessToken))
+        .andExpect(status().isNoContent());
+  }
 }

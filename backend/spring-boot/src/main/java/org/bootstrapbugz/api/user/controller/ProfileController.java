@@ -33,4 +33,10 @@ public class ProfileController {
     profileService.changePassword(changePasswordRequest);
     return ResponseEntity.noContent().build();
   }
+
+  @PutMapping("/delete")
+  public ResponseEntity<Void> delete() {
+    profileService.delete();
+    return ResponseEntity.noContent().build();
+  }
 }

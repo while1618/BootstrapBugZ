@@ -8,4 +8,6 @@ public interface ProfileService {
   UserDTO update(UpdateProfileRequest updateProfileRequest);
 
   void changePassword(ChangePasswordRequest changePasswordRequest);
+
+  void delete();
 }

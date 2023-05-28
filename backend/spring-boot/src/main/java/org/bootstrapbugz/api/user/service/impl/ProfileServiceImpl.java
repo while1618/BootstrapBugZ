@@ -6,7 +6,7 @@ import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
+import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
@@ -49,7 +49,7 @@ public class ProfileServiceImpl implements ProfileService {
         userRepository
             .findByUsernameWithRoles(userDTO.username())
             .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+                () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
     user.setFirstName(updateProfileRequest.firstName());
     user.setLastName(updateProfileRequest.lastName());
     tryToSetUsername(user, updateProfileRequest.username());
@@ -85,7 +85,7 @@ public class ProfileServiceImpl implements ProfileService {
         userRepository
             .findByUsername(userDTO.username())
             .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+                () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.oldPassword(), user.getPassword()))
       throw new BadRequestException(
           "oldPassword", messageService.getMessage("oldPassword.invalid"));
@@ -93,5 +93,13 @@ public class ProfileServiceImpl implements ProfileService {
     accessTokenService.invalidateAllByUser(user.getId());
     refreshTokenService.deleteAllByUser(user.getId());
     userRepository.save(user);
+  }
+
+  @Override
+  public void delete() {
+    final var userDTO = AuthUtil.findSignedInUser();
+    accessTokenService.invalidateAllByUser(userDTO.id());
+    refreshTokenService.deleteAllByUser(userDTO.id());
+    userRepository.deleteById(userDTO.id());
   }
 }
