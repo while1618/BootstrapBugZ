@@ -89,7 +89,7 @@ class RefreshTokenServiceTest {
     final var refreshToken = new RefreshTokenStore("token123", 1L, "ip1", 1000);
     when(refreshTokenStoreRepository.findByUserIdAndIpAddress(1L, "ip1"))
         .thenReturn(Optional.of(refreshToken));
-    refreshTokenService.deleteByUserAndIpAddress(1L, "ip1");
+    refreshTokenService.deleteByUserIdAndIpAddress(1L, "ip1");
     verify(refreshTokenStoreRepository, times(1)).delete(any(RefreshTokenStore.class));
   }
 
@@ -99,7 +99,7 @@ class RefreshTokenServiceTest {
     final var refreshToken2 = new RefreshTokenStore("token321", 1L, "ip2", 1000);
     when(refreshTokenStoreRepository.findAllByUserId(1L))
         .thenReturn(List.of(refreshToken1, refreshToken2));
-    refreshTokenService.deleteAllByUser(1L);
+    refreshTokenService.deleteAllByUserId(1L);
     verify(refreshTokenStoreRepository, times(1)).deleteAll(List.of(refreshToken1, refreshToken2));
   }
 }

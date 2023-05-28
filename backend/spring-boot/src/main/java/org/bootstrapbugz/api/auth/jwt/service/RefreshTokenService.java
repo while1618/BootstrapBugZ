@@ -13,7 +13,7 @@ public interface RefreshTokenService {
 
   void delete(String token);
 
-  void deleteByUserAndIpAddress(Long userId, String ipAddress);
+  void deleteByUserIdAndIpAddress(Long userId, String ipAddress);
 
-  void deleteAllByUser(Long userId);
+  void deleteAllByUserId(Long userId);
 }

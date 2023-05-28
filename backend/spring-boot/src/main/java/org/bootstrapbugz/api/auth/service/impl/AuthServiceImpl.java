@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public void signOut(HttpServletRequest request) {
-    refreshTokenService.deleteByUserAndIpAddress(
+    refreshTokenService.deleteByUserIdAndIpAddress(
         AuthUtil.findSignedInUser().id(), AuthUtil.getUserIpAddress(request));
     accessTokenService.invalidate(
         JwtUtil.removeBearer(AuthUtil.getAccessTokenFromRequest(request)));
@@ -143,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void signOutFromAllDevices() {
     final var userId = AuthUtil.findSignedInUser().id();
-    refreshTokenService.deleteAllByUser(userId);
+    refreshTokenService.deleteAllByUserId(userId);
     accessTokenService.invalidateAllByUser(userId);
   }
 
@@ -167,7 +167,7 @@ public class AuthServiceImpl implements AuthService {
     resetPasswordTokenService.check(resetPasswordRequest.token());
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.password()));
     accessTokenService.invalidateAllByUser(user.getId());
-    refreshTokenService.deleteAllByUser(user.getId());
+    refreshTokenService.deleteAllByUserId(user.getId());
     userRepository.save(user);
   }
 

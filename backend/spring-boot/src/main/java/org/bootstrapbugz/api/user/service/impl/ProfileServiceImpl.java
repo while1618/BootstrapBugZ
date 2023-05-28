@@ -73,7 +73,7 @@ public class ProfileServiceImpl implements ProfileService {
     user.setEmail(email);
     user.setActivated(false);
     accessTokenService.invalidateAllByUser(user.getId());
-    refreshTokenService.deleteAllByUser(user.getId());
+    refreshTokenService.deleteAllByUserId(user.getId());
     final var token = confirmRegistrationTokenService.create(user.getId());
     confirmRegistrationTokenService.sendToEmail(user, token);
   }
@@ -91,7 +91,7 @@ public class ProfileServiceImpl implements ProfileService {
           "oldPassword", messageService.getMessage("oldPassword.invalid"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
     accessTokenService.invalidateAllByUser(user.getId());
-    refreshTokenService.deleteAllByUser(user.getId());
+    refreshTokenService.deleteAllByUserId(user.getId());
     userRepository.save(user);
   }
 
@@ -99,7 +99,7 @@ public class ProfileServiceImpl implements ProfileService {
   public void delete() {
     final var userDTO = AuthUtil.findSignedInUser();
     accessTokenService.invalidateAllByUser(userDTO.id());
-    refreshTokenService.deleteAllByUser(userDTO.id());
+    refreshTokenService.deleteAllByUserId(userDTO.id());
     userRepository.deleteById(userDTO.id());
   }
 }

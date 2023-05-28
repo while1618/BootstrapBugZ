@@ -76,13 +76,13 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   }
 
   @Override
-  public void deleteByUserAndIpAddress(Long userId, String ipAddress) {
+  public void deleteByUserIdAndIpAddress(Long userId, String ipAddress) {
     final var token = refreshTokenStoreRepository.findByUserIdAndIpAddress(userId, ipAddress);
     token.ifPresent(refreshTokenStoreRepository::delete);
   }
 
   @Override
-  public void deleteAllByUser(Long userId) {
+  public void deleteAllByUserId(Long userId) {
     final var refreshTokens = refreshTokenStoreRepository.findAllByUserId(userId);
     refreshTokenStoreRepository.deleteAll(refreshTokens);
   }
