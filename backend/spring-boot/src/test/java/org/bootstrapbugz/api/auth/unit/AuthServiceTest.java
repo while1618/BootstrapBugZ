@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.auth.unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -174,9 +175,10 @@ class AuthServiceTest {
   void confirmRegistration_throwBadRequest_invalidToken() {
     final var token = confirmRegistrationTokenService.create(2L);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
-    assertThatThrownBy(() -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)))
-        .isInstanceOf(BadRequestException.class)
-        .hasMessage("Invalid token.");
+    final var throwable =
+        catchThrowable(
+            () -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)));
+    assertThat(throwable).isInstanceOf(BadRequestException.class).hasMessage("Invalid token.");
   }
 
   @Test
@@ -184,7 +186,10 @@ class AuthServiceTest {
     final var token = confirmRegistrationTokenService.create(2L);
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
-    assertThatThrownBy(() -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)))
+    final var throwable =
+        catchThrowable(
+            () -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)));
+    assertThat(throwable)
         .isInstanceOf(ConflictException.class)
         .hasMessage("User already activated.");
   }
