@@ -1,6 +1,6 @@
 package org.bootstrapbugz.api.auth.security.user.details;
 
-import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
+import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
         userRepository
             .findById(userId)
             .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+                () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
     return UserPrincipal.create(user);
   }
 
@@ -35,7 +35,7 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
         userRepository
             .findByUsernameOrEmail(username, username)
             .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+                () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
     return UserPrincipal.create(user);
   }
 }
