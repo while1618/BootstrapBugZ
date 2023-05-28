@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
@@ -45,7 +44,7 @@ class UserControllerIT extends DatabaseContainers {
         .perform(
             get(Path.USERS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].email").exists())
         .andExpect(jsonPath("$[0].roles").exists());
@@ -58,7 +57,7 @@ class UserControllerIT extends DatabaseContainers {
         .perform(
             get(Path.USERS + "/{username}", "user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.email").exists())
         .andExpect(jsonPath("$.roles").doesNotExist());
@@ -71,7 +70,7 @@ class UserControllerIT extends DatabaseContainers {
         .perform(
             get(Path.USERS + "/{username}", "admin")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.email").doesNotExist())
         .andExpect(jsonPath("$.roles").doesNotExist());
@@ -85,7 +84,7 @@ class UserControllerIT extends DatabaseContainers {
         .perform(
             get(Path.USERS + "/{username}", "user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.email").exists())
         .andExpect(jsonPath("$.roles").exists());

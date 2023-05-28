@@ -21,7 +21,6 @@ import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
-import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.email.service.EmailService;
@@ -195,7 +194,7 @@ class AuthControllerIT extends DatabaseContainers {
         .perform(
             post(Path.AUTH + "/sign-out")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(signInDTO.accessToken())))
         .andExpect(status().isNoContent());
     invalidAccessToken(signInDTO.accessToken());
     invalidRefreshToken(signInDTO.refreshToken());
@@ -208,7 +207,7 @@ class AuthControllerIT extends DatabaseContainers {
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(signInDTO.accessToken())))
         .andExpect(status().isNoContent());
     invalidAccessToken(signInDTO.accessToken());
     invalidRefreshToken(signInDTO.refreshToken());
@@ -219,7 +218,7 @@ class AuthControllerIT extends DatabaseContainers {
         .perform(
             get(Path.AUTH + "/signed-in-user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isUnauthorized())
         .andExpect(
             content()
@@ -312,12 +311,12 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void retrieveSignedInUser() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user");
+    final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
     mockMvc
         .perform(
             get(Path.AUTH + "/signed-in-user")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, signInDTO.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.username").value("user"));
   }

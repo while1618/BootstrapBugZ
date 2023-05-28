@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
-import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
@@ -72,7 +71,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/{username}/update-role", "update1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
@@ -109,7 +108,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/{username}/" + path, username)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
   }
@@ -131,7 +130,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         .perform(
             delete(Path.ADMIN + "/users/{username}/delete", "delete1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
   }

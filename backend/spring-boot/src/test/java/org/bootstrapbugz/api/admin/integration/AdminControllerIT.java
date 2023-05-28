@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.UpdateRoleRequest;
-import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
@@ -48,7 +47,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/{username}/update-role", "update1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
         .andExpect(status().isNoContent());
   }
@@ -60,7 +59,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/{username}/update-role", "unknown")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken)
+                .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(updateRoleRequest)))
         .andExpect(status().isNotFound())
         .andExpect(content().string(containsString("User not found.")));
@@ -72,7 +71,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             delete(Path.ADMIN + "/users/{username}/delete", "delete1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isNoContent());
   }
 
@@ -82,7 +81,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             delete(Path.ADMIN + "/users/{username}/delete", "unknown")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isNotFound())
         .andExpect(content().string(containsString("User not found.")));
   }
@@ -99,7 +98,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/{username}/" + path, username)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isNoContent());
   }
 
@@ -116,7 +115,7 @@ class AdminControllerIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN + "/users/{username}/" + path, "unknown")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(AuthUtil.AUTH_HEADER, accessToken))
+                .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isNotFound())
         .andExpect(content().string(containsString("User not found.")));
   }
