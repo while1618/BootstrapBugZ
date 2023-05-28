@@ -13,7 +13,7 @@ import java.util.Optional;
 import org.bootstrapbugz.api.auth.jwt.redis.model.RefreshTokenStore;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenStoreRepository;
 import org.bootstrapbugz.api.auth.jwt.service.impl.RefreshTokenServiceImpl;
-import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
+import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,12 +59,12 @@ class RefreshTokenServiceTest {
   }
 
   @Test
-  void checkRefreshToken_throwUnauthorized_refreshTokenNotInRedis() {
+  void checkRefreshToken_throwBadRequest_refreshTokenNotInRedis() {
     final var refreshToken = refreshTokenService.create(1L, Collections.emptySet(), "ip1");
     when(refreshTokenStoreRepository.existsById(refreshToken)).thenReturn(false);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> refreshTokenService.check(refreshToken))
-        .isInstanceOf(UnauthorizedException.class)
+        .isInstanceOf(BadRequestException.class)
         .hasMessage("Invalid token.");
   }
 

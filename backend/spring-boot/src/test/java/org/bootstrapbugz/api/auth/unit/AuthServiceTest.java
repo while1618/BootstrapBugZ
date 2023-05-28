@@ -30,7 +30,6 @@ import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
-import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.shared.util.UnitTestUtil;
@@ -257,12 +256,12 @@ class AuthServiceTest {
   }
 
   @Test
-  void resetPassword_throwForbidden_invalid() {
+  void resetPassword_throwBadRequest_invalidToken() {
     final var token = resetPasswordTokenService.create(2L);
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> authService.resetPassword(resetPasswordRequest))
-        .isInstanceOf(ForbiddenException.class)
+        .isInstanceOf(BadRequestException.class)
         .hasMessage("Invalid token.");
   }
 

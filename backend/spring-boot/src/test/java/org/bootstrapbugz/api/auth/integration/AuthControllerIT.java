@@ -233,7 +233,7 @@ class AuthControllerIT extends DatabaseContainers {
             post(Path.AUTH + "/refresh-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(refreshTokenRequest)))
-        .andExpect(status().isUnauthorized())
+        .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Invalid token.")));
   }
 
@@ -297,7 +297,7 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void resetPassword_throwForbidden_invalidToken() throws Exception {
+  void resetPassword_throwBadRequest_invalidToken() throws Exception {
     final var user = User.builder().id(100L).build();
     final var token = resetPasswordService.create(user.getId());
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
@@ -306,7 +306,7 @@ class AuthControllerIT extends DatabaseContainers {
             put(Path.AUTH + "/reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
-        .andExpect(status().isForbidden())
+        .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Invalid token.")));
   }
 

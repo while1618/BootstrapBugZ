@@ -10,7 +10,7 @@ import java.util.Optional;
 import org.bootstrapbugz.api.auth.jwt.redis.model.UserBlacklist;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
-import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
+import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ class ResetPasswordTokenServiceTest {
   }
 
   @Test
-  void checkToken_throwUnauthorized_userInBlacklist() {
+  void checkToken_throwBadRequest_userInBlacklist() {
     final var token = resetPasswordTokenService.create(1L);
     final var userBlacklist =
         UserBlacklist.builder()
@@ -72,7 +72,7 @@ class ResetPasswordTokenServiceTest {
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     assertThatThrownBy(() -> resetPasswordTokenService.check(token))
-        .isInstanceOf(ForbiddenException.class)
+        .isInstanceOf(BadRequestException.class)
         .hasMessage("Invalid token.");
   }
 }
