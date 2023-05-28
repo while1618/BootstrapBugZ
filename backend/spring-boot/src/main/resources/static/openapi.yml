@@ -65,8 +65,6 @@ paths:
                   - name: USER
         400:
           $ref: "#/components/responses/BadRequest"
-        409:
-          $ref: "#/components/responses/Conflict"
   /auth/resend-confirmation-email:
     post:
       tags:

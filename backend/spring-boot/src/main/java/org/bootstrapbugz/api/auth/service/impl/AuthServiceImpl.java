@@ -85,8 +85,7 @@ public class AuthServiceImpl implements AuthService {
   private Role getUserRole() {
     return roleRepository
         .findByName(RoleName.USER)
-        .orElseThrow(
-            () -> new ResourceNotFoundException(messageService.getMessage("role.notFound")));
+        .orElseThrow(() -> new RuntimeException(messageService.getMessage("role.notFound")));
   }
 
   @Override
