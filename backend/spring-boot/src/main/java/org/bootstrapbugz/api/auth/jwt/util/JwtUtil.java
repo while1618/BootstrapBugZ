@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 
 public class JwtUtil {
-  public static final String TOKEN_TYPE = "Bearer ";
+  private static final String BEARER = "Bearer ";
 
   private JwtUtil() {}
 
@@ -24,11 +24,11 @@ public class JwtUtil {
   }
 
   public static String removeBearer(String token) {
-    return token.replace(TOKEN_TYPE, "");
+    return token.replace(BEARER, "");
   }
 
   public static boolean isBearer(String token) {
-    return token.startsWith(JwtUtil.TOKEN_TYPE);
+    return token.startsWith(BEARER);
   }
 
   public static Long getUserId(String token) {

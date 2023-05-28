@@ -5,11 +5,10 @@ import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtil {
-  public static final String AUTH_HEADER = "Authorization";
-
   private AuthUtil() {}
 
   public static boolean isSignedIn() {
@@ -37,6 +36,6 @@ public class AuthUtil {
   }
 
   public static String getAccessTokenFromRequest(HttpServletRequest request) {
-    return request.getHeader(AUTH_HEADER);
+    return request.getHeader(HttpHeaders.AUTHORIZATION);
   }
 }
