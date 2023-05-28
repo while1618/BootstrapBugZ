@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.shared.error.handling;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import java.util.Objects;
 import lombok.NonNull;
 import org.bootstrapbugz.api.shared.error.ErrorMessage;
@@ -91,11 +90,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler({ConflictException.class})
   public ResponseEntity<Object> handleConflictException(ConflictException ex) {
     return createErrorResponseEntityWithField(ex.getStatus(), ex.getField(), ex.getMessage());
-  }
-
-  @ExceptionHandler({JWTVerificationException.class})
-  public ResponseEntity<Object> handleJwtVerificationException(JWTVerificationException ex) {
-    return createErrorResponseEntityWithoutField(HttpStatus.FORBIDDEN, ex.getMessage());
   }
 
   @ExceptionHandler({Exception.class})

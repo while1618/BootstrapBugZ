@@ -52,7 +52,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
   @Override
   public void check(String token) {
-    JwtUtil.verify(token, secret, PURPOSE);
+    try {
+      JwtUtil.verify(token, secret, PURPOSE);
+    } catch (RuntimeException e) {
+      throw new UnauthorizedException(e.getMessage());
+    }
     isInAccessTokenBlacklist(token);
     isInUserBlacklist(token);
   }
