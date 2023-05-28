@@ -9,7 +9,7 @@ public interface RefreshTokenService {
 
   void check(String token);
 
-  Optional<String> findByUserAndIpAddress(Long userId, String ipAddress);
+  Optional<String> findByUserIdAndIpAddress(Long userId, String ipAddress);
 
   void delete(String token);
 

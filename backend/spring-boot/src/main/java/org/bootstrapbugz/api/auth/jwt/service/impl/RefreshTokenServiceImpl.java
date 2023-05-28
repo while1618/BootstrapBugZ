@@ -64,7 +64,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   }
 
   @Override
-  public Optional<String> findByUserAndIpAddress(Long userId, String ipAddress) {
+  public Optional<String> findByUserIdAndIpAddress(Long userId, String ipAddress) {
     final var refreshTokenStore =
         refreshTokenStoreRepository.findByUserIdAndIpAddress(userId, ipAddress);
     return refreshTokenStore.map(RefreshTokenStore::getRefreshToken);
