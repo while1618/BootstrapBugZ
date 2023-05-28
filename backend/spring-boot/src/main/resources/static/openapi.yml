@@ -4,7 +4,7 @@ info:
   description: Description
   termsOfService: https://swagger.io/terms/
   contact:
-    email: dejan.zdravkovic96@gmail.com
+    email: dejan.zdravkovic@protonmail.com
   license:
     name: MIT License
     url: https://choosealicense.com/licenses/mit/
@@ -53,7 +53,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserDTO"
               example:
-                id: 4
+                id: 5
                 firstName: Joe
                 lastName: Bloggs
                 username: joe.bloggs
@@ -143,7 +143,7 @@ paths:
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
                 refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
                 user:
-                  id: 2
+                  id: 3
                   firstName: John
                   lastName: Doe
                   username: john.doe
@@ -185,8 +185,6 @@ paths:
                 refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
         400:
           $ref: "#/components/responses/BadRequest"
-        401:
-          $ref: "#/components/responses/Unauthorized"
   /auth/sign-out:
     post:
       tags:
@@ -261,8 +259,6 @@ paths:
           description: Reset Password Success
         400:
           $ref: "#/components/responses/BadRequest"
-        403:
-          $ref: "#/components/responses/Forbidden"
   /auth/signed-in-user:
     get:
       tags:
@@ -373,6 +369,14 @@ paths:
                       nonLocked: true
                       roles: null
                     - id: 2
+                      firstName: User
+                      lastName: User
+                      username: user
+                      email: null
+                      activated: true
+                      nonLocked: true
+                      roles: null
+                    - id: 3
                       firstName: John
                       lastName: Doe
                       username: john.doe
@@ -380,7 +384,7 @@ paths:
                       activated: true
                       nonLocked: true
                       roles: null
-                    - id: 3
+                    - id: 4
                       firstName: Jane
                       lastName: Doe
                       username: jane
@@ -401,6 +405,15 @@ paths:
                         - name: USER
                         - name: ADMIN
                     - id: 2
+                      firstName: User
+                      lastName: User
+                      username: user
+                      email: user@localhost
+                      activated: true
+                      nonLocked: true
+                      roles:
+                        - name: USER
+                    - id: 3
                       firstName: John
                       lastName: Doe
                       username: john.doe
@@ -409,7 +422,7 @@ paths:
                       nonLocked: true
                       roles:
                         - name: USER
-                    - id: 3
+                    - id: 4
                       firstName: Jane
                       lastName: Doe
                       username: jane
@@ -445,7 +458,7 @@ paths:
               examples:
                 non-signed-in-or-requesting-other:
                   value:
-                    id: 2
+                    id: 3
                     firstName: John
                     lastName: Doe
                     username: john.doe
@@ -455,7 +468,7 @@ paths:
                     roles: null
                 signed-in-requesting-himself:
                   value:
-                    id: 2
+                    id: 3
                     firstName: John
                     lastName: Doe
                     username: john.doe
@@ -465,7 +478,7 @@ paths:
                     roles: null
                 admin:
                   value:
-                    id: 2
+                    id: 3
                     firstName: John
                     lastName: Doe
                     username: john.doe
