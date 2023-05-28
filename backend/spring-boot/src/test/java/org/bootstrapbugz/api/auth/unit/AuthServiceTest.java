@@ -180,7 +180,7 @@ class AuthServiceTest {
   }
 
   @Test
-  void confirmRegistration_throwConfilict_userAlreadyActivated() {
+  void confirmRegistration_throwConflict_userAlreadyActivated() {
     final var token = confirmRegistrationTokenService.create(2L);
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
