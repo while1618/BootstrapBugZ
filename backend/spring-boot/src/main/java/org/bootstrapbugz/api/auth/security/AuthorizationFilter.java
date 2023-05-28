@@ -40,7 +40,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
       return;
     }
     try {
-      final var authToken = getAuthenticationToken(JwtUtil.removeBearer(accessToken));
+      final var authToken = getAuthenticationToken(accessToken);
       SecurityContextHolder.getContext().setAuthentication(authToken);
     } catch (RuntimeException e) {
       log.error(e.getMessage());
@@ -50,9 +50,10 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
   }
 
   private UsernamePasswordAuthenticationToken getAuthenticationToken(String accessToken) {
-    accessTokenService.check(accessToken);
-    final var userPrincipal =
-        (UserPrincipal) userDetailsService.loadUserByUserId(JwtUtil.getUserId(accessToken));
+    final var token = JwtUtil.removeBearer(accessToken);
+    accessTokenService.check(token);
+    final var userId = JwtUtil.getUserId(token);
+    final var userPrincipal = (UserPrincipal) userDetailsService.loadUserByUserId(userId);
     return new UsernamePasswordAuthenticationToken(
         userPrincipal, null, userPrincipal.getAuthorities());
   }

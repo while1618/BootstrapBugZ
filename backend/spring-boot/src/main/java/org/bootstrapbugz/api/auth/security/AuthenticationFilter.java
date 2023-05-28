@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
-import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
 import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
@@ -95,8 +94,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     final var refreshToken = getRefreshToken(userDTO.id(), userDTO.roleDTOs(), ipAddress);
     final var signInDTO =
         SignInDTO.builder()
-            .accessToken(JwtUtil.addBearer(accessToken))
-            .refreshToken(JwtUtil.addBearer(refreshToken))
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
             .userDTO(userDTO)
             .build();
     writeToResponse(response, signInDTO);

@@ -21,13 +21,11 @@ import org.bootstrapbugz.api.auth.jwt.service.impl.RefreshTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
-import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
@@ -50,7 +48,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -194,12 +191,9 @@ class AuthServiceTest {
 
   @Test
   void refreshToken() {
-    final var request = new MockHttpServletRequest();
-    request.addHeader("x-forwarded-for", "ip1");
     final var token = refreshTokenService.create(2L, Collections.emptySet(), "ip1");
     when(refreshTokenStoreRepository.existsById(token)).thenReturn(true);
-    final var refreshTokenRequest = new RefreshTokenRequest(token);
-    final var refreshTokenDTO = authService.refreshToken(refreshTokenRequest, request);
+    final var refreshTokenDTO = authService.refreshToken(token, "ip1");
     assertThat(refreshTokenDTO.accessToken()).isNotNull();
     assertThat(refreshTokenDTO.refreshToken()).isNotNull();
   }
@@ -210,10 +204,7 @@ class AuthServiceTest {
     SecurityContextHolder.setContext(securityContext);
     when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
     final var token = accessTokenService.create(2L, Collections.emptySet());
-    final var request = new MockHttpServletRequest();
-    request.addHeader("x-forwarded-for", "ip1");
-    request.addHeader(AuthUtil.AUTH_HEADER, token);
-    assertDoesNotThrow(() -> authService.signOut(request));
+    assertDoesNotThrow(() -> authService.signOut(token, "ip1"));
   }
 
   @Test

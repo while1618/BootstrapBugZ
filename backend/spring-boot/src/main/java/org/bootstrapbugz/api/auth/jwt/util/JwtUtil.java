@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 
 public class JwtUtil {
-  private static final String TOKEN_TYPE = "Bearer ";
+  public static final String TOKEN_TYPE = "Bearer ";
 
   private JwtUtil() {}
 
@@ -21,10 +21,6 @@ public class JwtUtil {
 
   public static Algorithm getAlgorithm(String secret) {
     return Algorithm.HMAC512(secret.getBytes());
-  }
-
-  public static String addBearer(String token) {
-    return TOKEN_TYPE + token;
   }
 
   public static String removeBearer(String token) {

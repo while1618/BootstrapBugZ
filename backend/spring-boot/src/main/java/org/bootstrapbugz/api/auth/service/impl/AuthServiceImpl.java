@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
@@ -10,7 +9,6 @@ import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
@@ -115,27 +113,19 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public RefreshTokenDTO refreshToken(
-      RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
-    final var oldRefreshToken = JwtUtil.removeBearer(refreshTokenRequest.refreshToken());
-    refreshTokenService.check(oldRefreshToken);
-    final var userId = JwtUtil.getUserId(oldRefreshToken);
-    final var roleDTOs = JwtUtil.getRoleDTOs(oldRefreshToken);
-    refreshTokenService.delete(oldRefreshToken);
-    final var accessToken = accessTokenService.create(userId, roleDTOs);
-    final var newRefreshToken =
-        refreshTokenService.create(userId, roleDTOs, AuthUtil.getUserIpAddress(request));
-    return RefreshTokenDTO.builder()
-        .accessToken(JwtUtil.addBearer(accessToken))
-        .refreshToken(JwtUtil.addBearer(newRefreshToken))
-        .build();
+  public RefreshTokenDTO refreshToken(String refreshToken, String ipAddress) {
+    refreshTokenService.check(refreshToken);
+    final var userId = JwtUtil.getUserId(refreshToken);
+    final var roleDTOs = JwtUtil.getRoleDTOs(refreshToken);
+    refreshTokenService.delete(refreshToken);
+    final var newAccessToken = accessTokenService.create(userId, roleDTOs);
+    final var newRefreshToken = refreshTokenService.create(userId, roleDTOs, ipAddress);
+    return new RefreshTokenDTO(newAccessToken, newRefreshToken);
   }
 
   @Override
-  public void signOut(HttpServletRequest request) {
+  public void signOut(String accessToken, String ipAddress) {
     final var id = AuthUtil.findSignedInUser().id();
-    final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var accessToken = JwtUtil.removeBearer(AuthUtil.getAccessTokenFromRequest(request));
     refreshTokenService.deleteByUserIdAndIpAddress(id, ipAddress);
     accessTokenService.invalidate(accessToken);
   }

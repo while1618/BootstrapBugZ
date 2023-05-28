@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.auth.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
 import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
@@ -10,6 +11,7 @@ import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
+import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.springframework.http.HttpStatus;
@@ -53,12 +55,16 @@ public class AuthController {
   @PostMapping("/refresh-token")
   public ResponseEntity<RefreshTokenDTO> refreshToken(
       @Valid @RequestBody RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
-    return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest, request));
+    final var refreshToken = JwtUtil.removeBearer(refreshTokenRequest.refreshToken());
+    final var ipAddress = AuthUtil.getUserIpAddress(request);
+    return ResponseEntity.ok(authService.refreshToken(refreshToken, ipAddress));
   }
 
   @PostMapping("/sign-out")
   public ResponseEntity<Void> signOut(HttpServletRequest request) {
-    authService.signOut(request);
+    final var accessToken = JwtUtil.removeBearer(AuthUtil.getAccessTokenFromRequest(request));
+    final var ipAddress = AuthUtil.getUserIpAddress(request);
+    authService.signOut(accessToken, ipAddress);
     return ResponseEntity.noContent().build();
   }
 
