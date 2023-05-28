@@ -155,6 +155,8 @@ paths:
           $ref: "#/components/responses/BadRequest"
         401:
           $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
   /auth/refresh-token:
     post:
       tags:
