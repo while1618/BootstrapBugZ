@@ -9,7 +9,7 @@ import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenStoreReposito
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil.JwtPurpose;
-import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
+import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,13 +50,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   @Override
   public void check(String token) {
-    JwtUtil.verify(token, secret, PURPOSE);
+    try {
+      JwtUtil.verify(token, secret, PURPOSE);
+    } catch (RuntimeException e) {
+      throw new BadRequestException("token", e.getMessage());
+    }
     isInRefreshTokenStore(token);
   }
 
   private void isInRefreshTokenStore(String token) {
     if (!refreshTokenStoreRepository.existsById(token))
-      throw new UnauthorizedException(messageService.getMessage("token.invalid"));
+      throw new BadRequestException("token", messageService.getMessage("token.invalid"));
   }
 
   @Override
