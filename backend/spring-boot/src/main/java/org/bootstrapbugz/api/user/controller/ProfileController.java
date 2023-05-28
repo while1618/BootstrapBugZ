@@ -7,6 +7,7 @@ import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.bootstrapbugz.api.user.service.ProfileService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,7 @@ public class ProfileController {
     return ResponseEntity.noContent().build();
   }
 
-  @PutMapping("/delete")
+  @DeleteMapping("/delete")
   public ResponseEntity<Void> delete() {
     profileService.delete();
     return ResponseEntity.noContent().build();

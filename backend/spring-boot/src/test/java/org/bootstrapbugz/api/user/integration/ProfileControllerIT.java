@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -190,12 +191,12 @@ class ProfileControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void delete() throws Exception {
+  void deleteProfile() throws Exception {
     final var accessToken =
         IntegrationTestUtil.signIn(mockMvc, objectMapper, "delete1").accessToken();
     mockMvc
         .perform(
-            put(Path.PROFILE + "/delete")
+            delete(Path.PROFILE + "/delete")
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isNoContent());
