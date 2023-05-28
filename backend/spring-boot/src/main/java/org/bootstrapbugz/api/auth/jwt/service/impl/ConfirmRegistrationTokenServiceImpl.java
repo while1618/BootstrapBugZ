@@ -6,6 +6,7 @@ import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil.JwtPurpose;
+import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -39,7 +40,11 @@ public class ConfirmRegistrationTokenServiceImpl implements ConfirmRegistrationT
 
   @Override
   public void check(String token) {
-    JwtUtil.verify(token, secret, PURPOSE);
+    try {
+      JwtUtil.verify(token, secret, PURPOSE);
+    } catch (RuntimeException e) {
+      throw new BadRequestException("token", e.getMessage());
+    }
   }
 
   @Override
