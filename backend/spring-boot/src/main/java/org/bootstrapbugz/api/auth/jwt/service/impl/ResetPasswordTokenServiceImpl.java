@@ -7,7 +7,7 @@ import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.ResetPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil.JwtPurpose;
-import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
+import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +49,11 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
 
   @Override
   public void check(String token) {
-    JwtUtil.verify(token, secret, PURPOSE);
+    try {
+      JwtUtil.verify(token, secret, PURPOSE);
+    } catch (RuntimeException e) {
+      throw new BadRequestException("token", e.getMessage());
+    }
     isInUserBlacklist(token);
   }
 
@@ -60,7 +64,7 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
     if (userInBlacklist.isEmpty()) return;
     if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt())
         || issuedAt.equals(userInBlacklist.get().getUpdatedAt()))
-      throw new ForbiddenException(messageService.getMessage("token.invalid"));
+      throw new BadRequestException("token", messageService.getMessage("token.invalid"));
   }
 
   @Override
