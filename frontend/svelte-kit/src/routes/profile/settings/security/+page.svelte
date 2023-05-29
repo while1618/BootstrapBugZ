@@ -1,8 +1,14 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import Modal from '$lib/components/modal.svelte';
   import type { ActionData } from './$types';
 
   export let form: ActionData;
+  let open = false;
+
+  function toggleModal(): void {
+    open = !open;
+  }
 </script>
 
 <div class="hero min-h-screen">
@@ -81,11 +87,23 @@
         </div>
         <div class="divider" />
         <div class="card">
-          <form class="flex flex-col gap-4" method="POST" action="?/delete" use:enhance>
-            <button class="btn-error btn">Delete Account</button>
-          </form>
+          <button class="btn-error btn" on:click|stopPropagation={toggleModal}>
+            Delete Account
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<Modal bind:open title="Delete account">
+  <svelte:fragment slot="body">
+    <p class="py-4">Are you sure you want to delete account?</p>
+  </svelte:fragment>
+  <svelte:fragment slot="actions">
+    <form method="POST" action="?/delete" use:enhance>
+      <button type="submit" class="btn text-error" on:click={toggleModal}>Delete</button>
+      <button type="button" class="btn" on:click={toggleModal}>Cancel</button>
+    </form>
+  </svelte:fragment>
+</Modal>
