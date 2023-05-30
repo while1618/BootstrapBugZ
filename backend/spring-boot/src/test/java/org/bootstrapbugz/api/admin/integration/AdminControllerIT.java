@@ -75,17 +75,6 @@ class AdminControllerIT extends DatabaseContainers {
         .andExpect(status().isNoContent());
   }
 
-  @Test
-  void deleteUser_throwResourceNotFound_userNotFound() throws Exception {
-    mockMvc
-        .perform(
-            delete(Path.ADMIN + "/users/{username}/delete", "unknown")
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken)))
-        .andExpect(status().isNotFound())
-        .andExpect(content().string(containsString("User not found.")));
-  }
-
   @ParameterizedTest
   @CsvSource({
     "lock, update3",

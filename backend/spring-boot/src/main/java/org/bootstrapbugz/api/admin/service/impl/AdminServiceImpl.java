@@ -86,7 +86,8 @@ public class AdminServiceImpl implements AdminService {
   @Override
   @Transactional
   public void delete(String username) {
-    final var user = getUser(username);
+    final var user = userRepository.findByUsername(username).orElse(null);
+    if (user == null) return;
     accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
     userRepository.delete(user);
