@@ -208,17 +208,27 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserDTO"
-              example:
-                id: 5
-                firstName: Joe
-                lastName: Bloggs
-                username: joe.bloggs
-                email: joe.bloggs@localhost
-                active: false
-                lock: false
-                createdAt: 2023-05-18T00:51:50.758738
-                roles:
-                  - name: USER
+              examples:
+                sign-up:
+                  value:
+                    id: 5
+                    firstName: Joe
+                    lastName: Bloggs
+                    username: joe.bloggs
+                    email: joe.bloggs@localhost
+                    createdAt: 2023-05-18T00:51:50.758738
+                admin-create-user:
+                  value:
+                    id: 5
+                    firstName: Joe
+                    lastName: Bloggs
+                    username: joe.bloggs
+                    email: joe.bloggs@localhost
+                    active: true
+                    lock: false
+                    createdAt: 2023-05-18T00:51:50.758738
+                    roles:
+                      - name: USER
         400:
           $ref: "#/components/responses/BadRequest"
         403:
@@ -247,33 +257,25 @@ paths:
                       lastName: Admin
                       username: admin
                       email: null
-                      active: true
-                      lock: false
-                      roles: null
+                      createdAt: 2023-05-18T00:51:50.758738
                     - id: 2
                       firstName: User
                       lastName: User
                       username: user
                       email: null
-                      active: true
-                      lock: false
-                      roles: null
+                      createdAt: 2023-05-18T00:51:50.758738
                     - id: 3
                       firstName: John
                       lastName: Doe
                       username: john.doe
                       email: null
-                      active: true
-                      lock: false
-                      roles: null
+                      createdAt: 2023-05-18T00:51:50.758738
                     - id: 4
                       firstName: Jane
                       lastName: Doe
                       username: jane
                       email: null
-                      active: true
-                      lock: false
-                      roles: null
+                      createdAt: 2023-05-18T00:51:50.758738
                 admin-user:
                   value:
                     - id: 1
@@ -283,6 +285,7 @@ paths:
                       email: admin@localhost
                       active: true
                       lock: false
+                      createdAt: 2023-05-18T00:51:50.758738
                       roles:
                         - name: USER
                         - name: ADMIN
@@ -293,6 +296,7 @@ paths:
                       email: user@localhost
                       active: true
                       lock: false
+                      createdAt: 2023-05-18T00:51:50.758738
                       roles:
                         - name: USER
                     - id: 3
@@ -302,6 +306,7 @@ paths:
                       email: john.doe@localhost
                       active: true
                       lock: false
+                      createdAt: 2023-05-18T00:51:50.758738
                       roles:
                         - name: USER
                     - id: 4
@@ -311,6 +316,7 @@ paths:
                       email: jane.doe@localhost
                       active: true
                       lock: false
+                      createdAt: 2023-05-18T00:51:50.758738
                       roles:
                         - name: USER
   /users/{id}:
@@ -344,9 +350,7 @@ paths:
                     lastName: Doe
                     username: john.doe
                     email: null
-                    active: true
-                    lock: false
-                    roles: null
+                    createdAt: 2023-05-18T00:51:50.758738
                 user-profile:
                   value:
                     id: 3
@@ -354,9 +358,7 @@ paths:
                     lastName: Doe
                     username: john.doe
                     email: john.doe@localhost
-                    active: true
-                    lock: false
-                    roles: null
+                    createdAt: 2023-05-18T00:51:50.758738
                 admin-user:
                   value:
                     id: 3
@@ -366,6 +368,7 @@ paths:
                     email: john.doe@localhost
                     active: true
                     lock: false
+                    createdAt: 2023-05-18T00:51:50.758738
                     roles:
                       - name: USER
         404:
@@ -400,10 +403,10 @@ paths:
                   email: joe.bloggs@localhost@localhost
               admin-user:
                 value:
-                  firstName: Jane
-                  lastName: Doe
-                  username: jane
-                  email: jane.doe@localhost
+                  firstName: Joe
+                  lastName: Bloggs
+                  username: joe.bloggs
+                  email: joe.bloggs@localhost
                   active: true
                   lock: false
                   roles:
@@ -424,17 +427,14 @@ paths:
                     lastName: Bloggs
                     username: joe.bloggs
                     email: joe.bloggs@localhost@localhost
-                    active: false
-                    lock: false
                     createdAt: 2023-05-18T00:51:50.758738
-                    roles: null
                 admin-user:
                   value:
                     id: 4
-                    firstName: Jane
-                    lastName: Doe
-                    username: jane
-                    email: jane.doe@localhost
+                    firstName: Joe
+                    lastName: Bloggs
+                    username: joe.bloggs
+                    email: joe.bloggs@localhost
                     active: true
                     lock: false
                     createdAt: 2023-05-18T00:51:50.758738
@@ -580,7 +580,7 @@ components:
             status: 409
             error: Conflict
             details:
-              - field?: field
+              - field: field
                 message: Conflict.
   schemas:
     AuthTokensRequest:
@@ -708,6 +708,9 @@ components:
           format: JWT
     AuthTokensDTO:
       type: object
+      required:
+        - accessToken
+        - refreshToken
       properties:
         accessToken:
           type: string
@@ -717,6 +720,8 @@ components:
           format: JWT
     RoleDTO:
       type: object
+      required:
+        - name
       properties:
         name:
           type: string
@@ -725,6 +730,13 @@ components:
             - ADMIN
     UserDTO:
       type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - username
+        - email
+        - createdAt
       properties:
         id:
           type: integer
@@ -738,6 +750,7 @@ components:
         email:
           type: string
           format: email
+          nullable: true
         active:
           type: boolean
         lock:
@@ -751,6 +764,11 @@ components:
             $ref: "#/components/schemas/RoleDTO"
     ErrorMessage:
       type: object
+      required:
+        - timestamp
+        - status
+        - error
+        - details
       properties:
         timestamp:
           type: string
@@ -764,6 +782,8 @@ components:
           type: array
           items:
             type: object
+            required:
+              - message
             properties:
               field:
                 type: string
