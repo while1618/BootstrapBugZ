@@ -74,25 +74,17 @@ paths:
       tags:
         - auth
       summary: Delete access and refresh tokens
-      security:
-        - BearerAuth: []
       responses:
         204:
           description: Access and refresh tokens deleted successfully
-        401:
-          $ref: "#/components/responses/Unauthorized"
   /auth/tokens/devices:
     delete:
       tags:
         - auth
       summary: Delete access and refresh tokens on all devices
-      security:
-        - BearerAuth: []
       responses:
         204:
           description: Access and refresh tokens deleted successfully on all devices
-        401:
-          $ref: "#/components/responses/Unauthorized"
   /auth/tokens/refresh:
     post:
       tags:
@@ -432,6 +424,35 @@ paths:
       summary: Get user by id
       parameters:
         - $ref: "#/components/parameters/id"
+      responses:
+        200:
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+              example:
+                id: 3
+                firstName: John
+                lastName: Doe
+                username: john.doe
+                email: null
+                createdAt: 2023-05-18T00:51:50.758738
+        404:
+          $ref: "#/components/responses/NotFound"
+  /users/{username}:
+    get:
+      tags:
+        - users
+      summary: Get user by username
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Username
+          example: john.doe
       responses:
         200:
           description: User retrieved successfully
