@@ -332,6 +332,43 @@ paths:
           $ref: "#/components/responses/Forbidden"
         409:
           $ref: "#/components/responses/Conflict"
+    patch:
+      tags:
+        - admin
+      summary: Patch user by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        $ref: "#/components/requestBodies/PatchUserBody"
+      responses:
+        200:
+          description: User patched successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+              example:
+                id: 4
+                firstName: Joe
+                lastName: Bloggs
+                username: joe.bloggs
+                email: joe.bloggs@localhost
+                active: true
+                lock: false
+                createdAt: 2023-05-18T00:51:50.758738
+                roles:
+                  - name: USER
+                  - name: ADMIN
+        400:
+          $ref: "#/components/responses/BadRequest"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        409:
+          $ref: "#/components/responses/Conflict"
     delete:
       tags:
         - admin
@@ -747,6 +784,43 @@ components:
             email: joe.bloggs@localhost
             password: qwerty123
             confirmPassword: qwerty123
+            active: true
+            lock: false
+            roleNames:
+              - USER
+    PatchUserBody:
+      description: Patch request body - admin
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              username:
+                type: string
+              email:
+                type: string
+                format: email
+              active:
+                type: boolean
+              lock:
+                type: boolean
+              roleNames:
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - USER
+                    - ADMIN
+          example:
+            firstName: Joe
+            lastName: Bloggs
+            username: joe.bloggs
+            email: joe.bloggs@localhost
             active: true
             lock: false
             roleNames:
