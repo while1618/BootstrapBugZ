@@ -440,7 +440,7 @@ paths:
                 createdAt: 2023-05-18T00:51:50.758738
         404:
           $ref: "#/components/responses/NotFound"
-  /users/{username}:
+  /users/username/{username}:
     get:
       tags:
         - users
