@@ -4,7 +4,7 @@ import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.security.AuthenticationFilter;
 import org.bootstrapbugz.api.auth.security.JWTFilter;
-import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
+import org.bootstrapbugz.api.auth.security.user.details.ExtendedUserDetailsService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
@@ -38,14 +38,14 @@ public class SecurityConfig {
     Path.AUTH + "/verify-email",
   };
   private static final String[] USERS_WHITELIST = {Path.USERS, Path.USERS + "/**"};
-  private final CustomUserDetailsService userDetailsService;
+  private final ExtendedUserDetailsService userDetailsService;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
   private final MessageService messageService;
 
   public SecurityConfig(
-      CustomUserDetailsService userDetailsService,
+      ExtendedUserDetailsService userDetailsService,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
@@ -93,13 +93,13 @@ public class SecurityConfig {
 }
 
 class CustomDSL extends AbstractHttpConfigurer<CustomDSL, HttpSecurity> {
-  private final CustomUserDetailsService userDetailsService;
+  private final ExtendedUserDetailsService userDetailsService;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
   private final MessageService messageService;
 
   private CustomDSL(
-      CustomUserDetailsService userDetailsService,
+      ExtendedUserDetailsService userDetailsService,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
       MessageService messageService) {
@@ -110,7 +110,7 @@ class CustomDSL extends AbstractHttpConfigurer<CustomDSL, HttpSecurity> {
   }
 
   public static CustomDSL customDsl(
-      CustomUserDetailsService userDetailsService,
+      ExtendedUserDetailsService userDetailsService,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
       MessageService messageService) {

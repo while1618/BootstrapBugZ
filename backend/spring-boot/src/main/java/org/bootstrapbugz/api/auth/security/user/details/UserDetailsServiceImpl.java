@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserDetailsServiceImpl implements CustomUserDetailsService {
+public class UserDetailsServiceImpl implements ExtendedUserDetailsService {
   private final UserRepository userRepository;
   private final MessageService messageService;
 

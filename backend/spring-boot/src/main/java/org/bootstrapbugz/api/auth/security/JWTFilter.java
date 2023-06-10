@@ -8,7 +8,7 @@ import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
-import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
+import org.bootstrapbugz.api.auth.security.user.details.ExtendedUserDetailsService;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,12 +19,12 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Slf4j
 public class JWTFilter extends BasicAuthenticationFilter {
   private final AccessTokenService accessTokenService;
-  private final CustomUserDetailsService userDetailsService;
+  private final ExtendedUserDetailsService userDetailsService;
 
   public JWTFilter(
       AuthenticationManager authenticationManager,
       AccessTokenService accessTokenService,
-      CustomUserDetailsService userDetailsService) {
+      ExtendedUserDetailsService userDetailsService) {
     super(authenticationManager);
     this.accessTokenService = accessTokenService;
     this.userDetailsService = userDetailsService;
