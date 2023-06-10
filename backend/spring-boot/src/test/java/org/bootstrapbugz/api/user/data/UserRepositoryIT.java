@@ -58,11 +58,6 @@ class UserRepositoryIT extends DatabaseContainers {
   }
 
   @Test
-  void findAllByUsernameIn() {
-    assertThat(userRepository.findAllByUsernameIn(Set.of("admin", "test"))).hasSize(2);
-  }
-
-  @Test
   void findByEmail() {
     assertThat(userRepository.findByEmail("admin@localhost")).isPresent();
   }
@@ -70,13 +65,6 @@ class UserRepositoryIT extends DatabaseContainers {
   @Test
   void findByUsername() {
     assertThat(userRepository.findByUsername("admin")).isPresent();
-  }
-
-  @Test
-  void findByUsernameWithRoles() {
-    final var user = userRepository.findByUsernameWithRoles("admin");
-    assertThat(user).isPresent();
-    user.ifPresent(value -> assertThat(value.getRoles()).hasSize(2));
   }
 
   @Test

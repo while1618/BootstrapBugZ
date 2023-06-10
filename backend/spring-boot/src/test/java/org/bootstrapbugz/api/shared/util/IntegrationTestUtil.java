@@ -5,8 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
-import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
+import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
+import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,19 +21,19 @@ public class IntegrationTestUtil {
     return headers;
   }
 
-  public static SignInDTO signIn(MockMvc mockMvc, ObjectMapper objectMapper, String username)
-      throws Exception {
-    final var signInRequest = new SignInRequest(username, "qwerty123");
+  public static AuthTokensDTO authTokens(
+      MockMvc mockMvc, ObjectMapper objectMapper, String username) throws Exception {
+    final var signInRequest = new AuthTokensRequest(username, "qwerty123");
     final var response =
         mockMvc
             .perform(
-                post(Path.AUTH + "/sign-in")
+                post(Path.AUTH + "/tokens")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(signInRequest)))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
             .getContentAsString();
-    return objectMapper.readValue(response, SignInDTO.class);
+    return objectMapper.readValue(response, AuthTokensDTO.class);
   }
 }

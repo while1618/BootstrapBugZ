@@ -3,25 +3,24 @@ package org.bootstrapbugz.api.auth.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
-import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
-import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
+import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
-import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.RefreshTokensRequest;
+import org.bootstrapbugz.api.auth.payload.request.RegisterRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping(Path.AUTH)
@@ -33,73 +32,58 @@ public class AuthController {
     this.authService = authService;
   }
 
-  @PostMapping("/sign-up")
-  public ResponseEntity<UserDTO> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
-    return new ResponseEntity<>(authService.signUp(signUpRequest), HttpStatus.CREATED);
+  @PostMapping("/register")
+  public ResponseEntity<UserDTO> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    return new ResponseEntity<>(authService.register(registerRequest), HttpStatus.CREATED);
   }
 
-  @PostMapping("/resend-confirmation-email")
-  public ResponseEntity<Void> resendConfirmationEmail(
-      @Valid @RequestBody ResendConfirmationEmailRequest resendConfirmationEmailRequest) {
-    authService.resendConfirmationEmail(resendConfirmationEmailRequest);
-    return ResponseEntity.noContent().build();
-  }
-
-  @PutMapping("/confirm-registration")
-  public ResponseEntity<Void> confirmRegistration(
-      @Valid @RequestBody ConfirmRegistrationRequest confirmRegistrationRequest) {
-    authService.confirmRegistration(confirmRegistrationRequest);
-    return ResponseEntity.noContent().build();
-  }
-
-  @PostMapping("/refresh-token")
-  public ResponseEntity<RefreshTokenDTO> refreshToken(
-      @Valid @RequestBody RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
-    final var refreshToken = JwtUtil.removeBearer(refreshTokenRequest.refreshToken());
-    final var ipAddress = AuthUtil.getUserIpAddress(request);
-    return ResponseEntity.ok(authService.refreshToken(refreshToken, ipAddress));
-  }
-
-  @PostMapping("/sign-out")
-  public ResponseEntity<Void> signOut(HttpServletRequest request) {
+  @DeleteMapping("/tokens")
+  public ResponseEntity<Void> deleteTokens(HttpServletRequest request) {
     final var accessToken = JwtUtil.removeBearer(AuthUtil.getAccessTokenFromRequest(request));
     final var ipAddress = AuthUtil.getUserIpAddress(request);
-    authService.signOut(accessToken, ipAddress);
+    authService.deleteTokens(accessToken, ipAddress);
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/sign-out-from-all-devices")
-  public ResponseEntity<Void> signOutFromAllDevices() {
-    authService.signOutFromAllDevices();
+  @DeleteMapping("/tokens/devices")
+  public ResponseEntity<Void> deleteTokensOnAllDevices() {
+    authService.deleteTokensOnAllDevices();
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping("/forgot-password")
+  @PostMapping("/tokens/refresh")
+  public ResponseEntity<AuthTokensDTO> refreshTokens(
+      @Valid @RequestBody RefreshTokensRequest refreshTokensRequest, HttpServletRequest request) {
+    final var refreshToken = JwtUtil.removeBearer(refreshTokensRequest.refreshToken());
+    final var ipAddress = AuthUtil.getUserIpAddress(request);
+    return ResponseEntity.ok(authService.refreshTokens(refreshToken, ipAddress));
+  }
+
+  @PostMapping("/password/forgot")
   public ResponseEntity<Void> forgotPassword(
       @Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
     authService.forgotPassword(forgotPasswordRequest);
     return ResponseEntity.noContent().build();
   }
 
-  @PutMapping("/reset-password")
+  @PutMapping("/password/reset")
   public ResponseEntity<Void> resetPassword(
       @Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
     authService.resetPassword(resetPasswordRequest);
     return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/signed-in-user")
-  public ResponseEntity<UserDTO> signedInUser() {
-    return ResponseEntity.ok(authService.signedInUser());
+  @PostMapping("/verification-email")
+  public ResponseEntity<Void> sendVerificationMail(
+      @Valid @RequestBody VerificationEmailRequest verificationEmailRequest) {
+    authService.sendVerificationMail(verificationEmailRequest);
+    return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/username-availability")
-  public ResponseEntity<Boolean> isUsernameAvailable(@RequestParam("username") String username) {
-    return ResponseEntity.ok(authService.isUsernameAvailable(username));
-  }
-
-  @GetMapping("/email-availability")
-  public ResponseEntity<Boolean> isEmailAvailable(@RequestParam("email") String email) {
-    return ResponseEntity.ok(authService.isEmailAvailable(email));
+  @PutMapping("/verify-email")
+  public ResponseEntity<Void> verifyEmail(
+      @Valid @RequestBody VerifyEmailRequest verifyEmailRequest) {
+    authService.verifyEmail(verifyEmailRequest);
+    return ResponseEntity.noContent().build();
   }
 }

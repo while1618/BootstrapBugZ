@@ -17,14 +17,14 @@ import org.bootstrapbugz.api.auth.jwt.redis.repository.AccessTokenBlacklistRepos
 import org.bootstrapbugz.api.auth.jwt.redis.repository.RefreshTokenStoreRepository;
 import org.bootstrapbugz.api.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.api.auth.jwt.service.impl.AccessTokenServiceImpl;
-import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.RefreshTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
-import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
+import org.bootstrapbugz.api.auth.jwt.service.impl.VerificationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.RegisterRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
@@ -71,7 +71,7 @@ class AuthServiceTest {
 
   @InjectMocks private AccessTokenServiceImpl accessTokenService;
   @InjectMocks private RefreshTokenServiceImpl refreshTokenService;
-  @InjectMocks private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
+  @InjectMocks private VerificationTokenServiceImpl confirmRegistrationTokenService;
   @InjectMocks private ResetPasswordTokenServiceImpl resetPasswordTokenService;
   private AuthServiceImpl authService;
 
@@ -111,41 +111,41 @@ class AuthServiceTest {
             .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
             .build();
     final var signUpRequest =
-        new SignUpRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
+        new RegisterRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(new Role(RoleName.USER)));
     final var testUser = UnitTestUtil.getTestUser();
     testUser.setActivated(false);
     when(userRepository.save(any(User.class))).thenReturn(testUser);
-    final var actualUserDTO = authService.signUp(signUpRequest);
+    final var actualUserDTO = authService.register(signUpRequest);
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test
   void resendConfirmationEmail() {
-    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
+    final var resendConfirmationEmailRequest = new VerificationEmailRequest("test");
     final var testUser = UnitTestUtil.getTestUser();
     testUser.setActivated(false);
     when(userRepository.findByUsernameOrEmail("test", "test")).thenReturn(Optional.of(testUser));
-    authService.resendConfirmationEmail(resendConfirmationEmailRequest);
+    authService.sendVerificationMail(resendConfirmationEmailRequest);
     verify(eventPublisher, times(1)).publishEvent(any(OnSendJwtEmail.class));
   }
 
   @Test
   void resendConfirmationEmail_throwResourceNotFound_userNotFound() {
-    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
+    final var resendConfirmationEmailRequest = new VerificationEmailRequest("test");
     when(messageService.getMessage("user.notFound")).thenReturn("User not found.");
-    assertThatThrownBy(() -> authService.resendConfirmationEmail(resendConfirmationEmailRequest))
+    assertThatThrownBy(() -> authService.sendVerificationMail(resendConfirmationEmailRequest))
         .isInstanceOf(ResourceNotFoundException.class)
         .hasMessage("User not found.");
   }
 
   @Test
   void resendConfirmationEmail_throwConflict_userAlreadyActivated() {
-    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("test");
+    final var resendConfirmationEmailRequest = new VerificationEmailRequest("test");
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     when(userRepository.findByUsernameOrEmail("test", "test"))
         .thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    assertThatThrownBy(() -> authService.resendConfirmationEmail(resendConfirmationEmailRequest))
+    assertThatThrownBy(() -> authService.sendVerificationMail(resendConfirmationEmailRequest))
         .isInstanceOf(ConflictException.class)
         .hasMessage("User already activated.");
   }
@@ -166,7 +166,7 @@ class AuthServiceTest {
     final var testUser = UnitTestUtil.getTestUser();
     testUser.setActivated(false);
     when(userRepository.findById(2L)).thenReturn(Optional.of(testUser));
-    authService.confirmRegistration(new ConfirmRegistrationRequest(token));
+    authService.verifyEmail(new VerifyEmailRequest(token));
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
   }
@@ -176,8 +176,7 @@ class AuthServiceTest {
     final var token = confirmRegistrationTokenService.create(2L);
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
     final var throwable =
-        catchThrowable(
-            () -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)));
+        catchThrowable(() -> authService.verifyEmail(new VerifyEmailRequest(token)));
     assertThat(throwable).isInstanceOf(BadRequestException.class).hasMessage("Invalid token.");
   }
 
@@ -187,8 +186,7 @@ class AuthServiceTest {
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(messageService.getMessage("user.activated")).thenReturn("User already activated.");
     final var throwable =
-        catchThrowable(
-            () -> authService.confirmRegistration(new ConfirmRegistrationRequest(token)));
+        catchThrowable(() -> authService.verifyEmail(new VerifyEmailRequest(token)));
     assertThat(throwable)
         .isInstanceOf(ConflictException.class)
         .hasMessage("User already activated.");
@@ -198,7 +196,7 @@ class AuthServiceTest {
   void refreshToken() {
     final var token = refreshTokenService.create(2L, Collections.emptySet(), "ip1");
     when(refreshTokenStoreRepository.existsById(token)).thenReturn(true);
-    final var refreshTokenDTO = authService.refreshToken(token, "ip1");
+    final var refreshTokenDTO = authService.refreshTokens(token, "ip1");
     assertThat(refreshTokenDTO.accessToken()).isNotNull();
     assertThat(refreshTokenDTO.refreshToken()).isNotNull();
   }
@@ -209,7 +207,7 @@ class AuthServiceTest {
     SecurityContextHolder.setContext(securityContext);
     when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
     final var token = accessTokenService.create(2L, Collections.emptySet());
-    assertDoesNotThrow(() -> authService.signOut(token, "ip1"));
+    assertDoesNotThrow(() -> authService.deleteTokens(token, "ip1"));
   }
 
   @Test
@@ -217,7 +215,7 @@ class AuthServiceTest {
     when(securityContext.getAuthentication()).thenReturn(auth);
     SecurityContextHolder.setContext(securityContext);
     when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
-    assertDoesNotThrow(() -> authService.signOutFromAllDevices());
+    assertDoesNotThrow(() -> authService.deleteTokensOnAllDevices());
   }
 
   @Test
@@ -259,37 +257,5 @@ class AuthServiceTest {
     assertThatThrownBy(() -> authService.resetPassword(resetPasswordRequest))
         .isInstanceOf(BadRequestException.class)
         .hasMessage("Invalid token.");
-  }
-
-  @Test
-  void signedInUser() {
-    when(securityContext.getAuthentication()).thenReturn(auth);
-    SecurityContextHolder.setContext(securityContext);
-    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
-    final var expectedUserDTO =
-        UserDTO.builder()
-            .id(2L)
-            .firstName("Test")
-            .lastName("Test")
-            .username("test")
-            .email("test@localhost")
-            .activated(true)
-            .nonLocked(true)
-            .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
-            .build();
-    final var actualUserDTO = authService.signedInUser();
-    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
-  }
-
-  @Test
-  void checkUsernameAvailability() {
-    when(userRepository.existsByUsername("test")).thenReturn(true);
-    assertThat(authService.isUsernameAvailable("test")).isFalse();
-  }
-
-  @Test
-  void checkEmailAvailability() {
-    when(userRepository.existsByEmail("available@localhost")).thenReturn(false);
-    assertThat(authService.isEmailAvailable("available@localhost")).isTrue();
   }
 }

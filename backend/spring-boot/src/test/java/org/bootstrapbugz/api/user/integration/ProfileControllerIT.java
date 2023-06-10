@@ -40,7 +40,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void updateUser_newUsernameAndEmail() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update1").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1").accessToken();
     final var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "updated1", "updated1@localhost");
     mockMvc
@@ -59,7 +59,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void updateUser_sameUsernameAndEmail() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update2").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update2").accessToken();
     final var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "update2", "update2@localhost");
     mockMvc
@@ -77,7 +77,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void updateUser_throwBadRequest_usernameExists() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
     final var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "admin", "updated3@localhost");
     mockMvc
@@ -93,7 +93,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void updateUser_throwBadRequest_emailExists() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
     final var updateUserRequest =
         new UpdateProfileRequest("Updated", "Updated", "updated3", "admin@localhost");
     mockMvc
@@ -109,7 +109,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void updateUser_throwBadRequest_invalidParameters() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
     final var updateUserRequest =
         new UpdateProfileRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
     mockMvc
@@ -128,7 +128,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void changePassword() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update4").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update4").accessToken();
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
     mockMvc
@@ -143,7 +143,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void changePassword_throwBadRequest_wrongOldPassword() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty12345", "qwerty1234", "qwerty1234");
     mockMvc
@@ -159,7 +159,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void changePassword_throwBadRequest_passwordsDoNotMatch() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty12345");
     mockMvc
@@ -175,7 +175,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void changePassword_throwBadRequest_invalidParameters() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update3").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
     final var changePasswordRequest = new ChangePasswordRequest("invalid", "invalid", "invalid");
     mockMvc
         .perform(
@@ -184,7 +184,7 @@ class ProfileControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("oldPassword")))
+        .andExpect(content().string(containsString("currentPassword")))
         .andExpect(content().string(containsString("newPassword")))
         .andExpect(content().string(containsString("confirmNewPassword")))
         .andExpect(content().string(containsString("Invalid password.")));
@@ -193,7 +193,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void deleteProfile() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "delete1").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete1").accessToken();
     mockMvc
         .perform(
             delete(Path.PROFILE + "/delete")

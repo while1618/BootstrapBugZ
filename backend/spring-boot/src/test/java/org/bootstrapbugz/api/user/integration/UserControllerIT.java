@@ -39,7 +39,7 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void findAllUsers_rolesAndEmailsShown() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "admin").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "admin").accessToken();
     mockMvc
         .perform(
             get(Path.USERS)
@@ -52,7 +52,8 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void findUserByUsername_emailShown() throws Exception {
-    final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
+    final var accessToken =
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
     mockMvc
         .perform(
             get(Path.USERS + "/{username}", "user")
@@ -65,7 +66,8 @@ class UserControllerIT extends DatabaseContainers {
 
   @Test
   void findUserByUsername_emailHidden() throws Exception {
-    final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
+    final var accessToken =
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
     mockMvc
         .perform(
             get(Path.USERS + "/{username}", "admin")
@@ -79,7 +81,7 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void findUserByUsername_adminSignedIn() throws Exception {
     final var accessToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "admin").accessToken();
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "admin").accessToken();
     mockMvc
         .perform(
             get(Path.USERS + "/{username}", "user")

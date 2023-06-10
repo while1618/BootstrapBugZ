@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
 @Slf4j
-public class ConfirmRegistrationEmail implements JwtEmail {
+public class VerificationEmail implements JwtEmail {
   @Override
   public void sendEmail(
       EmailService emailService, Environment environment, User user, String token) {

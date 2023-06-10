@@ -3,7 +3,7 @@ package org.bootstrapbugz.api.auth.jwt.service.impl;
 import com.auth0.jwt.JWT;
 import java.time.Instant;
 import org.bootstrapbugz.api.auth.jwt.event.OnSendJwtEmail;
-import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.VerificationTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ConfirmRegistrationTokenServiceImpl implements ConfirmRegistrationTokenService {
+public class VerificationTokenServiceImpl implements VerificationTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.CONFIRM_REGISTRATION_TOKEN;
 
   private final ApplicationEventPublisher eventPublisher;
@@ -24,7 +24,7 @@ public class ConfirmRegistrationTokenServiceImpl implements ConfirmRegistrationT
   @Value("${jwt.confirm-registration-token.duration}")
   private int tokenDuration;
 
-  public ConfirmRegistrationTokenServiceImpl(ApplicationEventPublisher eventPublisher) {
+  public VerificationTokenServiceImpl(ApplicationEventPublisher eventPublisher) {
     this.eventPublisher = eventPublisher;
   }
 

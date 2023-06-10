@@ -27,18 +27,17 @@ public class SecurityConfig {
   private static final String[] SWAGGER_WHITELIST = {
     "/swagger-ui/**", "/v3/api-docs/**", "/openapi.yml"
   };
-  private static final String[] USERS_WHITELIST = {Path.USERS, Path.USERS + "/**"};
   private static final String[] AUTH_WHITELIST = {
-    Path.AUTH + "/sign-up",
-    Path.AUTH + "/resend-confirmation-email",
-    Path.AUTH + "/confirm-registration",
-    Path.AUTH + "/sign-in",
-    Path.AUTH + "/refresh-token",
-    Path.AUTH + "/forgot-password",
-    Path.AUTH + "/reset-password",
-    Path.AUTH + "/username-availability",
-    Path.AUTH + "/email-availability"
+    Path.AUTH + "/register",
+    Path.AUTH + "/tokens",
+    Path.AUTH + "/tokens/devices",
+    Path.AUTH + "/tokens/refresh",
+    Path.AUTH + "/password/forgot",
+    Path.AUTH + "/password/reset",
+    Path.AUTH + "/verification-email",
+    Path.AUTH + "/verify-email",
   };
+  private static final String[] USERS_WHITELIST = {Path.USERS, Path.USERS + "/**"};
   private final CustomUserDetailsService userDetailsService;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;

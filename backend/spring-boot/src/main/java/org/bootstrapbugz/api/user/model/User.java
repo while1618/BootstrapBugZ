@@ -61,11 +61,11 @@ public class User implements Serializable {
 
   @Builder.Default
   @Column(nullable = false)
-  private boolean activated = false;
+  private Boolean activated = false;
 
   @Builder.Default
   @Column(nullable = false)
-  private boolean nonLocked = true;
+  private Boolean nonLocked = true;
 
   @Builder.Default
   @Column(nullable = false)

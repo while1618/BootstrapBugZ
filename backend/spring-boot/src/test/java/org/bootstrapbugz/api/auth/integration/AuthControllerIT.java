@@ -12,15 +12,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
-import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
+import org.bootstrapbugz.api.auth.jwt.service.impl.VerificationTokenServiceImpl;
+import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.RefreshTokenRequest;
-import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.RefreshTokensRequest;
+import org.bootstrapbugz.api.auth.payload.request.RegisterRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
-import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.email.service.EmailService;
@@ -44,7 +44,7 @@ import org.springframework.test.web.servlet.MockMvc;
 class AuthControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  @Autowired private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
+  @Autowired private VerificationTokenServiceImpl confirmRegistrationTokenService;
   @Autowired private ResetPasswordTokenServiceImpl resetPasswordService;
   @Autowired private UserRepository userRepository;
 
@@ -53,7 +53,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void signUp() throws Exception {
     final var signUpRequest =
-        SignUpRequest.builder()
+        RegisterRequest.builder()
             .firstName("Test")
             .lastName("Test")
             .username("test")
@@ -75,7 +75,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void signUp_throwBadRequest_invalidParameters() throws Exception {
     final var signUpRequest =
-        SignUpRequest.builder()
+        RegisterRequest.builder()
             .firstName("User1")
             .lastName("User1")
             .username("user")
@@ -98,7 +98,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resendConfirmationEmail() throws Exception {
-    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("deactivated");
+    final var resendConfirmationEmailRequest = new VerificationEmailRequest("deactivated");
     mockMvc
         .perform(
             post(Path.AUTH + "/resend-confirmation-email")
@@ -111,7 +111,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resendConfirmationEmail_throwResourceNotFound_userNotFound() throws Exception {
-    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("unknown");
+    final var resendConfirmationEmailRequest = new VerificationEmailRequest("unknown");
     mockMvc
         .perform(
             post(Path.AUTH + "/resend-confirmation-email")
@@ -123,7 +123,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resendConfirmationEmail_throwConflict_userAlreadyActivated() throws Exception {
-    final var resendConfirmationEmailRequest = new ResendConfirmationEmailRequest("user");
+    final var resendConfirmationEmailRequest = new VerificationEmailRequest("user");
     mockMvc
         .perform(
             post(Path.AUTH + "/resend-confirmation-email")
@@ -137,7 +137,7 @@ class AuthControllerIT extends DatabaseContainers {
   void confirmRegistration() throws Exception {
     final var user = userRepository.findByUsername("deactivated").orElseThrow();
     final var token = confirmRegistrationTokenService.create(user.getId());
-    final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
+    final var confirmRegistrationRequest = new VerifyEmailRequest(token);
     mockMvc
         .perform(
             put(Path.AUTH + "/confirm-registration")
@@ -150,7 +150,7 @@ class AuthControllerIT extends DatabaseContainers {
   void confirmRegistration_throwBadRequest_invalidToken() throws Exception {
     final var user = User.builder().id(100L).build();
     final var token = confirmRegistrationTokenService.create(user.getId());
-    final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
+    final var confirmRegistrationRequest = new VerifyEmailRequest(token);
     mockMvc
         .perform(
             put(Path.AUTH + "/confirm-registration")
@@ -164,7 +164,7 @@ class AuthControllerIT extends DatabaseContainers {
   void confirmRegistration_throwConflict_userAlreadyActivated() throws Exception {
     final var user = userRepository.findByUsername("user").orElseThrow();
     final var token = confirmRegistrationTokenService.create(user.getId());
-    final var confirmRegistrationRequest = new ConfirmRegistrationRequest(token);
+    final var confirmRegistrationRequest = new VerifyEmailRequest(token);
     mockMvc
         .perform(
             put(Path.AUTH + "/confirm-registration")
@@ -177,8 +177,8 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void refreshToken() throws Exception {
     final var refreshToken =
-        IntegrationTestUtil.signIn(mockMvc, objectMapper, "update1").refreshToken();
-    final var refreshTokenRequest = new RefreshTokenRequest(refreshToken);
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1").refreshToken();
+    final var refreshTokenRequest = new RefreshTokensRequest(refreshToken);
     mockMvc
         .perform(
             post(Path.AUTH + "/refresh-token")
@@ -189,7 +189,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void signOut() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "delete1");
+    final var signInDTO = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete1");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out")
@@ -202,7 +202,7 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void signOutFromAllDevices() throws Exception {
-    final var signInDTO = IntegrationTestUtil.signIn(mockMvc, objectMapper, "delete2");
+    final var signInDTO = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete2");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-out-from-all-devices")
@@ -226,7 +226,7 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   private void invalidRefreshToken(String refreshToken) throws Exception {
-    final var refreshTokenRequest = new RefreshTokenRequest(refreshToken);
+    final var refreshTokenRequest = new RefreshTokensRequest(refreshToken);
     mockMvc
         .perform(
             post(Path.AUTH + "/refresh-token")
@@ -272,7 +272,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isNoContent());
-    final var signInRequest = new SignInRequest("update4", "qwerty1234");
+    final var signInRequest = new AuthTokensRequest("update4", "qwerty1234");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-in")
@@ -311,7 +311,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void retrieveSignedInUser() throws Exception {
-    final var accessToken = IntegrationTestUtil.signIn(mockMvc, objectMapper, "user").accessToken();
+    final var accessToken =
+        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
     mockMvc
         .perform(
             get(Path.AUTH + "/signed-in-user")

@@ -1,33 +1,27 @@
 package org.bootstrapbugz.api.auth.service;
 
-import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
-import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
+import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.RegisterRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 
 public interface AuthService {
-  UserDTO signUp(SignUpRequest signUpRequest);
+  UserDTO register(RegisterRequest registerRequest);
 
-  void resendConfirmationEmail(ResendConfirmationEmailRequest resendConfirmationEmailRequest);
+  void deleteTokens(String accessToken, String ipAddress);
 
-  void confirmRegistration(ConfirmRegistrationRequest confirmRegistrationRequest);
+  void deleteTokensOnAllDevices();
 
-  RefreshTokenDTO refreshToken(String refreshToken, String ipAddress);
-
-  void signOut(String accessToken, String ipAddress);
-
-  void signOutFromAllDevices();
+  AuthTokensDTO refreshTokens(String refreshToken, String ipAddress);
 
   void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 
   void resetPassword(ResetPasswordRequest resetPasswordRequest);
 
-  UserDTO signedInUser();
+  void sendVerificationMail(VerificationEmailRequest verificationEmailRequest);
 
-  boolean isUsernameAvailable(String username);
-
-  boolean isEmailAvailable(String email);
+  void verifyEmail(VerifyEmailRequest verifyEmailRequest);
 }

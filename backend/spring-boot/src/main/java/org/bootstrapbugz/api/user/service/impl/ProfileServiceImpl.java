@@ -1,8 +1,8 @@
 package org.bootstrapbugz.api.user.service.impl;
 
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
-import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.VerificationTokenService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
@@ -25,7 +25,7 @@ public class ProfileServiceImpl implements ProfileService {
   private final PasswordEncoder bCryptPasswordEncoder;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
-  private final ConfirmRegistrationTokenService confirmRegistrationTokenService;
+  private final VerificationTokenService verificationTokenService;
 
   public ProfileServiceImpl(
       UserRepository userRepository,
@@ -33,31 +33,38 @@ public class ProfileServiceImpl implements ProfileService {
       PasswordEncoder bCryptPasswordEncoder,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
-      ConfirmRegistrationTokenService confirmRegistrationTokenService) {
+      VerificationTokenService verificationTokenService) {
     this.userRepository = userRepository;
     this.messageService = messageService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
-    this.confirmRegistrationTokenService = confirmRegistrationTokenService;
+    this.verificationTokenService = verificationTokenService;
   }
 
   @Override
-  public UserDTO update(UpdateProfileRequest updateProfileRequest) {
+  public UserDTO find() {
+    return AuthUtil.findSignedInUser();
+  }
+
+  @Override
+  public UserDTO patch(UpdateProfileRequest updateProfileRequest) {
     final var userDTO = AuthUtil.findSignedInUser();
     final var user =
         userRepository
-            .findByUsernameWithRoles(userDTO.username())
+            .findById(userDTO.id())
             .orElseThrow(
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
-    user.setFirstName(updateProfileRequest.firstName());
-    user.setLastName(updateProfileRequest.lastName());
+    if (updateProfileRequest.firstName() != null)
+      user.setFirstName(updateProfileRequest.firstName());
+    if (updateProfileRequest.lastName() != null) user.setLastName(updateProfileRequest.lastName());
     tryToSetUsername(user, updateProfileRequest.username());
     tryToSetEmail(user, updateProfileRequest.email());
     return UserMapper.INSTANCE.userToUserDTO(userRepository.save(user));
   }
 
   private void tryToSetUsername(User user, String username) {
+    if (username == null) return;
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
       throw new ConflictException("username", messageService.getMessage("username.exists"));
@@ -66,6 +73,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   private void tryToSetEmail(User user, String email) {
+    if (email == null) return;
     if (user.getEmail().equals(email)) return;
     if (userRepository.existsByEmail(email))
       throw new ConflictException("email", messageService.getMessage("email.exists"));
@@ -74,8 +82,8 @@ public class ProfileServiceImpl implements ProfileService {
     user.setActivated(false);
     accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
-    final var token = confirmRegistrationTokenService.create(user.getId());
-    confirmRegistrationTokenService.sendToEmail(user, token);
+    final var token = verificationTokenService.create(user.getId());
+    verificationTokenService.sendToEmail(user, token);
   }
 
   @Override
@@ -83,12 +91,12 @@ public class ProfileServiceImpl implements ProfileService {
     final var userDTO = AuthUtil.findSignedInUser();
     final var user =
         userRepository
-            .findByUsername(userDTO.username())
+            .findById(userDTO.id())
             .orElseThrow(
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
-    if (!bCryptPasswordEncoder.matches(changePasswordRequest.oldPassword(), user.getPassword()))
+    if (!bCryptPasswordEncoder.matches(changePasswordRequest.currentPassword(), user.getPassword()))
       throw new BadRequestException(
-          "oldPassword", messageService.getMessage("oldPassword.invalid"));
+          "currentPassword", messageService.getMessage("oldPassword.invalid"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
     accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());

@@ -8,7 +8,8 @@ import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 import org.bootstrapbugz.api.user.service.ProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,20 +23,25 @@ public class ProfileController {
     this.profileService = profileService;
   }
 
-  @PutMapping("/update")
-  public ResponseEntity<UserDTO> update(
-      @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
-    return ResponseEntity.ok(profileService.update(updateProfileRequest));
+  @GetMapping
+  public ResponseEntity<UserDTO> find() {
+    return ResponseEntity.ok(profileService.find());
   }
 
-  @PutMapping("/change-password")
+  @PatchMapping
+  public ResponseEntity<UserDTO> patch(
+      @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
+    return ResponseEntity.ok(profileService.patch(updateProfileRequest));
+  }
+
+  @PatchMapping("/password")
   public ResponseEntity<Void> changePassword(
       @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
     profileService.changePassword(changePasswordRequest);
     return ResponseEntity.noContent().build();
   }
 
-  @DeleteMapping("/delete")
+  @DeleteMapping
   public ResponseEntity<Void> delete() {
     profileService.delete();
     return ResponseEntity.noContent().build();

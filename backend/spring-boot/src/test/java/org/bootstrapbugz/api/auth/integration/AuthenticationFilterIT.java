@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
+import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
 
   @Test
   void signIn() throws Exception {
-    final var signInRequest = new SignInRequest("user", "qwerty123");
+    final var signInRequest = new AuthTokensRequest("user", "qwerty123");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-in")
@@ -45,7 +45,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
 
   @Test
   void signIn_throwUnauthorized_wrongCredentials() throws Exception {
-    final var signInRequest = new SignInRequest("wrong", "qwerty123");
+    final var signInRequest = new AuthTokensRequest("wrong", "qwerty123");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-in")
@@ -62,7 +62,7 @@ class AuthenticationFilterIT extends DatabaseContainers {
   })
   void signIn_throwForbidden_lockedDeactivatedUser(String username, String message)
       throws Exception {
-    final var signInRequest = new SignInRequest(username, "qwerty123");
+    final var signInRequest = new AuthTokensRequest(username, "qwerty123");
     mockMvc
         .perform(
             post(Path.AUTH + "/sign-in")

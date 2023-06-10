@@ -2,20 +2,16 @@ package org.bootstrapbugz.api.auth.security;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
-import org.bootstrapbugz.api.auth.payload.dto.SignInDTO;
-import org.bootstrapbugz.api.auth.payload.request.SignInRequest;
+import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
+import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
 import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.constants.Path;
@@ -49,18 +45,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
     this.messageService = messageService;
-    this.setFilterProcessesUrl(Path.AUTH + "/sign-in");
+    this.setFilterProcessesUrl(Path.AUTH + "/tokens");
   }
 
   @Override
   public Authentication attemptAuthentication(
       HttpServletRequest request, HttpServletResponse response) {
     try {
-      final var signInRequest =
-          JsonMapper.builder().build().readValue(request.getInputStream(), SignInRequest.class);
+      final var authTokensRequest =
+          JsonMapper.builder().build().readValue(request.getInputStream(), AuthTokensRequest.class);
       final var authToken =
           new UsernamePasswordAuthenticationToken(
-              signInRequest.usernameOrEmail(), signInRequest.password(), new ArrayList<>());
+              authTokensRequest.usernameOrEmail(), authTokensRequest.password(), new ArrayList<>());
       return authenticationManager.authenticate(authToken);
     } catch (IOException | AuthenticationException | ResourceNotFoundException e) {
       handleException(response, e);
@@ -92,13 +88,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     final var ipAddress = AuthUtil.getUserIpAddress(request);
     final var accessToken = accessTokenService.create(userDTO.id(), userDTO.roleDTOs());
     final var refreshToken = getRefreshToken(userDTO.id(), userDTO.roleDTOs(), ipAddress);
-    final var signInDTO =
-        SignInDTO.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
-            .userDTO(userDTO)
-            .build();
-    writeToResponse(response, signInDTO);
+    final var authTokensDTO =
+        AuthTokensDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+    writeToResponse(response, authTokensDTO);
   }
 
   private String getRefreshToken(Long userId, Set<RoleDTO> roleDTOs, String ipAddress) {
@@ -107,18 +99,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         .orElse(refreshTokenService.create(userId, roleDTOs, ipAddress));
   }
 
-  private void writeToResponse(HttpServletResponse response, SignInDTO signInDTO)
+  private void writeToResponse(HttpServletResponse response, AuthTokensDTO authTokensDTO)
       throws IOException {
-    final var json =
-        new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(
-                LocalDateTime.class,
-                (JsonSerializer<LocalDateTime>)
-                    (localDateTime, type, jsonSerializationContext) ->
-                        new JsonPrimitive(localDateTime.format(DateTimeFormatter.ISO_DATE_TIME)))
-            .create()
-            .toJson(signInDTO);
+    final var json = new GsonBuilder().setPrettyPrinting().create().toJson(authTokensDTO);
     final var out = response.getWriter();
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     out.print(json);

@@ -2,16 +2,16 @@ package org.bootstrapbugz.api.auth.service.impl;
 
 import java.util.Collections;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
-import org.bootstrapbugz.api.auth.jwt.service.ConfirmRegistrationTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.ResetPasswordTokenService;
+import org.bootstrapbugz.api.auth.jwt.service.VerificationTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
-import org.bootstrapbugz.api.auth.payload.dto.RefreshTokenDTO;
-import org.bootstrapbugz.api.auth.payload.request.ConfirmRegistrationRequest;
+import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.ResendConfirmationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.RegisterRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.SignUpRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
+import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
 import org.bootstrapbugz.api.auth.service.AuthService;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
   private final PasswordEncoder bCryptPasswordEncoder;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
-  private final ConfirmRegistrationTokenService confirmRegistrationTokenService;
+  private final VerificationTokenService verificationTokenService;
   private final ResetPasswordTokenService resetPasswordTokenService;
 
   public AuthServiceImpl(
@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
       PasswordEncoder bCryptPasswordEncoder,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
-      ConfirmRegistrationTokenService confirmRegistrationTokenService,
+      VerificationTokenService verificationTokenService,
       ResetPasswordTokenService resetPasswordTokenService) {
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
@@ -54,29 +54,25 @@ public class AuthServiceImpl implements AuthService {
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
-    this.confirmRegistrationTokenService = confirmRegistrationTokenService;
+    this.verificationTokenService = verificationTokenService;
     this.resetPasswordTokenService = resetPasswordTokenService;
   }
 
   @Override
-  public UserDTO signUp(SignUpRequest signUpRequest) {
-    final var user = createUser(signUpRequest);
-    final var token = confirmRegistrationTokenService.create(user.getId());
-    confirmRegistrationTokenService.sendToEmail(user, token);
-    return UserMapper.INSTANCE.userToUserDTO(user);
-  }
-
-  private User createUser(SignUpRequest signUpRequest) {
+  public UserDTO register(RegisterRequest registerRequest) {
     final var user =
         User.builder()
-            .firstName(signUpRequest.firstName())
-            .lastName(signUpRequest.lastName())
-            .username(signUpRequest.username())
-            .email(signUpRequest.email())
-            .password(bCryptPasswordEncoder.encode(signUpRequest.password()))
+            .firstName(registerRequest.firstName())
+            .lastName(registerRequest.lastName())
+            .username(registerRequest.username())
+            .email(registerRequest.email())
+            .password(bCryptPasswordEncoder.encode(registerRequest.password()))
             .roles(Collections.singleton(getUserRole()))
             .build();
-    return userRepository.save(user);
+    userRepository.save(user);
+    final var token = verificationTokenService.create(user.getId());
+    verificationTokenService.sendToEmail(user, token);
+    return UserMapper.INSTANCE.userToUserDTO(user);
   }
 
   private Role getUserRole() {
@@ -86,55 +82,30 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public void resendConfirmationEmail(ResendConfirmationEmailRequest request) {
-    final var user =
-        userRepository
-            .findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
-            .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    if (user.isActivated())
-      throw new ConflictException(messageService.getMessage("user.activated"));
-    final var token = confirmRegistrationTokenService.create(user.getId());
-    confirmRegistrationTokenService.sendToEmail(user, token);
-  }
-
-  @Override
-  public void confirmRegistration(ConfirmRegistrationRequest confirmRegistrationRequest) {
-    final var user =
-        userRepository
-            .findById(JwtUtil.getUserId(confirmRegistrationRequest.token()))
-            .orElseThrow(
-                () -> new BadRequestException("token", messageService.getMessage("token.invalid")));
-    if (user.isActivated())
-      throw new ConflictException(messageService.getMessage("user.activated"));
-    confirmRegistrationTokenService.check(confirmRegistrationRequest.token());
-    user.setActivated(true);
-    userRepository.save(user);
-  }
-
-  @Override
-  public RefreshTokenDTO refreshToken(String refreshToken, String ipAddress) {
-    refreshTokenService.check(refreshToken);
-    final var userId = JwtUtil.getUserId(refreshToken);
-    final var roleDTOs = JwtUtil.getRoleDTOs(refreshToken);
-    refreshTokenService.delete(refreshToken);
-    final var newAccessToken = accessTokenService.create(userId, roleDTOs);
-    final var newRefreshToken = refreshTokenService.create(userId, roleDTOs, ipAddress);
-    return new RefreshTokenDTO(newAccessToken, newRefreshToken);
-  }
-
-  @Override
-  public void signOut(String accessToken, String ipAddress) {
+  public void deleteTokens(String accessToken, String ipAddress) {
+    if (!AuthUtil.isSignedIn()) return;
     final var id = AuthUtil.findSignedInUser().id();
     refreshTokenService.deleteByUserIdAndIpAddress(id, ipAddress);
     accessTokenService.invalidate(accessToken);
   }
 
   @Override
-  public void signOutFromAllDevices() {
+  public void deleteTokensOnAllDevices() {
+    if (!AuthUtil.isSignedIn()) return;
     final var userId = AuthUtil.findSignedInUser().id();
     refreshTokenService.deleteAllByUserId(userId);
     accessTokenService.invalidateAllByUserId(userId);
+  }
+
+  @Override
+  public AuthTokensDTO refreshTokens(String refreshToken, String ipAddress) {
+    refreshTokenService.check(refreshToken);
+    final var userId = JwtUtil.getUserId(refreshToken);
+    final var roleDTOs = JwtUtil.getRoleDTOs(refreshToken);
+    refreshTokenService.delete(refreshToken);
+    final var newAccessToken = accessTokenService.create(userId, roleDTOs);
+    final var newRefreshToken = refreshTokenService.create(userId, roleDTOs, ipAddress);
+    return new AuthTokensDTO(newAccessToken, newRefreshToken);
   }
 
   @Override
@@ -163,17 +134,29 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public UserDTO signedInUser() {
-    return AuthUtil.findSignedInUser();
+  public void sendVerificationMail(VerificationEmailRequest request) {
+    final var user =
+        userRepository
+            .findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
+            .orElseThrow(
+                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+    if (Boolean.TRUE.equals(user.getActivated()))
+      throw new ConflictException(messageService.getMessage("user.activated"));
+    final var token = verificationTokenService.create(user.getId());
+    verificationTokenService.sendToEmail(user, token);
   }
 
   @Override
-  public boolean isUsernameAvailable(String username) {
-    return !userRepository.existsByUsername(username);
-  }
-
-  @Override
-  public boolean isEmailAvailable(String email) {
-    return !userRepository.existsByEmail(email);
+  public void verifyEmail(VerifyEmailRequest verifyEmailRequest) {
+    final var user =
+        userRepository
+            .findById(JwtUtil.getUserId(verifyEmailRequest.token()))
+            .orElseThrow(
+                () -> new BadRequestException("token", messageService.getMessage("token.invalid")));
+    if (Boolean.TRUE.equals(user.getActivated()))
+      throw new ConflictException(messageService.getMessage("user.activated"));
+    verificationTokenService.check(verifyEmailRequest.token());
+    user.setActivated(true);
+    userRepository.save(user);
   }
 }

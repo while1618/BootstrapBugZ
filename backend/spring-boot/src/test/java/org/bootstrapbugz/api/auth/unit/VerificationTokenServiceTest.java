@@ -2,7 +2,7 @@ package org.bootstrapbugz.api.auth.unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.bootstrapbugz.api.auth.jwt.service.impl.ConfirmRegistrationTokenServiceImpl;
+import org.bootstrapbugz.api.auth.jwt.service.impl.VerificationTokenServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +13,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
-class ConfirmRegistrationTokenServiceTest {
+class VerificationTokenServiceTest {
   @Mock private ApplicationEventPublisher eventPublisher;
-  @InjectMocks private ConfirmRegistrationTokenServiceImpl confirmRegistrationTokenService;
+  @InjectMocks private VerificationTokenServiceImpl confirmRegistrationTokenService;
 
   @BeforeEach
   public void setUp() {

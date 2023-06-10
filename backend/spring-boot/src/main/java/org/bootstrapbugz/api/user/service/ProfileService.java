@@ -5,7 +5,9 @@ import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
 import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
 
 public interface ProfileService {
-  UserDTO update(UpdateProfileRequest updateProfileRequest);
+  UserDTO find();
+
+  UserDTO patch(UpdateProfileRequest updateProfileRequest);
 
   void changePassword(ChangePasswordRequest changePasswordRequest);
 

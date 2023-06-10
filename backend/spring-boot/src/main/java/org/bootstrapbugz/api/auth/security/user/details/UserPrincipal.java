@@ -37,8 +37,8 @@ public class UserPrincipal implements UserDetails {
         user.getUsername(),
         user.getEmail(),
         user.getPassword(),
-        user.isActivated(),
-        user.isNonLocked(),
+        user.getActivated(),
+        user.getNonLocked(),
         user.getCreatedAt(),
         getAuthorities(user));
   }
