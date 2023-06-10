@@ -7,6 +7,7 @@ import org.bootstrapbugz.api.admin.payload.request.SaveUserRequest;
 import org.bootstrapbugz.api.admin.service.UserService;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
+import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
@@ -59,15 +60,17 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO create(SaveUserRequest saveRequest) {
+    if (userRepository.existsByUsername(saveRequest.username()))
+      throw new ConflictException(messageService.getMessage("username.exists"));
+    if (userRepository.existsByEmail(saveRequest.email()))
+      throw new ConflictException(messageService.getMessage("email.exists"));
     final var user = createUser(saveRequest);
     return UserMapper.INSTANCE.userToUserDTO(userRepository.save(user));
   }
 
   @Override
   public UserDTO update(Long id, SaveUserRequest saveRequest) {
-    final var user = createUser(saveRequest);
-    user.setId(id);
-    return UserMapper.INSTANCE.userToUserDTO(userRepository.save(user));
+    return null;
   }
 
   private User createUser(SaveUserRequest saveUserRequest) {
@@ -86,24 +89,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO patch(Long id, PatchUserRequest patchUserRequest) {
-    final var user =
-        userRepository
-            .findById(id)
-            .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-
-    if (patchUserRequest.firstName() != null) user.setFirstName(patchUserRequest.firstName());
-    if (patchUserRequest.lastName() != null) user.setLastName(patchUserRequest.lastName());
-    if (patchUserRequest.username() != null) user.setUsername(patchUserRequest.username());
-    if (patchUserRequest.email() != null) user.setEmail(patchUserRequest.email());
-    if (patchUserRequest.active() != null) user.setActivated(patchUserRequest.active());
-    if (patchUserRequest.lock() != null) user.setNonLocked(patchUserRequest.lock());
-    if (patchUserRequest.roleNames() != null) {
-      final var roles = roleRepository.findAllByNameIn(patchUserRequest.roleNames());
-      user.setRoles(Set.copyOf(roles));
-    }
-
-    return UserMapper.INSTANCE.userToUserDTO(userRepository.save(user));
+    return null;
   }
 
   @Override
