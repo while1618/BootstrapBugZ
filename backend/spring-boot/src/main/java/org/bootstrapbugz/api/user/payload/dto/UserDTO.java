@@ -1,6 +1,7 @@
 package org.bootstrapbugz.api.user.payload.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.gson.annotations.SerializedName;
@@ -15,11 +16,12 @@ public record UserDTO(
     String lastName,
     String username,
     String email,
-    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean activated,
-    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean nonLocked,
+    @JsonInclude(Include.NON_NULL) Boolean activated,
+    @JsonInclude(Include.NON_NULL) Boolean nonLocked,
     LocalDateTime createdAt,
-    @JsonInclude(JsonInclude.Include.NON_NULL) @JsonProperty("roles") @SerializedName("roles")
+    @JsonInclude(Include.NON_NULL) @JsonProperty("roles") @SerializedName("roles")
         Set<RoleDTO> roleDTOs) {
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
