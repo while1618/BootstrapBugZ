@@ -30,7 +30,7 @@ paths:
         - auth
       summary: User registration
       requestBody:
-        $ref: "#/components/requestBodies/RegisterUserBody"
+        $ref: "#/components/requestBodies/RegisterUserRequest"
       responses:
         201:
           description: User registered successfully
@@ -47,13 +47,15 @@ paths:
                 createdAt: 2023-05-18T00:51:50.758738
         400:
           $ref: "#/components/responses/BadRequest"
+        409:
+          $ref: "#/components/responses/Conflict"
   /auth/tokens:
     post:
       tags:
         - auth
       summary: Create access and refresh tokens
       requestBody:
-        $ref: "#/components/requestBodies/AuthTokensBody"
+        $ref: "#/components/requestBodies/AuthTokensRequest"
       responses:
         200:
           description: Auth tokens created successfully
@@ -91,7 +93,7 @@ paths:
         - auth
       summary: Refresh auth tokens
       requestBody:
-        $ref: "#/components/requestBodies/RefreshAuthTokensBody"
+        $ref: "#/components/requestBodies/RefreshAuthTokensRequest"
       responses:
         200:
           description: Auth tokens refreshed successfully
@@ -110,7 +112,7 @@ paths:
         - auth
       summary: Send forgot password email
       requestBody:
-        $ref: "#/components/requestBodies/ForgotPasswordBody"
+        $ref: "#/components/requestBodies/ForgotPasswordRequest"
       responses:
         204:
           description: Forgot password email sent successfully
@@ -124,7 +126,7 @@ paths:
         - auth
       summary: Reset password
       requestBody:
-        $ref: "#/components/requestBodies/ResetPasswordBody"
+        $ref: "#/components/requestBodies/ResetPasswordRequest"
       responses:
         204:
           description: Password reset successfully
@@ -136,7 +138,7 @@ paths:
         - auth
       summary: Send verification email
       requestBody:
-        $ref: "#/components/requestBodies/VerificationEmailBody"
+        $ref: "#/components/requestBodies/VerificationEmailRequest"
       responses:
         204:
           description: Verification email sent successfully
@@ -152,7 +154,7 @@ paths:
         - auth
       summary: Verify email
       requestBody:
-        $ref: "#/components/requestBodies/VerifyEmailBody"
+        $ref: "#/components/requestBodies/VerifyEmailRequest"
       responses:
         204:
           description: Email verified successfully
@@ -168,7 +170,7 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        $ref: "#/components/requestBodies/SaveUserBody"
+        $ref: "#/components/requestBodies/UserRequest"
       responses:
         201:
           description: User created successfully
@@ -298,7 +300,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/id"
       requestBody:
-        $ref: "#/components/requestBodies/SaveUserBody"
+        $ref: "#/components/requestBodies/UserRequest"
       responses:
         200:
           description: User updated successfully
@@ -335,7 +337,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/id"
       requestBody:
-        $ref: "#/components/requestBodies/PatchUserBody"
+        $ref: "#/components/requestBodies/PatchUserRequest"
       responses:
         200:
           description: User patched successfully
@@ -495,16 +497,14 @@ paths:
     patch:
       tags:
         - profile
-      summary: Update profile
+      summary: Patch profile
       security:
         - BearerAuth: []
-      parameters:
-        - $ref: "#/components/parameters/id"
       requestBody:
-        $ref: "#/components/requestBodies/UpdateProfileBody"
+        $ref: "#/components/requestBodies/PatchProfileRequest"
       responses:
         200:
-          description: Profile updated successfully
+          description: Profile patched successfully
           content:
             application/json:
               schema:
@@ -541,10 +541,10 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        $ref: "#/components/requestBodies/ChangePasswordBody"
+        $ref: "#/components/requestBodies/ChangePasswordPassword"
       responses:
         204:
-          description: Password changed successfully
+          description: Profile password changed successfully
         400:
           $ref: "#/components/responses/BadRequest"
         401:
@@ -625,8 +625,8 @@ components:
       description: Resource id
       example: 3
   requestBodies:
-    RegisterUserBody:
-      description: Register user request body
+    RegisterUserRequest:
+      description: Register user request
       required: true
       content:
         application/json:
@@ -660,8 +660,8 @@ components:
             email: joe.bloggs@localhost
             password: qwerty123
             confirmPassword: qwerty123
-    AuthTokensBody:
-      description: Auth tokens request body
+    AuthTokensRequest:
+      description: Auth tokens request
       required: true
       content:
         application/json:
@@ -678,8 +678,8 @@ components:
           example:
             usernameOrEmail: joe.bloggs
             password: qwerty123
-    RefreshAuthTokensBody:
-      description: Refresh auth tokens request body
+    RefreshAuthTokensRequest:
+      description: Refresh auth tokens request
       required: true
       content:
         application/json:
@@ -693,8 +693,8 @@ components:
                 format: JWT
           example:
             refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
-    ForgotPasswordBody:
-      description: Forgot password request body
+    ForgotPasswordRequest:
+      description: Forgot password request
       required: true
       content:
         application/json:
@@ -708,8 +708,8 @@ components:
                 format: email
           example:
             email: john.doe@localhost
-    ResetPasswordBody:
-      description: Reset password request body
+    ResetPasswordRequest:
+      description: Reset password request
       required: true
       content:
         application/json:
@@ -731,8 +731,8 @@ components:
             token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
             password: qwerty321
             confirmPassword: qwerty321
-    VerificationEmailBody:
-      description: Verification email request body
+    VerificationEmailRequest:
+      description: Verification email request
       required: true
       content:
         application/json:
@@ -745,8 +745,8 @@ components:
                 type: string
           example:
             usernameOrEmail: joe.bloggs@localhost
-    VerifyEmailBody:
-      description: Verify email request body
+    VerifyEmailRequest:
+      description: Verify email request
       required: true
       content:
         application/json:
@@ -760,8 +760,8 @@ components:
                 format: JWT
           example:
             token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
-    SaveUserBody:
-      description: User request body - admin
+    UserRequest:
+      description: User request
       required: true
       content:
         application/json:
@@ -813,8 +813,8 @@ components:
             lock: false
             roleNames:
               - USER
-    PatchUserBody:
-      description: Patch request body - admin
+    PatchUserRequest:
+      description: Patch user request
       required: true
       content:
         application/json:
@@ -830,6 +830,10 @@ components:
               email:
                 type: string
                 format: email
+              password:
+                type: string
+              confirmPassword:
+                type: string
               active:
                 type: boolean
               lock:
@@ -847,21 +851,18 @@ components:
             username: joe.bloggs
             email: joe.bloggs@localhost
             active: true
+            password: qwerty123
+            confirmPassword: qwerty123
             lock: false
             roleNames:
               - USER
-    UpdateProfileBody:
-      description: Update profile request body
+    PatchProfileRequest:
+      description: Patch profile request
       required: true
       content:
         application/json:
           schema:
             type: object
-            required:
-              - firstName
-              - lastName
-              - username
-              - email
             properties:
               firstName:
                 type: string
@@ -877,8 +878,8 @@ components:
             lastName: Bloggs
             username: joe.bloggs
             email: joe.bloggs@localhost@localhost
-    ChangePasswordBody:
-      description: Change password request body
+    ChangePasswordPassword:
+      description: Change password request
       required: true
       content:
         application/json:
