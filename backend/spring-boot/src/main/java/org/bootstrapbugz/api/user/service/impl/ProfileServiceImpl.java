@@ -12,7 +12,7 @@ import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
-import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
+import org.bootstrapbugz.api.user.payload.request.PatchProfileRequest;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.ProfileService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,18 +48,17 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public UserDTO patch(UpdateProfileRequest updateProfileRequest) {
+  public UserDTO patch(PatchProfileRequest patchProfileRequest) {
     final var userDTO = AuthUtil.findSignedInUser();
     final var user =
         userRepository
             .findById(userDTO.id())
             .orElseThrow(
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
-    if (updateProfileRequest.firstName() != null)
-      user.setFirstName(updateProfileRequest.firstName());
-    if (updateProfileRequest.lastName() != null) user.setLastName(updateProfileRequest.lastName());
-    tryToSetUsername(user, updateProfileRequest.username());
-    tryToSetEmail(user, updateProfileRequest.email());
+    if (patchProfileRequest.firstName() != null) user.setFirstName(patchProfileRequest.firstName());
+    if (patchProfileRequest.lastName() != null) user.setLastName(patchProfileRequest.lastName());
+    tryToSetUsername(user, patchProfileRequest.username());
+    tryToSetEmail(user, patchProfileRequest.email());
     return UserMapper.INSTANCE.userToUserDTO(userRepository.save(user));
   }
 

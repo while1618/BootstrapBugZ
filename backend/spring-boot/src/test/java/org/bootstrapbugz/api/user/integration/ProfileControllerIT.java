@@ -16,7 +16,7 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.email.service.EmailService;
 import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
-import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
+import org.bootstrapbugz.api.user.payload.request.PatchProfileRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,7 +42,7 @@ class ProfileControllerIT extends DatabaseContainers {
     final var accessToken =
         IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1").accessToken();
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "updated1", "updated1@localhost");
+        new PatchProfileRequest("Updated", "Updated", "updated1", "updated1@localhost");
     mockMvc
         .perform(
             put(Path.PROFILE + "/update")
@@ -61,7 +61,7 @@ class ProfileControllerIT extends DatabaseContainers {
     final var accessToken =
         IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update2").accessToken();
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "update2", "update2@localhost");
+        new PatchProfileRequest("Updated", "Updated", "update2", "update2@localhost");
     mockMvc
         .perform(
             put(Path.PROFILE + "/update")
@@ -79,7 +79,7 @@ class ProfileControllerIT extends DatabaseContainers {
     final var accessToken =
         IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "admin", "updated3@localhost");
+        new PatchProfileRequest("Updated", "Updated", "admin", "updated3@localhost");
     mockMvc
         .perform(
             put(Path.PROFILE + "/update")
@@ -95,7 +95,7 @@ class ProfileControllerIT extends DatabaseContainers {
     final var accessToken =
         IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
     final var updateUserRequest =
-        new UpdateProfileRequest("Updated", "Updated", "updated3", "admin@localhost");
+        new PatchProfileRequest("Updated", "Updated", "updated3", "admin@localhost");
     mockMvc
         .perform(
             put(Path.PROFILE + "/update")
@@ -111,7 +111,7 @@ class ProfileControllerIT extends DatabaseContainers {
     final var accessToken =
         IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
     final var updateUserRequest =
-        new UpdateProfileRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
+        new PatchProfileRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
     mockMvc
         .perform(
             put(Path.PROFILE + "/update")

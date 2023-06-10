@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.payload.request.ChangePasswordRequest;
-import org.bootstrapbugz.api.user.payload.request.UpdateProfileRequest;
+import org.bootstrapbugz.api.user.payload.request.PatchProfileRequest;
 import org.bootstrapbugz.api.user.service.ProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,8 +30,8 @@ public class ProfileController {
 
   @PatchMapping
   public ResponseEntity<UserDTO> patch(
-      @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
-    return ResponseEntity.ok(profileService.patch(updateProfileRequest));
+      @Valid @RequestBody PatchProfileRequest patchProfileRequest) {
+    return ResponseEntity.ok(profileService.patch(patchProfileRequest));
   }
 
   @PatchMapping("/password")

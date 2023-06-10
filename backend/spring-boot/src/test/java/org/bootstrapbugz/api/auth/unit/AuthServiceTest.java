@@ -21,7 +21,7 @@ import org.bootstrapbugz.api.auth.jwt.service.impl.RefreshTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.VerificationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.RegisterRequest;
+import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
@@ -111,7 +111,7 @@ class AuthServiceTest {
             .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
             .build();
     final var signUpRequest =
-        new RegisterRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
+        new RegisterUserRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(new Role(RoleName.USER)));
     final var testUser = UnitTestUtil.getTestUser();
     testUser.setActivated(false);

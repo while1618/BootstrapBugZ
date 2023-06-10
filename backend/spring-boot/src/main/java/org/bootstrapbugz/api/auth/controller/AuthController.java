@@ -6,7 +6,7 @@ import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokensRequest;
-import org.bootstrapbugz.api.auth.payload.request.RegisterRequest;
+import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
@@ -33,8 +33,9 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<UserDTO> register(@Valid @RequestBody RegisterRequest registerRequest) {
-    return new ResponseEntity<>(authService.register(registerRequest), HttpStatus.CREATED);
+  public ResponseEntity<UserDTO> register(
+      @Valid @RequestBody RegisterUserRequest registerUserRequest) {
+    return new ResponseEntity<>(authService.register(registerUserRequest), HttpStatus.CREATED);
   }
 
   @DeleteMapping("/tokens")

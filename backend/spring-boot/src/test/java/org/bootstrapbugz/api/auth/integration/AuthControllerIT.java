@@ -17,7 +17,7 @@ import org.bootstrapbugz.api.auth.jwt.service.impl.VerificationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshTokensRequest;
-import org.bootstrapbugz.api.auth.payload.request.RegisterRequest;
+import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
@@ -53,7 +53,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void signUp() throws Exception {
     final var signUpRequest =
-        RegisterRequest.builder()
+        RegisterUserRequest.builder()
             .firstName("Test")
             .lastName("Test")
             .username("test")
@@ -75,7 +75,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void signUp_throwBadRequest_invalidParameters() throws Exception {
     final var signUpRequest =
-        RegisterRequest.builder()
+        RegisterUserRequest.builder()
             .firstName("User1")
             .lastName("User1")
             .username("user")

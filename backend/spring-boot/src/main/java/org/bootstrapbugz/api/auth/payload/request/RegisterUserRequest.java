@@ -12,7 +12,7 @@ import org.bootstrapbugz.api.shared.validator.UsernameExist;
 
 @Builder
 @FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
-public record RegisterRequest(
+public record RegisterUserRequest(
     @NotNull @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{firstName.invalid}")
         String firstName,
     @NotNull @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{lastName.invalid}")

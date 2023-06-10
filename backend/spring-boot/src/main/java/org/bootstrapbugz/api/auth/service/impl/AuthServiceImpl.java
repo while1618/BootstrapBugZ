@@ -8,7 +8,7 @@ import org.bootstrapbugz.api.auth.jwt.service.VerificationTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.RegisterRequest;
+import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
@@ -59,14 +59,14 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public UserDTO register(RegisterRequest registerRequest) {
+  public UserDTO register(RegisterUserRequest registerUserRequest) {
     final var user =
         User.builder()
-            .firstName(registerRequest.firstName())
-            .lastName(registerRequest.lastName())
-            .username(registerRequest.username())
-            .email(registerRequest.email())
-            .password(bCryptPasswordEncoder.encode(registerRequest.password()))
+            .firstName(registerUserRequest.firstName())
+            .lastName(registerUserRequest.lastName())
+            .username(registerUserRequest.username())
+            .email(registerUserRequest.email())
+            .password(bCryptPasswordEncoder.encode(registerUserRequest.password()))
             .roles(Collections.singleton(getUserRole()))
             .build();
     userRepository.save(user);
