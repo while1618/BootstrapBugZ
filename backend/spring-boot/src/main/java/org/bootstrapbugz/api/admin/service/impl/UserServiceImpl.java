@@ -3,7 +3,7 @@ package org.bootstrapbugz.api.admin.service.impl;
 import java.util.List;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.PatchUserRequest;
-import org.bootstrapbugz.api.admin.payload.request.SaveUserRequest;
+import org.bootstrapbugz.api.admin.payload.request.UserRequest;
 import org.bootstrapbugz.api.admin.service.UserService;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO create(SaveUserRequest saveRequest) {
+  public UserDTO create(UserRequest saveRequest) {
     if (userRepository.existsByUsername(saveRequest.username()))
       throw new ConflictException(messageService.getMessage("username.exists"));
     if (userRepository.existsByEmail(saveRequest.email()))
@@ -69,20 +69,20 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO update(Long id, SaveUserRequest saveRequest) {
+  public UserDTO update(Long id, UserRequest saveRequest) {
     return null;
   }
 
-  private User createUser(SaveUserRequest saveUserRequest) {
-    final var roles = roleRepository.findAllByNameIn(saveUserRequest.roleNames());
+  private User createUser(UserRequest userRequest) {
+    final var roles = roleRepository.findAllByNameIn(userRequest.roleNames());
     return User.builder()
-        .firstName(saveUserRequest.firstName())
-        .lastName(saveUserRequest.lastName())
-        .username(saveUserRequest.username())
-        .email(saveUserRequest.email())
-        .password(bCryptPasswordEncoder.encode(saveUserRequest.password()))
-        .activated(saveUserRequest.active())
-        .nonLocked(saveUserRequest.lock())
+        .firstName(userRequest.firstName())
+        .lastName(userRequest.lastName())
+        .username(userRequest.username())
+        .email(userRequest.email())
+        .password(bCryptPasswordEncoder.encode(userRequest.password()))
+        .activated(userRequest.active())
+        .nonLocked(userRequest.lock())
         .roles(Set.copyOf(roles))
         .build();
   }

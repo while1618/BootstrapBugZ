@@ -13,7 +13,7 @@ import org.bootstrapbugz.api.user.model.Role.RoleName;
 
 @Builder
 @FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
-public record SaveUserRequest(
+public record UserRequest(
     @NonNull @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{firstName.invalid}")
         String firstName,
     @NonNull @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{lastName.invalid}")

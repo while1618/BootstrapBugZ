@@ -16,7 +16,7 @@ import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl
 import org.bootstrapbugz.api.auth.jwt.service.impl.VerificationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.RefreshTokensRequest;
+import org.bootstrapbugz.api.auth.payload.request.RefreshAuthTokensRequest;
 import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
@@ -178,7 +178,7 @@ class AuthControllerIT extends DatabaseContainers {
   void refreshToken() throws Exception {
     final var refreshToken =
         IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1").refreshToken();
-    final var refreshTokenRequest = new RefreshTokensRequest(refreshToken);
+    final var refreshTokenRequest = new RefreshAuthTokensRequest(refreshToken);
     mockMvc
         .perform(
             post(Path.AUTH + "/refresh-token")
@@ -226,7 +226,7 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   private void invalidRefreshToken(String refreshToken) throws Exception {
-    final var refreshTokenRequest = new RefreshTokensRequest(refreshToken);
+    final var refreshTokenRequest = new RefreshAuthTokensRequest(refreshToken);
     mockMvc
         .perform(
             post(Path.AUTH + "/refresh-token")

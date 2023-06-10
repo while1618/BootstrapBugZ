@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
-import org.bootstrapbugz.api.auth.payload.request.RefreshTokensRequest;
+import org.bootstrapbugz.api.auth.payload.request.RefreshAuthTokensRequest;
 import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
@@ -54,8 +54,9 @@ public class AuthController {
 
   @PostMapping("/tokens/refresh")
   public ResponseEntity<AuthTokensDTO> refreshTokens(
-      @Valid @RequestBody RefreshTokensRequest refreshTokensRequest, HttpServletRequest request) {
-    final var refreshToken = JwtUtil.removeBearer(refreshTokensRequest.refreshToken());
+      @Valid @RequestBody RefreshAuthTokensRequest refreshAuthTokensRequest,
+      HttpServletRequest request) {
+    final var refreshToken = JwtUtil.removeBearer(refreshAuthTokensRequest.refreshToken());
     final var ipAddress = AuthUtil.getUserIpAddress(request);
     return ResponseEntity.ok(authService.refreshTokens(refreshToken, ipAddress));
   }

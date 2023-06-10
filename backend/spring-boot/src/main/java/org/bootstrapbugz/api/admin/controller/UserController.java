@@ -2,7 +2,7 @@ package org.bootstrapbugz.api.admin.controller;
 
 import jakarta.validation.Valid;
 import org.bootstrapbugz.api.admin.payload.request.PatchUserRequest;
-import org.bootstrapbugz.api.admin.payload.request.SaveUserRequest;
+import org.bootstrapbugz.api.admin.payload.request.UserRequest;
 import org.bootstrapbugz.api.admin.service.UserService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.generic.crud.CrudController;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("adminUserController")
 @RequestMapping(Path.ADMIN_USERS)
 @PreAuthorize("hasAuthority('ADMIN')")
-public class UserController extends CrudController<UserDTO, SaveUserRequest> {
+public class UserController extends CrudController<UserDTO, UserRequest> {
   private final UserService userService;
 
   public UserController(UserService userService) {

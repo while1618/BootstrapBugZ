@@ -51,8 +51,8 @@ public class ErrorMessage {
   @Getter
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private static final class Detail {
-    private String field;
     private final String message;
+    private String field;
 
     private Detail(String message) {
       this.message = message;
