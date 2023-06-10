@@ -17,11 +17,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Slf4j
-public class AuthorizationFilter extends BasicAuthenticationFilter {
+public class JWTFilter extends BasicAuthenticationFilter {
   private final AccessTokenService accessTokenService;
   private final CustomUserDetailsService userDetailsService;
 
-  public AuthorizationFilter(
+  public JWTFilter(
       AuthenticationManager authenticationManager,
       AccessTokenService accessTokenService,
       CustomUserDetailsService userDetailsService) {

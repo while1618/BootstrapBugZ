@@ -3,7 +3,7 @@ package org.bootstrapbugz.api.shared.config;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.security.AuthenticationFilter;
-import org.bootstrapbugz.api.auth.security.AuthorizationFilter;
+import org.bootstrapbugz.api.auth.security.JWTFilter;
 import org.bootstrapbugz.api.auth.security.user.details.CustomUserDetailsService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
@@ -124,7 +124,6 @@ class CustomDSL extends AbstractHttpConfigurer<CustomDSL, HttpSecurity> {
     http.addFilter(
         new AuthenticationFilter(
             authenticationManager, accessTokenService, refreshTokenService, messageService));
-    http.addFilter(
-        new AuthorizationFilter(authenticationManager, accessTokenService, userDetailsService));
+    http.addFilter(new JWTFilter(authenticationManager, accessTokenService, userDetailsService));
   }
 }
