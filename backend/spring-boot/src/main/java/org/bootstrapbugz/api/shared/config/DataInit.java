@@ -26,7 +26,7 @@ public class DataInit implements ApplicationRunner {
   private final Role userRole = new Role(RoleName.USER);
   private final Role adminRole = new Role(RoleName.ADMIN);
 
-  @Value("${user.password}")
+  @Value("${spring.security.user.password}")
   private String password;
 
   public DataInit(

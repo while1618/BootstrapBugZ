@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.RESET_PASSWORD_TOKEN;
-
   private final UserBlacklistRepository userBlacklistRepository;
   private final MessageService messageService;
   private final ApplicationEventPublisher eventPublisher;
@@ -25,7 +24,7 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
   @Value("${jwt.secret}")
   private String secret;
 
-  @Value("${jwt.forgot-password-token.duration}")
+  @Value("${jwt.reset-password-token.duration}")
   private int tokenDuration;
 
   public ResetPasswordTokenServiceImpl(
@@ -49,12 +48,16 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
 
   @Override
   public void check(String token) {
+    verifyToken(token);
+    isInUserBlacklist(token);
+  }
+
+  private void verifyToken(String token) {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
       throw new BadRequestException("token", e.getMessage());
     }
-    isInUserBlacklist(token);
   }
 
   private void isInUserBlacklist(String token) {

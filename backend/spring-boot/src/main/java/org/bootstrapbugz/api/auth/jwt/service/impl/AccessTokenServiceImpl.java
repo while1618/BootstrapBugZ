@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.ACCESS_TOKEN;
-
   private final AccessTokenBlacklistRepository accessTokenBlacklistRepository;
   private final UserBlacklistRepository userBlacklistRepository;
   private final MessageService messageService;
@@ -52,13 +51,17 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
   @Override
   public void check(String token) {
+    verifyToken(token);
+    isInAccessTokenBlacklist(token);
+    isInUserBlacklist(token);
+  }
+
+  private void verifyToken(String token) {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
       throw new UnauthorizedException(e.getMessage());
     }
-    isInAccessTokenBlacklist(token);
-    isInUserBlacklist(token);
   }
 
   private void isInAccessTokenBlacklist(String token) {

@@ -23,22 +23,18 @@ public class ExtendedUserDetailsServiceImpl implements ExtendedUserDetailsServic
   @Override
   @Transactional
   public UserDetails loadUserByUserId(Long userId) {
-    final var user =
-        userRepository
-            .findById(userId)
-            .orElseThrow(
-                () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
-    return UserPrincipal.create(user);
+    return userRepository
+        .findById(userId)
+        .map(UserPrincipal::create)
+        .orElseThrow(() -> new UnauthorizedException(messageService.getMessage("token.invalid")));
   }
 
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String username) {
-    final var user =
-        userRepository
-            .findByUsernameOrEmail(username, username)
-            .orElseThrow(
-                () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
-    return UserPrincipal.create(user);
+    return userRepository
+        .findByUsernameOrEmail(username, username)
+        .map(UserPrincipal::create)
+        .orElseThrow(() -> new UnauthorizedException(messageService.getMessage("token.invalid")));
   }
 }

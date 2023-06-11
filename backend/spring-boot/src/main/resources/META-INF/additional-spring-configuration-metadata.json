@@ -26,14 +26,14 @@
       "description": "Refresh token duration time."
     },
     {
-      "name": "jwt.confirm-registration-token.duration",
+      "name": "jwt.verify-email-token.duration",
       "type": "java.lang.String",
-      "description": "Confirm registration token duration time."
+      "description": "Verify email token duration time."
     },
     {
-      "name": "jwt.forgot-password-token.duration",
+      "name": "jwt.reset-password-token.duration",
       "type": "java.lang.String",
-      "description": "Forgot password token duration time."
+      "description": "Reset password token duration time."
     }
   ]
 }

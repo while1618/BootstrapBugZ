@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.auth.security.user.details;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -22,8 +21,8 @@ public class UserPrincipal implements UserDetails {
   private final String firstName;
   private final String lastName;
   private final String username;
-  @JsonIgnore private final String email;
-  @JsonIgnore private final String password;
+  private final String email;
+  private final String password;
   private final boolean enabled;
   private final boolean accountNonLocked;
   private final LocalDateTime createdAt;

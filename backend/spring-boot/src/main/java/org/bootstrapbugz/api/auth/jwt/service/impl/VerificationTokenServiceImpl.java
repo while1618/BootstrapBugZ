@@ -14,14 +14,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VerificationTokenServiceImpl implements VerificationTokenService {
-  private static final JwtPurpose PURPOSE = JwtPurpose.CONFIRM_REGISTRATION_TOKEN;
-
+  private static final JwtPurpose PURPOSE = JwtPurpose.VERIFY_EMAIL_TOKEN;
   private final ApplicationEventPublisher eventPublisher;
 
   @Value("${jwt.secret}")
   private String secret;
 
-  @Value("${jwt.confirm-registration-token.duration}")
+  @Value("${jwt.verify-email-token.duration}")
   private int tokenDuration;
 
   public VerificationTokenServiceImpl(ApplicationEventPublisher eventPublisher) {

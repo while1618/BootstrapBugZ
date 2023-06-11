@@ -47,7 +47,7 @@ public class JwtUtil {
   public enum JwtPurpose {
     ACCESS_TOKEN,
     REFRESH_TOKEN,
-    CONFIRM_REGISTRATION_TOKEN,
+    VERIFY_EMAIL_TOKEN,
     RESET_PASSWORD_TOKEN
   }
 }

@@ -16,17 +16,15 @@ public class VerificationEmail implements JwtEmail {
   public void sendEmail(
       EmailService emailService, Environment environment, User user, String token) {
     try {
-      final var template =
-          new ClassPathResource("templates/email/confirm-registration.html").getFile();
-      final var link =
-          environment.getProperty("ui.app.url") + "/auth/confirm-registration?token=" + token;
+      final var template = new ClassPathResource("templates/email/verify-email.html").getFile();
+      final var link = environment.getProperty("ui.app.url") + "/auth/verify-email?token=" + token;
       final var body =
           Files.asCharSource(template, StandardCharsets.UTF_8)
               .read()
               .replace("$name", user.getUsername())
               .replace("$link", link)
               .replace("$appName", Objects.requireNonNull(environment.getProperty("app.name")));
-      emailService.sendHtmlEmail(user.getEmail(), "Confirm Registration", body);
+      emailService.sendHtmlEmail(user.getEmail(), "Verify email", body);
     } catch (IOException e) {
       log.error(e.getMessage());
     }

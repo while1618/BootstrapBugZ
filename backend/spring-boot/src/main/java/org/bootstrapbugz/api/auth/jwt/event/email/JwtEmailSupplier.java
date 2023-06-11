@@ -10,8 +10,8 @@ public class JwtEmailSupplier {
       new EnumMap<>(JwtPurpose.class);
 
   static {
-    emailType.put(JwtPurpose.CONFIRM_REGISTRATION_TOKEN, VerificationEmail::new);
-    emailType.put(JwtPurpose.RESET_PASSWORD_TOKEN, ForgotPasswordEmail::new);
+    emailType.put(JwtPurpose.VERIFY_EMAIL_TOKEN, VerificationEmail::new);
+    emailType.put(JwtPurpose.RESET_PASSWORD_TOKEN, ResetPasswordEmail::new);
   }
 
   public JwtEmail supplyEmail(JwtPurpose jwtPurpose) {

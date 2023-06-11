@@ -91,8 +91,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     final var ipAddress = AuthUtil.getUserIpAddress(request);
     final var accessToken = accessTokenService.create(userPrincipal.getId(), roleDTOs);
     final var refreshToken = getRefreshToken(userPrincipal.getId(), roleDTOs, ipAddress);
-    final var authTokensDTO =
-        AuthTokensDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+    final var authTokensDTO = new AuthTokensDTO(accessToken, refreshToken);
     writeToResponse(response, authTokensDTO);
   }
 

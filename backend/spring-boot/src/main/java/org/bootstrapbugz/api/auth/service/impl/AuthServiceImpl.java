@@ -60,6 +60,10 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserDTO register(RegisterUserRequest registerUserRequest) {
+    if (userRepository.existsByUsername(registerUserRequest.username()))
+      throw new ConflictException(messageService.getMessage("username.exists"));
+    if (userRepository.existsByEmail(registerUserRequest.email()))
+      throw new ConflictException(messageService.getMessage("email.exists"));
     final var user =
         User.builder()
             .firstName(registerUserRequest.firstName())
@@ -92,9 +96,9 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void deleteTokensOnAllDevices() {
     if (!AuthUtil.isSignedIn()) return;
-    final var userId = AuthUtil.findSignedInUser().getId();
-    refreshTokenService.deleteAllByUserId(userId);
-    accessTokenService.invalidateAllByUserId(userId);
+    final var id = AuthUtil.findSignedInUser().getId();
+    refreshTokenService.deleteAllByUserId(id);
+    accessTokenService.invalidateAllByUserId(id);
   }
 
   @Override

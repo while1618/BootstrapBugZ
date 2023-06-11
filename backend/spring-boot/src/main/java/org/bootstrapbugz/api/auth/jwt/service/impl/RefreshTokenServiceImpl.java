@@ -50,12 +50,16 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   @Override
   public void check(String token) {
+    verifyToken(token);
+    isInRefreshTokenStore(token);
+  }
+
+  private void verifyToken(String token) {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
       throw new BadRequestException("token", e.getMessage());
     }
-    isInRefreshTokenStore(token);
   }
 
   private void isInRefreshTokenStore(String token) {
@@ -65,9 +69,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   @Override
   public Optional<String> findByUserIdAndIpAddress(Long userId, String ipAddress) {
-    final var refreshTokenStore =
-        refreshTokenStoreRepository.findByUserIdAndIpAddress(userId, ipAddress);
-    return refreshTokenStore.map(RefreshTokenStore::getRefreshToken);
+    return refreshTokenStoreRepository
+        .findByUserIdAndIpAddress(userId, ipAddress)
+        .map(RefreshTokenStore::getRefreshToken);
   }
 
   @Override
@@ -77,8 +81,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   @Override
   public void deleteByUserIdAndIpAddress(Long userId, String ipAddress) {
-    final var token = refreshTokenStoreRepository.findByUserIdAndIpAddress(userId, ipAddress);
-    token.ifPresent(refreshTokenStoreRepository::delete);
+    refreshTokenStoreRepository
+        .findByUserIdAndIpAddress(userId, ipAddress)
+        .ifPresent(refreshTokenStoreRepository::delete);
   }
 
   @Override

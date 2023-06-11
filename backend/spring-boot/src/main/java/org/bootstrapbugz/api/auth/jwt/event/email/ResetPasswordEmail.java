@@ -11,12 +11,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
 @Slf4j
-public class ForgotPasswordEmail implements JwtEmail {
+public class ResetPasswordEmail implements JwtEmail {
   @Override
   public void sendEmail(
       EmailService emailService, Environment environment, User user, String token) {
     try {
-      final var template = new ClassPathResource("templates/email/forgot-password.html").getFile();
+      final var template = new ClassPathResource("templates/email/reset-password.html").getFile();
       final var link =
           environment.getProperty("ui.app.url") + "/auth/reset-password?token=" + token;
       final var body =
@@ -25,7 +25,7 @@ public class ForgotPasswordEmail implements JwtEmail {
               .replace("$name", user.getUsername())
               .replace("$link", link)
               .replace("$appName", Objects.requireNonNull(environment.getProperty("app.name")));
-      emailService.sendHtmlEmail(user.getEmail(), "Forgot Password", body);
+      emailService.sendHtmlEmail(user.getEmail(), "Reset password", body);
     } catch (IOException e) {
       log.error(e.getMessage());
     }
