@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.user.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -7,9 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
+import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,75 +29,66 @@ class UserControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
+  private final UserDTO expectedUserDTO =
+      UserDTO.builder()
+          .id(2L)
+          .firstName("User")
+          .lastName("User")
+          .username("user")
+          .email(null)
+          .createdAt(LocalDateTime.now())
+          .build();
+
   @Test
-  void findAllUsers_rolesAndEmailsHidden() throws Exception {
+  void findAllUsers() throws Exception {
     mockMvc
         .perform(get(Path.USERS).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].email").doesNotExist())
-        .andExpect(jsonPath("$[0].roles").doesNotExist());
+        .andExpect(jsonPath("$.length()").value(10));
   }
 
   @Test
-  void findAllUsers_rolesAndEmailsShown() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "admin").accessToken();
-    mockMvc
-        .perform(
-            get(Path.USERS)
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].email").exists())
-        .andExpect(jsonPath("$[0].roles").exists());
+  void findUserById() throws Exception {
+    final var response =
+        mockMvc
+            .perform(get(Path.USERS + "/{id}", 2L).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    final var actualUserDTO = objectMapper.readValue(response, UserDTO.class);
+    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test
-  void findUserByUsername_emailShown() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
+  void findUserById_throwResourceNotFound() throws Exception {
     mockMvc
-        .perform(
-            get(Path.USERS + "/{username}", "user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.email").exists())
-        .andExpect(jsonPath("$.roles").doesNotExist());
+        .perform(get(Path.USERS + "/{id}", 100L).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound())
+        .andExpect(content().string(containsString("User not found.")));
   }
 
   @Test
-  void findUserByUsername_emailHidden() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
-    mockMvc
-        .perform(
-            get(Path.USERS + "/{username}", "admin")
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.email").doesNotExist())
-        .andExpect(jsonPath("$.roles").doesNotExist());
-  }
-
-  @Test
-  void findUserByUsername_adminSignedIn() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "admin").accessToken();
-    mockMvc
-        .perform(
-            get(Path.USERS + "/{username}", "user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.email").exists())
-        .andExpect(jsonPath("$.roles").exists());
+  void findUserByUsername() throws Exception {
+    final var response =
+        mockMvc
+            .perform(
+                get(Path.USERS + "/username/{username}", "user")
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+    final var actualUserDTO = objectMapper.readValue(response, UserDTO.class);
+    assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
 
   @Test
   void findUserByUsername_throwResourceNotFound() throws Exception {
     mockMvc
-        .perform(get(Path.USERS + "/{username}", "unknown").contentType(MediaType.APPLICATION_JSON))
+        .perform(
+            get(Path.USERS + "/username/{username}", "unknown")
+                .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound())
         .andExpect(content().string(containsString("User not found.")));
   }
