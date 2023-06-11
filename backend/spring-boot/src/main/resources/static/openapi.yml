@@ -183,6 +183,8 @@ paths:
                 username: john.doe
                 email: john.doe@localhost
                 createdAt: 2023-05-18T00:51:50.758738
+        401:
+          $ref: "#/components/responses/Unauthorized"
     patch:
       tags:
         - profile

@@ -5,7 +5,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,17 +39,29 @@ class ProfileControllerIT extends DatabaseContainers {
   @MockBean private EmailService emailService;
 
   @Test
-  void updateUser_newUsernameAndEmail() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1").accessToken();
-    final var updateUserRequest =
+  void findProfile() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user");
+    mockMvc
+        .perform(
+            get(Path.PROFILE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.username").value("user"))
+        .andExpect(jsonPath("$.email").value("user@localhost"));
+  }
+
+  @Test
+  void patchProfile_newUsernameAndEmail() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1");
+    final var patchProfileRequest =
         new PatchProfileRequest("Updated", "Updated", "updated1", "updated1@localhost");
     mockMvc
         .perform(
-            put(Path.PROFILE + "/update")
+            patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken))
-                .content(objectMapper.writeValueAsString(updateUserRequest)))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.username").value("updated1"))
         .andExpect(jsonPath("$.email").value("updated1@localhost"));
@@ -57,17 +70,15 @@ class ProfileControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void updateUser_sameUsernameAndEmail() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update2").accessToken();
-    final var updateUserRequest =
-        new PatchProfileRequest("Updated", "Updated", "update2", "update2@localhost");
+  void patchProfile_sameUsernameAndEmail() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update2");
+    final var patchProfileRequest = PatchProfileRequest.builder().firstName("Updated").build();
     mockMvc
         .perform(
-            put(Path.PROFILE + "/update")
+            patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken))
-                .content(objectMapper.writeValueAsString(updateUserRequest)))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.firstName").value("Updated"))
         .andExpect(jsonPath("$.username").value("update2"))
@@ -75,49 +86,44 @@ class ProfileControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void updateUser_throwBadRequest_usernameExists() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
-    final var updateUserRequest =
-        new PatchProfileRequest("Updated", "Updated", "admin", "updated3@localhost");
+  void patchProfile_throwConflict_usernameExists() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
+    final var patchProfileRequest = PatchProfileRequest.builder().username("admin").build();
     mockMvc
         .perform(
-            put(Path.PROFILE + "/update")
+            patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken))
-                .content(objectMapper.writeValueAsString(updateUserRequest)))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isConflict())
         .andExpect(content().string(containsString("Username already exists.")));
   }
 
   @Test
-  void updateUser_throwBadRequest_emailExists() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
-    final var updateUserRequest =
-        new PatchProfileRequest("Updated", "Updated", "updated3", "admin@localhost");
+  void patchProfile_throwConflict_emailExists() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
+    final var patchProfileRequest = PatchProfileRequest.builder().email("admin@localhost").build();
     mockMvc
         .perform(
-            put(Path.PROFILE + "/update")
+            patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken))
-                .content(objectMapper.writeValueAsString(updateUserRequest)))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isConflict())
         .andExpect(content().string(containsString("Email already exists.")));
   }
 
   @Test
-  void updateUser_throwBadRequest_invalidParameters() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
-    final var updateUserRequest =
+  void patchProfile_throwBadRequest_invalidParameters() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
+    final var patchProfileRequest =
         new PatchProfileRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
     mockMvc
         .perform(
-            put(Path.PROFILE + "/update")
+            patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken))
-                .content(objectMapper.writeValueAsString(updateUserRequest)))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Invalid first name.")))
         .andExpect(content().string(containsString("Invalid last name.")))
@@ -126,47 +132,55 @@ class ProfileControllerIT extends DatabaseContainers {
   }
 
   @Test
+  void deleteProfile() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete1");
+    mockMvc
+        .perform(
+            delete(Path.PROFILE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+        .andExpect(status().isNoContent());
+  }
+
+  @Test
   void changePassword() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update4").accessToken();
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update4");
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
-            put(Path.PROFILE + "/change-password")
+            patch(Path.PROFILE + "/password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isNoContent());
   }
 
   @Test
   void changePassword_throwBadRequest_wrongOldPassword() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty12345", "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
-            put(Path.PROFILE + "/change-password")
+            patch(Path.PROFILE + "/password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Wrong old password.")));
+        .andExpect(content().string(containsString("Wrong current password.")));
   }
 
   @Test
   void changePassword_throwBadRequest_passwordsDoNotMatch() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123", "qwerty1234", "qwerty12345");
     mockMvc
         .perform(
-            put(Path.PROFILE + "/change-password")
+            patch(Path.PROFILE + "/password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Passwords do not match.")));
@@ -174,31 +188,18 @@ class ProfileControllerIT extends DatabaseContainers {
 
   @Test
   void changePassword_throwBadRequest_invalidParameters() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3").accessToken();
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
     final var changePasswordRequest = new ChangePasswordRequest("invalid", "invalid", "invalid");
     mockMvc
         .perform(
-            put(Path.PROFILE + "/change-password")
+            patch(Path.PROFILE + "/password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("currentPassword")))
         .andExpect(content().string(containsString("newPassword")))
         .andExpect(content().string(containsString("confirmNewPassword")))
         .andExpect(content().string(containsString("Invalid password.")));
-  }
-
-  @Test
-  void deleteProfile() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete1").accessToken();
-    mockMvc
-        .perform(
-            delete(Path.PROFILE + "/delete")
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken)))
-        .andExpect(status().isNoContent());
   }
 }
