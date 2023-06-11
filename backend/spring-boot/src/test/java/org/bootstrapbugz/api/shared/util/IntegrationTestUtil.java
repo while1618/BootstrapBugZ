@@ -23,13 +23,13 @@ public class IntegrationTestUtil {
 
   public static AuthTokensDTO authTokens(
       MockMvc mockMvc, ObjectMapper objectMapper, String username) throws Exception {
-    final var signInRequest = new AuthTokensRequest(username, "qwerty123");
+    final var authTokensRequest = new AuthTokensRequest(username, "qwerty123");
     final var response =
         mockMvc
             .perform(
                 post(Path.AUTH + "/tokens")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(signInRequest)))
+                    .content(objectMapper.writeValueAsString(authTokensRequest)))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()

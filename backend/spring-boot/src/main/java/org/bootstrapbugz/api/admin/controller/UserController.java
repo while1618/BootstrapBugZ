@@ -8,7 +8,6 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.generic.crud.CrudController;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController("adminUserController")
 @RequestMapping(Path.ADMIN_USERS)
-@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController extends CrudController<UserDTO, UserRequest> {
   private final UserService userService;
 
