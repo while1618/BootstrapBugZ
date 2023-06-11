@@ -12,6 +12,7 @@ import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
@@ -81,32 +82,16 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO update(Long id, UserRequest userRequest) {
-    final var user = userRepository.findByIdWithRoles(id).orElse(User.builder().id(id).build());
+    final var user = userRepository.findByIdWithRoles(id).orElse(new User());
 
-    if (userRepository.existsByUsername(userRequest.username())
-        && !Objects.equals(user.getUsername(), userRequest.username()))
-      throw new ConflictException(messageService.getMessage("username.exists"));
-    if (userRepository.existsByEmail(userRequest.email())
-        && !Objects.equals(user.getEmail(), userRequest.email()))
-      throw new ConflictException(messageService.getMessage("email.exists"));
-
-    final var roles = Set.copyOf(roleRepository.findAllByNameIn(userRequest.roleNames()));
     user.setFirstName(userRequest.firstName());
     user.setLastName(userRequest.lastName());
-    user.setUsername(userRequest.username());
-    user.setEmail(userRequest.email());
-    user.setPassword(bCryptPasswordEncoder.encode(userRequest.password()));
-    user.setActive(userRequest.active());
-    user.setLock(userRequest.lock());
-    user.setRoles(roles);
-
-    if (!bCryptPasswordEncoder.matches(userRequest.password(), user.getPassword())
-        || !userRequest.active()
-        || userRequest.lock()
-        || !roles.equals(user.getRoles())) {
-      accessTokenService.invalidateAllByUserId(id);
-      refreshTokenService.deleteAllByUserId(id);
-    }
+    setUsername(user, userRequest.username());
+    setEmail(user, userRequest.email());
+    setPassword(user, userRequest.password());
+    setActive(user, userRequest.active());
+    setLock(user, userRequest.lock());
+    setRoles(user, userRequest.roleNames());
 
     return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user));
   }
@@ -119,50 +104,71 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
 
-    final var roles = Set.copyOf(roleRepository.findAllByNameIn(patchUserRequest.roleNames()));
     if (patchUserRequest.firstName() != null) user.setFirstName(patchUserRequest.firstName());
     if (patchUserRequest.lastName() != null) user.setLastName(patchUserRequest.lastName());
-    tryToSetUsername(user, patchUserRequest.username());
-    tryToSetEmail(user, patchUserRequest.email());
-    if (patchUserRequest.password() != null)
-      user.setPassword(bCryptPasswordEncoder.encode(patchUserRequest.password()));
-    if (patchUserRequest.active() != null) user.setActive(patchUserRequest.active());
-    if (patchUserRequest.lock() != null) user.setLock(patchUserRequest.lock());
-    if (patchUserRequest.roleNames() != null) user.setRoles(roles);
-
-    if (!bCryptPasswordEncoder.matches(patchUserRequest.password(), user.getPassword())
-        || Boolean.FALSE.equals(patchUserRequest.active())
-        || Boolean.TRUE.equals(patchUserRequest.lock())
-        || (patchUserRequest.roleNames() != null && !roles.equals(user.getRoles()))) {
-      accessTokenService.invalidateAllByUserId(id);
-      refreshTokenService.deleteAllByUserId(id);
-    }
+    if (patchUserRequest.username() != null) setUsername(user, patchUserRequest.username());
+    if (patchUserRequest.email() != null) setEmail(user, patchUserRequest.email());
+    if (patchUserRequest.password() != null) setPassword(user, patchUserRequest.password());
+    if (patchUserRequest.active() != null) setActive(user, patchUserRequest.active());
+    if (patchUserRequest.lock() != null) setLock(user, patchUserRequest.lock());
+    if (patchUserRequest.roleNames() != null) setRoles(user, patchUserRequest.roleNames());
 
     return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user));
   }
 
-  private void tryToSetUsername(User user, String username) {
-    if (username == null) return;
-    if (user.getUsername().equals(username)) return;
+  private void deleteAuthTokens(Long userId) {
+    accessTokenService.invalidateAllByUserId(userId);
+    refreshTokenService.deleteAllByUserId(userId);
+  }
+
+  private void setUsername(User user, String username) {
+    if (Objects.equals(user.getUsername(), username)) return;
     if (userRepository.existsByUsername(username))
       throw new ConflictException("username", messageService.getMessage("username.exists"));
 
     user.setUsername(username);
   }
 
-  private void tryToSetEmail(User user, String email) {
-    if (email == null) return;
-    if (user.getEmail().equals(email)) return;
+  private void setEmail(User user, String email) {
+    if (Objects.equals(user.getEmail(), email)) return;
     if (userRepository.existsByEmail(email))
       throw new ConflictException("email", messageService.getMessage("email.exists"));
 
     user.setEmail(email);
   }
 
+  private void setPassword(User user, String password) {
+    if (bCryptPasswordEncoder.matches(password, user.getPassword())) return;
+
+    user.setPassword(bCryptPasswordEncoder.encode(password));
+    deleteAuthTokens(user.getId());
+  }
+
+  private void setActive(User user, Boolean active) {
+    if (Objects.equals(user.getActive(), active)) return;
+
+    user.setActive(active);
+    if (Boolean.FALSE.equals(active)) deleteAuthTokens(user.getId());
+  }
+
+  private void setLock(User user, Boolean lock) {
+    if (Objects.equals(user.getLock(), lock)) return;
+
+    user.setLock(lock);
+    if (Boolean.TRUE.equals(lock)) deleteAuthTokens(user.getId());
+  }
+
+  private void setRoles(User user, Set<RoleName> roleNames) {
+    final var roles = Set.copyOf(roleRepository.findAllByNameIn(roleNames));
+    if (Objects.equals(user.getRoles(), roles)) return;
+
+    user.setRoles(roles);
+    deleteAuthTokens(user.getId());
+  }
+
   @Override
   public void delete(Long id) {
-    accessTokenService.invalidateAllByUserId(id);
-    refreshTokenService.deleteAllByUserId(id);
+    deleteAuthTokens(id);
     userRepository.deleteById(id);
   }
 }
