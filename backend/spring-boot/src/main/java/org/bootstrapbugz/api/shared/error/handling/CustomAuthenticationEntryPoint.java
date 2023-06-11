@@ -18,11 +18,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
   public void commence(
       HttpServletRequest request, HttpServletResponse response, AuthenticationException e) {
     try {
-      final var errorResponse = new ErrorMessage(HttpStatus.UNAUTHORIZED);
-      errorResponse.addDetails(e.getMessage());
+      final var errorMessage = new ErrorMessage(HttpStatus.UNAUTHORIZED);
+      errorMessage.addDetails(e.getMessage());
       response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
       response.setStatus(HttpStatus.UNAUTHORIZED.value());
-      response.getOutputStream().println(errorResponse.toString());
+      response.getOutputStream().println(errorMessage.toString());
     } catch (IOException ex) {
       log.error(ex.getMessage());
     }

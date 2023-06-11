@@ -16,11 +16,11 @@ public final class CustomFilterExceptionHandler {
   public static void handleException(
       HttpServletResponse response, String message, HttpStatus status) {
     try {
-      final var errorResponse = new ErrorMessage(status);
-      errorResponse.addDetails(message);
+      final var errorMessage = new ErrorMessage(status);
+      errorMessage.addDetails(message);
       response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
       response.setStatus(status.value());
-      response.getOutputStream().println(errorResponse.toString());
+      response.getOutputStream().println(errorMessage.toString());
     } catch (IOException e) {
       log.error(e.getMessage());
     }
