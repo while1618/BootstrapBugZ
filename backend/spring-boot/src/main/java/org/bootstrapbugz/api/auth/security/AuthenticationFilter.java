@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
@@ -18,7 +20,7 @@ import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.handling.CustomFilterExceptionHandler;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
-import org.bootstrapbugz.api.user.mapper.UserMapper;
+import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +30,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -83,14 +86,20 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
       FilterChain chain,
       Authentication auth)
       throws IOException {
-    final var userDTO =
-        UserMapper.INSTANCE.userPrincipalToUserDTO((UserPrincipal) auth.getPrincipal());
+    final var userPrincipal = (UserPrincipal) auth.getPrincipal();
+    final var roleDTOs = authoritiesToRoleDTOs(userPrincipal.getAuthorities());
     final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var accessToken = accessTokenService.create(userDTO.id(), userDTO.roleDTOs());
-    final var refreshToken = getRefreshToken(userDTO.id(), userDTO.roleDTOs(), ipAddress);
+    final var accessToken = accessTokenService.create(userPrincipal.getId(), roleDTOs);
+    final var refreshToken = getRefreshToken(userPrincipal.getId(), roleDTOs, ipAddress);
     final var authTokensDTO =
         AuthTokensDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     writeToResponse(response, authTokensDTO);
+  }
+
+  private Set<RoleDTO> authoritiesToRoleDTOs(Collection<? extends GrantedAuthority> authorities) {
+    return authorities.stream()
+        .map(authority -> new RoleDTO(RoleName.valueOf(authority.getAuthority()).name()))
+        .collect(Collectors.toSet());
   }
 
   private String getRefreshToken(Long userId, Set<RoleDTO> roleDTOs, String ipAddress) {

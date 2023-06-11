@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<UserDTO> findAll() {
     return userRepository.findAllWithRoles().stream()
-        .map(UserMapper.INSTANCE::userToUserDTO)
+        .map(UserMapper.INSTANCE::userToAdminUserDTO)
         .toList();
   }
 
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
   public UserDTO findById(Long id) {
     return userRepository
         .findByIdWithRoles(id)
-        .map(UserMapper.INSTANCE::userToUserDTO)
+        .map(UserMapper.INSTANCE::userToAdminUserDTO)
         .orElseThrow(
             () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
   }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     if (userRepository.existsByEmail(saveRequest.email()))
       throw new ConflictException(messageService.getMessage("email.exists"));
     final var user = createUser(saveRequest);
-    return UserMapper.INSTANCE.userToUserDTO(userRepository.save(user));
+    return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user));
   }
 
   @Override

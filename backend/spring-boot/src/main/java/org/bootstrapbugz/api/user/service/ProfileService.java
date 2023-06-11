@@ -9,7 +9,7 @@ public interface ProfileService {
 
   UserDTO patch(PatchProfileRequest patchProfileRequest);
 
-  void changePassword(ChangePasswordRequest changePasswordRequest);
-
   void delete();
+
+  void changePassword(ChangePasswordRequest changePasswordRequest);
 }

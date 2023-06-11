@@ -21,43 +21,24 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<UserDTO> findAll() {
-    return userRepository.findAll().stream()
-        .map(
-            user -> {
-              user.setEmail(null);
-              user.setActivated(null);
-              user.setNonLocked(null);
-              user.setRoles(null);
-              return UserMapper.INSTANCE.userToUserDTO(user);
-            })
-        .toList();
+    return userRepository.findAll().stream().map(UserMapper.INSTANCE::userToSimpleUserDTO).toList();
   }
 
   @Override
   public UserDTO findById(Long id) {
-    final var user =
-        userRepository
-            .findById(id)
-            .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    user.setEmail(null);
-    user.setActivated(null);
-    user.setNonLocked(null);
-    user.setRoles(null);
-    return UserMapper.INSTANCE.userToUserDTO(user);
+    return userRepository
+        .findById(id)
+        .map(UserMapper.INSTANCE::userToSimpleUserDTO)
+        .orElseThrow(
+            () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
   }
 
   @Override
   public UserDTO findByUsername(String username) {
-    final var user =
-        userRepository
-            .findByUsername(username)
-            .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    user.setEmail(null);
-    user.setActivated(null);
-    user.setNonLocked(null);
-    user.setRoles(null);
-    return UserMapper.INSTANCE.userToUserDTO(user);
+    return userRepository
+        .findByUsername(username)
+        .map(UserMapper.INSTANCE::userToSimpleUserDTO)
+        .orElseThrow(
+            () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
   }
 }

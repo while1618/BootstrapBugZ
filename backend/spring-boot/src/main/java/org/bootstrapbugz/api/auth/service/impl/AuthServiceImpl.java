@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
     userRepository.save(user);
     final var token = verificationTokenService.create(user.getId());
     verificationTokenService.sendToEmail(user, token);
-    return UserMapper.INSTANCE.userToUserDTO(user);
+    return UserMapper.INSTANCE.userToProfileUserDTO(user);
   }
 
   private Role getUserRole() {
@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void deleteTokens(String accessToken, String ipAddress) {
     if (!AuthUtil.isSignedIn()) return;
-    final var id = AuthUtil.findSignedInUser().id();
+    final var id = AuthUtil.findSignedInUser().getId();
     refreshTokenService.deleteByUserIdAndIpAddress(id, ipAddress);
     accessTokenService.invalidate(accessToken);
   }
@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public void deleteTokensOnAllDevices() {
     if (!AuthUtil.isSignedIn()) return;
-    final var userId = AuthUtil.findSignedInUser().id();
+    final var userId = AuthUtil.findSignedInUser().getId();
     refreshTokenService.deleteAllByUserId(userId);
     accessTokenService.invalidateAllByUserId(userId);
   }

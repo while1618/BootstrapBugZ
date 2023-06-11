@@ -44,22 +44,22 @@ public class ProfileServiceImpl implements ProfileService {
 
   @Override
   public UserDTO find() {
-    return AuthUtil.findSignedInUser();
+    return UserMapper.INSTANCE.userPrincipalToProfileUserDTO(AuthUtil.findSignedInUser());
   }
 
   @Override
   public UserDTO patch(PatchProfileRequest patchProfileRequest) {
-    final var userDTO = AuthUtil.findSignedInUser();
+    final var userId = AuthUtil.findSignedInUser().getId();
     final var user =
         userRepository
-            .findById(userDTO.id())
+            .findById(userId)
             .orElseThrow(
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
     if (patchProfileRequest.firstName() != null) user.setFirstName(patchProfileRequest.firstName());
     if (patchProfileRequest.lastName() != null) user.setLastName(patchProfileRequest.lastName());
     tryToSetUsername(user, patchProfileRequest.username());
     tryToSetEmail(user, patchProfileRequest.email());
-    return UserMapper.INSTANCE.userToUserDTO(userRepository.save(user));
+    return UserMapper.INSTANCE.userToProfileUserDTO(userRepository.save(user));
   }
 
   private void tryToSetUsername(User user, String username) {
@@ -86,27 +86,27 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
+  public void delete() {
+    final var userId = AuthUtil.findSignedInUser().getId();
+    accessTokenService.invalidateAllByUserId(userId);
+    refreshTokenService.deleteAllByUserId(userId);
+    userRepository.deleteById(userId);
+  }
+
+  @Override
   public void changePassword(ChangePasswordRequest changePasswordRequest) {
-    final var userDTO = AuthUtil.findSignedInUser();
+    final var userId = AuthUtil.findSignedInUser().getId();
     final var user =
         userRepository
-            .findById(userDTO.id())
+            .findById(userId)
             .orElseThrow(
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.currentPassword(), user.getPassword()))
       throw new BadRequestException(
           "currentPassword", messageService.getMessage("oldPassword.invalid"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
-    accessTokenService.invalidateAllByUserId(user.getId());
-    refreshTokenService.deleteAllByUserId(user.getId());
+    accessTokenService.invalidateAllByUserId(userId);
+    refreshTokenService.deleteAllByUserId(userId);
     userRepository.save(user);
-  }
-
-  @Override
-  public void delete() {
-    final var userDTO = AuthUtil.findSignedInUser();
-    accessTokenService.invalidateAllByUserId(userDTO.id());
-    refreshTokenService.deleteAllByUserId(userDTO.id());
-    userRepository.deleteById(userDTO.id());
   }
 }
