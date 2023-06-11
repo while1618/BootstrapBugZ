@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.shared.integration;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -11,10 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
-import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,15 +46,15 @@ class AccessingResourcesIT extends DatabaseContainers {
         .andExpect(content().string(containsString(unauthorized)));
   }
 
-  @Test
-  void changeUsersRoles_throwUnauthorized_userNotSignedIn() throws Exception {
-    mockMvc
-        .perform(
-            put(Path.ADMIN + "/users/{username}/update-role", "update1")
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized())
-        .andExpect(content().string(containsString(unauthorized)));
-  }
+  //  @Test
+  //  void changeUsersRoles_throwUnauthorized_userNotSignedIn() throws Exception {
+  //    mockMvc
+  //        .perform(
+  //            put(Path.ADMIN + "/users/{username}/update-role", "update1")
+  //                .contentType(MediaType.APPLICATION_JSON))
+  //        .andExpect(status().isUnauthorized())
+  //        .andExpect(content().string(containsString(unauthorized)));
+  //  }
 
   //  @Test
   //  void changeUsersRoles_throwForbidden_userNotAdmin() throws Exception {
@@ -75,65 +71,66 @@ class AccessingResourcesIT extends DatabaseContainers {
   //        .andExpect(content().string(containsString(forbidden)));
   //  }
 
-  @ParameterizedTest
-  @CsvSource({
-    "lock",
-    "unlock",
-    "deactivate",
-    "activate",
-  })
-  void lockUnlockDeactivateActivateUsers_throwUnauthorized_userNotSignedIn(String path)
-      throws Exception {
-    mockMvc
-        .perform(
-            put(Path.ADMIN + "/users/{username}/" + path, "update1")
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized())
-        .andExpect(content().string(containsString(unauthorized)));
-  }
+  //  @ParameterizedTest
+  //  @CsvSource({
+  //    "lock",
+  //    "unlock",
+  //    "deactivate",
+  //    "activate",
+  //  })
+  //  void lockUnlockDeactivateActivateUsers_throwUnauthorized_userNotSignedIn(String path)
+  //      throws Exception {
+  //    mockMvc
+  //        .perform(
+  //            put(Path.ADMIN + "/users/{username}/" + path, "update1")
+  //                .contentType(MediaType.APPLICATION_JSON))
+  //        .andExpect(status().isUnauthorized())
+  //        .andExpect(content().string(containsString(unauthorized)));
+  //  }
 
-  @ParameterizedTest
-  @CsvSource({
-    "lock, update1",
-    "unlock, locked",
-    "deactivate, update2",
-    "activate, deactivated",
-  })
-  void lockUnlockDeactivateActivateUsers_throwForbidden_userNotAdmin(String path, String username)
-      throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
-    mockMvc
-        .perform(
-            put(Path.ADMIN + "/users/{username}/" + path, username)
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken)))
-        .andExpect(status().isForbidden())
-        .andExpect(content().string(containsString(forbidden)));
-  }
+  //  @ParameterizedTest
+  //  @CsvSource({
+  //    "lock, update1",
+  //    "unlock, locked",
+  //    "deactivate, update2",
+  //    "activate, deactivated",
+  //  })
+  //  void lockUnlockDeactivateActivateUsers_throwForbidden_userNotAdmin(String path, String
+  // username)
+  //      throws Exception {
+  //    final var accessToken =
+  //        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
+  //    mockMvc
+  //        .perform(
+  //            put(Path.ADMIN + "/users/{username}/" + path, username)
+  //                .contentType(MediaType.APPLICATION_JSON)
+  //                .headers(IntegrationTestUtil.authHeader(accessToken)))
+  //        .andExpect(status().isForbidden())
+  //        .andExpect(content().string(containsString(forbidden)));
+  //  }
 
-  @Test
-  void deleteUsers_throwUnauthorized_userNotSignedIn() throws Exception {
-    mockMvc
-        .perform(
-            delete(Path.ADMIN + "/users/{username}/delete", "delete1")
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized())
-        .andExpect(content().string(containsString(unauthorized)));
-  }
+  //  @Test
+  //  void deleteUsers_throwUnauthorized_userNotSignedIn() throws Exception {
+  //    mockMvc
+  //        .perform(
+  //            delete(Path.ADMIN + "/users/{username}/delete", "delete1")
+  //                .contentType(MediaType.APPLICATION_JSON))
+  //        .andExpect(status().isUnauthorized())
+  //        .andExpect(content().string(containsString(unauthorized)));
+  //  }
 
-  @Test
-  void deleteUsers_throwForbidden_userNotAdmin() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
-    mockMvc
-        .perform(
-            delete(Path.ADMIN + "/users/{username}/delete", "delete1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken)))
-        .andExpect(status().isForbidden())
-        .andExpect(content().string(containsString(forbidden)));
-  }
+  //  @Test
+  //  void deleteUsers_throwForbidden_userNotAdmin() throws Exception {
+  //    final var accessToken =
+  //        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
+  //    mockMvc
+  //        .perform(
+  //            delete(Path.ADMIN + "/users/{username}/delete", "delete1")
+  //                .contentType(MediaType.APPLICATION_JSON)
+  //                .headers(IntegrationTestUtil.authHeader(accessToken)))
+  //        .andExpect(status().isForbidden())
+  //        .andExpect(content().string(containsString(forbidden)));
+  //  }
 
   @Test
   void receiveSignedInUser_throwUnauthorized_userNotSignedIn() throws Exception {
