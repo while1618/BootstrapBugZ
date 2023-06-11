@@ -47,8 +47,6 @@ paths:
                 createdAt: 2023-05-18T00:51:50.758738
         400:
           $ref: "#/components/responses/BadRequest"
-        409:
-          $ref: "#/components/responses/Conflict"
   /auth/tokens:
     post:
       tags:
@@ -195,8 +193,6 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-        409:
-          $ref: "#/components/responses/Conflict"
     get:
       tags:
         - admin
@@ -326,8 +322,6 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-        409:
-          $ref: "#/components/responses/Conflict"
     patch:
       tags:
         - admin
@@ -365,8 +359,6 @@ paths:
           $ref: "#/components/responses/Forbidden"
         404:
           $ref: "#/components/responses/NotFound"
-        409:
-          $ref: "#/components/responses/Conflict"
     delete:
       tags:
         - admin
@@ -520,8 +512,6 @@ paths:
           $ref: "#/components/responses/BadRequest"
         401:
           $ref: "#/components/responses/Unauthorized"
-        409:
-          $ref: "#/components/responses/Conflict"
     delete:
       tags:
         - profile
