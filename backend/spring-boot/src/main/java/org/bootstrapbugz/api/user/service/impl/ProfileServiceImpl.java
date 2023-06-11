@@ -55,15 +55,21 @@ public class ProfileServiceImpl implements ProfileService {
             .findById(userId)
             .orElseThrow(
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
+
     if (patchProfileRequest.firstName() != null) user.setFirstName(patchProfileRequest.firstName());
     if (patchProfileRequest.lastName() != null) user.setLastName(patchProfileRequest.lastName());
-    tryToSetUsername(user, patchProfileRequest.username());
-    tryToSetEmail(user, patchProfileRequest.email());
+    if (patchProfileRequest.username() != null) setUsername(user, patchProfileRequest.username());
+    if (patchProfileRequest.email() != null) setEmail(user, patchProfileRequest.email());
+
     return UserMapper.INSTANCE.userToProfileUserDTO(userRepository.save(user));
   }
 
-  private void tryToSetUsername(User user, String username) {
-    if (username == null) return;
+  private void deleteAuthTokens(Long userId) {
+    accessTokenService.invalidateAllByUserId(userId);
+    refreshTokenService.deleteAllByUserId(userId);
+  }
+
+  private void setUsername(User user, String username) {
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
       throw new ConflictException("username", messageService.getMessage("username.exists"));
@@ -71,16 +77,14 @@ public class ProfileServiceImpl implements ProfileService {
     user.setUsername(username);
   }
 
-  private void tryToSetEmail(User user, String email) {
-    if (email == null) return;
+  private void setEmail(User user, String email) {
     if (user.getEmail().equals(email)) return;
     if (userRepository.existsByEmail(email))
       throw new ConflictException("email", messageService.getMessage("email.exists"));
 
     user.setEmail(email);
     user.setActive(false);
-    accessTokenService.invalidateAllByUserId(user.getId());
-    refreshTokenService.deleteAllByUserId(user.getId());
+    deleteAuthTokens(user.getId());
     final var token = verificationTokenService.create(user.getId());
     verificationTokenService.sendToEmail(user, token);
   }
@@ -88,8 +92,7 @@ public class ProfileServiceImpl implements ProfileService {
   @Override
   public void delete() {
     final var userId = AuthUtil.findSignedInUser().getId();
-    accessTokenService.invalidateAllByUserId(userId);
-    refreshTokenService.deleteAllByUserId(userId);
+    deleteAuthTokens(userId);
     userRepository.deleteById(userId);
   }
 
@@ -105,8 +108,7 @@ public class ProfileServiceImpl implements ProfileService {
       throw new BadRequestException(
           "currentPassword", messageService.getMessage("currentPassword.invalid"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
-    accessTokenService.invalidateAllByUserId(userId);
-    refreshTokenService.deleteAllByUserId(userId);
+    deleteAuthTokens(userId);
     userRepository.save(user);
   }
 }
