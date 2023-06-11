@@ -34,16 +34,16 @@ public class ProfileController {
     return ResponseEntity.ok(profileService.patch(patchProfileRequest));
   }
 
+  @DeleteMapping
+  public ResponseEntity<Void> delete() {
+    profileService.delete();
+    return ResponseEntity.noContent().build();
+  }
+
   @PatchMapping("/password")
   public ResponseEntity<Void> changePassword(
       @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
     profileService.changePassword(changePasswordRequest);
-    return ResponseEntity.noContent().build();
-  }
-
-  @DeleteMapping
-  public ResponseEntity<Void> delete() {
-    profileService.delete();
     return ResponseEntity.noContent().build();
   }
 }
