@@ -84,10 +84,10 @@ public class UserServiceImpl implements UserService {
     final var user = userRepository.findByIdWithRoles(id).orElse(User.builder().id(id).build());
 
     if (userRepository.existsByUsername(userRequest.username())
-        && Objects.equals(user.getUsername(), userRequest.username()))
+        && !Objects.equals(user.getUsername(), userRequest.username()))
       throw new ConflictException(messageService.getMessage("username.exists"));
     if (userRepository.existsByEmail(userRequest.email())
-        && Objects.equals(user.getEmail(), userRequest.email()))
+        && !Objects.equals(user.getEmail(), userRequest.email()))
       throw new ConflictException(messageService.getMessage("email.exists"));
 
     final var roles = Set.copyOf(roleRepository.findAllByNameIn(userRequest.roleNames()));
