@@ -16,38 +16,24 @@ servers:
   - url: https://localhost:18080/v1
 tags:
   - name: auth
-    description: Auth Endpoints
-  - name: user
-    description: User Endpoints
+    description: Authentication endpoints
   - name: profile
-    description: Profile Endpoints
+    description: Profile endpoints
+  - name: users
+    description: Users endpoints
   - name: admin
-    description: Admin Endpoints
+    description: Admin endpoints
 paths:
-  /auth/sign-up:
+  /auth/register:
     post:
       tags:
         - auth
-      summary: Sign Up
-      operationId: signUp
-      x-codegen-request-body-name: body
+      summary: User registration
       requestBody:
-        description: Sign Up Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SignUpRequest"
-            example:
-              firstName: Joe
-              lastName: Bloggs
-              username: joe.bloggs
-              email: joe.bloggs@localhost
-              password: qwerty123
-              confirmPassword: qwerty123
+        $ref: "#/components/requestBodies/RegisterUserRequest"
       responses:
         201:
-          description: Sign Up Success
+          description: User registered successfully
           content:
             application/json:
               schema:
@@ -58,461 +44,156 @@ paths:
                 lastName: Bloggs
                 username: joe.bloggs
                 email: joe.bloggs@localhost
-                activated: false
-                nonLocked: true
                 createdAt: 2023-05-18T00:51:50.758738
-                roles:
-                  - name: USER
-        400:
-          $ref: "#/components/responses/BadRequest"
-  /auth/resend-confirmation-email:
-    post:
-      tags:
-        - auth
-      summary: Resend Confirmation Email
-      operationId: resendConfirmationEmail
-      x-codegen-request-body-name: body
-      requestBody:
-        description: Resend Confirmation Email Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ResendConfirmationEmailRequest"
-            example:
-              usernameOrEmail: joe.bloggs@localhost
-      responses:
-        204:
-          description: Resend Confirmation Email Success
-        400:
-          $ref: "#/components/responses/BadRequest"
-        404:
-          $ref: "#/components/responses/NotFound"
-        409:
-          $ref: "#/components/responses/Conflict"
-  /auth/confirm-registration:
-    put:
-      tags:
-        - auth
-      summary: Confirm Registration
-      operationId: confirmRegistration
-      x-codegen-request-body-name: body
-      requestBody:
-        description: Confirm Registration Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ConfirmRegistrationRequest"
-            example:
-              token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
-      responses:
-        204:
-          description: Confirm Registration Success
         400:
           $ref: "#/components/responses/BadRequest"
         409:
           $ref: "#/components/responses/Conflict"
-  /auth/sign-in:
+  /auth/tokens:
     post:
       tags:
         - auth
-      summary: Sign In
-      operationId: signIn
-      x-codegen-request-body-name: body
+      summary: Create access and refresh tokens
       requestBody:
-        description: Sign In Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SignInRequest"
-            example:
-              usernameOrEmail: john.doe@localhost
-              password: qwerty123
+        $ref: "#/components/requestBodies/AuthTokensRequest"
       responses:
         200:
-          description: Sign In Success
+          description: Auth tokens created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SignInDTO"
+                $ref: "#/components/schemas/AuthTokensDTO"
               example:
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
                 refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
-                user:
-                  id: 3
-                  firstName: John
-                  lastName: Doe
-                  username: john.doe
-                  email: john.doe@localhost
-                  activated: true
-                  nonLocked: true
-                  createdAt: 2023-05-18T00:51:50.758738
-                  roles:
-                    - name: USER
         400:
           $ref: "#/components/responses/BadRequest"
         401:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-  /auth/refresh-token:
+    delete:
+      tags:
+        - auth
+      summary: Delete access and refresh tokens
+      responses:
+        204:
+          description: Access and refresh tokens deleted successfully
+  /auth/tokens/devices:
+    delete:
+      tags:
+        - auth
+      summary: Delete access and refresh tokens on all devices
+      responses:
+        204:
+          description: Access and refresh tokens deleted successfully on all devices
+  /auth/tokens/refresh:
     post:
       tags:
         - auth
-      summary: Refresh Token
-      operationId: refreshToken
-      x-codegen-request-body-name: body
+      summary: Refresh auth tokens
       requestBody:
-        description: Refresh Token Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RefreshTokenRequest"
-            example:
-              refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
+        $ref: "#/components/requestBodies/RefreshAuthTokensRequest"
       responses:
         200:
-          description: Refresh Token Success
+          description: Auth tokens refreshed successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RefreshTokenDTO"
+                $ref: "#/components/schemas/AuthTokensDTO"
               example:
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
                 refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
         400:
           $ref: "#/components/responses/BadRequest"
-  /auth/sign-out:
+  /auth/password/forgot:
     post:
       tags:
         - auth
-      summary: Sign Out
-      operationId: signOut
-      x-codegen-request-body-name: body
-      security:
-        - BearerAuth: []
-      responses:
-        204:
-          description: Sign Out Success
-        401:
-          $ref: "#/components/responses/Unauthorized"
-  /auth/sign-out-from-all-devices:
-    post:
-      tags:
-        - auth
-      summary: Sign Out From All Devices
-      operationId: signOutFromAllDevices
-      x-codegen-request-body-name: body
-      security:
-        - BearerAuth: []
-      responses:
-        204:
-          description: Sign Out From All Devices Success
-        401:
-          $ref: "#/components/responses/Unauthorized"
-  /auth/forgot-password:
-    post:
-      tags:
-        - auth
-      summary: Forgot Password
-      operationId: forgotPassword
-      x-codegen-request-body-name: body
+      summary: Send forgot password email
       requestBody:
-        description: Forgot Password Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ForgotPasswordRequest"
-            example:
-              email: john.doe@localhost
+        $ref: "#/components/requestBodies/ForgotPasswordRequest"
       responses:
         204:
-          description: Forgot Password Success
+          description: Forgot password email sent successfully
         400:
           $ref: "#/components/responses/BadRequest"
         404:
           $ref: "#/components/responses/NotFound"
-  /auth/reset-password:
-    put:
+  /auth/password/reset:
+    post:
       tags:
         - auth
-      summary: Reset Password
-      operationId: resetPassword
-      x-codegen-request-body-name: body
+      summary: Reset password
       requestBody:
-        description: Reset Password Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ResetPasswordRequest"
-            example:
-              token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
-              password: qwerty321
-              confirmPassword: qwerty321
+        $ref: "#/components/requestBodies/ResetPasswordRequest"
       responses:
         204:
-          description: Reset Password Success
+          description: Password reset successfully
         400:
           $ref: "#/components/responses/BadRequest"
-  /auth/signed-in-user:
-    get:
+  /auth/verification-email:
+    post:
       tags:
         - auth
-      summary: Signed In User
-      operationId: signedInUser
+      summary: Send verification email
+      requestBody:
+        $ref: "#/components/requestBodies/VerificationEmailRequest"
+      responses:
+        204:
+          description: Verification email sent successfully
+        400:
+          $ref: "#/components/responses/BadRequest"
+        404:
+          $ref: "#/components/responses/NotFound"
+        409:
+          $ref: "#/components/responses/Conflict"
+  /auth/verify-email:
+    post:
+      tags:
+        - auth
+      summary: Verify email
+      requestBody:
+        $ref: "#/components/requestBodies/VerifyEmailRequest"
+      responses:
+        204:
+          description: Email verified successfully
+        400:
+          $ref: "#/components/responses/BadRequest"
+        409:
+          $ref: "#/components/responses/Conflict"
+  /profile:
+    get:
+      tags:
+        - profile
+      summary: Get profile
       security:
         - BearerAuth: []
       responses:
         200:
-          description: Signed In User Success
+          description: Profile retrieved successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserDTO"
               example:
-                id: 2
+                id: 3
                 firstName: John
                 lastName: Doe
                 username: john.doe
                 email: john.doe@localhost
-                activated: true
-                nonLocked: true
                 createdAt: 2023-05-18T00:51:50.758738
-                roles:
-                  - name: USER
-        401:
-          $ref: "#/components/responses/Unauthorized"
-  /auth/username-availability:
-    get:
-      tags:
-        - auth
-      summary: Username Availability
-      operationId: usernameAvailability
-      parameters:
-        - in: query
-          name: username
-          required: true
-          schema:
-            type: string
-          description: Pass username to check if it's available.
-          example: john.doe
-      responses:
-        200:
-          description: Username Availability Success
-          content:
-            application/json:
-              schema:
-                type: boolean
-              examples:
-                username-available:
-                  value: true
-                username-taken:
-                  value: false
-  /auth/email-availability:
-    get:
-      tags:
-        - auth
-      summary: Email Availability
-      operationId: emailAvailability
-      parameters:
-        - in: query
-          name: email
-          required: true
-          schema:
-            type: string
-          description: Pass email to check if it's available.
-          example: john.doe@localhost
-      responses:
-        200:
-          description: Email Availability Success
-          content:
-            application/json:
-              schema:
-                type: boolean
-              examples:
-                email-available:
-                  value: true
-                email-taken:
-                  value: false
-  /users:
-    get:
-      tags:
-        - user
-      summary: Get Users
-      operationId: getUsers
-      security:
-        - {}
-        - BearerAuth: []
-      responses:
-        200:
-          description: Get Users Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/UserDTO"
-              examples:
-                non-signed-in-and-regular-user:
-                  value:
-                    - id: 1
-                      firstName: Admin
-                      lastName: Admin
-                      username: admin
-                      email: null
-                      activated: true
-                      nonLocked: true
-                      roles: null
-                    - id: 2
-                      firstName: User
-                      lastName: User
-                      username: user
-                      email: null
-                      activated: true
-                      nonLocked: true
-                      roles: null
-                    - id: 3
-                      firstName: John
-                      lastName: Doe
-                      username: john.doe
-                      email: null
-                      activated: true
-                      nonLocked: true
-                      roles: null
-                    - id: 4
-                      firstName: Jane
-                      lastName: Doe
-                      username: jane
-                      email: null
-                      activated: true
-                      nonLocked: true
-                      roles: null
-                admin:
-                  value:
-                    - id: 1
-                      firstName: Admin
-                      lastName: Admin
-                      username: admin
-                      email: admin@localhost
-                      activated: true
-                      nonLocked: true
-                      roles:
-                        - name: USER
-                        - name: ADMIN
-                    - id: 2
-                      firstName: User
-                      lastName: User
-                      username: user
-                      email: user@localhost
-                      activated: true
-                      nonLocked: true
-                      roles:
-                        - name: USER
-                    - id: 3
-                      firstName: John
-                      lastName: Doe
-                      username: john.doe
-                      email: john.doe@localhost
-                      activated: true
-                      nonLocked: true
-                      roles:
-                        - name: USER
-                    - id: 4
-                      firstName: Jane
-                      lastName: Doe
-                      username: jane
-                      email: jane.doe@localhost
-                      activated: true
-                      nonLocked: true
-                      roles:
-                        - name: USER
-  /users/{username}:
-    get:
-      tags:
-        - user
-      summary: Get User
-      operationId: getUser
-      security:
-        - {}
-        - BearerAuth: []
-      parameters:
-        - in: path
-          name: username
-          required: true
-          schema:
-            type: string
-          description: Pass username to get user.
-          example: john.doe
-      responses:
-        200:
-          description: Get User Success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserDTO"
-              examples:
-                non-signed-in-or-requesting-other:
-                  value:
-                    id: 3
-                    firstName: John
-                    lastName: Doe
-                    username: john.doe
-                    email: null
-                    activated: true
-                    nonLocked: true
-                    roles: null
-                signed-in-requesting-himself:
-                  value:
-                    id: 3
-                    firstName: John
-                    lastName: Doe
-                    username: john.doe
-                    email: john.doe@localhost
-                    activated: true
-                    nonLocked: true
-                    roles: null
-                admin:
-                  value:
-                    id: 3
-                    firstName: John
-                    lastName: Doe
-                    username: john.doe
-                    email: john.doe@localhost
-                    activated: true
-                    nonLocked: true
-                    roles:
-                      - name: USER
-        404:
-          $ref: "#/components/responses/NotFound"
-  /profile/update:
-    put:
+    patch:
       tags:
         - profile
-      summary: Update Profile
-      operationId: updateProfile
-      x-codegen-request-body-name: body
+      summary: Patch profile
       security:
         - BearerAuth: []
       requestBody:
-        description: Update Profile Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateProfileRequest"
-            example:
-              firstName: Joe
-              lastName: Blow
-              username: joe.blow
-              email: joe.blow@localhost
+        $ref: "#/components/requestBodies/PatchProfileRequest"
       responses:
         200:
-          description: Update Profile Success
+          description: Profile patched successfully
           content:
             application/json:
               schema:
@@ -520,11 +201,152 @@ paths:
               example:
                 id: 4
                 firstName: Joe
-                lastName: Blow
-                username: joe.blow
-                email: joe.blow@localhost
-                activated: false
-                nonLocked: true
+                lastName: Bloggs
+                username: joe.bloggs
+                email: joe.bloggs@localhost@localhost
+                createdAt: 2023-05-18T00:51:50.758738
+        400:
+          $ref: "#/components/responses/BadRequest"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        409:
+          $ref: "#/components/responses/Conflict"
+    delete:
+      tags:
+        - profile
+      summary: Delete profile
+      security:
+        - BearerAuth: []
+      responses:
+        204:
+          description: Profile deleted successfully
+        401:
+          $ref: "#/components/responses/Unauthorized"
+  /profile/password:
+    patch:
+      tags:
+        - profile
+      summary: Change profile password
+      security:
+        - BearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/ChangePasswordPassword"
+      responses:
+        204:
+          description: Profile password changed successfully
+        400:
+          $ref: "#/components/responses/BadRequest"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+  /users:
+    get:
+      tags:
+        - users
+      summary: Get users
+      responses:
+        200:
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserDTO"
+              example:
+                - id: 1
+                  firstName: Admin
+                  lastName: Admin
+                  username: admin
+                  email: null
+                  createdAt: 2023-05-18T00:51:50.758738
+                - id: 2
+                  firstName: User
+                  lastName: User
+                  username: user
+                  email: null
+                  createdAt: 2023-05-18T00:51:50.758738
+                - id: 3
+                  firstName: John
+                  lastName: Doe
+                  username: john.doe
+                  email: null
+                  createdAt: 2023-05-18T00:51:50.758738
+                - id: 4
+                  firstName: Jane
+                  lastName: Doe
+                  username: jane
+                  email: null
+                  createdAt: 2023-05-18T00:51:50.758738
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get user by id
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        200:
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+              example:
+                id: 3
+                firstName: John
+                lastName: Doe
+                username: john.doe
+                email: null
+                createdAt: 2023-05-18T00:51:50.758738
+        404:
+          $ref: "#/components/responses/NotFound"
+  /users/username/{username}:
+    get:
+      tags:
+        - users
+      summary: Get user by username
+      parameters:
+        - $ref: "#/components/parameters/username"
+      responses:
+        200:
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+              example:
+                id: 3
+                firstName: John
+                lastName: Doe
+                username: john.doe
+                email: null
+                createdAt: 2023-05-18T00:51:50.758738
+        404:
+          $ref: "#/components/responses/NotFound"
+  /admin/users:
+    post:
+      tags:
+        - admin
+      summary: Create user
+      security:
+        - BearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/UserRequest"
+      responses:
+        201:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+              example:
+                id: 5
+                firstName: Joe
+                lastName: Bloggs
+                username: joe.bloggs
+                email: joe.bloggs@localhost
+                active: true
+                lock: false
                 createdAt: 2023-05-18T00:51:50.758738
                 roles:
                   - name: USER
@@ -532,179 +354,170 @@ paths:
           $ref: "#/components/responses/BadRequest"
         401:
           $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
         409:
           $ref: "#/components/responses/Conflict"
-  /profile/change-password:
-    put:
+    get:
       tags:
-        - profile
-      summary: Change Password
-      operationId: changePassword
-      x-codegen-request-body-name: body
+        - admin
+      summary: Get users
       security:
         - BearerAuth: []
-      requestBody:
-        description: Change Password Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ChangePasswordRequest"
-            example:
-              oldPassword: qwerty123
-              newPassword: qwerty321
-              confirmNewPassword: qwerty321
       responses:
-        204:
-          description: Change Password Success
+        200:
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserDTO"
+                example:
+                  - id: 1
+                    firstName: Admin
+                    lastName: Admin
+                    username: admin
+                    email: admin@localhost
+                    active: true
+                    lock: false
+                    createdAt: 2023-05-18T00:51:50.758738
+                    roles:
+                      - name: USER
+                      - name: ADMIN
+                  - id: 2
+                    firstName: User
+                    lastName: User
+                    username: user
+                    email: user@localhost
+                    active: true
+                    lock: false
+                    createdAt: 2023-05-18T00:51:50.758738
+                    roles:
+                      - name: USER
+                  - id: 3
+                    firstName: John
+                    lastName: Doe
+                    username: john.doe
+                    email: john.doe@localhost
+                    active: true
+                    lock: false
+                    createdAt: 2023-05-18T00:51:50.758738
+                    roles:
+                      - name: USER
+                  - id: 4
+                    firstName: Jane
+                    lastName: Doe
+                    username: jane
+                    email: jane.doe@localhost
+                    active: true
+                    lock: false
+                    createdAt: 2023-05-18T00:51:50.758738
+                    roles:
+                      - name: USER
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+  /admin/users/{id}:
+    get:
+      tags:
+        - admin
+      summary: Get user by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        200:
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+              example:
+                id: 3
+                firstName: John
+                lastName: Doe
+                username: john.doe
+                email: john.doe@localhost
+                active: true
+                lock: false
+                createdAt: 2023-05-18T00:51:50.758738
+                roles:
+                  - name: USER
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - admin
+      summary: Update user by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/id"
+      requestBody:
+        $ref: "#/components/requestBodies/UserRequest"
+      responses:
+        200:
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+              example:
+                id: 4
+                firstName: Joe
+                lastName: Bloggs
+                username: joe.bloggs
+                email: joe.bloggs@localhost
+                active: true
+                lock: false
+                createdAt: 2023-05-18T00:51:50.758738
+                roles:
+                  - name: USER
+                  - name: ADMIN
         400:
           $ref: "#/components/responses/BadRequest"
         401:
           $ref: "#/components/responses/Unauthorized"
-  /profile/delete:
-    delete:
-      tags:
-        - profile
-      summary: Delete Profile
-      operationId: deleteProfile
-      security:
-        - BearerAuth: []
-      responses:
-        204:
-          description: Delete Profile Success
-        401:
-          $ref: "#/components/responses/Unauthorized"
-  /admin/users/{username}/activate:
-    put:
-      tags:
-        - admin
-      summary: Activate User
-      operationId: activateUser
-      security:
-        - BearerAuth: []
-      parameters:
-        - in: path
-          name: username
-          required: true
-          schema:
-            type: string
-          description: Pass username to activate user.
-          example: john.doe
-      responses:
-        204:
-          description: Activate User Success
-        401:
-          $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-        404:
-          $ref: "#/components/responses/NotFound"
-  /admin/users/{username}/deactivate:
-    put:
+        409:
+          $ref: "#/components/responses/Conflict"
+    patch:
       tags:
         - admin
-      summary: Deactivate User
-      operationId: deactivateUser
+      summary: Patch user by id
       security:
         - BearerAuth: []
       parameters:
-        - in: path
-          name: username
-          required: true
-          schema:
-            type: string
-          description: Pass username to deactivate user.
-          example: john.doe
-      responses:
-        204:
-          description: Deactivate User Success
-        401:
-          $ref: "#/components/responses/Unauthorized"
-        403:
-          $ref: "#/components/responses/Forbidden"
-        404:
-          $ref: "#/components/responses/NotFound"
-  /admin/users/{username}/unlock:
-    put:
-      tags:
-        - admin
-      summary: Unlock User
-      operationId: unlockUser
-      security:
-        - BearerAuth: []
-      parameters:
-        - in: path
-          name: username
-          required: true
-          schema:
-            type: string
-          description: Pass username to unlock user.
-          example: john.doe
-      responses:
-        204:
-          description: Unlock User Success
-        401:
-          $ref: "#/components/responses/Unauthorized"
-        403:
-          $ref: "#/components/responses/Forbidden"
-        404:
-          $ref: "#/components/responses/NotFound"
-  /admin/users/{username}/lock:
-    put:
-      tags:
-        - admin
-      summary: Lock User
-      operationId: lockUser
-      security:
-        - BearerAuth: []
-      parameters:
-        - in: path
-          name: username
-          required: true
-          schema:
-            type: string
-          description: Pass username to lock user.
-          example: john.doe
-      responses:
-        204:
-          description: Lock User Success
-        401:
-          $ref: "#/components/responses/Unauthorized"
-        403:
-          $ref: "#/components/responses/Forbidden"
-        404:
-          $ref: "#/components/responses/NotFound"
-  /admin/users/{username}/update-role:
-    put:
-      tags:
-        - admin
-      summary: Update User Roles
-      operationId: updateUserRoles
-      x-codegen-request-body-name: body
-      security:
-        - BearerAuth: []
-      parameters:
-        - in: path
-          name: username
-          required: true
-          schema:
-            type: string
-          description: Pass username to update user roles.
-          example: john.doe
+        - $ref: "#/components/parameters/id"
       requestBody:
-        description: Update User Roles Request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateRoleRequest"
-            example:
-              roleNames:
-                - USER
-                - ADMIN
+        $ref: "#/components/requestBodies/PatchUserRequest"
       responses:
-        204:
-          description: Update Users Roles Success
+        200:
+          description: User patched successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+              example:
+                id: 4
+                firstName: Joe
+                lastName: Bloggs
+                username: joe.bloggs
+                email: joe.bloggs@localhost
+                active: true
+                lock: false
+                createdAt: 2023-05-18T00:51:50.758738
+                roles:
+                  - name: USER
+                  - name: ADMIN
         400:
           $ref: "#/components/responses/BadRequest"
         401:
@@ -713,31 +526,23 @@ paths:
           $ref: "#/components/responses/Forbidden"
         404:
           $ref: "#/components/responses/NotFound"
-  /admin/users/{username}/delete:
+        409:
+          $ref: "#/components/responses/Conflict"
     delete:
       tags:
         - admin
-      summary: Delete User
-      operationId: deleteUser
+      summary: Delete user by id
       security:
         - BearerAuth: []
       parameters:
-        - in: path
-          name: username
-          required: true
-          schema:
-            type: string
-          description: Pass username to delete user.
-          example: john.doe
+        - $ref: "#/components/parameters/id"
       responses:
         204:
-          description: Delete Users Success
+          description: User deleted successfully
         401:
           $ref: "#/components/responses/Unauthorized"
         403:
           $ref: "#/components/responses/Forbidden"
-        404:
-          $ref: "#/components/responses/NotFound"
 components:
   responses:
     BadRequest:
@@ -755,18 +560,6 @@ components:
                 message: Invalid field1.
               - field: field2
                 message: Invalid field2.
-    NotFound:
-      description: Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: "#/components/schemas/ErrorMessage"
-          example:
-            timestamp: 2023-05-18T00:51:50.758738
-            status: 404
-            error: Not Found
-            details:
-              - message: Resource Not Found.
     Unauthorized:
       description: Unauthorized
       content:
@@ -791,6 +584,18 @@ components:
             error: Forbidden
             details:
               - message: Forbidden.
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessage"
+          example:
+            timestamp: 2023-05-18T00:51:50.758738
+            status: 404
+            error: Not Found
+            details:
+              - message: Resource Not Found.
     Conflict:
       description: Conflict
       content:
@@ -802,98 +607,318 @@ components:
             status: 409
             error: Conflict
             details:
-              - field?: field
+              - field: field
                 message: Conflict.
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+      description: Resource id
+      example: 3
+    username:
+      name: username
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Username
+      example: john.doe
+  requestBodies:
+    RegisterUserRequest:
+      description: Register user request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - firstName
+              - lastName
+              - username
+              - email
+              - password
+              - confirmPassword
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              username:
+                type: string
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+              confirmPassword:
+                type: string
+          example:
+            firstName: Joe
+            lastName: Bloggs
+            username: joe.bloggs
+            email: joe.bloggs@localhost
+            password: qwerty123
+            confirmPassword: qwerty123
+    AuthTokensRequest:
+      description: Auth tokens request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - usernameOrEmail
+              - password
+            properties:
+              usernameOrEmail:
+                type: string
+              password:
+                type: string
+          example:
+            usernameOrEmail: joe.bloggs
+            password: qwerty123
+    RefreshAuthTokensRequest:
+      description: Refresh auth tokens request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - refreshToken
+            properties:
+              refreshToken:
+                type: string
+                format: JWT
+          example:
+            refreshToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0xOVQxMzowMDowMy45MDYzNDQyMDJaIiwiZXhwIjoxNjM1MjUzMjAzLCJ1c2VySWQiOjJ9.RHzh6qyGJEKYdvCuCF7wPoUGBSrDGeoY8dSTBhuv21Fzw_CPEa5KeI3MOYgSN3zA1o_ZlKwjHgpSsPM3xAO_DQ
+    ForgotPasswordRequest:
+      description: Forgot password request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+            properties:
+              email:
+                type: string
+                format: email
+          example:
+            email: john.doe@localhost
+    ResetPasswordRequest:
+      description: Reset password request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - token
+              - password
+              - confirmPassword
+            properties:
+              token:
+                type: string
+                format: JWT
+              password:
+                type: string
+              confirmPassword:
+                type: string
+          example:
+            token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
+            password: qwerty321
+            confirmPassword: qwerty321
+    VerificationEmailRequest:
+      description: Verification email request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - usernameOrEmail
+            properties:
+              usernameOrEmail:
+                type: string
+          example:
+            usernameOrEmail: joe.bloggs@localhost
+    VerifyEmailRequest:
+      description: Verify email request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - token
+            properties:
+              token:
+                type: string
+                format: JWT
+          example:
+            token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlzc3VlZEF0IjoiMjAyMS0xMC0yMFQxNDozMzo0NC43MDcyOTMzMDlaIiwiZXhwIjoxNjM0NzQxMzI0LCJ1c2VySWQiOjJ9.uXOVA1q-o2DtHmwBAzEfqEm8GLpAhXrYo0rlZ_6NFbBGILhkV74x-Iu9W2uSfSlwp1IfKPCHlR6zWVPvAbhWVw
+    PatchProfileRequest:
+      description: Patch profile request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              username:
+                type: string
+              email:
+                type: string
+                format: email
+          example:
+            firstName: Joe
+            lastName: Bloggs
+            username: joe.bloggs
+            email: joe.bloggs@localhost@localhost
+    ChangePasswordPassword:
+      description: Change password request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - currentPassword
+              - newPassword
+              - confirmNewPassword
+            properties:
+              currentPassword:
+                type: string
+              newPassword:
+                type: string
+              confirmNewPassword:
+                type: string
+          example:
+            currentPassword: qwerty123
+            newPassword: qwerty321
+            confirmNewPassword: qwerty321
+    UserRequest:
+      description: User request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - firstName
+              - lastName
+              - username
+              - email
+              - password
+              - confirmPassword
+              - active
+              - lock
+              - roleNames
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              username:
+                type: string
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+              confirmPassword:
+                type: string
+              active:
+                type: boolean
+              lock:
+                type: boolean
+              roleNames:
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - USER
+                    - ADMIN
+          example:
+            firstName: Joe
+            lastName: Bloggs
+            username: joe.bloggs
+            email: joe.bloggs@localhost
+            password: qwerty123
+            confirmPassword: qwerty123
+            active: true
+            lock: false
+            roleNames:
+              - USER
+    PatchUserRequest:
+      description: Patch user request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              username:
+                type: string
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+              confirmPassword:
+                type: string
+              active:
+                type: boolean
+              lock:
+                type: boolean
+              roleNames:
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - USER
+                    - ADMIN
+          example:
+            firstName: Joe
+            lastName: Bloggs
+            username: joe.bloggs
+            email: joe.bloggs@localhost
+            active: true
+            password: qwerty123
+            confirmPassword: qwerty123
+            lock: false
+            roleNames:
+              - USER
   schemas:
-    SignUpRequest:
+    AuthTokensDTO:
       type: object
+      required:
+        - accessToken
+        - refreshToken
       properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        username:
-          type: string
-        email:
-          type: string
-          format: email
-        password:
-          type: string
-        confirmPassword:
-          type: string
-    ConfirmRegistrationRequest:
-      type: object
-      properties:
-        token:
+        accessToken:
           type: string
           format: JWT
-    ResendConfirmationEmailRequest:
-      type: object
-      properties:
-        usernameOrEmail:
-          type: string
-    SignInRequest:
-      type: object
-      properties:
-        usernameOrEmail:
-          type: string
-        password:
-          type: string
-    RefreshTokenRequest:
-      type: object
-      properties:
         refreshToken:
           type: string
           format: JWT
-    ForgotPasswordRequest:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-    ResetPasswordRequest:
-      type: object
-      properties:
-        token:
-          type: string
-          format: JWT
-        password:
-          type: string
-        confirmPassword:
-          type: string
-    UpdateProfileRequest:
-      type: object
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        username:
-          type: string
-        email:
-          type: string
-          format: email
-    ChangePasswordRequest:
-      type: object
-      properties:
-        oldPassword:
-          type: string
-        newPassword:
-          type: string
-        confirmNewPassword:
-          type: string
-    UpdateRoleRequest:
-      type: object
-      properties:
-        roleNames:
-          type: array
-          items:
-            type: string
-            enum:
-              - USER
-              - ADMIN
     RoleDTO:
       type: object
+      required:
+        - name
       properties:
         name:
           type: string
@@ -902,6 +927,13 @@ components:
             - ADMIN
     UserDTO:
       type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - username
+        - email
+        - createdAt
       properties:
         id:
           type: integer
@@ -915,9 +947,10 @@ components:
         email:
           type: string
           format: email
-        activated:
+          nullable: true
+        active:
           type: boolean
-        nonLocked:
+        lock:
           type: boolean
         createdAt:
           type: string
@@ -926,27 +959,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RoleDTO"
-    SignInDTO:
-      type: object
-      properties:
-        accessToken:
-          type: string
-          format: JWT
-        refreshToken:
-          type: string
-          format: JWT
-        user:
-          $ref: "#/components/schemas/UserDTO"
-    RefreshTokenDTO:
-      properties:
-        accessToken:
-          type: string
-          format: JWT
-        refreshToken:
-          type: string
-          format: JWT
     ErrorMessage:
       type: object
+      required:
+        - timestamp
+        - status
+        - error
+        - details
       properties:
         timestamp:
           type: string
@@ -960,6 +979,8 @@ components:
           type: array
           items:
             type: object
+            required:
+              - message
             properties:
               field:
                 type: string
