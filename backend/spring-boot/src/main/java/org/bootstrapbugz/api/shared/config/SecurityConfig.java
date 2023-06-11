@@ -37,7 +37,9 @@ public class SecurityConfig {
     Path.AUTH + "/verification-email",
     Path.AUTH + "/verify-email",
   };
-  private static final String[] USERS_WHITELIST = {Path.USERS, Path.USERS + "/**"};
+  private static final String[] USERS_WHITELIST = {
+    Path.USERS, Path.USERS + "/**", Path.USERS + "/username/**"
+  };
   private final ExtendedUserDetailsService userDetailsService;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
