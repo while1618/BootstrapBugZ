@@ -140,8 +140,8 @@ public class AuthServiceImpl implements AuthService {
             .findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    if (Boolean.TRUE.equals(user.getActivated()))
-      throw new ConflictException(messageService.getMessage("user.activated"));
+    if (Boolean.TRUE.equals(user.getActive()))
+      throw new ConflictException(messageService.getMessage("user.active"));
     final var token = verificationTokenService.create(user.getId());
     verificationTokenService.sendToEmail(user, token);
   }
@@ -153,10 +153,10 @@ public class AuthServiceImpl implements AuthService {
             .findById(JwtUtil.getUserId(verifyEmailRequest.token()))
             .orElseThrow(
                 () -> new BadRequestException("token", messageService.getMessage("token.invalid")));
-    if (Boolean.TRUE.equals(user.getActivated()))
-      throw new ConflictException(messageService.getMessage("user.activated"));
+    if (Boolean.TRUE.equals(user.getActive()))
+      throw new ConflictException(messageService.getMessage("user.active"));
     verificationTokenService.check(verifyEmailRequest.token());
-    user.setActivated(true);
+    user.setActive(true);
     userRepository.save(user);
   }
 }

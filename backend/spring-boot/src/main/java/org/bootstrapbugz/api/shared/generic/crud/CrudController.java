@@ -18,7 +18,12 @@ public abstract class CrudController<T, U> {
     this.service = service;
   }
 
-  @GetMapping()
+  @PostMapping
+  public ResponseEntity<T> create(@Valid @RequestBody U saveRequest) {
+    return new ResponseEntity<>(service.create(saveRequest), HttpStatus.CREATED);
+  }
+
+  @GetMapping
   public ResponseEntity<List<T>> findAll() {
     return ResponseEntity.ok(service.findAll());
   }
@@ -28,17 +33,12 @@ public abstract class CrudController<T, U> {
     return ResponseEntity.ok(service.findById(id));
   }
 
-  @PostMapping
-  public ResponseEntity<T> create(@Valid @RequestBody U saveRequest) {
-    return new ResponseEntity<>(service.create(saveRequest), HttpStatus.CREATED);
-  }
-
   @PutMapping("/{id}")
   public ResponseEntity<T> update(@PathVariable("id") Long id, @Valid @RequestBody U saveRequest) {
     return ResponseEntity.ok(service.update(id, saveRequest));
   }
 
-  @DeleteMapping
+  @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
     service.delete(id);
     return ResponseEntity.noContent().build();

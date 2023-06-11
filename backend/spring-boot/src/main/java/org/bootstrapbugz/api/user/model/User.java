@@ -61,11 +61,11 @@ public class User implements Serializable {
 
   @Builder.Default
   @Column(nullable = false)
-  private Boolean activated = false;
+  private Boolean active = false;
 
   @Builder.Default
   @Column(nullable = false)
-  private Boolean nonLocked = true;
+  private Boolean lock = false;
 
   @Builder.Default
   @Column(nullable = false)
@@ -84,8 +84,8 @@ public class User implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     User user = (User) o;
-    return activated == user.activated
-        && nonLocked == user.nonLocked
+    return active == user.active
+        && lock == user.lock
         && Objects.equal(id, user.id)
         && Objects.equal(firstName, user.firstName)
         && Objects.equal(lastName, user.lastName)
@@ -98,6 +98,6 @@ public class User implements Serializable {
   @Override
   public int hashCode() {
     return Objects.hashCode(
-        id, firstName, lastName, username, email, password, activated, nonLocked, roles);
+        id, firstName, lastName, username, email, password, active, lock, roles);
   }
 }

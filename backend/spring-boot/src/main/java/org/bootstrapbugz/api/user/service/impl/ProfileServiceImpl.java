@@ -78,7 +78,7 @@ public class ProfileServiceImpl implements ProfileService {
       throw new ConflictException("email", messageService.getMessage("email.exists"));
 
     user.setEmail(email);
-    user.setActivated(false);
+    user.setActive(false);
     accessTokenService.invalidateAllByUserId(user.getId());
     refreshTokenService.deleteAllByUserId(user.getId());
     final var token = verificationTokenService.create(user.getId());
@@ -103,7 +103,7 @@ public class ProfileServiceImpl implements ProfileService {
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.currentPassword(), user.getPassword()))
       throw new BadRequestException(
-          "currentPassword", messageService.getMessage("oldPassword.invalid"));
+          "currentPassword", messageService.getMessage("currentPassword.invalid"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
     accessTokenService.invalidateAllByUserId(userId);
     refreshTokenService.deleteAllByUserId(userId);

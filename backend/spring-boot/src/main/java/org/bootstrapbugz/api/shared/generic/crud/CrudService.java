@@ -3,11 +3,11 @@ package org.bootstrapbugz.api.shared.generic.crud;
 import java.util.List;
 
 public interface CrudService<T, U> {
+  T create(U saveRequest);
+
   List<T> findAll();
 
   T findById(Long id);
-
-  T create(U saveRequest);
 
   T update(Long id, U saveRequest);
 

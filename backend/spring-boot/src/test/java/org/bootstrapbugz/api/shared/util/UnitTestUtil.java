@@ -15,7 +15,7 @@ public class UnitTestUtil {
         .lastName("Admin")
         .username("admin")
         .email("admin@localhost")
-        .activated(true)
+        .active(true)
         .roles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)))
         .build();
   }
@@ -27,7 +27,7 @@ public class UnitTestUtil {
         .lastName("Test")
         .username("test")
         .email("test@localhost")
-        .activated(true)
+        .active(true)
         .roles(Set.of(new Role(RoleName.USER)))
         .build();
   }

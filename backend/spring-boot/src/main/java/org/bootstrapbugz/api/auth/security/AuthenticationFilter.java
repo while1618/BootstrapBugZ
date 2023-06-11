@@ -70,13 +70,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private void handleException(HttpServletResponse response, Exception e) {
     if (e instanceof DisabledException)
       CustomFilterExceptionHandler.handleException(
-          response, messageService.getMessage("user.notActivated"), HttpStatus.FORBIDDEN);
+          response, messageService.getMessage("user.notActive"), HttpStatus.FORBIDDEN);
     else if (e instanceof LockedException)
       CustomFilterExceptionHandler.handleException(
-          response, messageService.getMessage("user.locked"), HttpStatus.FORBIDDEN);
+          response, messageService.getMessage("user.lock"), HttpStatus.FORBIDDEN);
     else
       CustomFilterExceptionHandler.handleException(
-          response, messageService.getMessage("signIn.invalid"), HttpStatus.UNAUTHORIZED);
+          response, messageService.getMessage("auth.invalid"), HttpStatus.UNAUTHORIZED);
   }
 
   @Override

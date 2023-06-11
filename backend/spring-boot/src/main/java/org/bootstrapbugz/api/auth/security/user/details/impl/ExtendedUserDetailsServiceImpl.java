@@ -1,5 +1,7 @@
-package org.bootstrapbugz.api.auth.security.user.details;
+package org.bootstrapbugz.api.auth.security.user.details.impl;
 
+import org.bootstrapbugz.api.auth.security.user.details.ExtendedUserDetailsService;
+import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.repository.UserRepository;
@@ -8,11 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserDetailsServiceImpl implements ExtendedUserDetailsService {
+public class ExtendedUserDetailsServiceImpl implements ExtendedUserDetailsService {
   private final UserRepository userRepository;
   private final MessageService messageService;
 
-  public UserDetailsServiceImpl(UserRepository userRepository, MessageService messageService) {
+  public ExtendedUserDetailsServiceImpl(
+      UserRepository userRepository, MessageService messageService) {
     this.userRepository = userRepository;
     this.messageService = messageService;
   }

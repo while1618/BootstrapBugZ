@@ -15,19 +15,19 @@ public interface UserMapper {
   @Mapping(source = "roles", target = "roleDTOs")
   UserDTO userToAdminUserDTO(User user);
 
-  @Mapping(target = "activated", ignore = true)
-  @Mapping(target = "nonLocked", ignore = true)
+  @Mapping(target = "active", ignore = true)
+  @Mapping(target = "lock", ignore = true)
   @Mapping(target = "roleDTOs", ignore = true)
   UserDTO userToProfileUserDTO(User user);
 
-  @Mapping(target = "activated", ignore = true)
-  @Mapping(target = "nonLocked", ignore = true)
+  @Mapping(target = "active", ignore = true)
+  @Mapping(target = "lock", ignore = true)
   @Mapping(target = "roleDTOs", ignore = true)
   UserDTO userPrincipalToProfileUserDTO(UserPrincipal userPrincipal);
 
   @Mapping(target = "email", ignore = true)
-  @Mapping(target = "activated", ignore = true)
-  @Mapping(target = "nonLocked", ignore = true)
+  @Mapping(target = "active", ignore = true)
+  @Mapping(target = "lock", ignore = true)
   @Mapping(target = "roleDTOs", ignore = true)
   UserDTO userToSimpleUserDTO(User user);
 }

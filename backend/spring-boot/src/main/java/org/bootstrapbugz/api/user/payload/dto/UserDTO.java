@@ -16,8 +16,8 @@ public record UserDTO(
     String lastName,
     String username,
     String email,
-    @JsonInclude(Include.NON_NULL) Boolean activated,
-    @JsonInclude(Include.NON_NULL) Boolean nonLocked,
+    @JsonInclude(Include.NON_NULL) Boolean active,
+    @JsonInclude(Include.NON_NULL) Boolean lock,
     LocalDateTime createdAt,
     @JsonInclude(Include.NON_NULL) @JsonProperty("roles") @SerializedName("roles")
         Set<RoleDTO> roleDTOs) {
@@ -27,8 +27,8 @@ public record UserDTO(
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     UserDTO userDTO = (UserDTO) o;
-    return activated == userDTO.activated
-        && nonLocked == userDTO.nonLocked
+    return active == userDTO.active
+        && lock == userDTO.lock
         && Objects.equal(id, userDTO.id)
         && Objects.equal(firstName, userDTO.firstName)
         && Objects.equal(lastName, userDTO.lastName)
@@ -39,7 +39,6 @@ public record UserDTO(
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
-        id, firstName, lastName, username, email, activated, nonLocked, roleDTOs);
+    return Objects.hashCode(id, firstName, lastName, username, email, active, lock, roleDTOs);
   }
 }

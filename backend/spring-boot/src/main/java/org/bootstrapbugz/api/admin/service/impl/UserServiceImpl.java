@@ -43,6 +43,26 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserDTO create(UserRequest userRequest) {
+    if (userRepository.existsByUsername(userRequest.username()))
+      throw new ConflictException(messageService.getMessage("username.exists"));
+    if (userRepository.existsByEmail(userRequest.email()))
+      throw new ConflictException(messageService.getMessage("email.exists"));
+    final var user =
+        User.builder()
+            .firstName(userRequest.firstName())
+            .lastName(userRequest.lastName())
+            .username(userRequest.username())
+            .email(userRequest.email())
+            .password(bCryptPasswordEncoder.encode(userRequest.password()))
+            .active(userRequest.active())
+            .lock(userRequest.lock())
+            .roles(Set.copyOf(roleRepository.findAllByNameIn(userRequest.roleNames())))
+            .build();
+    return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user));
+  }
+
+  @Override
   public List<UserDTO> findAll() {
     return userRepository.findAllWithRoles().stream()
         .map(UserMapper.INSTANCE::userToAdminUserDTO)
@@ -59,32 +79,32 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO create(UserRequest saveRequest) {
-    if (userRepository.existsByUsername(saveRequest.username()))
+  public UserDTO update(Long id, UserRequest userRequest) {
+    final var user = userRepository.findByIdWithRoles(id).orElse(User.builder().id(id).build());
+
+    if (userRepository.existsByUsername(userRequest.username())
+        && !user.getUsername().equals(userRequest.username()))
       throw new ConflictException(messageService.getMessage("username.exists"));
-    if (userRepository.existsByEmail(saveRequest.email()))
+    if (userRepository.existsByEmail(userRequest.email())
+        && !user.getEmail().equals(userRequest.email()))
       throw new ConflictException(messageService.getMessage("email.exists"));
-    final var user = createUser(saveRequest);
+
+    final var roles = Set.copyOf(roleRepository.findAllByNameIn(userRequest.roleNames()));
+    user.setFirstName(userRequest.firstName());
+    user.setLastName(userRequest.lastName());
+    user.setUsername(userRequest.username());
+    user.setEmail(userRequest.email());
+    user.setPassword(bCryptPasswordEncoder.encode(userRequest.password()));
+    user.setActive(userRequest.active());
+    user.setLock(userRequest.lock());
+    user.setRoles(roles);
+
+    if (!userRequest.active() || userRequest.lock() || !roles.equals(user.getRoles())) {
+      accessTokenService.invalidateAllByUserId(id);
+      refreshTokenService.deleteAllByUserId(id);
+    }
+
     return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user));
-  }
-
-  @Override
-  public UserDTO update(Long id, UserRequest saveRequest) {
-    return null;
-  }
-
-  private User createUser(UserRequest userRequest) {
-    final var roles = roleRepository.findAllByNameIn(userRequest.roleNames());
-    return User.builder()
-        .firstName(userRequest.firstName())
-        .lastName(userRequest.lastName())
-        .username(userRequest.username())
-        .email(userRequest.email())
-        .password(bCryptPasswordEncoder.encode(userRequest.password()))
-        .activated(userRequest.active())
-        .nonLocked(userRequest.lock())
-        .roles(Set.copyOf(roles))
-        .build();
   }
 
   @Override

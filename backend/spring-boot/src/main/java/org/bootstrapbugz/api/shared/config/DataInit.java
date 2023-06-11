@@ -59,8 +59,8 @@ public class DataInit implements ApplicationRunner {
                 .username("admin")
                 .email("admin@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Set.of(userRole, adminRole))
                 .build(),
             User.builder()
@@ -69,8 +69,8 @@ public class DataInit implements ApplicationRunner {
                 .username("user")
                 .email("user@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build()));
     if (environment.getActiveProfiles()[0].equals("dev")) devUsers();
@@ -86,8 +86,8 @@ public class DataInit implements ApplicationRunner {
                 .username("john.doe")
                 .email("john.doe@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
@@ -96,8 +96,8 @@ public class DataInit implements ApplicationRunner {
                 .username("jane.doe")
                 .email("jane.doe@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build()));
   }
@@ -111,8 +111,8 @@ public class DataInit implements ApplicationRunner {
                 .username("deactivated")
                 .email("deactivated@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(false)
-                .nonLocked(true)
+                .active(false)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
@@ -121,8 +121,8 @@ public class DataInit implements ApplicationRunner {
                 .username("locked")
                 .email("locked@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(false)
+                .active(true)
+                .lock(true)
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
@@ -131,8 +131,8 @@ public class DataInit implements ApplicationRunner {
                 .username("update1")
                 .email("update1@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
@@ -141,8 +141,8 @@ public class DataInit implements ApplicationRunner {
                 .username("update2")
                 .email("update2@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
@@ -151,8 +151,8 @@ public class DataInit implements ApplicationRunner {
                 .username("update3")
                 .email("update3@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
@@ -161,8 +161,8 @@ public class DataInit implements ApplicationRunner {
                 .username("update4")
                 .email("update4@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
@@ -171,8 +171,8 @@ public class DataInit implements ApplicationRunner {
                 .username("delete1")
                 .email("delete1@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
@@ -181,8 +181,8 @@ public class DataInit implements ApplicationRunner {
                 .username("delete2")
                 .email("delete2@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
-                .activated(true)
-                .nonLocked(true)
+                .active(true)
+                .lock(false)
                 .roles(Collections.singleton(userRole))
                 .build()));
   }

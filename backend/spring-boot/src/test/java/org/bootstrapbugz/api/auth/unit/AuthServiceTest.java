@@ -106,15 +106,15 @@ class AuthServiceTest {
             .lastName("Test")
             .username("test")
             .email("test@localhost")
-            .activated(false)
-            .nonLocked(true)
+            .active(false)
+            .lock(false)
             .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
             .build();
     final var signUpRequest =
         new RegisterUserRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(new Role(RoleName.USER)));
     final var testUser = UnitTestUtil.getTestUser();
-    testUser.setActivated(false);
+    testUser.setActive(false);
     when(userRepository.save(any(User.class))).thenReturn(testUser);
     final var actualUserDTO = authService.register(signUpRequest);
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
@@ -124,7 +124,7 @@ class AuthServiceTest {
   void resendConfirmationEmail() {
     final var resendConfirmationEmailRequest = new VerificationEmailRequest("test");
     final var testUser = UnitTestUtil.getTestUser();
-    testUser.setActivated(false);
+    testUser.setActive(false);
     when(userRepository.findByUsernameOrEmail("test", "test")).thenReturn(Optional.of(testUser));
     authService.sendVerificationMail(resendConfirmationEmailRequest);
     verify(eventPublisher, times(1)).publishEvent(any(OnSendJwtEmail.class));
@@ -159,12 +159,12 @@ class AuthServiceTest {
             .lastName("Test")
             .username("test")
             .email("test@localhost")
-            .activated(true)
+            .active(true)
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
     final var token = confirmRegistrationTokenService.create(2L);
     final var testUser = UnitTestUtil.getTestUser();
-    testUser.setActivated(false);
+    testUser.setActive(false);
     when(userRepository.findById(2L)).thenReturn(Optional.of(testUser));
     authService.verifyEmail(new VerifyEmailRequest(token));
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
