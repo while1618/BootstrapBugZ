@@ -32,12 +32,12 @@ class RefreshTokenStoreRepositoryIT extends DatabaseContainers {
   }
 
   @Test
-  void itShouldFindByUserIdAndIpAddress() {
+  void findByUserIdAndIpAddress() {
     assertThat(refreshTokenStoreRepository.findByUserIdAndIpAddress(1L, "ip1")).isPresent();
   }
 
   @Test
-  void itShouldFindAllByUserId() {
+  void findAllByUserId() {
     assertThat(refreshTokenStoreRepository.findAllByUserId(2L)).hasSize(2);
   }
 }

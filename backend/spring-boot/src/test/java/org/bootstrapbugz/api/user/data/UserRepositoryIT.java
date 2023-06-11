@@ -58,8 +58,11 @@ class UserRepositoryIT extends DatabaseContainers {
   }
 
   @Test
-  void findByEmail() {
-    assertThat(userRepository.findByEmail("admin@localhost")).isPresent();
+  void findByIdWithRoles() {
+    final var admin = userRepository.findByUsername("admin").orElseThrow();
+    final var user = userRepository.findByIdWithRoles(admin.getId());
+    assertThat(user).isPresent();
+    assertThat(user.get().getRoles()).hasSize(2);
   }
 
   @Test
@@ -68,17 +71,22 @@ class UserRepositoryIT extends DatabaseContainers {
   }
 
   @Test
+  void findByEmail() {
+    assertThat(userRepository.findByEmail("admin@localhost")).isPresent();
+  }
+
+  @Test
   void findByUsernameOrEmail() {
     assertThat(userRepository.findByUsernameOrEmail("admin", "admin@localhost")).isPresent();
   }
 
   @Test
-  void existsByEmail() {
-    assertThat(userRepository.existsByEmail("admin@localhost")).isTrue();
+  void existsByUsername() {
+    assertThat(userRepository.existsByUsername("admin")).isTrue();
   }
 
   @Test
-  void existsByUsername() {
-    assertThat(userRepository.existsByUsername("admin")).isTrue();
+  void existsByEmail() {
+    assertThat(userRepository.existsByEmail("admin@localhost")).isTrue();
   }
 }
