@@ -1,6 +1,7 @@
 package org.bootstrapbugz.api.shared.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
@@ -13,7 +14,6 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorMessage {
   private final LocalDateTime timestamp;
   private final int status;
@@ -49,9 +49,10 @@ public class ErrorMessage {
   }
 
   @Getter
-  @JsonInclude(JsonInclude.Include.NON_NULL)
   private static final class Detail {
     private final String message;
+
+    @JsonInclude(Include.NON_NULL)
     private String field;
 
     private Detail(String message) {
