@@ -12,14 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.test.annotation.DirtiesContext;
 
 @DataRedisTest
+@DirtiesContext
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class RefreshTokenStoreRepositoryIT extends DatabaseContainers {
   @Autowired private RefreshTokenStoreRepository refreshTokenStoreRepository;
 
   @BeforeEach
   void setUp() {
+    refreshTokenStoreRepository.deleteAll();
     final var first = new RefreshTokenStore("token1", 1L, "ip1", 1000);
     final var second = new RefreshTokenStore("token2", 2L, "ip2", 1000);
     final var third = new RefreshTokenStore("token3", 2L, "ip3", 1000);
