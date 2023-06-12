@@ -11,6 +11,8 @@ import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -65,67 +67,34 @@ public class SecurityConfig {
   }
 
   @Bean
+  public AuthenticationManager authManager() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService);
+    authProvider.setPasswordEncoder(bCryptPasswordEncoder());
+    return new ProviderManager(authProvider);
+  }
+
+  @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests()
-        .requestMatchers(AUTH_WHITELIST)
-        .permitAll()
-        .requestMatchers(USERS_WHITELIST)
-        .permitAll()
-        .requestMatchers(SWAGGER_WHITELIST)
-        .permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
-        .apply(
-            CustomDSL.customDsl(
-                userDetailsService, accessTokenService, refreshTokenService, messageService))
-        .and()
-        .exceptionHandling()
-        .authenticationEntryPoint(customAuthenticationEntryPoint)
-        .and()
-        .cors()
-        .and()
-        .csrf()
-        .disable()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-    return http.build();
-  }
-}
-
-class CustomDSL extends AbstractHttpConfigurer<CustomDSL, HttpSecurity> {
-  private final ExtendedUserDetailsService userDetailsService;
-  private final AccessTokenService accessTokenService;
-  private final RefreshTokenService refreshTokenService;
-  private final MessageService messageService;
-
-  private CustomDSL(
-      ExtendedUserDetailsService userDetailsService,
-      AccessTokenService accessTokenService,
-      RefreshTokenService refreshTokenService,
-      MessageService messageService) {
-    this.userDetailsService = userDetailsService;
-    this.accessTokenService = accessTokenService;
-    this.refreshTokenService = refreshTokenService;
-    this.messageService = messageService;
-  }
-
-  public static CustomDSL customDsl(
-      ExtendedUserDetailsService userDetailsService,
-      AccessTokenService accessTokenService,
-      RefreshTokenService refreshTokenService,
-      MessageService messageService) {
-    return new CustomDSL(
-        userDetailsService, accessTokenService, refreshTokenService, messageService);
-  }
-
-  @Override
-  public void configure(HttpSecurity http) {
-    final var authenticationManager = http.getSharedObject(AuthenticationManager.class);
-    http.addFilter(
-        new AuthenticationFilter(
-            authenticationManager, accessTokenService, refreshTokenService, messageService));
-    http.addFilter(new JWTFilter(authenticationManager, accessTokenService, userDetailsService));
+    return http.authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(AUTH_WHITELIST)
+                    .permitAll()
+                    .requestMatchers(USERS_WHITELIST)
+                    .permitAll()
+                    .requestMatchers(SWAGGER_WHITELIST)
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .addFilter(
+            new AuthenticationFilter(
+                authManager(), accessTokenService, refreshTokenService, messageService))
+        .addFilter(new JWTFilter(authManager(), accessTokenService, userDetailsService))
+        .exceptionHandling(
+            exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint))
+        .cors(cors -> cors.configure(http))
+        .csrf(AbstractHttpConfigurer::disable)
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .build();
   }
 }
