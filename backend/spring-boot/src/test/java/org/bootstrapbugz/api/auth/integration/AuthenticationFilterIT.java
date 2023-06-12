@@ -30,27 +30,26 @@ class AuthenticationFilterIT extends DatabaseContainers {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  void signIn() throws Exception {
-    final var signInRequest = new AuthTokensRequest("user", "qwerty123");
+  void createAuthTokens() throws Exception {
+    final var authTokensRequest = new AuthTokensRequest("user", "qwerty123");
     mockMvc
         .perform(
-            post(Path.AUTH + "/sign-in")
+            post(Path.AUTH + "/tokens")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signInRequest)))
+                .content(objectMapper.writeValueAsString(authTokensRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.user.username").value("user"))
         .andExpect(jsonPath("$.accessToken").isString())
         .andExpect(jsonPath("$.refreshToken").isString());
   }
 
   @Test
-  void signIn_throwUnauthorized_wrongCredentials() throws Exception {
-    final var signInRequest = new AuthTokensRequest("wrong", "qwerty123");
+  void createAuthTokens_throwUnauthorized_wrongCredentials() throws Exception {
+    final var authTokensRequest = new AuthTokensRequest("wrong", "qwerty123");
     mockMvc
         .perform(
-            post(Path.AUTH + "/sign-in")
+            post(Path.AUTH + "/tokens")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signInRequest)))
+                .content(objectMapper.writeValueAsString(authTokensRequest)))
         .andExpect(status().isUnauthorized())
         .andExpect(content().string(containsString("Invalid credentials.")));
   }
@@ -58,16 +57,16 @@ class AuthenticationFilterIT extends DatabaseContainers {
   @ParameterizedTest
   @CsvSource({
     "locked, User locked.",
-    "deactivated, User not activated.",
+    "deactivated1, User not activated.",
   })
-  void signIn_throwForbidden_lockedDeactivatedUser(String username, String message)
+  void createAuthTokens_throwForbidden_lockedDeactivatedUser(String username, String message)
       throws Exception {
-    final var signInRequest = new AuthTokensRequest(username, "qwerty123");
+    final var authTokensRequest = new AuthTokensRequest(username, "qwerty123");
     mockMvc
         .perform(
-            post(Path.AUTH + "/sign-in")
+            post(Path.AUTH + "/tokens")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signInRequest)))
+                .content(objectMapper.writeValueAsString(authTokensRequest)))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(message)));
   }

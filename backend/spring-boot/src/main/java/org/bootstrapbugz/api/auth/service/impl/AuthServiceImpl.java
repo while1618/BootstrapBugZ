@@ -19,7 +19,6 @@ import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
-import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
@@ -64,25 +63,25 @@ public class AuthServiceImpl implements AuthService {
       throw new ConflictException(messageService.getMessage("username.exists"));
     if (userRepository.existsByEmail(registerUserRequest.email()))
       throw new ConflictException(messageService.getMessage("email.exists"));
-    final var user =
-        User.builder()
-            .firstName(registerUserRequest.firstName())
-            .lastName(registerUserRequest.lastName())
-            .username(registerUserRequest.username())
-            .email(registerUserRequest.email())
-            .password(bCryptPasswordEncoder.encode(registerUserRequest.password()))
-            .roles(Collections.singleton(getUserRole()))
-            .build();
-    userRepository.save(user);
+    final var user = userRepository.save(createUser(registerUserRequest));
     final var token = verificationTokenService.create(user.getId());
     verificationTokenService.sendToEmail(user, token);
     return UserMapper.INSTANCE.userToProfileUserDTO(user);
   }
 
-  private Role getUserRole() {
-    return roleRepository
-        .findByName(RoleName.USER)
-        .orElseThrow(() -> new RuntimeException(messageService.getMessage("role.notFound")));
+  private User createUser(RegisterUserRequest registerUserRequest) {
+    final var roles =
+        roleRepository
+            .findByName(RoleName.USER)
+            .orElseThrow(() -> new RuntimeException(messageService.getMessage("role.notFound")));
+    return User.builder()
+        .firstName(registerUserRequest.firstName())
+        .lastName(registerUserRequest.lastName())
+        .username(registerUserRequest.username())
+        .email(registerUserRequest.email())
+        .password(bCryptPasswordEncoder.encode(registerUserRequest.password()))
+        .roles(Collections.singleton(roles))
+        .build();
   }
 
   @Override

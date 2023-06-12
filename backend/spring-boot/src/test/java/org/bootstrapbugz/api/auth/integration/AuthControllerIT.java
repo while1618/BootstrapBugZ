@@ -4,9 +4,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,15 +44,15 @@ import org.springframework.test.web.servlet.MockMvc;
 class AuthControllerIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  @Autowired private VerificationTokenServiceImpl confirmRegistrationTokenService;
+  @Autowired private VerificationTokenServiceImpl verificationTokenService;
   @Autowired private ResetPasswordTokenServiceImpl resetPasswordService;
   @Autowired private UserRepository userRepository;
 
   @MockBean private EmailService emailService;
 
   @Test
-  void signUp() throws Exception {
-    final var signUpRequest =
+  void registerUser() throws Exception {
+    final var registerUserRequest =
         RegisterUserRequest.builder()
             .firstName("Test")
             .lastName("Test")
@@ -63,9 +63,9 @@ class AuthControllerIT extends DatabaseContainers {
             .build();
     mockMvc
         .perform(
-            post(Path.AUTH + "/sign-up")
+            post(Path.AUTH + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signUpRequest)))
+                .content(objectMapper.writeValueAsString(registerUserRequest)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.username").value("test"));
     verify(emailService, times(1))
@@ -73,8 +73,8 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void signUp_throwBadRequest_invalidParameters() throws Exception {
-    final var signUpRequest =
+  void registerUser_throwBadRequest_invalidParameters() throws Exception {
+    final var registerUserRequest =
         RegisterUserRequest.builder()
             .firstName("User1")
             .lastName("User1")
@@ -85,138 +85,86 @@ class AuthControllerIT extends DatabaseContainers {
             .build();
     mockMvc
         .perform(
-            post(Path.AUTH + "/sign-up")
+            post(Path.AUTH + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signUpRequest)))
+                .content(objectMapper.writeValueAsString(registerUserRequest)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Invalid first name.")))
         .andExpect(content().string(containsString("Invalid last name.")))
-        .andExpect(content().string(containsString("Username already exists.")))
-        .andExpect(content().string(containsString("Email already exists.")))
         .andExpect(content().string(containsString("Passwords do not match.")));
   }
 
   @Test
-  void resendConfirmationEmail() throws Exception {
-    final var resendConfirmationEmailRequest = new VerificationEmailRequest("deactivated");
+  void registerUser_throwConflict_usernameExists() throws Exception {
+    final var registerUserRequest =
+        RegisterUserRequest.builder()
+            .firstName("Test")
+            .lastName("Test")
+            .username("user")
+            .email("test123@localhost")
+            .password("qwerty123")
+            .confirmPassword("qwerty123")
+            .build();
     mockMvc
         .perform(
-            post(Path.AUTH + "/resend-confirmation-email")
+            post(Path.AUTH + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
-        .andExpect(status().isNoContent());
-    verify(emailService, times(1))
-        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
-  }
-
-  @Test
-  void resendConfirmationEmail_throwResourceNotFound_userNotFound() throws Exception {
-    final var resendConfirmationEmailRequest = new VerificationEmailRequest("unknown");
-    mockMvc
-        .perform(
-            post(Path.AUTH + "/resend-confirmation-email")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
-        .andExpect(status().isNotFound())
-        .andExpect(content().string(containsString("User not found.")));
-  }
-
-  @Test
-  void resendConfirmationEmail_throwConflict_userAlreadyActivated() throws Exception {
-    final var resendConfirmationEmailRequest = new VerificationEmailRequest("user");
-    mockMvc
-        .perform(
-            post(Path.AUTH + "/resend-confirmation-email")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(resendConfirmationEmailRequest)))
+                .content(objectMapper.writeValueAsString(registerUserRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("User already activated.")));
+        .andExpect(content().string(containsString("Username already exists.")));
   }
 
   @Test
-  void confirmRegistration() throws Exception {
-    final var user = userRepository.findByUsername("deactivated").orElseThrow();
-    final var token = confirmRegistrationTokenService.create(user.getId());
-    final var confirmRegistrationRequest = new VerifyEmailRequest(token);
+  void registerUser_throwConflict_emailExists() throws Exception {
+    final var registerUserRequest =
+        RegisterUserRequest.builder()
+            .firstName("Test")
+            .lastName("Test")
+            .username("test123")
+            .email("user@localhost")
+            .password("qwerty123")
+            .confirmPassword("qwerty123")
+            .build();
     mockMvc
         .perform(
-            put(Path.AUTH + "/confirm-registration")
+            post(Path.AUTH + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
-        .andExpect(status().isNoContent());
-  }
-
-  @Test
-  void confirmRegistration_throwBadRequest_invalidToken() throws Exception {
-    final var user = User.builder().id(100L).build();
-    final var token = confirmRegistrationTokenService.create(user.getId());
-    final var confirmRegistrationRequest = new VerifyEmailRequest(token);
-    mockMvc
-        .perform(
-            put(Path.AUTH + "/confirm-registration")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Invalid token.")));
-  }
-
-  @Test
-  void confirmRegistration_throwConflict_userAlreadyActivated() throws Exception {
-    final var user = userRepository.findByUsername("user").orElseThrow();
-    final var token = confirmRegistrationTokenService.create(user.getId());
-    final var confirmRegistrationRequest = new VerifyEmailRequest(token);
-    mockMvc
-        .perform(
-            put(Path.AUTH + "/confirm-registration")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(confirmRegistrationRequest)))
+                .content(objectMapper.writeValueAsString(registerUserRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("User already activated.")));
+        .andExpect(content().string(containsString("Email already exists.")));
   }
 
+  //  TODO: fix spring security
   @Test
-  void refreshToken() throws Exception {
-    final var refreshToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1").refreshToken();
-    final var refreshTokenRequest = new RefreshAuthTokensRequest(refreshToken);
+  void deleteTokens() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete1");
     mockMvc
         .perform(
-            post(Path.AUTH + "/refresh-token")
+            delete(Path.AUTH + "/tokens")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(refreshTokenRequest)))
-        .andExpect(status().isOk());
-  }
-
-  @Test
-  void signOut() throws Exception {
-    final var signInDTO = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete1");
-    mockMvc
-        .perform(
-            post(Path.AUTH + "/sign-out")
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(signInDTO.accessToken())))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
         .andExpect(status().isNoContent());
-    invalidAccessToken(signInDTO.accessToken());
-    invalidRefreshToken(signInDTO.refreshToken());
+    invalidAccessToken(authTokens.accessToken());
+    invalidRefreshToken(authTokens.refreshToken());
   }
 
   @Test
-  void signOutFromAllDevices() throws Exception {
-    final var signInDTO = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete2");
+  void deleteTokensOnAllDevices() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete2");
     mockMvc
         .perform(
-            post(Path.AUTH + "/sign-out-from-all-devices")
+            delete(Path.AUTH + "/tokens/devices")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(signInDTO.accessToken())))
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
         .andExpect(status().isNoContent());
-    invalidAccessToken(signInDTO.accessToken());
-    invalidRefreshToken(signInDTO.refreshToken());
+    invalidAccessToken(authTokens.accessToken());
+    invalidRefreshToken(authTokens.refreshToken());
   }
 
   private void invalidAccessToken(String accessToken) throws Exception {
     mockMvc
         .perform(
-            get(Path.AUTH + "/signed-in-user")
+            get(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isUnauthorized())
@@ -229,7 +177,7 @@ class AuthControllerIT extends DatabaseContainers {
     final var refreshTokenRequest = new RefreshAuthTokensRequest(refreshToken);
     mockMvc
         .perform(
-            post(Path.AUTH + "/refresh-token")
+            post(Path.AUTH + "/tokens/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(refreshTokenRequest)))
         .andExpect(status().isBadRequest())
@@ -237,11 +185,23 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   @Test
+  void refreshToken() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1");
+    final var refreshTokenRequest = new RefreshAuthTokensRequest(authTokens.refreshToken());
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/tokens/refresh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(refreshTokenRequest)))
+        .andExpect(status().isOk());
+  }
+
+  @Test
   void forgotPassword() throws Exception {
     final var forgotPasswordRequest = new ForgotPasswordRequest("update4@localhost");
     mockMvc
         .perform(
-            post(Path.AUTH + "/forgot-password")
+            post(Path.AUTH + "/password/forgot")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
         .andExpect(status().isNoContent());
@@ -254,7 +214,7 @@ class AuthControllerIT extends DatabaseContainers {
     final var forgotPasswordRequest = new ForgotPasswordRequest("unknown@localhost");
     mockMvc
         .perform(
-            post(Path.AUTH + "/forgot-password")
+            post(Path.AUTH + "/password/forgot")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
         .andExpect(status().isNotFound())
@@ -268,16 +228,16 @@ class AuthControllerIT extends DatabaseContainers {
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
-            put(Path.AUTH + "/reset-password")
+            post(Path.AUTH + "/password/reset")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isNoContent());
-    final var signInRequest = new AuthTokensRequest("update4", "qwerty1234");
+    final var authTokensRequest = new AuthTokensRequest("update4", "qwerty1234");
     mockMvc
         .perform(
-            post(Path.AUTH + "/sign-in")
+            post(Path.AUTH + "/tokens")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signInRequest)))
+                .content(objectMapper.writeValueAsString(authTokensRequest)))
         .andExpect(status().isOk());
   }
 
@@ -288,7 +248,7 @@ class AuthControllerIT extends DatabaseContainers {
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty123", "qwerty1234");
     mockMvc
         .perform(
-            put(Path.AUTH + "/reset-password")
+            post(Path.AUTH + "/password/reset")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isBadRequest())
@@ -302,7 +262,7 @@ class AuthControllerIT extends DatabaseContainers {
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
         .perform(
-            put(Path.AUTH + "/reset-password")
+            post(Path.AUTH + "/password/reset")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isBadRequest())
@@ -310,37 +270,80 @@ class AuthControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void retrieveSignedInUser() throws Exception {
-    final var accessToken =
-        IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user").accessToken();
+  void sendVerificationMail() throws Exception {
+    final var verificationMailRequest = new VerificationEmailRequest("deactivated1");
     mockMvc
         .perform(
-            get(Path.AUTH + "/signed-in-user")
+            post(Path.AUTH + "/verification-email")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(accessToken)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.username").value("user"));
+                .content(objectMapper.writeValueAsString(verificationMailRequest)))
+        .andExpect(status().isNoContent());
+    verify(emailService, times(1))
+        .sendHtmlEmail(any(String.class), any(String.class), any(String.class));
   }
 
   @Test
-  void usernameAvailability() throws Exception {
+  void sendVerificationMail_throwResourceNotFound_userNotFound() throws Exception {
+    final var verificationMailRequest = new VerificationEmailRequest("unknown");
     mockMvc
         .perform(
-            get(Path.AUTH + "/username-availability")
-                .param("username", "user")
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().string("false"));
+            post(Path.AUTH + "/verification-email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(verificationMailRequest)))
+        .andExpect(status().isNotFound())
+        .andExpect(content().string(containsString("User not found.")));
   }
 
   @Test
-  void emailAvailability() throws Exception {
+  void sendVerificationMail_throwConflict_userAlreadyActivated() throws Exception {
+    final var verificationMailRequest = new VerificationEmailRequest("user");
     mockMvc
         .perform(
-            get(Path.AUTH + "/email-availability")
-                .param("email", "available@localhost")
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().string("true"));
+            post(Path.AUTH + "/verification-email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(verificationMailRequest)))
+        .andExpect(status().isConflict())
+        .andExpect(content().string(containsString("User already activated.")));
+  }
+
+  @Test
+  void verifyEmail() throws Exception {
+    final var user = userRepository.findByUsername("deactivated2").orElseThrow();
+    final var token = verificationTokenService.create(user.getId());
+    final var verifyEmailRequest = new VerifyEmailRequest(token);
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/verify-email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(verifyEmailRequest)))
+        .andExpect(status().isNoContent());
+  }
+
+  @Test
+  void verifyEmail_throwBadRequest_invalidToken() throws Exception {
+    final var user = User.builder().id(100L).build();
+    final var token = verificationTokenService.create(user.getId());
+    final var verifyEmailRequest = new VerifyEmailRequest(token);
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/verify-email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(verifyEmailRequest)))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("Invalid token.")));
+  }
+
+  @Test
+  void verifyEmail_throwConflict_userAlreadyActivated() throws Exception {
+    final var user = userRepository.findByUsername("user").orElseThrow();
+    final var token = verificationTokenService.create(user.getId());
+    final var verifyEmailRequest = new VerifyEmailRequest(token);
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/verify-email")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(verifyEmailRequest)))
+        .andExpect(status().isConflict())
+        .andExpect(content().string(containsString("User already activated.")));
   }
 }

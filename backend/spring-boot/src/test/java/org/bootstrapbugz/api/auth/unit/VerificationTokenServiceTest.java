@@ -15,23 +15,23 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class VerificationTokenServiceTest {
   @Mock private ApplicationEventPublisher eventPublisher;
-  @InjectMocks private VerificationTokenServiceImpl confirmRegistrationTokenService;
+  @InjectMocks private VerificationTokenServiceImpl verificationTokenService;
 
   @BeforeEach
   public void setUp() {
-    ReflectionTestUtils.setField(confirmRegistrationTokenService, "secret", "secret");
-    ReflectionTestUtils.setField(confirmRegistrationTokenService, "tokenDuration", 900);
+    ReflectionTestUtils.setField(verificationTokenService, "secret", "secret");
+    ReflectionTestUtils.setField(verificationTokenService, "tokenDuration", 900);
   }
 
   @Test
   void createToken() {
-    final var token = confirmRegistrationTokenService.create(1L);
+    final var token = verificationTokenService.create(1L);
     assertThat(token).isNotNull();
   }
 
   @Test
   void checkRefreshToken() {
-    final var token = confirmRegistrationTokenService.create(1L);
-    confirmRegistrationTokenService.check(token);
+    final var token = verificationTokenService.create(1L);
+    verificationTokenService.check(token);
   }
 }

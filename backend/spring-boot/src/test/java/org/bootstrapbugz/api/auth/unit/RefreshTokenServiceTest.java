@@ -69,7 +69,7 @@ class RefreshTokenServiceTest {
   }
 
   @Test
-  void findRefreshToken() {
+  void findRefreshTokenByUserIdAndIpAddress() {
     final var refreshToken = new RefreshTokenStore("token123", 1L, "ip1", 1000);
     when(refreshTokenStoreRepository.findByUserIdAndIpAddress(1L, "ip1"))
         .thenReturn(Optional.of(refreshToken));
