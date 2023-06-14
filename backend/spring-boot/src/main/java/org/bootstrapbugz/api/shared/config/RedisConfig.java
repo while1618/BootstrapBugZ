@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisKeyValueAdapter.EnableKeyspaceEvents;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
@@ -33,21 +33,21 @@ public class RedisConfig {
   private int timeout;
 
   @Bean
-  JedisConnectionFactory jedisConnectionFactory() {
+  LettuceConnectionFactory lettuceConnectionFactory() {
     final var redisStandaloneConfiguration = new RedisStandaloneConfiguration();
     redisStandaloneConfiguration.setHostName(host);
     redisStandaloneConfiguration.setPort(port);
     redisStandaloneConfiguration.setDatabase(database);
     redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
-    return new JedisConnectionFactory(
+    return new LettuceConnectionFactory(
         redisStandaloneConfiguration,
-        JedisClientConfiguration.builder().connectTimeout(Duration.ofSeconds(timeout)).build());
+        LettuceClientConfiguration.builder().commandTimeout(Duration.ofSeconds(timeout)).build());
   }
 
   @Bean
   public RedisTemplate<String, Object> redisTemplate() {
     final var template = new RedisTemplate<String, Object>();
-    template.setConnectionFactory(jedisConnectionFactory());
+    template.setConnectionFactory(lettuceConnectionFactory());
     return template;
   }
 }
