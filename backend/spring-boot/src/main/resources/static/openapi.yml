@@ -12,8 +12,8 @@ info:
 servers:
   - url: http://localhost:8080/v1
   - url: https://localhost:8080/v1
-  - url: http://localhost:18080/v1
-  - url: https://localhost:18080/v1
+  - url: http://localhost:8081/v1
+  - url: https://localhost:8081/v1
 tags:
   - name: auth
     description: Authentication endpoints
