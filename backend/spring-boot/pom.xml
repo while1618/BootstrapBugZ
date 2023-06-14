@@ -23,12 +23,12 @@
     <guava.version>32.0.1-jre</guava.version>
     <jwt.version>4.4.0</jwt.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <springdoc.version>2.1.0</springdoc.version>
     <jacoco.version>0.8.8</jacoco.version>
     <testcontainers.version>1.18.3</testcontainers.version>
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     <spotless.version>2.29.0</spotless.version>
-    <google-java-format.version>1.15.0</google-java-format.version>
-    <springdoc.version>2.1.0</springdoc.version>
+    <google-java-format.version>1.17.0</google-java-format.version>
   </properties>
 
   <dependencies>
@@ -97,7 +97,7 @@
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <version>${springdoc.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
