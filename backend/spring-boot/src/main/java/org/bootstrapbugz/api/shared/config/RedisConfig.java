@@ -39,12 +39,9 @@ public class RedisConfig {
     redisStandaloneConfiguration.setPort(port);
     redisStandaloneConfiguration.setDatabase(database);
     redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
-
-    final var jedisClientConfiguration =
-        JedisClientConfiguration.builder().connectTimeout(Duration.ofSeconds(timeout));
-
     return new JedisConnectionFactory(
-        redisStandaloneConfiguration, jedisClientConfiguration.build());
+        redisStandaloneConfiguration,
+        JedisClientConfiguration.builder().connectTimeout(Duration.ofSeconds(timeout)).build());
   }
 
   @Bean
