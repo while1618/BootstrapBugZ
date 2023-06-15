@@ -25,7 +25,7 @@ import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerificationEmailRequest;
 import org.bootstrapbugz.api.auth.payload.request.VerifyEmailRequest;
-import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
+import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.auth.service.impl.AuthServiceImpl;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
@@ -48,6 +48,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,6 +61,7 @@ class AuthServiceTest {
   @Mock private RoleRepository roleRepository;
   @Mock private MessageService messageService;
   @Spy private BCryptPasswordEncoder bCryptPasswordEncoder;
+  @Mock private AuthenticationManager authenticationManager;
   @Mock private AccessTokenBlacklistRepository accessTokenBlacklistRepository;
   @Mock private UserBlacklistRepository userBlacklistRepository;
   @Mock private RefreshTokenStoreRepository refreshTokenStoreRepository;
@@ -82,6 +84,7 @@ class AuthServiceTest {
             roleRepository,
             messageService,
             bCryptPasswordEncoder,
+            authenticationManager,
             accessTokenService,
             refreshTokenService,
             verificationTokenService,

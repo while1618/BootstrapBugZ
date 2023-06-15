@@ -1,6 +1,7 @@
 package org.bootstrapbugz.api.auth.service;
 
 import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
+import org.bootstrapbugz.api.auth.payload.request.AuthenticateRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
@@ -10,6 +11,8 @@ import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 
 public interface AuthService {
   UserDTO register(RegisterUserRequest registerUserRequest);
+
+  AuthTokensDTO authenticate(AuthenticateRequest authenticateRequest, String ipAddress);
 
   void deleteTokens(String accessToken, String ipAddress);
 

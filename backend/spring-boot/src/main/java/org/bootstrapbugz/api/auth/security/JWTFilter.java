@@ -4,35 +4,34 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
-import org.bootstrapbugz.api.auth.security.user.details.ExtendedUserDetailsService;
-import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
 import org.bootstrapbugz.api.auth.util.AuthUtil;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
-public class JWTFilter extends BasicAuthenticationFilter {
+@Component
+public class JWTFilter extends OncePerRequestFilter {
   private final AccessTokenService accessTokenService;
   private final ExtendedUserDetailsService userDetailsService;
 
   public JWTFilter(
-      AuthenticationManager authenticationManager,
-      AccessTokenService accessTokenService,
-      ExtendedUserDetailsService userDetailsService) {
-    super(authenticationManager);
+      AccessTokenService accessTokenService, ExtendedUserDetailsService userDetailsService) {
     this.accessTokenService = accessTokenService;
     this.userDetailsService = userDetailsService;
   }
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+      @NotNull HttpServletRequest request,
+      @NotNull HttpServletResponse response,
+      @NotNull FilterChain chain)
       throws IOException, ServletException {
     final var accessToken = AuthUtil.getAccessTokenFromRequest(request);
     if (accessToken == null || !JwtUtil.isBearer(accessToken)) {
@@ -40,8 +39,7 @@ public class JWTFilter extends BasicAuthenticationFilter {
       return;
     }
     try {
-      final var authToken = getAuthenticationToken(accessToken);
-      SecurityContextHolder.getContext().setAuthentication(authToken);
+      SecurityContextHolder.getContext().setAuthentication(getAuth(accessToken));
     } catch (RuntimeException e) {
       log.error(e.getMessage());
     } finally {
@@ -49,7 +47,7 @@ public class JWTFilter extends BasicAuthenticationFilter {
     }
   }
 
-  private UsernamePasswordAuthenticationToken getAuthenticationToken(String accessToken) {
+  private UsernamePasswordAuthenticationToken getAuth(String accessToken) {
     final var token = JwtUtil.removeBearer(accessToken);
     accessTokenService.check(token);
     final var userId = JwtUtil.getUserId(token);

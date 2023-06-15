@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.security.user.details;
+package org.bootstrapbugz.api.auth.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

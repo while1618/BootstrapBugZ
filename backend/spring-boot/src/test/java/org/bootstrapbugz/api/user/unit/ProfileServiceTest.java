@@ -12,7 +12,7 @@ import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.VerificationTokenService;
-import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
+import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;

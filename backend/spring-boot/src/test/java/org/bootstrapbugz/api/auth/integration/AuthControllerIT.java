@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.VerificationTokenServiceImpl;
-import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
+import org.bootstrapbugz.api.auth.payload.request.AuthenticateRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshAuthTokensRequest;
 import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
@@ -28,6 +28,8 @@ import org.bootstrapbugz.api.shared.util.IntegrationTestUtil;
 import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -134,7 +136,48 @@ class AuthControllerIT extends DatabaseContainers {
         .andExpect(content().string(containsString("Email already exists.")));
   }
 
-  //  TODO: fix spring security
+  @Test
+  void authenticate() throws Exception {
+    final var authenticateRequest = new AuthenticateRequest("user", "qwerty123");
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/tokens")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(authenticateRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.accessToken").isString())
+        .andExpect(jsonPath("$.refreshToken").isString());
+  }
+
+  @Test
+  void authenticate_throwUnauthorized_wrongCredentials() throws Exception {
+    final var authenticateRequest = new AuthenticateRequest("wrong", "qwerty123");
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/tokens")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(authenticateRequest)))
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString("Invalid credentials.")));
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "locked, User locked.",
+    "deactivated1, User not activated.",
+  })
+  void authenticate_throwForbidden_lockedDeactivatedUser(String username, String message)
+      throws Exception {
+    final var authenticateRequest = new AuthenticateRequest(username, "qwerty123");
+    mockMvc
+        .perform(
+            post(Path.AUTH + "/tokens")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(authenticateRequest)))
+        .andExpect(status().isForbidden())
+        .andExpect(content().string(containsString(message)));
+  }
+
   @Test
   void deleteTokens() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete1");
@@ -232,12 +275,12 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isNoContent());
-    final var authTokensRequest = new AuthTokensRequest("update4", "qwerty1234");
+    final var authenticateRequest = new AuthenticateRequest("update4", "qwerty1234");
     mockMvc
         .perform(
             post(Path.AUTH + "/tokens")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(authTokensRequest)))
+                .content(objectMapper.writeValueAsString(authenticateRequest)))
         .andExpect(status().isOk());
   }
 

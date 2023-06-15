@@ -1,7 +1,10 @@
 package org.bootstrapbugz.api.user.mapper;
 
-import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
+import java.util.Set;
+import org.bootstrapbugz.api.auth.security.UserPrincipal;
+import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.User;
+import org.bootstrapbugz.api.user.payload.dto.RoleDTO;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -11,6 +14,8 @@ import org.mapstruct.factory.Mappers;
 @Mapper(injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface UserMapper {
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+
+  Set<RoleDTO> rolesToRoleDTOs(Set<Role> roles);
 
   @Mapping(source = "roles", target = "roleDTOs")
   UserDTO userToAdminUserDTO(User user);

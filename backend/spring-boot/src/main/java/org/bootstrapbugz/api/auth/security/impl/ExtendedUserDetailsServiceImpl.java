@@ -1,7 +1,7 @@
-package org.bootstrapbugz.api.auth.security.user.details.impl;
+package org.bootstrapbugz.api.auth.security.impl;
 
-import org.bootstrapbugz.api.auth.security.user.details.ExtendedUserDetailsService;
-import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
+import org.bootstrapbugz.api.auth.security.ExtendedUserDetailsService;
+import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.repository.UserRepository;

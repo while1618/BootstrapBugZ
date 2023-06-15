@@ -1,7 +1,7 @@
 package org.bootstrapbugz.api.auth.util;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.bootstrapbugz.api.auth.security.user.details.UserPrincipal;
+import org.bootstrapbugz.api.auth.security.UserPrincipal;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;

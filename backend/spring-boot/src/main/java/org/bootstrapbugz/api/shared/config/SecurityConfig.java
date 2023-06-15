@@ -1,13 +1,9 @@
 package org.bootstrapbugz.api.shared.config;
 
-import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
-import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
-import org.bootstrapbugz.api.auth.security.AuthenticationFilter;
+import org.bootstrapbugz.api.auth.security.ExtendedUserDetailsService;
 import org.bootstrapbugz.api.auth.security.JWTFilter;
-import org.bootstrapbugz.api.auth.security.user.details.ExtendedUserDetailsService;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
-import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -43,22 +40,16 @@ public class SecurityConfig {
     "/swagger-ui/**", "/v3/api-docs/**", "/openapi.yml"
   };
   private final ExtendedUserDetailsService userDetailsService;
-  private final AccessTokenService accessTokenService;
-  private final RefreshTokenService refreshTokenService;
+  private final JWTFilter jwtFilter;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-  private final MessageService messageService;
 
   public SecurityConfig(
       ExtendedUserDetailsService userDetailsService,
-      AccessTokenService accessTokenService,
-      RefreshTokenService refreshTokenService,
-      CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-      MessageService messageService) {
+      JWTFilter jwtFilter,
+      CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
     this.userDetailsService = userDetailsService;
-    this.accessTokenService = accessTokenService;
-    this.refreshTokenService = refreshTokenService;
+    this.jwtFilter = jwtFilter;
     this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
-    this.messageService = messageService;
   }
 
   @Bean
@@ -67,7 +58,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public AuthenticationManager authManager() {
+  public AuthenticationManager authenticationManager() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
     authProvider.setUserDetailsService(userDetailsService);
     authProvider.setPasswordEncoder(bCryptPasswordEncoder());
@@ -76,7 +67,8 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    return http.authorizeHttpRequests(
+    return http.csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers(AUTH_WHITELIST)
                     .permitAll()
@@ -86,15 +78,11 @@ public class SecurityConfig {
                     .permitAll()
                     .anyRequest()
                     .authenticated())
-        .addFilter(
-            new AuthenticationFilter(
-                authManager(), accessTokenService, refreshTokenService, messageService))
-        .addFilter(new JWTFilter(authManager(), accessTokenService, userDetailsService))
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(
             exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint))
         .cors(cors -> cors.configure(http))
-        .csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .build();
   }
 }

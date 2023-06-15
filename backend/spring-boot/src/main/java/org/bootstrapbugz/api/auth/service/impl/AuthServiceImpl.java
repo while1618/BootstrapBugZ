@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.auth.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.RefreshTokenService;
@@ -7,6 +8,7 @@ import org.bootstrapbugz.api.auth.jwt.service.ResetPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.VerificationTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
+import org.bootstrapbugz.api.auth.payload.request.AuthenticateRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
@@ -17,6 +19,7 @@ import org.bootstrapbugz.api.auth.util.AuthUtil;
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
+import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -24,6 +27,8 @@ import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
   private final RoleRepository roleRepository;
   private final MessageService messageService;
   private final PasswordEncoder bCryptPasswordEncoder;
+  private final AuthenticationManager authenticationManager;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
   private final VerificationTokenService verificationTokenService;
@@ -43,6 +49,7 @@ public class AuthServiceImpl implements AuthService {
       RoleRepository roleRepository,
       MessageService messageService,
       PasswordEncoder bCryptPasswordEncoder,
+      AuthenticationManager authenticationManager,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
       VerificationTokenService verificationTokenService,
@@ -51,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
     this.roleRepository = roleRepository;
     this.messageService = messageService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    this.authenticationManager = authenticationManager;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
     this.verificationTokenService = verificationTokenService;
@@ -67,6 +75,29 @@ public class AuthServiceImpl implements AuthService {
     final var token = verificationTokenService.create(user.getId());
     verificationTokenService.sendToEmail(user, token);
     return UserMapper.INSTANCE.userToProfileUserDTO(user);
+  }
+
+  @Override
+  public AuthTokensDTO authenticate(AuthenticateRequest authenticateRequest, String ipAddress) {
+    final var auth =
+        new UsernamePasswordAuthenticationToken(
+            authenticateRequest.usernameOrEmail(),
+            authenticateRequest.password(),
+            new ArrayList<>());
+    authenticationManager.authenticate(auth);
+
+    final var user =
+        userRepository
+            .findByUsernameWithRoles(auth.getName())
+            .orElseThrow(
+                () -> new UnauthorizedException(messageService.getMessage("auth.invalid")));
+    final var roleDTOs = UserMapper.INSTANCE.rolesToRoleDTOs(user.getRoles());
+    final var accessToken = accessTokenService.create(user.getId(), roleDTOs);
+    final var refreshToken =
+        refreshTokenService
+            .findByUserIdAndIpAddress(user.getId(), ipAddress)
+            .orElse(refreshTokenService.create(user.getId(), roleDTOs, ipAddress));
+    return new AuthTokensDTO(accessToken, refreshToken);
   }
 
   private User createUser(RegisterUserRequest registerUserRequest) {

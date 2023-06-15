@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.auth.security.user.details;
+package org.bootstrapbugz.api.auth.security;
 
 import java.io.Serial;
 import java.time.LocalDateTime;

@@ -8,6 +8,7 @@ import org.bootstrapbugz.api.shared.error.exception.ConflictException;
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.error.exception.UnauthorizedException;
+import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -15,6 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -26,6 +30,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+  private final MessageService messageService;
+
+  public CustomExceptionHandler(MessageService messageService) {
+    this.messageService = messageService;
+  }
+
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex,
@@ -83,6 +93,16 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler({ConflictException.class})
   public ResponseEntity<Object> handleConflictException(ConflictException ex) {
     return createError(ex.getStatus(), ex.getMessage(), ex.getField());
+  }
+
+  @ExceptionHandler({AuthenticationException.class})
+  public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+    if (ex instanceof DisabledException)
+      return createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.notActive"), null);
+    else if (ex instanceof LockedException)
+      return createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.lock"), null);
+    else
+      return createError(HttpStatus.UNAUTHORIZED, messageService.getMessage("auth.invalid"), null);
   }
 
   @ExceptionHandler({Exception.class})
