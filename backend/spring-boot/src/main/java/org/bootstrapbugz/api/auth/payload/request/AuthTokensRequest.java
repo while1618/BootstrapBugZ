@@ -5,6 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import org.bootstrapbugz.api.shared.constants.Regex;
 import org.bootstrapbugz.api.shared.validator.UsernameOrEmail;
 
-public record AuthenticateRequest(
+public record AuthTokensRequest(
     @NotBlank @UsernameOrEmail(message = "{auth.invalid}") String usernameOrEmail,
     @NotBlank @Pattern(regexp = Regex.PASSWORD, message = "{auth.invalid}") String password) {}

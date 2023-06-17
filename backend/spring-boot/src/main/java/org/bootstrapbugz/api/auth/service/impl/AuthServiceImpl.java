@@ -8,7 +8,7 @@ import org.bootstrapbugz.api.auth.jwt.service.ResetPasswordTokenService;
 import org.bootstrapbugz.api.auth.jwt.service.VerificationTokenService;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
-import org.bootstrapbugz.api.auth.payload.request.AuthenticateRequest;
+import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
 import org.bootstrapbugz.api.auth.payload.request.ResetPasswordRequest;
@@ -78,12 +78,10 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public AuthTokensDTO authenticate(AuthenticateRequest authenticateRequest, String ipAddress) {
+  public AuthTokensDTO authenticate(AuthTokensRequest authTokensRequest, String ipAddress) {
     final var auth =
         new UsernamePasswordAuthenticationToken(
-            authenticateRequest.usernameOrEmail(),
-            authenticateRequest.password(),
-            new ArrayList<>());
+            authTokensRequest.usernameOrEmail(), authTokensRequest.password(), new ArrayList<>());
     authenticationManager.authenticate(auth);
 
     final var user =

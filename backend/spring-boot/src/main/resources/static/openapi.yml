@@ -55,7 +55,7 @@ paths:
         - auth
       summary: Create access and refresh tokens
       requestBody:
-        $ref: "#/components/requestBodies/AuthenticateRequest"
+        $ref: "#/components/requestBodies/AuthTokenRequest"
       responses:
         200:
           description: Auth tokens created successfully
@@ -668,8 +668,8 @@ components:
             email: joe.bloggs@localhost
             password: qwerty123
             confirmPassword: qwerty123
-    AuthenticateRequest:
-      description: Authenticate request
+    AuthTokenRequest:
+      description: Auth token request
       required: true
       content:
         application/json:

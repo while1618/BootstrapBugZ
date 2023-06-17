@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.bootstrapbugz.api.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
-import org.bootstrapbugz.api.auth.payload.request.AuthenticateRequest;
+import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
 import org.bootstrapbugz.api.auth.payload.request.ForgotPasswordRequest;
 import org.bootstrapbugz.api.auth.payload.request.RefreshAuthTokensRequest;
 import org.bootstrapbugz.api.auth.payload.request.RegisterUserRequest;
@@ -40,9 +40,9 @@ public class AuthController {
 
   @PostMapping("/tokens")
   public ResponseEntity<AuthTokensDTO> authenticate(
-      @Valid @RequestBody AuthenticateRequest authenticateRequest, HttpServletRequest request) {
+      @Valid @RequestBody AuthTokensRequest authTokensRequest, HttpServletRequest request) {
     final var ipAddress = AuthUtil.getUserIpAddress(request);
-    return ResponseEntity.ok(authService.authenticate(authenticateRequest, ipAddress));
+    return ResponseEntity.ok(authService.authenticate(authTokensRequest, ipAddress));
   }
 
   @DeleteMapping("/tokens")

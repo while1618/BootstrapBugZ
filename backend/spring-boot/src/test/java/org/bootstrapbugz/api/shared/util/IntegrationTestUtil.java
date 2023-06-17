@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bootstrapbugz.api.auth.payload.dto.AuthTokensDTO;
-import org.bootstrapbugz.api.auth.payload.request.AuthenticateRequest;
+import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,13 +23,13 @@ public class IntegrationTestUtil {
 
   public static AuthTokensDTO authTokens(
       MockMvc mockMvc, ObjectMapper objectMapper, String username) throws Exception {
-    final var authenticateRequest = new AuthenticateRequest(username, "qwerty123");
+    final var authTokensRequest = new AuthTokensRequest(username, "qwerty123");
     final var response =
         mockMvc
             .perform(
                 post(Path.AUTH + "/tokens")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(authenticateRequest)))
+                    .content(objectMapper.writeValueAsString(authTokensRequest)))
             .andExpect(status().isOk())
             .andReturn()
             .getResponse()
