@@ -5,10 +5,17 @@ import jakarta.validation.constraints.Pattern;
 import org.bootstrapbugz.api.shared.constants.Regex;
 import org.bootstrapbugz.api.shared.validator.FieldMatch;
 
-@FieldMatch(first = "newPassword", second = "confirmNewPassword", message = "{password.doNotMatch}")
+@FieldMatch(
+    first = "newPassword",
+    second = "confirmNewPassword",
+    message = "{passwords.doNotMatch}")
 public record ChangePasswordRequest(
-    @NotBlank @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{password.required}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
         String currentPassword,
-    @NotBlank @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}") String newPassword,
-    @NotBlank @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{password.required}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+        String newPassword,
+    @NotBlank(message = "{password.required}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
         String confirmNewPassword) {}

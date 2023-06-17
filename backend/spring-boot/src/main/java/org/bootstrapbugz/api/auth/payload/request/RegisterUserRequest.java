@@ -8,14 +8,23 @@ import org.bootstrapbugz.api.shared.constants.Regex;
 import org.bootstrapbugz.api.shared.validator.FieldMatch;
 
 @Builder
-@FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
+@FieldMatch(first = "password", second = "confirmPassword", message = "{passwords.doNotMatch}")
 public record RegisterUserRequest(
-    @NotBlank @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{firstName.invalid}")
+    @NotBlank(message = "{firstName.required}")
+        @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{firstName.invalid}")
         String firstName,
-    @NotBlank @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{lastName.invalid}")
+    @NotBlank(message = "{lastName.required}")
+        @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{lastName.invalid}")
         String lastName,
-    @NotBlank @Pattern(regexp = Regex.USERNAME, message = "{username.invalid}") String username,
-    @NotBlank @Email(message = "{email.invalid}", regexp = Regex.EMAIL) String email,
-    @NotBlank @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}") String password,
-    @NotBlank @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{username.required}")
+        @Pattern(regexp = Regex.USERNAME, message = "{username.invalid}")
+        String username,
+    @NotBlank(message = "{email.required}")
+        @Email(message = "{email.invalid}", regexp = Regex.EMAIL)
+        String email,
+    @NotBlank(message = "{password.required}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+        String password,
+    @NotBlank(message = "{password.required}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
         String confirmPassword) {}

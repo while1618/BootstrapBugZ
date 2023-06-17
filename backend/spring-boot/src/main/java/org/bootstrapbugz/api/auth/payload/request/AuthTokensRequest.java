@@ -6,5 +6,8 @@ import org.bootstrapbugz.api.shared.constants.Regex;
 import org.bootstrapbugz.api.shared.validator.UsernameOrEmail;
 
 public record AuthTokensRequest(
-    @NotBlank @UsernameOrEmail(message = "{auth.invalid}") String usernameOrEmail,
-    @NotBlank @Pattern(regexp = Regex.PASSWORD, message = "{auth.invalid}") String password) {}
+    @NotBlank(message = "{usernameOrEmail.required}") @UsernameOrEmail(message = "{auth.invalid}")
+        String usernameOrEmail,
+    @NotBlank(message = "{password.required}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{auth.invalid}")
+        String password) {}

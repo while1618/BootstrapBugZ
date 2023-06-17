@@ -4,4 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import org.bootstrapbugz.api.shared.validator.UsernameOrEmail;
 
 public record VerificationEmailRequest(
-    @NotBlank @UsernameOrEmail(message = "{usernameOrEmail.invalid}") String usernameOrEmail) {}
+    @NotBlank(message = "{usernameOrEmail.required}")
+        @UsernameOrEmail(message = "{usernameOrEmail.invalid}")
+        String usernameOrEmail) {}

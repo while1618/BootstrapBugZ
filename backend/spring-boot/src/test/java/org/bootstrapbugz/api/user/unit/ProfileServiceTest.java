@@ -157,8 +157,7 @@ class ProfileServiceTest {
   void changePassword_thrownBadRequest_wrongOldPassword() {
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty123456", "qwerty1234", "qwerty1234");
-    when(messageService.getMessage("currentPassword.invalid"))
-        .thenReturn("Wrong current password.");
+    when(messageService.getMessage("currentPassword.wrong")).thenReturn("Wrong current password.");
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     assertThatThrownBy(() -> profileService.changePassword(changePasswordRequest))
         .isInstanceOf(BadRequestException.class)

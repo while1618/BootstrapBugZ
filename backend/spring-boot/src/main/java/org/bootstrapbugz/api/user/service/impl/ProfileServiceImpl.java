@@ -106,7 +106,7 @@ public class ProfileServiceImpl implements ProfileService {
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.currentPassword(), user.getPassword()))
       throw new BadRequestException(
-          "currentPassword", messageService.getMessage("currentPassword.invalid"));
+          "currentPassword", messageService.getMessage("currentPassword.wrong"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
     deleteAuthTokens(userId);
     userRepository.save(user);

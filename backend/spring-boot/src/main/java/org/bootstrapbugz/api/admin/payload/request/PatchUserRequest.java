@@ -9,7 +9,7 @@ import org.bootstrapbugz.api.shared.validator.FieldMatch;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 
 @Builder
-@FieldMatch(first = "password", second = "confirmPassword", message = "{password.doNotMatch}")
+@FieldMatch(first = "password", second = "confirmPassword", message = "{passwords.doNotMatch}")
 public record PatchUserRequest(
     @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{firstName.invalid}") String firstName,
     @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{lastName.invalid}") String lastName,
