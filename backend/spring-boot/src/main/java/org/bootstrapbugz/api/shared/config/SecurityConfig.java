@@ -1,7 +1,7 @@
 package org.bootstrapbugz.api.shared.config;
 
-import org.bootstrapbugz.api.auth.security.ExtendedUserDetailsService;
 import org.bootstrapbugz.api.auth.security.JWTFilter;
+import org.bootstrapbugz.api.auth.security.UserDetailsServiceImpl;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.shared.error.handling.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
@@ -39,16 +39,16 @@ public class SecurityConfig {
   private static final String[] SWAGGER_WHITELIST = {
     "/swagger-ui/**", "/v3/api-docs/**", "/openapi.yml"
   };
-  private final ExtendedUserDetailsService userDetailsService;
   private final JWTFilter jwtFilter;
+  private final UserDetailsServiceImpl userDetailsService;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
   public SecurityConfig(
-      ExtendedUserDetailsService userDetailsService,
       JWTFilter jwtFilter,
+      UserDetailsServiceImpl userDetailsService,
       CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
-    this.userDetailsService = userDetailsService;
     this.jwtFilter = jwtFilter;
+    this.userDetailsService = userDetailsService;
     this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
   }
 

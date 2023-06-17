@@ -19,10 +19,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JWTFilter extends OncePerRequestFilter {
   private final AccessTokenService accessTokenService;
-  private final ExtendedUserDetailsService userDetailsService;
+  private final UserDetailsServiceImpl userDetailsService;
 
   public JWTFilter(
-      AccessTokenService accessTokenService, ExtendedUserDetailsService userDetailsService) {
+      AccessTokenService accessTokenService, UserDetailsServiceImpl userDetailsService) {
     this.accessTokenService = accessTokenService;
     this.userDetailsService = userDetailsService;
   }
