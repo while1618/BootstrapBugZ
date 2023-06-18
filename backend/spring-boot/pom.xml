@@ -24,6 +24,7 @@
     <jwt.version>4.4.0</jwt.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <springdoc.version>2.1.0</springdoc.version>
+    <datafaker.version>2.0.0</datafaker.version>
     <jacoco.version>0.8.8</jacoco.version>
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     <spotless.version>2.29.0</spotless.version>
@@ -95,6 +96,11 @@
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <version>${springdoc.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.datafaker</groupId>
+      <artifactId>datafaker</artifactId>
+      <version>${datafaker.version}</version>
     </dependency>
 
     <dependency>

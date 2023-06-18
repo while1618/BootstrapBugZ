@@ -40,10 +40,10 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 5
-                firstName: Joe
-                lastName: Bloggs
-                username: joe.bloggs
-                email: joe.bloggs@localhost
+                firstName: John
+                lastName: Doe
+                username: john.doe
+                email: john.doe@localhost
                 createdAt: 2023-05-18T00:51:50.758738
         400:
           $ref: "#/components/responses/BadRequest"
@@ -181,11 +181,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserDTO"
               example:
-                id: 3
-                firstName: John
-                lastName: Doe
-                username: john.doe
-                email: john.doe@localhost
+                id: 2
+                firstName: User
+                lastName: User
+                username: user
+                email: user@localhost
                 createdAt: 2023-05-18T00:51:50.758738
         401:
           $ref: "#/components/responses/Unauthorized"
@@ -205,11 +205,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserDTO"
               example:
-                id: 4
-                firstName: Joe
-                lastName: Bloggs
-                username: joe.bloggs
-                email: joe.bloggs@localhost@localhost
+                id: 2
+                firstName: John
+                lastName: Doe
+                username: john.doe
+                email: john.doe@localhost
                 createdAt: 2023-05-18T00:51:50.758738
         400:
           $ref: "#/components/responses/BadRequest"
@@ -277,12 +277,6 @@ paths:
                   username: john.doe
                   email: null
                   createdAt: 2023-05-18T00:51:50.758738
-                - id: 4
-                  firstName: Jane
-                  lastName: Doe
-                  username: jane
-                  email: null
-                  createdAt: 2023-05-18T00:51:50.758738
   /users/{id}:
     get:
       tags:
@@ -298,10 +292,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserDTO"
               example:
-                id: 3
-                firstName: John
-                lastName: Doe
-                username: john.doe
+                id: 2
+                firstName: User
+                lastName: User
+                username: user
                 email: null
                 createdAt: 2023-05-18T00:51:50.758738
         404:
@@ -321,10 +315,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserDTO"
               example:
-                id: 3
-                firstName: John
-                lastName: Doe
-                username: john.doe
+                id: 2
+                firstName: user
+                lastName: user
+                username: user
                 email: null
                 createdAt: 2023-05-18T00:51:50.758738
         404:
@@ -347,10 +341,10 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 5
-                firstName: Joe
-                lastName: Bloggs
-                username: joe.bloggs
-                email: joe.bloggs@localhost
+                firstName: John
+                lastName: Doe
+                username: john.doe
+                email: john.doe@localhost
                 active: true
                 lock: false
                 createdAt: 2023-05-18T00:51:50.758738
@@ -411,16 +405,6 @@ paths:
                     createdAt: 2023-05-18T00:51:50.758738
                     roles:
                       - name: USER
-                  - id: 4
-                    firstName: Jane
-                    lastName: Doe
-                    username: jane
-                    email: jane.doe@localhost
-                    active: true
-                    lock: false
-                    createdAt: 2023-05-18T00:51:50.758738
-                    roles:
-                      - name: USER
         401:
           $ref: "#/components/responses/Unauthorized"
         403:
@@ -442,11 +426,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserDTO"
               example:
-                id: 3
-                firstName: John
-                lastName: Doe
-                username: john.doe
-                email: john.doe@localhost
+                id: 2
+                firstName: User
+                lastName: User
+                username: user
+                email: user@localhost
                 active: true
                 lock: false
                 createdAt: 2023-05-18T00:51:50.758738
@@ -476,11 +460,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserDTO"
               example:
-                id: 4
-                firstName: Joe
-                lastName: Bloggs
-                username: joe.bloggs
-                email: joe.bloggs@localhost
+                id: 2
+                firstName: John
+                lastName: Doe
+                username: john.doe
+                email: john.doe@localhost
                 active: true
                 lock: false
                 createdAt: 2023-05-18T00:51:50.758738
@@ -513,11 +497,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserDTO"
               example:
-                id: 4
-                firstName: Joe
-                lastName: Bloggs
-                username: joe.bloggs
-                email: joe.bloggs@localhost
+                id: 2
+                firstName: John
+                lastName: Doe
+                username: john.doe
+                email: john.doe@localhost
                 active: true
                 lock: false
                 createdAt: 2023-05-18T00:51:50.758738
@@ -623,7 +607,7 @@ components:
       schema:
         type: number
       description: Resource id
-      example: 3
+      example: 2
     username:
       name: username
       in: path
@@ -631,7 +615,7 @@ components:
       schema:
         type: string
       description: Username
-      example: john.doe
+      example: user
   requestBodies:
     RegisterUserRequest:
       description: Register user request
@@ -662,10 +646,10 @@ components:
               confirmPassword:
                 type: string
           example:
-            firstName: Joe
-            lastName: Bloggs
-            username: joe.bloggs
-            email: joe.bloggs@localhost
+            firstName: John
+            lastName: Doe
+            username: John.doe
+            email: john.doe@localhost
             password: qwerty123
             confirmPassword: qwerty123
     AuthTokenRequest:
@@ -684,7 +668,7 @@ components:
               password:
                 type: string
           example:
-            usernameOrEmail: joe.bloggs
+            usernameOrEmail: user
             password: qwerty123
     RefreshAuthTokensRequest:
       description: Refresh auth tokens request
@@ -715,7 +699,7 @@ components:
                 type: string
                 format: email
           example:
-            email: john.doe@localhost
+            email: user@localhost
     ResetPasswordRequest:
       description: Reset password request
       required: true
@@ -752,7 +736,7 @@ components:
               usernameOrEmail:
                 type: string
           example:
-            usernameOrEmail: joe.bloggs@localhost
+            usernameOrEmail: user@localhost
     VerifyEmailRequest:
       description: Verify email request
       required: true
@@ -786,10 +770,10 @@ components:
                 type: string
                 format: email
           example:
-            firstName: Joe
-            lastName: Bloggs
-            username: joe.bloggs
-            email: joe.bloggs@localhost@localhost
+            firstName: John
+            lastName: Doe
+            username: John.doe
+            email: john.doe@localhost
     ChangePasswordPassword:
       description: Change password request
       required: true
@@ -855,10 +839,10 @@ components:
                     - USER
                     - ADMIN
           example:
-            firstName: Joe
-            lastName: Bloggs
-            username: joe.bloggs
-            email: joe.bloggs@localhost
+            firstName: John
+            lastName: Doe
+            username: John.doe
+            email: john.doe@localhost
             password: qwerty123
             confirmPassword: qwerty123
             active: true
@@ -898,10 +882,10 @@ components:
                     - USER
                     - ADMIN
           example:
-            firstName: Joe
-            lastName: Bloggs
-            username: joe.bloggs
-            email: joe.bloggs@localhost
+            firstName: John
+            lastName: Doe
+            username: John.doe
+            email: john.doe@localhost
             active: true
             password: qwerty123
             confirmPassword: qwerty123

@@ -3,6 +3,7 @@ package org.bootstrapbugz.api.shared.config;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import net.datafaker.Faker;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
 import org.bootstrapbugz.api.user.model.User;
@@ -23,6 +24,7 @@ public class DataInit implements ApplicationRunner {
   private final RoleRepository roleRepository;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final Environment environment;
+  private final Faker faker;
   private final Role userRole = new Role(RoleName.USER);
   private final Role adminRole = new Role(RoleName.ADMIN);
 
@@ -38,6 +40,7 @@ public class DataInit implements ApplicationRunner {
     this.roleRepository = roleRepository;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.environment = environment;
+    this.faker = new Faker();
   }
 
   @Override
@@ -78,28 +81,23 @@ public class DataInit implements ApplicationRunner {
   }
 
   private void devUsers() {
-    userRepository.saveAll(
-        List.of(
-            User.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .username("john.doe")
-                .email("john.doe@localhost")
-                .password(bCryptPasswordEncoder.encode(password))
-                .active(true)
-                .lock(false)
-                .roles(Collections.singleton(userRole))
-                .build(),
-            User.builder()
-                .firstName("Jane")
-                .lastName("Doe")
-                .username("jane.doe")
-                .email("jane.doe@localhost")
-                .password(bCryptPasswordEncoder.encode(password))
-                .active(true)
-                .lock(false)
-                .roles(Collections.singleton(userRole))
-                .build()));
+    List<User> users =
+        faker
+            .collection(
+                () ->
+                    User.builder()
+                        .firstName(faker.name().firstName())
+                        .lastName(faker.name().lastName())
+                        .username(faker.name().username())
+                        .email(faker.internet().emailAddress())
+                        .password(bCryptPasswordEncoder.encode(password))
+                        .active(true)
+                        .lock(false)
+                        .roles(Collections.singleton(userRole))
+                        .build())
+            .len(100)
+            .generate();
+    userRepository.saveAll(users);
   }
 
   private void testUsers() {
