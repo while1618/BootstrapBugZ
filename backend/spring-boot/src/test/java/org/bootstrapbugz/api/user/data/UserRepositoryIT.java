@@ -39,10 +39,10 @@ class UserRepositoryIT extends DatabaseContainers {
             .build());
     userRepository.save(
         User.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("test")
-            .email("test@localhost")
+            .firstName("User")
+            .lastName("User")
+            .username("user")
+            .email("user@localhost")
             .password("password")
             .roles(Set.of(userRole))
             .build());
@@ -61,15 +61,22 @@ class UserRepositoryIT extends DatabaseContainers {
 
   @Test
   void findByIdWithRoles() {
-    final var admin = userRepository.findByUsername("admin").orElseThrow();
-    final var user = userRepository.findByIdWithRoles(admin.getId());
-    assertThat(user).isPresent();
-    assertThat(user.get().getRoles()).hasSize(2);
+    final var id = userRepository.findByUsername("admin").orElseThrow().getId();
+    final var user = userRepository.findByIdWithRoles(id).orElseThrow();
+    assertThat(user.getUsername()).isEqualTo("admin");
+    assertThat(user.getRoles()).hasSize(2);
   }
 
   @Test
   void findByUsername() {
     assertThat(userRepository.findByUsername("admin")).isPresent();
+  }
+
+  @Test
+  void findByUsernameWithRoles() {
+    final var user = userRepository.findByUsernameWithRoles("user").orElseThrow();
+    assertThat(user.getUsername()).isEqualTo("user");
+    assertThat(user.getRoles()).hasSize(1);
   }
 
   @Test
