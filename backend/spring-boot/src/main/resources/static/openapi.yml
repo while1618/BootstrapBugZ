@@ -236,7 +236,7 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        $ref: "#/components/requestBodies/ChangePasswordPassword"
+        $ref: "#/components/requestBodies/ChangePasswordRequest"
       responses:
         204:
           description: Profile password changed successfully
@@ -323,6 +323,48 @@ paths:
                 createdAt: 2023-05-18T00:51:50.758738
         404:
           $ref: "#/components/responses/NotFound"
+  /users/username/availability:
+    post:
+      tags:
+        - users
+      summary: Check username availability
+      requestBody:
+        $ref: "#/components/requestBodies/UsernameAvailabilityRequest"
+      responses:
+        200:
+          description: Username availability checked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available:
+                    type: boolean
+              example:
+                available: true
+        400:
+          $ref: "#/components/responses/BadRequest"
+  /users/email/availability:
+    post:
+      tags:
+        - users
+      summary: Check email availability
+      requestBody:
+        $ref: "#/components/requestBodies/EmailAvailabilityRequest"
+      responses:
+        200:
+          description: Email availability checked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available:
+                    type: boolean
+              example:
+                available: true
+        400:
+          $ref: "#/components/responses/BadRequest"
   /admin/users:
     post:
       tags:
@@ -774,7 +816,7 @@ components:
             lastName: Doe
             username: John.doe
             email: john.doe@localhost
-    ChangePasswordPassword:
+    ChangePasswordRequest:
       description: Change password request
       required: true
       content:
@@ -892,6 +934,35 @@ components:
             lock: false
             roleNames:
               - USER
+    UsernameAvailabilityRequest:
+      description: Username availability request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - username
+            properties:
+              username:
+                type: string
+          example:
+            username: user
+    EmailAvailabilityRequest:
+      description: Email availability request
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+            properties:
+              email:
+                type: string
+                format: email
+          example:
+            email: user@localhost
   schemas:
     AuthTokensDTO:
       type: object
