@@ -1,4 +1,4 @@
-package org.bootstrapbugz.api.shared.error;
+package org.bootstrapbugz.api.shared.payload.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
