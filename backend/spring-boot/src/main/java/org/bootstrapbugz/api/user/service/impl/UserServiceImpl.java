@@ -4,7 +4,10 @@ import java.util.List;
 import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.user.mapper.UserMapper;
+import org.bootstrapbugz.api.user.payload.dto.AvailabilityDTO;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.payload.request.EmailAvailabilityRequest;
+import org.bootstrapbugz.api.user.payload.request.UsernameAvailabilityRequest;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.UserService;
 import org.springframework.stereotype.Service;
@@ -40,5 +43,18 @@ public class UserServiceImpl implements UserService {
         .map(UserMapper.INSTANCE::userToSimpleUserDTO)
         .orElseThrow(
             () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+  }
+
+  @Override
+  public AvailabilityDTO usernameAvailability(
+      UsernameAvailabilityRequest usernameAvailabilityRequest) {
+    final var available = userRepository.existsByUsername(usernameAvailabilityRequest.username());
+    return new AvailabilityDTO(available);
+  }
+
+  @Override
+  public AvailabilityDTO emailAvailability(EmailAvailabilityRequest emailAvailabilityRequest) {
+    final var available = userRepository.existsByEmail(emailAvailabilityRequest.email());
+    return new AvailabilityDTO(available);
   }
 }

@@ -3,6 +3,7 @@ package org.bootstrapbugz.api.user.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.shared.constants.Path;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.payload.request.EmailAvailabilityRequest;
+import org.bootstrapbugz.api.user.payload.request.UsernameAvailabilityRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -91,5 +94,29 @@ class UserControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound())
         .andExpect(content().string(containsString("User not found.")));
+  }
+
+  @Test
+  void usernameAvailability() throws Exception {
+    final var availabilityRequest = new UsernameAvailabilityRequest("user");
+    mockMvc
+        .perform(
+            post(Path.USERS + "/username/availability")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(availabilityRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.available").value(true));
+  }
+
+  @Test
+  void emailAvailability() throws Exception {
+    final var availabilityRequest = new EmailAvailabilityRequest("unknown@localhost");
+    mockMvc
+        .perform(
+            post(Path.USERS + "/email/availability")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(availabilityRequest)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.available").value(false));
   }
 }

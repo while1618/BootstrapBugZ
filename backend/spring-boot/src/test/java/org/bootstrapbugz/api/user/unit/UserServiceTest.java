@@ -10,6 +10,8 @@ import org.bootstrapbugz.api.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.api.shared.message.service.MessageService;
 import org.bootstrapbugz.api.shared.util.UnitTestUtil;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
+import org.bootstrapbugz.api.user.payload.request.EmailAvailabilityRequest;
+import org.bootstrapbugz.api.user.payload.request.UsernameAvailabilityRequest;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -93,5 +95,21 @@ class UserServiceTest {
     assertThatThrownBy(() -> userService.findByUsername("test"))
         .isInstanceOf(ResourceNotFoundException.class)
         .hasMessage("User not found.");
+  }
+
+  @Test
+  void usernameAvailability() {
+    when(userRepository.existsByUsername("admin")).thenReturn(true);
+    final var availabilityRequest = new UsernameAvailabilityRequest("admin");
+    final var availabilityDTO = userService.usernameAvailability(availabilityRequest);
+    assertThat(availabilityDTO.available()).isTrue();
+  }
+
+  @Test
+  void emailAvailability() {
+    when(userRepository.existsByEmail("unknown@localhost")).thenReturn(false);
+    final var availabilityRequest = new EmailAvailabilityRequest("unknown@localhost");
+    final var availabilityDTO = userService.emailAvailability(availabilityRequest);
+    assertThat(availabilityDTO.available()).isFalse();
   }
 }
