@@ -336,10 +336,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  available:
-                    type: boolean
+                $ref: "#/components/schemas/AvailabilityDTO"
               example:
                 available: true
         400:
@@ -357,10 +354,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  available:
-                    type: boolean
+                $ref: "#/components/schemas/AvailabilityDTO"
               example:
                 available: true
         400:
@@ -1020,6 +1014,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RoleDTO"
+    AvailabilityDTO:
+      type: object
+      required:
+        - available
+      properties:
+        available:
+          type: boolean
     ErrorMessage:
       type: object
       required:
