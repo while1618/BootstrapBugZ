@@ -23,7 +23,7 @@ export const actions = {
 
     const response = await makeRequest({
       method: HttpRequest.POST,
-      path: '/auth/forgot-password',
+      path: '/auth/password/forgot',
       body: JSON.stringify(forgotPasswordForm.data),
     });
 

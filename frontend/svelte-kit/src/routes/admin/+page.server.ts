@@ -1,13 +1,13 @@
 import type { UserDTO } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { error, fail, type Cookies } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ cookies }) => {
   const response = await makeRequest({
     method: HttpRequest.GET,
-    path: '/users',
+    path: '/admin/users',
     auth: cookies.get('accessToken'),
   });
 
@@ -17,30 +17,58 @@ export const load = (async ({ cookies }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  activate: ({ cookies, url }) => {
-    performAction(HttpRequest.PUT, 'activate', cookies, url);
+  activate: async ({ cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ active: true }),
+    });
+
+    if ('error' in response) return fail(response.status, { errorMessage: response });
   },
-  deactivate: ({ cookies, url }) => {
-    performAction(HttpRequest.PUT, 'deactivate', cookies, url);
+  deactivate: async ({ cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ active: false }),
+    });
+
+    if ('error' in response) return fail(response.status, { errorMessage: response });
   },
-  unlock: ({ cookies, url }) => {
-    performAction(HttpRequest.PUT, 'unlock', cookies, url);
+  unlock: async ({ cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ lock: false }),
+    });
+
+    if ('error' in response) return fail(response.status, { errorMessage: response });
   },
-  lock: ({ cookies, url }) => {
-    performAction(HttpRequest.PUT, 'lock', cookies, url);
+  lock: async ({ cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ lock: true }),
+    });
+
+    if ('error' in response) return fail(response.status, { errorMessage: response });
   },
-  delete: ({ cookies, url }) => {
-    performAction(HttpRequest.DELETE, 'delete', cookies, url);
+  delete: async ({ cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const response = await makeRequest({
+      method: HttpRequest.DELETE,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+    });
+
+    if ('error' in response) return fail(response.status, { errorMessage: response });
   },
 } satisfies Actions;
-
-const performAction = async (method: HttpRequest, path: string, cookies: Cookies, url: URL) => {
-  const username = url.searchParams.get('username');
-  const response = await makeRequest({
-    method,
-    path: `/admin/users/${username}/${path}`,
-    auth: cookies.get('accessToken'),
-  });
-
-  if ('error' in response) return fail(response.status, { errorMessage: response });
-};

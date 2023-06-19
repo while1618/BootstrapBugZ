@@ -5,6 +5,7 @@ Everything you need to build a Svelte project, powered by [`create-svelte`](http
 ## Developing
 
 create .env file in root of svelte-kit directory with the following data:
+
 ```bash
 JWT_SECRET=secret
 API_URL=http://localhost:18080/v1

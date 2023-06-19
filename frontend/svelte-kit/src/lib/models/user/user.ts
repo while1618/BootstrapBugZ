@@ -5,9 +5,9 @@ export interface UserDTO {
   firstName: string;
   lastName: string;
   username: string;
-  email: string;
-  activated: boolean;
-  nonLocked: boolean;
+  email?: string;
+  active?: boolean;
+  lock?: boolean;
   createdAt: Date;
-  roles: RoleDTO[];
+  roles?: RoleDTO[];
 }

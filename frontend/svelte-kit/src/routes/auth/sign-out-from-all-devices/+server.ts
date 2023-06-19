@@ -5,8 +5,8 @@ import type { RequestHandler } from './$types';
 
 export const GET = (async ({ locals, cookies }) => {
   const response = await makeRequest({
-    method: HttpRequest.POST,
-    path: '/auth/sign-out-from-all-devices',
+    method: HttpRequest.DELETE,
+    path: '/auth/tokens/devices',
     auth: cookies.get('accessToken'),
   });
 

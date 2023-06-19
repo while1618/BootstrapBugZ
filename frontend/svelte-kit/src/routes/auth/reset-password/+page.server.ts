@@ -44,8 +44,8 @@ export const actions = {
       return fail(400, { errors: resetPasswordForm.error.flatten().fieldErrors });
 
     const response = await makeRequest({
-      method: HttpRequest.PUT,
-      path: '/auth/reset-password',
+      method: HttpRequest.POST,
+      path: '/auth/password/reset',
       body: JSON.stringify(resetPasswordForm.data),
     });
 

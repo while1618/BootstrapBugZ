@@ -4,11 +4,10 @@ import { HttpRequest } from '$lib/server/utils/util';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({ params, cookies }) => {
+export const load = (async ({ params }) => {
   const response = await makeRequest({
     method: HttpRequest.GET,
-    path: `/users/${params.name}`,
-    auth: cookies.get('accessToken'),
+    path: `/users/username/${params.name}`,
   });
 
   if ('error' in response) throw error(response.status, { message: response.error });

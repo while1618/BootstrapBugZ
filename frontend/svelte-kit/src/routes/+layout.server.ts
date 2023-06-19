@@ -9,7 +9,7 @@ export const load = (async ({ locals, cookies }) => {
 
   const response = await makeRequest({
     method: HttpRequest.GET,
-    path: `/auth/signed-in-user`,
+    path: `/profile`,
     auth: cookies.get('accessToken'),
   });
 

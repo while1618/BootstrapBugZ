@@ -8,8 +8,8 @@ export const GET = (async ({ locals, url }) => {
 
   const token = url.searchParams.get('token');
   const response = await makeRequest({
-    method: HttpRequest.PUT,
-    path: '/auth/confirm-registration',
+    method: HttpRequest.POST,
+    path: '/auth/verify-email',
     body: JSON.stringify({ token }),
   });
 

@@ -9,7 +9,7 @@ export const GET = (async ({ locals, url }) => {
   const usernameOrEmail = url.searchParams.get('usernameOrEmail');
   const response = await makeRequest({
     method: HttpRequest.POST,
-    path: '/auth/resend-confirmation-email',
+    path: '/auth/verification-email',
     body: JSON.stringify({ usernameOrEmail }),
   });
 

@@ -29,8 +29,8 @@ export const actions = {
       return fail(400, { errors: changePasswordForm.error.flatten().fieldErrors });
 
     const response = await makeRequest({
-      method: HttpRequest.PUT,
-      path: '/profile/change-password',
+      method: HttpRequest.PATCH,
+      path: '/profile/password',
       body: JSON.stringify(changePasswordForm.data),
       auth: cookies.get('accessToken'),
     });
@@ -43,7 +43,7 @@ export const actions = {
   delete: async ({ cookies, locals }) => {
     const response = await makeRequest({
       method: HttpRequest.DELETE,
-      path: '/profile/delete',
+      path: '/profile',
       auth: cookies.get('accessToken'),
     });
 

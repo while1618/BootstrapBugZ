@@ -5,10 +5,11 @@
   import SignOutIcon from '$lib/icons/sign-out.svelte';
   import avatar from '$lib/images/avatar.jpg';
   import logo from '$lib/images/logo.png';
-  import { RoleName } from '$lib/models/user/role';
-  import { userStore } from '$lib/stores/user';
+  // import { RoleName } from '$lib/models/user/role';
+  // import { userStore } from '$lib/stores/user';
 
-  $: isAdmin = $userStore?.roles.some((role) => role.name === RoleName.ADMIN);
+  // $: isAdmin = $userStore?.roles.some((role) => role.name === RoleName.ADMIN);
+  $: isAdmin = true;
 </script>
 
 <nav class="navbar bg-base-100 px-5">

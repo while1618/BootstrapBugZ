@@ -7,10 +7,11 @@
   import LockOpenIcon from '$lib/icons/lock-open.svelte';
   import PencilIcon from '$lib/icons/pencil.svelte';
   import TrashIcon from '$lib/icons/trash.svelte';
+  import type { UserDTO } from '$lib/models/user/user';
   import type { PageServerData } from './$types';
 
   export let data: PageServerData;
-  let selectedUser = '';
+  let selectedUser: UserDTO;
   let open = false;
 
   function toggleModal(): void {
@@ -45,10 +46,10 @@
           <th>
             <form
               method="POST"
-              action="?/{user.activated ? 'deactivate' : 'activate'}&username={user.username}"
+              action="?/{user.active ? 'deactivate' : 'activate'}&id={user.id}"
               use:enhance
             >
-              {#if user.activated}
+              {#if user.active}
                 <button class=" text-green-600 dark:text-green-500">
                   <CheckCircleIcon />
                 </button>
@@ -60,39 +61,37 @@
             </form>
           </th>
           <th>
-            <form
-              method="POST"
-              action="?/{user.nonLocked ? 'lock' : 'unlock'}&username={user.username}"
-              use:enhance
-            >
-              {#if user.nonLocked}
-                <button class="text-blue-600 dark:text-blue-500">
-                  <LockOpenIcon />
-                </button>
-              {:else}
+            <form method="POST" action="?/{user.lock ? 'unlock' : 'lock'}&id={user.id}" use:enhance>
+              {#if user.lock}
                 <button class="text-red-600 dark:text-red-500">
                   <LockCloseIcon />
+                </button>
+              {:else}
+                <button class="text-blue-600 dark:text-blue-500">
+                  <LockOpenIcon />
                 </button>
               {/if}
             </form>
           </th>
           <th>{user.createdAt}</th>
           <th>
-            <div class="flex gap-2">
-              {#each user.roles as role}
-                {`${role.name} `}
-              {/each}
-              <button on:click={() => alert('modal')} class="text-blue-600 dark:text-blue-500">
-                <PencilIcon />
-              </button>
-            </div>
+            {#if user.roles}
+              <div class="flex gap-2">
+                {#each user.roles as role}
+                  {`${role.name} `}
+                {/each}
+                <button on:click={() => alert('modal')} class="text-blue-600 dark:text-blue-500">
+                  <PencilIcon />
+                </button>
+              </div>
+            {/if}
           </th>
           <th>
             <button
               class="text-red-600 dark:text-red-500"
               on:click|stopPropagation={() => {
                 toggleModal();
-                selectedUser = user.username;
+                selectedUser = user;
               }}
             >
               <TrashIcon />
@@ -106,10 +105,10 @@
 
 <Modal bind:open title="Delete user">
   <svelte:fragment slot="body">
-    <p class="py-4">Are you sure you want to delete {selectedUser}?</p>
+    <p class="py-4">Are you sure you want to delete {selectedUser?.username}?</p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
-    <form method="POST" action="?/delete&username={selectedUser}" use:enhance>
+    <form method="POST" action="?/delete&id={selectedUser?.id}" use:enhance>
       <button type="submit" class="btn text-error" on:click={toggleModal}>Delete</button>
       <button type="button" class="btn" on:click={toggleModal}>Cancel</button>
     </form>

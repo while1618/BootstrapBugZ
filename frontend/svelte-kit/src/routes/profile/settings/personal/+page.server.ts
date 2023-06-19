@@ -20,8 +20,8 @@ export const actions = {
       return fail(400, { errors: updateProfileForm.error.flatten().fieldErrors });
 
     const response = await makeRequest({
-      method: HttpRequest.PUT,
-      path: '/profile/update',
+      method: HttpRequest.PATCH,
+      path: '/profile',
       body: JSON.stringify(updateProfileForm.data),
       auth: cookies.get('accessToken'),
     });

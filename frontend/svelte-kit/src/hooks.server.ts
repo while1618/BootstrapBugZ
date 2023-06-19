@@ -1,6 +1,6 @@
 import { JWT_SECRET } from '$env/static/private';
+import type { AuthTokensDTO } from '$lib/models/auth/auth-tokens';
 import type { JwtPayload } from '$lib/models/auth/jwt-payload';
-import type { RefreshTokenDTO } from '$lib/models/auth/refresh-token';
 import { RoleName } from '$lib/models/user/role';
 import { makeRequest } from '$lib/server/apis/api';
 import {
@@ -36,14 +36,14 @@ async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<
   if (refreshToken) {
     const response = await makeRequest({
       method: HttpRequest.POST,
-      path: '/auth/refresh-token',
+      path: '/auth/tokens/refresh',
       body: JSON.stringify({ refreshToken }),
     });
 
     if ('error' in response) {
       removeAuth(cookies, locals);
     } else {
-      const { accessToken, refreshToken } = response as RefreshTokenDTO;
+      const { accessToken, refreshToken } = response as AuthTokensDTO;
       setAccessTokenCookie(cookies, accessToken);
       setRefreshTokenCookie(cookies, refreshToken);
       const { iss } = jwt.decode(accessToken) as JwtPayload;

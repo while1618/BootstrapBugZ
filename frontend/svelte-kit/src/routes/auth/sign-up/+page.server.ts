@@ -1,4 +1,5 @@
 import en from '$lib/i18n/en.json';
+import type { AvailabilityDTO } from '$lib/models/shared/availability';
 import {
   EMAIL_REGEX,
   FIRST_AND_LAST_NAME_REGEX,
@@ -7,7 +8,7 @@ import {
 } from '$lib/regex/regex';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -23,21 +24,25 @@ const signUpSchema = z
       .string()
       .regex(USERNAME_REGEX, { message: en['username.invalid'] })
       .refine(async (value) => {
-        const usernameAvailability = await makeRequest({
-          method: HttpRequest.GET,
-          path: `/auth/username-availability?username=${value}`,
+        const response = await makeRequest({
+          method: HttpRequest.POST,
+          path: '/users/username/availability',
+          body: JSON.stringify({ username: value }),
         });
-        return usernameAvailability;
+        if ('error' in response) throw error(response.status, { message: response.error });
+        return (response as AvailabilityDTO).available;
       }, en['username.exists']),
     email: z
       .string()
       .regex(EMAIL_REGEX, { message: en['email.invalid'] })
       .refine(async (value) => {
-        const emailAvailability = await makeRequest({
-          method: HttpRequest.GET,
-          path: `/auth/email-availability?email=${value}`,
+        const response = await makeRequest({
+          method: HttpRequest.POST,
+          path: '/users/email/availability',
+          body: JSON.stringify({ email: value }),
         });
-        return emailAvailability;
+        if ('error' in response) throw error(response.status, { message: response.error });
+        return (response as AvailabilityDTO).available;
       }, en['email.exists']),
     password: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
     confirmPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
@@ -60,7 +65,7 @@ export const actions = {
 
     const response = await makeRequest({
       method: HttpRequest.POST,
-      path: '/auth/sign-up',
+      path: '/auth/register',
       body: JSON.stringify(signUpForm.data),
     });
 

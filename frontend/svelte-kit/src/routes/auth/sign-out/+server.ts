@@ -5,8 +5,8 @@ import type { RequestHandler } from './$types';
 
 export const GET = (async ({ locals, cookies }) => {
   const response = await makeRequest({
-    method: HttpRequest.POST,
-    path: '/auth/sign-out',
+    method: HttpRequest.DELETE,
+    path: '/auth/tokens',
     auth: cookies.get('accessToken'),
   });
 
