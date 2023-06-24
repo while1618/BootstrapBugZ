@@ -1,4 +1,4 @@
-name: Spring Boot API CI
+name: Spring Boot CI
 run-name: ${{ github.actor }} started CI
 
 on:
