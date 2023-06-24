@@ -28,7 +28,7 @@
           <img src={avatar} alt="Avatar" />
         </div>
       </div>
-      <ul class="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
+      <ul class="menu-compact dropdown-content menu rounded-box mt-3 w-52 bg-base-100 p-2 shadow">
         <li><a href="/profile"><ProfileIcon /> Profile</a></li>
         {#if isAdmin}
           <li><a href="/admin"><ChartIcon /> Admin</a></li>
