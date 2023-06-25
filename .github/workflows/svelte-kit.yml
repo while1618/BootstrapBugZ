@@ -2,14 +2,15 @@ name: Svelte Kit CI
 run-name: ${{ github.actor }} started CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [master]
-    # paths:
-    #   - frontend/svelte-kit/**
+    paths:
+      - frontend/svelte-kit/**
   pull_request:
     branches: [master]
-    # paths:
-    #   - frontend/svelte-kit/**
+    paths:
+      - frontend/svelte-kit/**
 
 jobs:
   build:
