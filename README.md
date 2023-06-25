@@ -1,5 +1,9 @@
 # BootstrapBugZ
 
+### GitHub Actions
+[![Spring Boot CI](https://github.com/while1618/BootstrapBugZ/actions/workflows/spring-boot.yml/badge.svg?branch=master)](https://github.com/while1618/BootstrapBugZ/actions/workflows/spring-boot.yml)
+[![Svelte Kit CI](https://github.com/while1618/BootstrapBugZ/actions/workflows/svelte-kit.yml/badge.svg)](https://github.com/while1618/BootstrapBugZ/actions/workflows/svelte-kit.yml)
+
 ### Setup
 - Create new project based on this template.
 - Open terminal and run init script.
