@@ -7,11 +7,11 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "playwright test",
+    "test": "vitest --run",
+    "test:e2e": "playwright test",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "check-updates": "npx npm-check-updates",
-    "test:unit": "vitest",
     "format": "prettier --plugin-search-dir . --write .",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
