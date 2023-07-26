@@ -11,12 +11,8 @@
   import type { PageServerData } from './$types';
 
   export let data: PageServerData;
+  let dialog: HTMLDialogElement;
   let selectedUser: UserDTO;
-  let open = false;
-
-  function toggleModal(): void {
-    open = !open;
-  }
 </script>
 
 <div class="overflow-x-auto p-10">
@@ -90,7 +86,7 @@
             <button
               class="text-red-600 dark:text-red-500"
               on:click|stopPropagation={() => {
-                toggleModal();
+                dialog.showModal();
                 selectedUser = user;
               }}
             >
@@ -103,14 +99,14 @@
   </table>
 </div>
 
-<Modal bind:open title="Delete user">
+<Modal bind:dialog title="Delete user">
   <svelte:fragment slot="body">
     <p class="py-4">Are you sure you want to delete {selectedUser?.username}?</p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
     <form method="POST" action="?/delete&id={selectedUser?.id}" use:enhance>
-      <button type="submit" class="btn text-error" on:click={toggleModal}>Delete</button>
-      <button type="button" class="btn" on:click={toggleModal}>Cancel</button>
+      <button type="submit" class="btn text-error" on:click={() => dialog.close()}>Delete</button>
+      <button type="button" class="btn" on:click={() => dialog.close()}>Cancel</button>
     </form>
   </svelte:fragment>
 </Modal>
