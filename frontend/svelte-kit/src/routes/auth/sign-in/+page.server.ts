@@ -16,7 +16,7 @@ const signInSchema = z.object({
     .string()
     .refine(
       (value) => USERNAME_REGEX.test(value) || EMAIL_REGEX.test(value),
-      en['usernameOrEmail.invalid']
+      en['usernameOrEmail.invalid'],
     ),
   password: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
 });

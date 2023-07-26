@@ -18,7 +18,8 @@
   class:modal-open={open}
   on:click|self={closeModal}
   on:keydown={handleKeyDown}
-  tabindex="-1"
+  tabindex="0"
+  role="button"
 >
   <div class="modal-box">
     <h3 class="text-lg font-bold">{title}</h3>
