@@ -1,11 +1,12 @@
 package org.bootstrapbugz.api.shared.generic.crud;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface CrudService<T, U> {
   T create(U saveRequest);
 
-  List<T> findAll();
+  List<T> findAll(Pageable pageable);
 
   T findById(Long id);
 

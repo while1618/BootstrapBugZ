@@ -17,6 +17,7 @@ import org.bootstrapbugz.api.user.model.User;
 import org.bootstrapbugz.api.user.payload.dto.UserDTO;
 import org.bootstrapbugz.api.user.repository.RoleRepository;
 import org.bootstrapbugz.api.user.repository.UserRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -67,8 +68,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserDTO> findAll() {
-    return userRepository.findAllWithRoles().stream()
+  public List<UserDTO> findAll(Pageable pageable) {
+    return userRepository.findAllWithRoles(pageable).stream()
         .map(UserMapper.INSTANCE::userToAdminUserDTO)
         .toList();
   }

@@ -10,6 +10,7 @@ import org.bootstrapbugz.api.user.payload.request.EmailAvailabilityRequest;
 import org.bootstrapbugz.api.user.payload.request.UsernameAvailabilityRequest;
 import org.bootstrapbugz.api.user.repository.UserRepository;
 import org.bootstrapbugz.api.user.service.UserService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,8 +24,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserDTO> findAll() {
-    return userRepository.findAll().stream().map(UserMapper.INSTANCE::userToSimpleUserDTO).toList();
+  public List<UserDTO> findAll(Pageable pageable) {
+    return userRepository.findAll(pageable).stream()
+        .map(UserMapper.INSTANCE::userToSimpleUserDTO)
+        .toList();
   }
 
   @Override

@@ -19,6 +19,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -44,9 +46,10 @@ class UserServiceTest {
                 .username("test")
                 .email(null)
                 .build());
-    when(userRepository.findAll())
-        .thenReturn(List.of(UnitTestUtil.getAdminUser(), UnitTestUtil.getTestUser()));
-    final var actualUserDTOs = userService.findAll();
+    when(userRepository.findAll(PageRequest.of(0, 10)))
+        .thenReturn(
+            new PageImpl<>(List.of(UnitTestUtil.getAdminUser(), UnitTestUtil.getTestUser())));
+    final var actualUserDTOs = userService.findAll(PageRequest.of(0, 10));
     assertThat(actualUserDTOs).isEqualTo(expectedUserDTOs);
   }
 
