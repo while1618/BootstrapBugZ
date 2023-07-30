@@ -1,6 +1,6 @@
 # API
 
-To start the backend via docker you need to run `mvn clean install` and after that `docker compose build api`.
+To start the backend via docker you need to run `mvn clean install` and after that `docker compose build bootstrapbugz-api`.
 
 Then run `docker-compose up -d`
 
