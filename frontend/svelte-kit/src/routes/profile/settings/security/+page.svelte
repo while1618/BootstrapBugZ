@@ -4,11 +4,7 @@
   import type { ActionData } from './$types';
 
   export let form: ActionData;
-  let open = false;
-
-  function toggleModal(): void {
-    open = !open;
-  }
+  let dialog: HTMLDialogElement;
 </script>
 
 <div class="hero min-h-screen">
@@ -87,7 +83,7 @@
         </div>
         <div class="divider" />
         <div class="card">
-          <button class="btn-error btn" on:click|stopPropagation={toggleModal}>
+          <button class="btn-error btn" on:click|stopPropagation={() => dialog.showModal()}>
             Delete Account
           </button>
         </div>
@@ -96,14 +92,14 @@
   </div>
 </div>
 
-<Modal bind:open title="Delete account">
+<Modal bind:dialog title="Delete account">
   <svelte:fragment slot="body">
     <p class="py-4">Are you sure you want to delete account?</p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
     <form method="POST" action="?/delete" use:enhance>
-      <button type="submit" class="btn text-error" on:click={toggleModal}>Delete</button>
-      <button type="button" class="btn" on:click={toggleModal}>Cancel</button>
+      <button type="submit" class="btn text-error" on:click={() => dialog.close()}>Delete</button>
+      <button type="button" class="btn" on:click={() => dialog.close()}>Cancel</button>
     </form>
   </svelte:fragment>
 </Modal>
