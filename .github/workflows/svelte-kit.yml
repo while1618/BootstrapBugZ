@@ -12,6 +12,10 @@ on:
     paths:
       - frontend/svelte-kit/**
 
+env:
+  JWT_SECRET: ${{secrets.JWT_SECRET}}
+  API_URL: ${{secrets.API_URL}}
+
 jobs:
   build:
     defaults:
