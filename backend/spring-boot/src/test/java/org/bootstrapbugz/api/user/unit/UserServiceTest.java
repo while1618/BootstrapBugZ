@@ -105,7 +105,7 @@ class UserServiceTest {
     when(userRepository.existsByUsername("admin")).thenReturn(true);
     final var availabilityRequest = new UsernameAvailabilityRequest("admin");
     final var availabilityDTO = userService.usernameAvailability(availabilityRequest);
-    assertThat(availabilityDTO.available()).isTrue();
+    assertThat(availabilityDTO.available()).isFalse();
   }
 
   @Test
@@ -113,6 +113,6 @@ class UserServiceTest {
     when(userRepository.existsByEmail("unknown@localhost")).thenReturn(false);
     final var availabilityRequest = new EmailAvailabilityRequest("unknown@localhost");
     final var availabilityDTO = userService.emailAvailability(availabilityRequest);
-    assertThat(availabilityDTO.available()).isFalse();
+    assertThat(availabilityDTO.available()).isTrue();
   }
 }

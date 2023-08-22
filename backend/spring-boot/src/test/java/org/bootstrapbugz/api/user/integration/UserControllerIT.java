@@ -105,7 +105,7 @@ class UserControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(availabilityRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.available").value(true));
+        .andExpect(jsonPath("$.available").value(false));
   }
 
   @Test
@@ -117,6 +117,6 @@ class UserControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(availabilityRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.available").value(false));
+        .andExpect(jsonPath("$.available").value(true));
   }
 }
