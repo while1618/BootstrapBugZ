@@ -4,11 +4,11 @@ run-name: ${{ github.actor }} started CI
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [ master ]
     paths:
       - backend/spring-boot/**
   pull_request:
-    branches: [master]
+    branches: [ master ]
     paths:
       - backend/spring-boot/**
 
@@ -33,6 +33,9 @@ jobs:
 
       - name: Build
         run: mvn -B clean install -DskipTests
+
+      - name: Lint
+        run: mvn -B spotless:check
 
       - name: Unit tests
         run: mvn -B test
