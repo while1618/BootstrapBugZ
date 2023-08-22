@@ -23,7 +23,7 @@
     <guava.version>32.1.2-jre</guava.version>
     <jwt.version>4.4.0</jwt.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
-    <springdoc.version>2.1.0</springdoc.version>
+    <springdoc.version>2.2.0</springdoc.version>
     <datafaker.version>2.0.1</datafaker.version>
     <jacoco.version>0.8.8</jacoco.version>
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
