@@ -25,9 +25,9 @@
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <springdoc.version>2.2.0</springdoc.version>
     <datafaker.version>2.0.1</datafaker.version>
-    <jacoco.version>0.8.8</jacoco.version>
-    <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-    <spotless.version>2.29.0</spotless.version>
+    <jacoco.version>0.8.10</jacoco.version>
+    <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+    <spotless.version>2.38.0</spotless.version>
     <google-java-format.version>1.17.0</google-java-format.version>
     <snakeyaml.version>2.1</snakeyaml.version>
   </properties>
