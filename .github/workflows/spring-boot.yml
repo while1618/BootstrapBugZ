@@ -4,11 +4,11 @@ run-name: ${{ github.actor }} started CI
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [master]
     paths:
       - backend/spring-boot/**
   pull_request:
-    branches: [ master ]
+    branches: [master]
     paths:
       - backend/spring-boot/**
 
