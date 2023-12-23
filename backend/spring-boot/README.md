@@ -1,9 +1,6 @@
 # API
 
-To start the backend via docker you need to run `mvn clean install` and after that `docker compose build bootstrapbugz-api`.
+To start the backend via docker you need to run `docker-compose up --build -d`.
 
-Then run `docker-compose up -d`
-
-and you'll find backend on http://localhost:8081/
-
-You can find OpenApi documentation here: http://localhost:8081/swagger-ui/index.html
+You'll find backend running on http://localhost:8081/
+And OpenApi documentation here: http://localhost:8081/swagger-ui/index.html

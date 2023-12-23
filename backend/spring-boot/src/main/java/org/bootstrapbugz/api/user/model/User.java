@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -77,7 +76,7 @@ public class User implements Serializable {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
   @Column(nullable = false)
-  private Set<Role> roles = new HashSet<>();
+  private Set<Role> roles;
 
   @Override
   public boolean equals(Object o) {
