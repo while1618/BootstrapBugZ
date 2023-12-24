@@ -34,4 +34,5 @@ You can preview the production build with `pnpm run preview`.
 
 ## auth credentials
 username: user/admin
+
 password: qwerty123
