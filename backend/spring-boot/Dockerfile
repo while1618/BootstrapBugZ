@@ -1,4 +1,4 @@
-FROM maven:3.9.6-amazoncorretto-17-debian AS build
+FROM maven:3.9.6-amazoncorretto-21-debian AS build
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY src ./src
 
 RUN mvn clean install -DskipTests
 
-FROM openjdk:17-jdk-slim
+FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
