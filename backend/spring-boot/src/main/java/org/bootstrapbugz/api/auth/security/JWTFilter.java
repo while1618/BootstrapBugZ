@@ -1,10 +1,10 @@
 package org.bootstrapbugz.api.auth.security;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
@@ -29,9 +29,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(
-      @NotNull HttpServletRequest request,
-      @NotNull HttpServletResponse response,
-      @NotNull FilterChain chain)
+      @Nonnull HttpServletRequest request,
+      @Nonnull HttpServletResponse response,
+      @Nonnull FilterChain chain)
       throws IOException, ServletException {
     final var accessToken = AuthUtil.getAccessTokenFromRequest(request);
     if (accessToken == null || !JwtUtil.isBearer(accessToken)) {
