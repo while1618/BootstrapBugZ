@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.admin.service.impl;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import org.bootstrapbugz.api.admin.payload.request.PatchUserRequest;
 import org.bootstrapbugz.api.admin.payload.request.UserRequest;
@@ -125,7 +124,7 @@ public class UserServiceImpl implements UserService {
   }
 
   private void setUsername(User user, String username) {
-    if (Objects.equals(user.getUsername(), username)) return;
+    if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
       throw new ConflictException("username", messageService.getMessage("username.exists"));
 
@@ -133,7 +132,7 @@ public class UserServiceImpl implements UserService {
   }
 
   private void setEmail(User user, String email) {
-    if (Objects.equals(user.getEmail(), email)) return;
+    if (user.getEmail().equals(email)) return;
     if (userRepository.existsByEmail(email))
       throw new ConflictException("email", messageService.getMessage("email.exists"));
 
@@ -148,14 +147,14 @@ public class UserServiceImpl implements UserService {
   }
 
   private void setActive(User user, Boolean active) {
-    if (Objects.equals(user.getActive(), active)) return;
+    if (user.getActive().equals(active)) return;
 
     user.setActive(active);
     if (Boolean.FALSE.equals(active)) deleteAuthTokens(user.getId());
   }
 
   private void setLock(User user, Boolean lock) {
-    if (Objects.equals(user.getLock(), lock)) return;
+    if (user.getLock().equals(lock)) return;
 
     user.setLock(lock);
     if (Boolean.TRUE.equals(lock)) deleteAuthTokens(user.getId());
@@ -163,7 +162,7 @@ public class UserServiceImpl implements UserService {
 
   private void setRoles(User user, Set<RoleName> roleNames) {
     final var roles = Set.copyOf(roleRepository.findAllByNameIn(roleNames));
-    if (Objects.equals(user.getRoles(), roles)) return;
+    if (user.getRoles().equals(roles)) return;
 
     user.setRoles(roles);
     deleteAuthTokens(user.getId());
