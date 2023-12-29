@@ -21,7 +21,7 @@
                 type="password"
                 id="oldPassword"
                 name="oldPassword"
-                class="input-bordered input w-full max-w-xs"
+                class="input input-bordered w-full max-w-xs"
               />
               {#if form?.errors?.oldPassword}
                 <label for="oldPassword" class="label">
@@ -38,7 +38,7 @@
                 type="password"
                 id="newPassword"
                 name="newPassword"
-                class="input-bordered input w-full max-w-xs"
+                class="input input-bordered w-full max-w-xs"
               />
               {#if form?.errors?.newPassword}
                 <label for="newPassword" class="label">
@@ -55,7 +55,7 @@
                 type="password"
                 id="confirmNewPassword"
                 name="confirmNewPassword"
-                class="input-bordered input w-full max-w-xs"
+                class="input input-bordered w-full max-w-xs"
               />
               {#if form?.errors?.confirmNewPassword}
                 <label for="confirmNewPassword" class="label">
@@ -72,18 +72,18 @@
               {/each}
             {/if}
 
-            <button class="btn-primary btn">Change password</button>
+            <button class="btn btn-primary">Change password</button>
           </form>
         </div>
         <div class="divider" />
         <div class="card">
-          <a href="/auth/sign-out-from-all-devices" class="btn-primary btn">
+          <a href="/auth/sign-out-from-all-devices" class="btn btn-primary">
             Sign out form all devices
           </a>
         </div>
         <div class="divider" />
         <div class="card">
-          <button class="btn-error btn" on:click|stopPropagation={() => dialog.showModal()}>
+          <button class="btn btn-error" on:click|stopPropagation={() => dialog.showModal()}>
             Delete Account
           </button>
         </div>

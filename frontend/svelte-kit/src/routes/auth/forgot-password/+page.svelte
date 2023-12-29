@@ -17,7 +17,7 @@
             type="email"
             id="email"
             name="email"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.email}
             <label for="email" class="label">
@@ -34,7 +34,7 @@
           {/each}
         {/if}
 
-        <button class="btn-primary btn">Send</button>
+        <button class="btn btn-primary">Send</button>
       </form>
     </div>
   </div>

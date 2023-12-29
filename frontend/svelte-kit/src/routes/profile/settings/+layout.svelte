@@ -4,7 +4,7 @@
   import ProfileIcon from '$lib/icons/profile.svelte';
 </script>
 
-<div class="tabs tabs-boxed flex justify-center">
+<div class="tabs-boxed tabs flex justify-center">
   <a
     href="/profile/settings/personal"
     class="tab"

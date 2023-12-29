@@ -24,7 +24,7 @@
             type="password"
             id="password"
             name="password"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.password}
             <label for="password" class="label">
@@ -41,7 +41,7 @@
             type="password"
             id="confirmPassword"
             name="confirmPassword"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.confirmPassword}
             <label for="confirmPassword" class="label">
@@ -64,7 +64,7 @@
           {/each}
         {/if}
 
-        <button class="btn-primary btn">Reset password</button>
+        <button class="btn btn-primary">Reset password</button>
       </form>
     </div>
   </div>

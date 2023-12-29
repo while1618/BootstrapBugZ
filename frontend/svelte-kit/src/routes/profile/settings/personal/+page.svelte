@@ -27,7 +27,7 @@
             type="text"
             id="firstName"
             name="firstName"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
             value={$userStore?.firstName}
           />
           {#if form?.errors?.firstName}
@@ -45,7 +45,7 @@
             type="text"
             id="lastName"
             name="lastName"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
             value={$userStore?.lastName}
           />
           {#if form?.errors?.lastName}
@@ -63,7 +63,7 @@
             type="text"
             id="username"
             name="username"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
             value={$userStore?.username}
           />
           {#if form?.errors?.username}
@@ -81,7 +81,7 @@
             type="email"
             id="email"
             name="email"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
             value={$userStore?.email}
           />
           {#if form?.errors?.email}
@@ -99,7 +99,7 @@
           {/each}
         {/if}
 
-        <button class="btn-primary btn">Update</button>
+        <button class="btn btn-primary">Update</button>
       </form>
     </div>
   </div>

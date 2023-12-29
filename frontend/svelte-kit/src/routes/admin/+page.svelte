@@ -16,7 +16,7 @@
 </script>
 
 <div class="overflow-x-auto p-10">
-  <table class="table-zebra table w-full">
+  <table class="table table-zebra w-full">
     <thead>
       <tr>
         <th>ID</th>

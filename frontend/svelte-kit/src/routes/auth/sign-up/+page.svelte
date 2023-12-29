@@ -17,7 +17,7 @@
             type="text"
             id="firstName"
             name="firstName"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.firstName}
             <label for="firstName" class="label">
@@ -34,7 +34,7 @@
             type="text"
             id="lastName"
             name="lastName"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.lastName}
             <label for="lastName" class="label">
@@ -51,7 +51,7 @@
             type="text"
             id="username"
             name="username"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.username}
             <label for="username" class="label">
@@ -68,7 +68,7 @@
             type="email"
             id="email"
             name="email"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.email}
             <label for="email" class="label">
@@ -85,7 +85,7 @@
             type="password"
             id="password"
             name="password"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.password}
             <label for="password" class="label">
@@ -102,7 +102,7 @@
             type="password"
             id="confirmPassword"
             name="confirmPassword"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.confirmPassword}
             <label for="confirmPassword" class="label">
@@ -119,7 +119,7 @@
           {/each}
         {/if}
 
-        <button class="btn-primary btn">Sign up</button>
+        <button class="btn btn-primary">Sign up</button>
       </form>
     </div>
   </div>

@@ -19,7 +19,7 @@
             type="text"
             id="usernameOrEmail"
             name="usernameOrEmail"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
             bind:value={usernameOrEmail}
           />
           {#if form?.errors?.usernameOrEmail}
@@ -37,7 +37,7 @@
             type="password"
             id="password"
             name="password"
-            class="input-bordered input w-full max-w-xs"
+            class="input input-bordered w-full max-w-xs"
           />
           {#if form?.errors?.password}
             <label for="password" class="label">
@@ -62,7 +62,7 @@
           {/each}
         {/if}
 
-        <button class="btn-primary btn">Sign in</button>
+        <button class="btn btn-primary">Sign in</button>
 
         <div class="flex gap-4">
           <span class="label-text">
