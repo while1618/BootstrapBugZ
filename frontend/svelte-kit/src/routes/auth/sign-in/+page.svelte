@@ -7,11 +7,12 @@
   let usernameOrEmail = '';
 </script>
 
-<div class="hero min-h-screen">
-  <div class="hero-content text-center">
-    <div class="max-w-md">
+<div class="flex h-screen items-center justify-center">
+  <div class="card mx-auto w-full max-w-xl p-8 shadow-xl">
+    <div class="flex flex-col gap-10">
+      <h1 class="text-center text-3xl font-bold">Sign in</h1>
       <form class="flex flex-col gap-4" method="POST" action="?/signIn" use:enhance>
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label for="usernameOrEmail" class="label">
             <span class="label-text">Username or email</span>
           </label>
@@ -19,7 +20,7 @@
             type="text"
             id="usernameOrEmail"
             name="usernameOrEmail"
-            class="input input-bordered w-full max-w-xs"
+            class="input input-bordered w-full"
             bind:value={usernameOrEmail}
           />
           {#if form?.errors?.usernameOrEmail}
@@ -29,7 +30,7 @@
           {/if}
         </div>
 
-        <div class="form-control w-full max-w-xs">
+        <div class="form-control w-full">
           <label for="password" class="label">
             <span class="label-text">Password</span>
           </label>
@@ -37,7 +38,7 @@
             type="password"
             id="password"
             name="password"
-            class="input input-bordered w-full max-w-xs"
+            class="input input-bordered w-full"
           />
           {#if form?.errors?.password}
             <label for="password" class="label">
@@ -66,7 +67,9 @@
 
         <div class="flex gap-4">
           <span class="label-text">
-            Not registered? <a href="/auth/sign-up" class="text-info hover:underline">Sign up</a>
+            Don't have an account? <a href="/auth/sign-up" class="text-info hover:underline">
+              Sign up
+            </a>
           </span>
           <a href="/auth/forgot-password" class="label-text ml-auto text-info hover:underline">
             Forgot password?
