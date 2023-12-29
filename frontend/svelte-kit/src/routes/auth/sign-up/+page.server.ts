@@ -13,7 +13,7 @@ import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (({ locals }) => {
-  if (locals.userId) throw redirect(302, '/');
+  if (locals.userId) redirect(302, '/');
 }) satisfies PageServerLoad;
 
 const signUpSchema = z
@@ -29,7 +29,7 @@ const signUpSchema = z
           path: '/users/username/availability',
           body: JSON.stringify({ username: value }),
         });
-        if ('error' in response) throw error(response.status, { message: response.error });
+        if ('error' in response) error(response.status, { message: response.error });
         return (response as AvailabilityDTO).available;
       }, en['username.exists']),
     email: z
@@ -41,7 +41,7 @@ const signUpSchema = z
           path: '/users/email/availability',
           body: JSON.stringify({ email: value }),
         });
-        if ('error' in response) throw error(response.status, { message: response.error });
+        if ('error' in response) error(response.status, { message: response.error });
         return (response as AvailabilityDTO).available;
       }, en['email.exists']),
     password: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
@@ -71,6 +71,6 @@ export const actions = {
 
     if ('error' in response) return fail(response.status, { errorMessage: response });
 
-    throw redirect(302, '/auth/sign-in');
+    redirect(302, '/auth/sign-in');
   },
 } satisfies Actions;

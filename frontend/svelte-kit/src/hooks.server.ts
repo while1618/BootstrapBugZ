@@ -55,11 +55,11 @@ async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<
 function checkProtectedRoutes(url: URL, cookies: Cookies): void {
   if (protectedRoutes.some((route) => url.pathname.startsWith(route))) {
     const accessToken = cookies.get('accessToken');
-    if (!accessToken) throw redirect(302, '/');
+    if (!accessToken) redirect(302, '/');
 
     if (url.pathname.startsWith('/admin')) {
       const { roles } = jwt.decode(accessToken) as JwtPayload;
-      if (!roles?.includes(RoleName.ADMIN)) throw redirect(302, '/');
+      if (!roles?.includes(RoleName.ADMIN)) redirect(302, '/');
     }
   }
 }

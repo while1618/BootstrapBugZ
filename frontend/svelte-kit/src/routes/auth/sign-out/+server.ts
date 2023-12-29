@@ -10,9 +10,9 @@ export const GET = (async ({ locals, cookies }) => {
     auth: cookies.get('accessToken'),
   });
 
-  if ('error' in response) throw error(response.status, { message: response.error });
+  if ('error' in response) error(response.status, { message: response.error });
 
   removeAuth(cookies, locals);
 
-  throw redirect(302, '/');
+  redirect(302, '/');
 }) satisfies RequestHandler;

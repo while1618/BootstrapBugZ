@@ -16,9 +16,9 @@ export const load = (async ({ locals, cookies }) => {
   if ('error' in response) {
     if (response.status === 401) {
       removeAuth(cookies, locals);
-      throw redirect(302, '/');
+      redirect(302, '/');
     }
-    throw error(response.status, { message: response.error });
+    error(response.status, { message: response.error });
   }
 
   return { user: response as UserDTO };

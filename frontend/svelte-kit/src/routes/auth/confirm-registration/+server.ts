@@ -4,7 +4,7 @@ import { error, redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET = (async ({ locals, url }) => {
-  if (locals.userId) throw redirect(302, '/');
+  if (locals.userId) redirect(302, '/');
 
   const token = url.searchParams.get('token');
   const response = await makeRequest({
@@ -13,7 +13,7 @@ export const GET = (async ({ locals, url }) => {
     body: JSON.stringify({ token }),
   });
 
-  if ('error' in response) throw error(response.status, { message: response.error });
+  if ('error' in response) error(response.status, { message: response.error });
 
-  throw redirect(302, '/auth/sign-in');
+  redirect(302, '/auth/sign-in');
 }) satisfies RequestHandler;

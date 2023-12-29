@@ -38,7 +38,7 @@ export const actions = {
     if ('error' in response) return fail(response.status, { errorMessage: response });
 
     removeAuth(cookies, locals);
-    throw redirect(302, '/');
+    redirect(302, '/');
   },
   delete: async ({ cookies, locals }) => {
     const response = await makeRequest({
@@ -50,6 +50,6 @@ export const actions = {
     if ('error' in response) return fail(response.status, { errorMessage: response });
 
     removeAuth(cookies, locals);
-    throw redirect(302, '/');
+    redirect(302, '/');
   },
 } satisfies Actions;

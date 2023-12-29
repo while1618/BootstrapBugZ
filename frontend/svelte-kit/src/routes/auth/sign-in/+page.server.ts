@@ -8,7 +8,7 @@ import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (({ locals }) => {
-  if (locals.userId) throw redirect(302, '/');
+  if (locals.userId) redirect(302, '/');
 }) satisfies PageServerLoad;
 
 const signInSchema = z.object({
@@ -39,6 +39,6 @@ export const actions = {
     setAccessTokenCookie(cookies, accessToken);
     setRefreshTokenCookie(cookies, refreshToken);
 
-    throw redirect(302, '/');
+    redirect(302, '/');
   },
 } satisfies Actions;

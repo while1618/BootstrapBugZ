@@ -10,7 +10,7 @@ export const load = (async ({ params }) => {
     path: `/users/username/${params.name}`,
   });
 
-  if ('error' in response) throw error(response.status, { message: response.error });
+  if ('error' in response) error(response.status, { message: response.error });
 
   return { user: response as UserDTO };
 }) satisfies PageServerLoad;

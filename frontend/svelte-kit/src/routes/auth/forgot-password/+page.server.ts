@@ -7,7 +7,7 @@ import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (({ locals }) => {
-  if (locals.userId) throw redirect(302, '/');
+  if (locals.userId) redirect(302, '/');
 }) satisfies PageServerLoad;
 
 const forgotPasswordSchema = z.object({
@@ -29,6 +29,6 @@ export const actions = {
 
     if ('error' in response) return fail(response.status, { errorMessage: response });
 
-    throw redirect(302, '/auth/sign-in');
+    redirect(302, '/auth/sign-in');
   },
 } satisfies Actions;
