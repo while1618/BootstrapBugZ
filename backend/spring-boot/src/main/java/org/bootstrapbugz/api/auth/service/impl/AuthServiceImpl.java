@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
 
     final var user =
         userRepository
-            .findByUsernameWithRoles(auth.getName())
+            .findWithRolesByUsername(auth.getName())
             .orElseThrow(
                 () -> new UnauthorizedException(messageService.getMessage("auth.invalid")));
     final var roleDTOs = UserMapper.INSTANCE.rolesToRoleDTOs(user.getRoles());

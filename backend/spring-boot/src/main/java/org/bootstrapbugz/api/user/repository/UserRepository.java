@@ -4,20 +4,20 @@ import java.util.Optional;
 import org.bootstrapbugz.api.user.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-  @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles")
-  Page<User> findAllWithRoles(Pageable pageable);
+  @EntityGraph(attributePaths = "roles")
+  Page<User> findAll(Pageable pageable);
 
-  @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.id = :id")
-  Optional<User> findByIdWithRoles(Long id);
+  @EntityGraph(attributePaths = "roles")
+  Optional<User> findWithRolesById(Long id);
 
   Optional<User> findByUsername(String username);
 
-  @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.username = :username")
-  Optional<User> findByUsernameWithRoles(String username);
+  @EntityGraph(attributePaths = "roles")
+  Optional<User> findWithRolesByUsername(String username);
 
   Optional<User> findByEmail(String email);
 

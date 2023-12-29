@@ -135,7 +135,7 @@ class UserServiceTest {
                 .lock(false)
                 .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
                 .build());
-    when(userRepository.findAllWithRoles(PageRequest.of(0, 10)))
+    when(userRepository.findAll(PageRequest.of(0, 10)))
         .thenReturn(
             new PageImpl<>(List.of(UnitTestUtil.getAdminUser(), UnitTestUtil.getTestUser())));
     final var actualUserDTOs = userService.findAll(PageRequest.of(0, 10));
@@ -155,7 +155,7 @@ class UserServiceTest {
             .lock(false)
             .roleDTOs(Set.of(new RoleDTO(RoleName.ADMIN.name()), new RoleDTO(RoleName.USER.name())))
             .build();
-    when(userRepository.findByIdWithRoles(1L)).thenReturn(Optional.of(UnitTestUtil.getAdminUser()));
+    when(userRepository.findWithRolesById(1L)).thenReturn(Optional.of(UnitTestUtil.getAdminUser()));
     final var actualUserDTO = userService.findById(1L);
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
   }
@@ -182,7 +182,7 @@ class UserServiceTest {
             .lock(false)
             .roleNames(Set.of(RoleName.USER))
             .build();
-    when(userRepository.findByIdWithRoles(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByUsername(userRequest.username())).thenReturn(false);
     when(userRepository.existsByEmail(userRequest.email())).thenReturn(false);
     userService.update(2L, userRequest);
@@ -204,7 +204,7 @@ class UserServiceTest {
             .lock(false)
             .roleNames(Set.of(RoleName.USER))
             .build();
-    when(userRepository.findByIdWithRoles(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByUsername(userRequest.username())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> userService.update(2L, userRequest))
@@ -226,7 +226,7 @@ class UserServiceTest {
             .lock(false)
             .roleNames(Set.of(RoleName.USER))
             .build();
-    when(userRepository.findByIdWithRoles(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByEmail(userRequest.email())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> userService.update(2L, userRequest))
@@ -248,7 +248,7 @@ class UserServiceTest {
             .lock(false)
             .roleNames(Set.of(RoleName.USER))
             .build();
-    when(userRepository.findByIdWithRoles(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByUsername(patchUserRequest.username())).thenReturn(false);
     when(userRepository.existsByEmail(patchUserRequest.email())).thenReturn(false);
     userService.patch(2L, patchUserRequest);
@@ -270,7 +270,7 @@ class UserServiceTest {
             .lock(false)
             .roleNames(Set.of(RoleName.USER))
             .build();
-    when(userRepository.findByIdWithRoles(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByUsername(patchUserRequest.username())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> userService.patch(2L, patchUserRequest))
@@ -292,7 +292,7 @@ class UserServiceTest {
             .lock(false)
             .roleNames(Set.of(RoleName.USER))
             .build();
-    when(userRepository.findByIdWithRoles(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByEmail(patchUserRequest.email())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> userService.patch(2L, patchUserRequest))

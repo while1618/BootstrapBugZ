@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<UserDTO> findAll(Pageable pageable) {
-    return userRepository.findAllWithRoles(pageable).stream()
+    return userRepository.findAll(pageable).stream()
         .map(UserMapper.INSTANCE::userToAdminUserDTO)
         .toList();
   }
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDTO findById(Long id) {
     return userRepository
-        .findByIdWithRoles(id)
+        .findWithRolesById(id)
         .map(UserMapper.INSTANCE::userToAdminUserDTO)
         .orElseThrow(
             () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO update(Long id, UserRequest userRequest) {
-    final var user = userRepository.findByIdWithRoles(id).orElse(new User());
+    final var user = userRepository.findWithRolesById(id).orElse(new User());
 
     user.setFirstName(userRequest.firstName());
     user.setLastName(userRequest.lastName());
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
   public UserDTO patch(Long id, PatchUserRequest patchUserRequest) {
     final var user =
         userRepository
-            .findByIdWithRoles(id)
+            .findWithRolesById(id)
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
 

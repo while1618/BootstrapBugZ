@@ -57,13 +57,13 @@ class UserRepositoryIT extends DatabaseContainers {
 
   @Test
   void findAllWithRoles() {
-    assertThat(userRepository.findAllWithRoles(PageRequest.of(0, 10))).hasSize(2);
+    assertThat(userRepository.findAll(PageRequest.of(0, 10))).hasSize(2);
   }
 
   @Test
   void findByIdWithRoles() {
     final var id = userRepository.findByUsername("admin").orElseThrow().getId();
-    final var user = userRepository.findByIdWithRoles(id).orElseThrow();
+    final var user = userRepository.findWithRolesById(id).orElseThrow();
     assertThat(user.getUsername()).isEqualTo("admin");
     assertThat(user.getRoles()).hasSize(2);
   }
@@ -75,7 +75,7 @@ class UserRepositoryIT extends DatabaseContainers {
 
   @Test
   void findByUsernameWithRoles() {
-    final var user = userRepository.findByUsernameWithRoles("user").orElseThrow();
+    final var user = userRepository.findWithRolesByUsername("user").orElseThrow();
     assertThat(user.getUsername()).isEqualTo("user");
     assertThat(user.getRoles()).hasSize(1);
   }
