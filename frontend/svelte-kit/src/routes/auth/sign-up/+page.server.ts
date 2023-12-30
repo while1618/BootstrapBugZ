@@ -8,7 +8,7 @@ import {
 } from '$lib/regex/regex';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { error, fail, redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -29,7 +29,7 @@ const signUpSchema = z
           path: '/users/username/availability',
           body: JSON.stringify({ username: value }),
         });
-        if ('error' in response) error(response.status, { message: response.error });
+        if ('error' in response) return false;
         return (response as AvailabilityDTO).available;
       }, en['username.exists']),
     email: z
@@ -41,7 +41,7 @@ const signUpSchema = z
           path: '/users/email/availability',
           body: JSON.stringify({ email: value }),
         });
-        if ('error' in response) error(response.status, { message: response.error });
+        if ('error' in response) return false;
         return (response as AvailabilityDTO).available;
       }, en['email.exists']),
     password: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
