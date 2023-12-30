@@ -1,7 +1,7 @@
 import type { UserDTO } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, type NumericRange } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ cookies }) => {
@@ -11,7 +11,8 @@ export const load = (async ({ cookies }) => {
     auth: cookies.get('accessToken'),
   });
 
-  if ('error' in response) error(response.status, { message: response.error });
+  if ('error' in response)
+    error(response.status as NumericRange<400, 599>, { message: response.error });
 
   return { users: response as UserDTO[] };
 }) satisfies PageServerLoad;

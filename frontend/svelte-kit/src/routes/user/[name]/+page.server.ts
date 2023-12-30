@@ -1,7 +1,7 @@
 import type { UserDTO } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { error } from '@sveltejs/kit';
+import { error, type NumericRange } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params }) => {
@@ -10,7 +10,8 @@ export const load = (async ({ params }) => {
     path: `/users/username/${params.name}`,
   });
 
-  if ('error' in response) error(response.status, { message: response.error });
+  if ('error' in response)
+    error(response.status as NumericRange<400, 599>, { message: response.error });
 
   return { user: response as UserDTO };
 }) satisfies PageServerLoad;
