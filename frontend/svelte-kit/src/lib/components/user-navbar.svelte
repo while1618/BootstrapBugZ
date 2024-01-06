@@ -1,12 +1,11 @@
 <script lang="ts">
   import ChartIcon from '$lib/icons/chart.svelte';
-  import MoonIcon from '$lib/icons/moon.svelte';
   import ProfileIcon from '$lib/icons/profile.svelte';
   import SettingsIcon from '$lib/icons/settings.svelte';
   import SignOutIcon from '$lib/icons/sign-out.svelte';
-  import SunIcon from '$lib/icons/sun.svelte';
   import avatar from '$lib/images/avatar.jpg';
   import logo from '$lib/images/logo.png';
+  import ThemeSelector from './theme-selector.svelte';
 
   export let isAdmin: boolean;
 </script>
@@ -21,11 +20,7 @@
     </a>
   </div>
   <div class="navbar-end gap-3">
-    <label class="swap swap-rotate">
-      <input type="checkbox" class="theme-controller" value="light" />
-      <SunIcon />
-      <MoonIcon />
-    </label>
+    <ThemeSelector />
     <div class="dropdown dropdown-end">
       <div tabindex="-1" class="avatar btn btn-circle btn-ghost">
         <div class="w-10 rounded-full">
