@@ -8,8 +8,8 @@
 
 <div class="flex h-screen items-center justify-center">
   <div class="card mx-auto w-full max-w-xl bg-base-100 p-8 shadow-xl">
-    <div class="flex flex-col gap-10">
-      <h1 class="text-center text-3xl font-bold">Profile</h1>
+    <div class="flex flex-col gap-2">
+      <h1 class="mb-6 text-center text-3xl font-bold">Profile</h1>
       <form
         class="flex flex-col gap-4"
         method="POST"
