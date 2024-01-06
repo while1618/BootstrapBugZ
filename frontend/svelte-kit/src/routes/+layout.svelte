@@ -15,7 +15,7 @@
 
 <div class="flex h-screen flex-col overflow-hidden bg-base-200">
   {#if data.user}
-    <UserNavbar />
+    <UserNavbar isAdmin={data.isAdmin} />
   {:else}
     <GuestNavbar />
   {/if}
