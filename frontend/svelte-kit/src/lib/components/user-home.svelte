@@ -5,9 +5,11 @@
 <div class="hero min-h-screen">
   <div class="hero-content text-center">
     <div class="max-w-md">
-      {#if $userStore}
-        <h1 class="text-5xl font-bold">{$userStore.username}</h1>
-      {/if}
+      <h1 class="text-5xl font-bold">Hello there, {$userStore?.username}</h1>
+      <p class="py-6">
+        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
+        quasi. In deleniti eaque aut repudiandae et a id nisi.
+      </p>
     </div>
   </div>
 </div>
