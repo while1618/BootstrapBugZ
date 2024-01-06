@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex h-screen items-center justify-center">
-  <div class="card mx-auto w-full max-w-xl p-8 shadow-xl">
+  <div class="card mx-auto w-full max-w-xl bg-base-100 p-8 shadow-xl">
     <div class="flex flex-col gap-10">
       <h1 class="text-center text-3xl font-bold">Profile</h1>
       <form
