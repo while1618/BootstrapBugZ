@@ -5,7 +5,7 @@
 
 <nav class="navbar bg-base-100 px-5">
   <div class="navbar-start">
-    <a href="/" class="flex items-center">
+    <a href="/" class="btn btn-ghost flex items-center">
       <div class="w-10 rounded-full">
         <img src={logo} alt="logo" />
       </div>
