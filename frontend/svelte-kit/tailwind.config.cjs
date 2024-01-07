@@ -8,7 +8,9 @@ const config = {
     },
   },
   plugins: [require('daisyui')],
-  darkMode: 'class',
+  daisyui: {
+    themes: ['dark', 'cupcake'],
+  },
 };
 
 module.exports = config;

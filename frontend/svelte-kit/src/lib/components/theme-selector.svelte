@@ -4,7 +4,7 @@
 </script>
 
 <label class="swap swap-rotate">
-  <input type="checkbox" class="theme-controller" value="light" />
+  <input type="checkbox" class="theme-controller" value="cupcake" />
   <SunIcon />
   <MoonIcon />
 </label>
