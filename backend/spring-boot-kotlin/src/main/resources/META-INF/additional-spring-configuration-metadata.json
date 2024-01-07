@@ -1,0 +1,39 @@
+{
+  "properties": [
+    {
+      "name": "app.name",
+      "type": "java.lang.String",
+      "description": "Application name."
+    },
+    {
+      "name": "ui.app.url",
+      "type": "java.lang.String",
+      "description": "UI application URL."
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret used to encrypt JWT."
+    },
+    {
+      "name": "jwt.access-token.duration",
+      "type": "java.lang.String",
+      "description": "Access token duration time."
+    },
+    {
+      "name": "jwt.refresh-token.duration",
+      "type": "java.lang.String",
+      "description": "Refresh token duration time."
+    },
+    {
+      "name": "jwt.verify-email-token.duration",
+      "type": "java.lang.String",
+      "description": "Verify email token duration time."
+    },
+    {
+      "name": "jwt.reset-password-token.duration",
+      "type": "java.lang.String",
+      "description": "Reset password token duration time."
+    }
+  ]
+}
