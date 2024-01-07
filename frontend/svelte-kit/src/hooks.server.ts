@@ -17,7 +17,7 @@ const protectedRoutes = ['/profile', '/admin', '/auth/sign-out', '/auth/sign-out
 export const handle = (async ({ event, resolve }) => {
   await tryToGetSignedInUser(event.cookies, event.locals);
   checkProtectedRoutes(event.url, event.cookies);
-  const theme = event.cookies.get('theme') ?? 'dark';
+  const theme = event.cookies.get('theme');
   return await resolve(event, {
     transformPageChunk: ({ html }) => html.replace('data-theme=""', `data-theme="${theme}"`),
   });
