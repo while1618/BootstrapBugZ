@@ -19,10 +19,10 @@
 </script>
 
 <div class="flex h-screen flex-col items-center justify-center">
-  <div class="card bg-base-100 mx-auto w-auto p-8 shadow-xl">
+  <div class="card mx-auto w-auto bg-base-100 p-8 shadow-xl">
     <div class="flex flex-col gap-8">
       <h1 class="text-center text-3xl font-bold">Users</h1>
-      <table class="table-zebra table">
+      <table class="table table-zebra">
         <thead>
           <tr>
             <th>ID</th>
@@ -126,10 +126,10 @@
         </tbody>
       </table>
       <div class="join justify-end">
-        <button class="join-item btn btn-active">1</button>
-        <button class="join-item btn">2</button>
-        <button class="join-item btn">3</button>
-        <button class="join-item btn">4</button>
+        <button class="btn join-item btn-active">1</button>
+        <button class="btn join-item">2</button>
+        <button class="btn join-item">3</button>
+        <button class="btn join-item">4</button>
       </div>
     </div>
   </div>
@@ -142,7 +142,7 @@
   <svelte:fragment slot="body">
     <p class="py-4">
       Are you sure you want to {selectedUser?.active ? 'deactivate' : 'activate'}
-      {selectedUser?.username}?
+      <strong>{selectedUser?.username}</strong>?
     </p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
@@ -165,7 +165,7 @@
   <svelte:fragment slot="body">
     <p class="py-4">
       Are you sure you want to {selectedUser?.lock ? 'unlock' : 'lock'}
-      {selectedUser?.username}?
+      <strong>{selectedUser?.username}</strong>?
     </p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
@@ -186,7 +186,7 @@
 
 <Modal bind:dialog={deleteDialog} title="Delete user">
   <svelte:fragment slot="body">
-    <p class="py-4">Are you sure you want to delete {selectedUser?.username}?</p>
+    <p class="py-4">Are you sure you want to delete <strong>{selectedUser?.username}</strong>?</p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
     <form method="POST" action="?/delete&id={selectedUser?.id}" use:enhance>
@@ -202,7 +202,7 @@
 
 <Modal bind:dialog={rolesDialog} title="Change roles">
   <svelte:fragment slot="body">
-    <p>logic here</p>
+    <p class="py-4">Select roles for <strong>{selectedUser?.username}</strong></p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
     <form method="POST" action="?/roles&id={selectedUser?.id}" use:enhance>
