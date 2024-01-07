@@ -1,3 +1,4 @@
+import { RoleName } from '$lib/models/user/role';
 import type { UserDTO } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
@@ -14,7 +15,10 @@ export const load = (async ({ cookies }) => {
   if ('error' in response)
     error(response.status as NumericRange<400, 599>, { message: response.error });
 
-  return { users: response as UserDTO[] };
+  return {
+    users: response as UserDTO[],
+    roles: [{ name: RoleName.USER }, { name: RoleName.ADMIN }],
+  };
 }) satisfies PageServerLoad;
 
 export const actions = {
@@ -72,7 +76,16 @@ export const actions = {
 
     if ('error' in response) return fail(response.status, { errorMessage: response });
   },
-  roles: async () => {
-    console.log('roles');
+  roles: async ({ cookies, url, request }) => {
+    const id = url.searchParams.get('id');
+    const formData = Object.fromEntries(await request.formData());
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ roleNames: Object.keys(formData) }),
+    });
+
+    if ('error' in response) return fail(response.status, { errorMessage: response });
   },
 } satisfies Actions;
