@@ -3,6 +3,7 @@
   import '../app.css';
 
   import GuestNavbar from '$lib/components/guest-navbar.svelte';
+  import Loading from '$lib/components/loading.svelte';
   import UserNavbar from '$lib/components/user-navbar.svelte';
   import { beforeUpdate } from 'svelte';
   import type { LayoutData } from './$types';
@@ -13,11 +14,14 @@
   });
 </script>
 
-<div class="flex h-screen flex-col overflow-hidden bg-base-200">
-  {#if data.user}
-    <UserNavbar isAdmin={data.isAdmin} />
-  {:else}
+<div class="bg-base-200 flex h-screen flex-col overflow-hidden">
+  {#if !data.user}
     <GuestNavbar />
+    <slot />
+  {:else if !$userStore}
+    <Loading />
+  {:else}
+    <UserNavbar isAdmin={data.isAdmin} />
+    <slot />
   {/if}
-  <slot />
 </div>
