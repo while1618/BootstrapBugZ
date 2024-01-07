@@ -72,4 +72,7 @@ export const actions = {
 
     if ('error' in response) return fail(response.status, { errorMessage: response });
   },
+  roles: async ({ cookies, url }) => {
+    console.log('roles');
+  },
 } satisfies Actions;
