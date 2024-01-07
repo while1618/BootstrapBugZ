@@ -33,7 +33,11 @@ export const actions = {
       body: JSON.stringify(signInForm.data),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response)
+      return fail(response.status, {
+        errorMessage: response,
+        usernameOrEmail: signInForm.data.usernameOrEmail,
+      });
 
     const { accessToken, refreshToken } = response as AuthTokensDTO;
     setAccessTokenCookie(cookies, accessToken);
