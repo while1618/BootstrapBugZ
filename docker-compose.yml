@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+  bootstrapbugz-api:
+    image: "bootstrapbugz-api:latest"
+    build:
+      context: ./backend/spring-boot
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/bootstrapbugz
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_PASSWORD: root
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: "postgres"
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: bootstrapbugz
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+
+  redis:
+    image: "redis"
+    ports:
+      - "6380:6379"
+    command: redis-server --requirepass root
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+
+  bootstrapbugz-ui:
+    image: "bootstrapbugz-ui:latest"
+    build:
+      context: ./frontend/svelte-kit
+      dockerfile: Dockerfile
+    env_file:
+      - ./frontend/svelte-kit/.env
+    ports:
+      - "5174:5173"
