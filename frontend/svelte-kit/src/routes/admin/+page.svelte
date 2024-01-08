@@ -16,6 +16,24 @@
   let deleteDialog: HTMLDialogElement;
   let rolesDialog: HTMLDialogElement;
   let selectedUser: UserDTO;
+
+  const tableFieldsLabels = [
+    'ID',
+    'First name',
+    'Last name',
+    'Username',
+    'Email',
+    'Created at',
+    'Active',
+    'Lock',
+    'Roles',
+    '',
+  ];
+
+  const showModal = (dialog: HTMLDialogElement, user: UserDTO) => {
+    dialog.showModal();
+    selectedUser = user;
+  };
 </script>
 
 <div class="flex h-screen flex-col items-center justify-center">
@@ -25,16 +43,9 @@
       <table class="table table-zebra">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Activated</th>
-            <th>Locked</th>
-            <th>Created at</th>
-            <th>Roles</th>
-            <th />
+            {#each tableFieldsLabels as label}
+              <th>{label}</th>
+            {/each}
           </tr>
         </thead>
         <tbody>
@@ -45,65 +56,44 @@
               <th>{user.lastName}</th>
               <th>{user.username}</th>
               <th>{user.email}</th>
-              <th>
-                {#if user.active}
-                  <button
-                    class=" text-green-600 dark:text-green-500"
-                    on:click|stopPropagation={() => {
-                      activateDialog.showModal();
-                      selectedUser = user;
-                    }}
-                  >
-                    <CheckCircleIcon />
-                  </button>
-                {:else}
-                  <button
-                    class="text-red-600 dark:text-red-500"
-                    on:click|stopPropagation={() => {
-                      activateDialog.showModal();
-                      selectedUser = user;
-                    }}
-                  >
-                    <CloseCircleIcon />
-                  </button>
-                {/if}
-              </th>
-              <th>
-                {#if user.lock}
-                  <button
-                    class="text-red-600 dark:text-red-500"
-                    on:click|stopPropagation={() => {
-                      lockDialog.showModal();
-                      selectedUser = user;
-                    }}
-                  >
-                    <LockCloseIcon />
-                  </button>
-                {:else}
-                  <button
-                    class="text-blue-600 dark:text-blue-500"
-                    on:click|stopPropagation={() => {
-                      lockDialog.showModal();
-                      selectedUser = user;
-                    }}
-                  >
-                    <LockOpenIcon />
-                  </button>
-                {/if}
-              </th>
               <th>{new Date(user.createdAt).toLocaleString()}</th>
+              <th>
+                <button
+                  class={user.active
+                    ? 'text-green-600 dark:text-green-500'
+                    : 'text-red-600 dark:text-red-500'}
+                  on:click|stopPropagation={() => showModal(activateDialog, user)}
+                >
+                  {#if user.active}
+                    <CheckCircleIcon />
+                  {:else}
+                    <CloseCircleIcon />
+                  {/if}
+                </button>
+              </th>
+              <th>
+                <button
+                  class={user.lock
+                    ? 'text-red-600 dark:text-red-500'
+                    : 'text-blue-600 dark:text-blue-500'}
+                  on:click|stopPropagation={() => showModal(lockDialog, user)}
+                >
+                  {#if user.lock}
+                    <LockCloseIcon />
+                  {:else}
+                    <LockOpenIcon />
+                  {/if}
+                </button>
+              </th>
               <th>
                 {#if user.roles}
                   <div class="flex gap-2">
                     {#each user.roles as role}
-                      {`${role.name} `}
+                      <span class="badge badge-neutral">{role.name}</span>
                     {/each}
                     <button
-                      on:click|stopPropagation={() => {
-                        rolesDialog.showModal();
-                        selectedUser = user;
-                      }}
                       class="text-blue-600 dark:text-blue-500"
+                      on:click|stopPropagation={() => showModal(rolesDialog, user)}
                     >
                       <PencilIcon />
                     </button>
@@ -113,10 +103,7 @@
               <th>
                 <button
                   class="text-red-600 dark:text-red-500"
-                  on:click|stopPropagation={() => {
-                    deleteDialog.showModal();
-                    selectedUser = user;
-                  }}
+                  on:click|stopPropagation={() => showModal(deleteDialog, user)}
                 >
                   <TrashIcon />
                 </button>
