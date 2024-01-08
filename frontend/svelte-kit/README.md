@@ -4,7 +4,7 @@ Everything you need to build a Svelte project, powered by [`create-svelte`](http
 
 ## Developing
 
-create .env file in root of svelte-kit directory with the following data:
+create `.env` file in root of svelte-kit directory with the following data:
 
 ```bash
 JWT_SECRET=secret
@@ -31,8 +31,3 @@ pnpm run build
 You can preview the production build with `pnpm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
-
-## auth credentials
-username: user/admin
-
-password: qwerty123
