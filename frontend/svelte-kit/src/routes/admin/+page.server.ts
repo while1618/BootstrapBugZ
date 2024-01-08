@@ -2,7 +2,7 @@ import { RoleName } from '$lib/models/user/role';
 import type { UserDTO } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { error, fail, type NumericRange } from '@sveltejs/kit';
+import { error, fail, type Cookies, type NumericRange } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ cookies }) => {
@@ -21,71 +21,41 @@ export const load = (async ({ cookies }) => {
   };
 }) satisfies PageServerLoad;
 
+const makeAction = async (cookies: Cookies, url: URL, method: HttpRequest, body?: string) => {
+  const id = url.searchParams.get('id');
+  const response = await makeRequest({
+    method,
+    path: `/admin/users/${id}`,
+    auth: cookies.get('accessToken'),
+    body,
+  });
+
+  if ('error' in response) return fail(response.status, { errorMessage: response });
+};
+
 export const actions = {
   activate: async ({ cookies, url }) => {
-    const id = url.searchParams.get('id');
-    const response = await makeRequest({
-      method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
-      auth: cookies.get('accessToken'),
-      body: JSON.stringify({ active: true }),
-    });
-
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ active: true }));
   },
   deactivate: async ({ cookies, url }) => {
-    const id = url.searchParams.get('id');
-    const response = await makeRequest({
-      method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
-      auth: cookies.get('accessToken'),
-      body: JSON.stringify({ active: false }),
-    });
-
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ active: false }));
   },
   unlock: async ({ cookies, url }) => {
-    const id = url.searchParams.get('id');
-    const response = await makeRequest({
-      method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
-      auth: cookies.get('accessToken'),
-      body: JSON.stringify({ lock: false }),
-    });
-
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ lock: false }));
   },
   lock: async ({ cookies, url }) => {
-    const id = url.searchParams.get('id');
-    const response = await makeRequest({
-      method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
-      auth: cookies.get('accessToken'),
-      body: JSON.stringify({ lock: true }),
-    });
-
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ lock: true }));
   },
   delete: async ({ cookies, url }) => {
-    const id = url.searchParams.get('id');
-    const response = await makeRequest({
-      method: HttpRequest.DELETE,
-      path: `/admin/users/${id}`,
-      auth: cookies.get('accessToken'),
-    });
-
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    await makeAction(cookies, url, HttpRequest.DELETE);
   },
   roles: async ({ cookies, url, request }) => {
-    const id = url.searchParams.get('id');
     const formData = Object.fromEntries(await request.formData());
-    const response = await makeRequest({
-      method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
-      auth: cookies.get('accessToken'),
-      body: JSON.stringify({ roleNames: Object.keys(formData) }),
-    });
-
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    await makeAction(
+      cookies,
+      url,
+      HttpRequest.PATCH,
+      JSON.stringify({ roleNames: Object.keys(formData) }),
+    );
   },
 } satisfies Actions;

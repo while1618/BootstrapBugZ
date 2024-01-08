@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import Modal from '$lib/components/modal.svelte';
   import CheckCircleIcon from '$lib/icons/check-circle.svelte';
   import CloseCircleIcon from '$lib/icons/close-circle.svelte';
   import LockCloseIcon from '$lib/icons/lock-close.svelte';
@@ -9,6 +7,10 @@
   import TrashIcon from '$lib/icons/trash.svelte';
   import type { UserDTO } from '$lib/models/user/user';
   import type { PageServerData } from './$types';
+  import ActivateModal from './activate-modal.svelte';
+  import DeleteModal from './delete-modal.svelte';
+  import LockModal from './lock-modal.svelte';
+  import RoleModal from './role-modal.svelte';
 
   export let data: PageServerData;
   let activateDialog: HTMLDialogElement;
@@ -112,106 +114,11 @@
           {/each}
         </tbody>
       </table>
-      <div class="join justify-end">
-        <button class="btn join-item btn-active">1</button>
-        <button class="btn join-item">2</button>
-        <button class="btn join-item">3</button>
-        <button class="btn join-item">4</button>
-      </div>
     </div>
   </div>
 </div>
 
-<Modal
-  bind:dialog={activateDialog}
-  title={selectedUser?.active ? 'Deactivate user' : 'Activate user'}
->
-  <svelte:fragment slot="body">
-    <p class="py-4">
-      Are you sure you want to {selectedUser?.active ? 'deactivate' : 'activate'}
-      <strong>{selectedUser?.username}</strong>?
-    </p>
-  </svelte:fragment>
-  <svelte:fragment slot="actions">
-    <form
-      method="POST"
-      action="?/{selectedUser?.active ? 'deactivate' : 'activate'}&id={selectedUser?.id}"
-      use:enhance
-    >
-      <div class="flex gap-2">
-        <button type="submit" class="btn btn-neutral" on:click={() => activateDialog.close()}>
-          {selectedUser?.active ? 'Deactivate' : 'Activate'}
-        </button>
-        <button type="button" class="btn" on:click={() => activateDialog.close()}>Cancel</button>
-      </div>
-    </form>
-  </svelte:fragment>
-</Modal>
-
-<Modal bind:dialog={lockDialog} title={selectedUser?.lock ? 'Unlock user' : 'Lock user'}>
-  <svelte:fragment slot="body">
-    <p class="py-4">
-      Are you sure you want to {selectedUser?.lock ? 'unlock' : 'lock'}
-      <strong>{selectedUser?.username}</strong>?
-    </p>
-  </svelte:fragment>
-  <svelte:fragment slot="actions">
-    <form
-      method="POST"
-      action="?/{selectedUser?.lock ? 'unlock' : 'lock'}&id={selectedUser?.id}"
-      use:enhance
-    >
-      <div class="flex gap-2">
-        <button type="submit" class="btn btn-neutral" on:click={() => lockDialog.close()}>
-          {selectedUser?.lock ? 'Unlock' : 'Lock'}
-        </button>
-        <button type="button" class="btn" on:click={() => lockDialog.close()}>Cancel</button>
-      </div>
-    </form>
-  </svelte:fragment>
-</Modal>
-
-<Modal bind:dialog={deleteDialog} title="Delete user">
-  <svelte:fragment slot="body">
-    <p class="py-4">Are you sure you want to delete <strong>{selectedUser?.username}</strong>?</p>
-  </svelte:fragment>
-  <svelte:fragment slot="actions">
-    <form method="POST" action="?/delete&id={selectedUser?.id}" use:enhance>
-      <div class="flex gap-2">
-        <button type="submit" class="btn btn-error" on:click={() => deleteDialog.close()}>
-          Delete
-        </button>
-        <button type="button" class="btn" on:click={() => deleteDialog.close()}>Cancel</button>
-      </div>
-    </form>
-  </svelte:fragment>
-</Modal>
-
-<Modal bind:dialog={rolesDialog} title="Change roles">
-  <svelte:fragment slot="body">
-    <p class="py-4">Select roles for <strong>{selectedUser?.username}</strong>:</p>
-    <form id="roleForm" method="POST" action="?/roles&id={selectedUser?.id}" use:enhance>
-      <div class="flex flex-col gap-2">
-        {#each data.roles as role}
-          <div class="form-control">
-            <label class="label cursor-pointer">
-              <span class="label-text">{role.name}</span>
-              <input type="checkbox" id={role.name} name={role.name} class="checkbox" />
-            </label>
-          </div>
-        {/each}
-      </div>
-    </form>
-  </svelte:fragment>
-  <svelte:fragment slot="actions">
-    <button
-      type="submit"
-      form="roleForm"
-      class="btn btn-neutral"
-      on:click={() => rolesDialog.close()}
-    >
-      Save
-    </button>
-    <button type="button" class="btn" on:click={() => rolesDialog.close()}>Cancel</button>
-  </svelte:fragment>
-</Modal>
+<ActivateModal bind:activateDialog {selectedUser} />
+<LockModal bind:lockDialog {selectedUser} />
+<DeleteModal bind:deleteDialog {selectedUser} />
+<RoleModal bind:rolesDialog {selectedUser} {data} />
