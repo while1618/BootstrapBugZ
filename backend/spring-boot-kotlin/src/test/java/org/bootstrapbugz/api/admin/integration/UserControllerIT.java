@@ -160,17 +160,16 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void findUserById() throws Exception {
     final var expectedUserDTO =
-        UserDTO.builder()
-            .id(2L)
-            .firstName("User")
-            .lastName("User")
-            .username("user")
-            .email("user@localhost")
-            .active(true)
-            .lock(false)
-            .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
-            .createdAt(LocalDateTime.now())
-            .build();
+        new UserDTO(
+            2L,
+            "User",
+            "User",
+            "user",
+            "user@localhost",
+            true,
+            false,
+            Set.of(new RoleDTO(RoleName.USER.name())),
+            LocalDateTime.now());
     final var response =
         mockMvc
             .perform(

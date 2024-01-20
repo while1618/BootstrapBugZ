@@ -62,13 +62,7 @@ class ProfileServiceTest {
   @Test
   void findProfile() {
     final var expectedUserDTO =
-        UserDTO.builder()
-            .id(2L)
-            .firstName("Test")
-            .lastName("Test")
-            .username("test")
-            .email("test@localhost")
-            .build();
+        new UserDTO(2L, "Test", "Test", "test", "test@localhost", null, null, null, null);
     final var userDTO = profileService.find();
     assertThat(userDTO).isEqualTo(expectedUserDTO);
   }

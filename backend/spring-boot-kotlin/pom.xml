@@ -29,6 +29,7 @@
     <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
     <spotless.version>2.41.1</spotless.version>
     <google-java-format.version>1.17.0</google-java-format.version>
+    <kotlin.version>1.9.22</kotlin.version>
   </properties>
 
   <dependencies>
@@ -138,6 +139,23 @@
       <artifactId>postgresql</artifactId>
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <artifactId>kotlin-stdlib</artifactId>
+          <version>${kotlin.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <artifactId>kotlin-test</artifactId>
+          <version>${kotlin.version}</version>
+          <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>com.fasterxml.jackson.module</groupId>
+          <artifactId>jackson-module-kotlin</artifactId>
+          <version>2.15.3</version>
+      </dependency>
+
   </dependencies>
 
   <build>
@@ -175,10 +193,87 @@
         <version>${project.parent.version}</version>
       </plugin>
       <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>generate-code-coverage-report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <version>${kotlin.version}</version>
+          <configuration>
+              <compilerPlugins>
+                  <plugin>spring</plugin>
+              </compilerPlugins>
+              <jvmTarget>21</jvmTarget>
+          </configuration>
+          <executions>
+              <execution>
+                  <id>compile</id>
+                  <phase>compile</phase>
+                  <goals>
+                      <goal>compile</goal>
+                  </goals>
+              </execution>
+              <execution>
+                  <id>test-compile</id>
+                  <phase>test-compile</phase>
+                  <goals>
+                      <goal>test-compile</goal>
+                  </goals>
+              </execution>
+          </executions>
+          <dependencies>
+              <dependency>
+                  <groupId>org.jetbrains.kotlin</groupId>
+                  <artifactId>kotlin-maven-allopen</artifactId>
+                  <version>${kotlin.version}</version>
+              </dependency>
+          </dependencies>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
-        <configuration>
+          <executions>
+              <execution>
+                  <id>default-compile</id>
+                  <phase>none</phase>
+              </execution>
+              <execution>
+                  <id>default-testCompile</id>
+                  <phase>none</phase>
+              </execution>
+              <execution>
+                  <id>compile</id>
+                  <phase>compile</phase>
+                  <goals>
+                      <goal>compile</goal>
+                  </goals>
+              </execution>
+              <execution>
+                  <id>testCompile</id>
+                  <phase>test-compile</phase>
+                  <goals>
+                      <goal>testCompile</goal>
+                  </goals>
+              </execution>
+          </executions>
+          <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
           <annotationProcessorPaths>
@@ -198,25 +293,6 @@
             </compilerArg>
           </compilerArgs>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>generate-code-coverage-report</id>
-            <phase>test</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

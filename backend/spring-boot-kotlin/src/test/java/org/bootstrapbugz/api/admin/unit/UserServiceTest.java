@@ -114,27 +114,27 @@ class UserServiceTest {
   void findAllUsers() {
     final var expectedUserDTOs =
         List.of(
-            UserDTO.builder()
-                .id(1L)
-                .firstName("Admin")
-                .lastName("Admin")
-                .username("admin")
-                .email("admin@localhost")
-                .active(true)
-                .lock(false)
-                .roleDTOs(
-                    Set.of(new RoleDTO(RoleName.ADMIN.name()), new RoleDTO(RoleName.USER.name())))
-                .build(),
-            UserDTO.builder()
-                .id(2L)
-                .firstName("Test")
-                .lastName("Test")
-                .username("test")
-                .email("test@localhost")
-                .active(true)
-                .lock(false)
-                .roleDTOs(Set.of(new RoleDTO(RoleName.USER.name())))
-                .build());
+            new UserDTO(
+                1L,
+                "Admin",
+                "Admin",
+                "admin",
+                "admin@localhost",
+                true,
+                false,
+                Set.of(new RoleDTO(RoleName.ADMIN.name()), new RoleDTO(RoleName.USER.name())),
+                null),
+            new UserDTO(
+                2L,
+                "Test",
+                "Test",
+                "test",
+                "test@localhost",
+                true,
+                false,
+                Set.of(new RoleDTO(RoleName.USER.name())),
+                null));
+
     when(userRepository.findAll(PageRequest.of(0, 10)))
         .thenReturn(
             new PageImpl<>(List.of(UnitTestUtil.getAdminUser(), UnitTestUtil.getTestUser())));
@@ -145,16 +145,17 @@ class UserServiceTest {
   @Test
   void findUserById() {
     final var expectedUserDTO =
-        UserDTO.builder()
-            .id(1L)
-            .firstName("Admin")
-            .lastName("Admin")
-            .username("admin")
-            .email("admin@localhost")
-            .active(true)
-            .lock(false)
-            .roleDTOs(Set.of(new RoleDTO(RoleName.ADMIN.name()), new RoleDTO(RoleName.USER.name())))
-            .build();
+        new UserDTO(
+            1L,
+            "Admin",
+            "Admin",
+            "admin",
+            "admin@localhost",
+            true,
+            false,
+            Set.of(new RoleDTO(RoleName.ADMIN.name()), new RoleDTO(RoleName.USER.name())),
+            null);
+
     when(userRepository.findWithRolesById(1L)).thenReturn(Optional.of(UnitTestUtil.getAdminUser()));
     final var actualUserDTO = userService.findById(1L);
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
