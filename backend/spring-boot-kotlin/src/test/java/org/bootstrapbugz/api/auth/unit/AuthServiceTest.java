@@ -102,13 +102,7 @@ class AuthServiceTest {
   @Test
   void registerUser() {
     final var expectedUserDTO =
-        UserDTO.builder()
-            .id(2L)
-            .firstName("Test")
-            .lastName("Test")
-            .username("test")
-            .email("test@localhost")
-            .build();
+        new UserDTO(2L, "Test", "Test", "test", "test@localhost", null, null, null, null);
     final var registerUserRequest =
         new RegisterUserRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     when(userRepository.existsByUsername(registerUserRequest.username())).thenReturn(false);

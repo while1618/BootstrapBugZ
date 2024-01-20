@@ -32,20 +32,8 @@ class UserServiceTest {
   void findAllUsers() {
     final var expectedUserDTOs =
         List.of(
-            UserDTO.builder()
-                .id(1L)
-                .firstName("Admin")
-                .lastName("Admin")
-                .username("admin")
-                .email(null)
-                .build(),
-            UserDTO.builder()
-                .id(2L)
-                .firstName("Test")
-                .lastName("Test")
-                .username("test")
-                .email(null)
-                .build());
+            new UserDTO(1L, "Admin", "Admin", "admin", null, null, null, null, null),
+            new UserDTO(2L, "Test", "Test", "test", null, null, null, null, null));
     when(userRepository.findAll(PageRequest.of(0, 10)))
         .thenReturn(
             new PageImpl<>(List.of(UnitTestUtil.getAdminUser(), UnitTestUtil.getTestUser())));
@@ -56,13 +44,7 @@ class UserServiceTest {
   @Test
   void findUserById() {
     final var expectedUserDTO =
-        UserDTO.builder()
-            .id(1L)
-            .firstName("Admin")
-            .lastName("Admin")
-            .username("admin")
-            .email(null)
-            .build();
+        new UserDTO(1L, "Admin", "Admin", "admin", null, null, null, null, null);
     when(userRepository.findById(1L)).thenReturn(Optional.of(UnitTestUtil.getAdminUser()));
     final var actualUserDTO = userService.findById(1L);
     assertThat(actualUserDTO).isEqualTo(expectedUserDTO);
@@ -78,14 +60,8 @@ class UserServiceTest {
 
   @Test
   void findUserByUsername() {
-    final var expectedUserDTO =
-        UserDTO.builder()
-            .id(1L)
-            .firstName("Admin")
-            .lastName("Admin")
-            .username("admin")
-            .email(null)
-            .build();
+    final UserDTO expectedUserDTO =
+        new UserDTO(1L, "Admin", "Admin", "admin", null, null, null, null, null);
     when(userRepository.findByUsername("admin"))
         .thenReturn(Optional.of(UnitTestUtil.getAdminUser()));
     final var actualUserDTO = userService.findByUsername("admin");

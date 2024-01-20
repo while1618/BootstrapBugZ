@@ -42,7 +42,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   public String create(Long userId, Set<RoleDTO> roleDTOs) {
     return JWT.create()
         .withIssuer(userId.toString())
-        .withClaim("roles", roleDTOs.stream().map(RoleDTO::name).toList())
+        .withClaim("roles", roleDTOs.stream().map(RoleDTO::getName).toList())
         .withClaim("purpose", PURPOSE.name())
         .withIssuedAt(Instant.now())
         .withExpiresAt(Instant.now().plusSeconds(tokenDuration))
