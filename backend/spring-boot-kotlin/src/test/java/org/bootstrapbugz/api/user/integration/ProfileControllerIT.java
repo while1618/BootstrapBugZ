@@ -45,7 +45,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             get(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken())))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.username").value("user"))
         .andExpect(jsonPath("$.email").value("user@localhost"));
@@ -60,7 +60,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.username").value("updated1"))
@@ -77,7 +77,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.firstName").value("Updated"))
@@ -93,7 +93,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isConflict())
         .andExpect(content().string(containsString("Username already exists.")));
@@ -107,7 +107,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isConflict())
         .andExpect(content().string(containsString("Email already exists.")));
@@ -122,7 +122,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             patch(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Invalid first name.")))
@@ -138,7 +138,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             delete(Path.PROFILE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken())))
         .andExpect(status().isNoContent());
   }
 
@@ -151,7 +151,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             patch(Path.PROFILE + "/password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isNoContent());
   }
@@ -165,7 +165,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             patch(Path.PROFILE + "/password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Wrong current password.")));
@@ -180,7 +180,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             patch(Path.PROFILE + "/password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("Passwords do not match.")));
@@ -194,7 +194,7 @@ class ProfileControllerIT extends DatabaseContainers {
         .perform(
             patch(Path.PROFILE + "/password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("currentPassword")))

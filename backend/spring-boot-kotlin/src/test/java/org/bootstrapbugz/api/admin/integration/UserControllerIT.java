@@ -44,7 +44,7 @@ class UserControllerIT extends DatabaseContainers {
 
   @BeforeEach
   void setUp() throws Exception {
-    accessToken = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "admin").accessToken();
+    accessToken = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "admin").getAccessToken();
   }
 
   @Test
