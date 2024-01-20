@@ -96,7 +96,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         .perform(
             post(Path.ADMIN_USERS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
@@ -117,7 +117,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         .perform(
             get(Path.ADMIN_USERS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken())))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
   }
@@ -137,7 +137,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         .perform(
             get(Path.ADMIN_USERS + "/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken())))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
   }
@@ -169,7 +169,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         .perform(
             put(Path.ADMIN_USERS + "/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
@@ -191,7 +191,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         .perform(
             patch(Path.ADMIN_USERS + "/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken()))
                 .content(objectMapper.writeValueAsString(patchUserRequest)))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
@@ -212,7 +212,7 @@ class AccessingResourcesIT extends DatabaseContainers {
         .perform(
             delete(Path.ADMIN_USERS + "/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken())))
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
   }

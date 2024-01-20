@@ -185,10 +185,10 @@ class AuthControllerIT extends DatabaseContainers {
         .perform(
             delete(Path.AUTH + "/tokens")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken())))
         .andExpect(status().isNoContent());
-    invalidAccessToken(authTokens.accessToken());
-    invalidRefreshToken(authTokens.refreshToken());
+    invalidAccessToken(authTokens.getAccessToken());
+    invalidRefreshToken(authTokens.getRefreshToken());
   }
 
   @Test
@@ -198,10 +198,10 @@ class AuthControllerIT extends DatabaseContainers {
         .perform(
             delete(Path.AUTH + "/tokens/devices")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+                .headers(IntegrationTestUtil.authHeader(authTokens.getAccessToken())))
         .andExpect(status().isNoContent());
-    invalidAccessToken(authTokens.accessToken());
-    invalidRefreshToken(authTokens.refreshToken());
+    invalidAccessToken(authTokens.getAccessToken());
+    invalidRefreshToken(authTokens.getRefreshToken());
   }
 
   private void invalidAccessToken(String accessToken) throws Exception {
@@ -230,7 +230,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void refreshToken() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1");
-    final var refreshTokenRequest = new RefreshAuthTokensRequest(authTokens.refreshToken());
+    final var refreshTokenRequest = new RefreshAuthTokensRequest(authTokens.getRefreshToken());
     mockMvc
         .perform(
             post(Path.AUTH + "/tokens/refresh")
