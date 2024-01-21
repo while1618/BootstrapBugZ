@@ -51,13 +51,14 @@ public class UserServiceImpl implements UserService {
   @Override
   public AvailabilityDTO usernameAvailability(
       UsernameAvailabilityRequest usernameAvailabilityRequest) {
-    final var available = !userRepository.existsByUsername(usernameAvailabilityRequest.username());
+    final var available =
+        !userRepository.existsByUsername(usernameAvailabilityRequest.getUsername());
     return new AvailabilityDTO(available);
   }
 
   @Override
   public AvailabilityDTO emailAvailability(EmailAvailabilityRequest emailAvailabilityRequest) {
-    final var available = !userRepository.existsByEmail(emailAvailabilityRequest.email());
+    final var available = !userRepository.existsByEmail(emailAvailabilityRequest.getEmail());
     return new AvailabilityDTO(available);
   }
 }

@@ -63,7 +63,7 @@ public class AuthController {
   public ResponseEntity<AuthTokensDTO> refreshTokens(
       @Valid @RequestBody RefreshAuthTokensRequest refreshAuthTokensRequest,
       HttpServletRequest request) {
-    final var refreshToken = JwtUtil.removeBearer(refreshAuthTokensRequest.refreshToken());
+    final var refreshToken = JwtUtil.removeBearer(refreshAuthTokensRequest.getRefreshToken());
     final var ipAddress = AuthUtil.getUserIpAddress(request);
     return ResponseEntity.ok(authService.refreshTokens(refreshToken, ipAddress));
   }

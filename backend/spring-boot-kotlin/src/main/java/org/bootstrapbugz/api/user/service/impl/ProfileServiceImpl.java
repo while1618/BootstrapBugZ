@@ -56,10 +56,13 @@ public class ProfileServiceImpl implements ProfileService {
             .orElseThrow(
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
 
-    if (patchProfileRequest.firstName() != null) user.setFirstName(patchProfileRequest.firstName());
-    if (patchProfileRequest.lastName() != null) user.setLastName(patchProfileRequest.lastName());
-    if (patchProfileRequest.username() != null) setUsername(user, patchProfileRequest.username());
-    if (patchProfileRequest.email() != null) setEmail(user, patchProfileRequest.email());
+    if (patchProfileRequest.getFirstName() != null)
+      user.setFirstName(patchProfileRequest.getFirstName());
+    if (patchProfileRequest.getLastName() != null)
+      user.setLastName(patchProfileRequest.getLastName());
+    if (patchProfileRequest.getUsername() != null)
+      setUsername(user, patchProfileRequest.getUsername());
+    if (patchProfileRequest.getEmail() != null) setEmail(user, patchProfileRequest.getEmail());
 
     return UserMapper.INSTANCE.userToProfileUserDTO(userRepository.save(user));
   }
@@ -104,10 +107,11 @@ public class ProfileServiceImpl implements ProfileService {
             .findById(userId)
             .orElseThrow(
                 () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
-    if (!bCryptPasswordEncoder.matches(changePasswordRequest.currentPassword(), user.getPassword()))
+    if (!bCryptPasswordEncoder.matches(
+        changePasswordRequest.getCurrentPassword(), user.getPassword()))
       throw new BadRequestException(
           "currentPassword", messageService.getMessage("currentPassword.wrong"));
-    user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
+    user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getNewPassword()));
     deleteAuthTokens(userId);
     userRepository.save(user);
   }
