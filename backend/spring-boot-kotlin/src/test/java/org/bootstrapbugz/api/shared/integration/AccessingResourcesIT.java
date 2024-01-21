@@ -81,17 +81,16 @@ class AccessingResourcesIT extends DatabaseContainers {
   void createUser_throwForbidden_userNotAdmin() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user");
     final var userRequest =
-        UserRequest.builder()
-            .firstName("test")
-            .lastName("test")
-            .username("test")
-            .email("test@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "test",
+            "test",
+            "test",
+            "test@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
     mockMvc
         .perform(
             post(Path.ADMIN_USERS)
@@ -154,17 +153,16 @@ class AccessingResourcesIT extends DatabaseContainers {
   void updateUserById_throwForbidden_userNotAdmin() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user");
     final var userRequest =
-        UserRequest.builder()
-            .firstName("test")
-            .lastName("test")
-            .username("test")
-            .email("test@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "test",
+            "test",
+            "test",
+            "test@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
     mockMvc
         .perform(
             put(Path.ADMIN_USERS + "/{id}", 1L)
@@ -186,7 +184,8 @@ class AccessingResourcesIT extends DatabaseContainers {
   @Test
   void patchUserById_throwForbidden_userNotAdmin() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user");
-    final var patchUserRequest = PatchUserRequest.builder().build();
+    final var patchUserRequest =
+        new PatchUserRequest(null, null, null, null, null, null, null, null, null);
     mockMvc
         .perform(
             patch(Path.ADMIN_USERS + "/{id}", 1L)

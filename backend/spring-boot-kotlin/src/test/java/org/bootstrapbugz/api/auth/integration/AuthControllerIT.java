@@ -55,14 +55,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void registerUser() throws Exception {
     final var registerUserRequest =
-        RegisterUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("test")
-            .email("test@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .build();
+        new RegisterUserRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     mockMvc
         .perform(
             post(Path.AUTH + "/register")
@@ -77,14 +70,8 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void registerUser_throwBadRequest_invalidParameters() throws Exception {
     final var registerUserRequest =
-        RegisterUserRequest.builder()
-            .firstName("User1")
-            .lastName("User1")
-            .username("user")
-            .email("user@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty1234")
-            .build();
+        new RegisterUserRequest(
+            "User1", "User1", "user", "user@localhost", "qwerty123", "qwerty1234");
     mockMvc
         .perform(
             post(Path.AUTH + "/register")
@@ -99,14 +86,8 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void registerUser_throwConflict_usernameExists() throws Exception {
     final var registerUserRequest =
-        RegisterUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("user")
-            .email("test123@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .build();
+        new RegisterUserRequest(
+            "Test", "Test", "user", "test123@localhost", "qwerty123", "qwerty123");
     mockMvc
         .perform(
             post(Path.AUTH + "/register")
@@ -119,14 +100,8 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void registerUser_throwConflict_emailExists() throws Exception {
     final var registerUserRequest =
-        RegisterUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("test123")
-            .email("user@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .build();
+        new RegisterUserRequest(
+            "Test", "Test", "test123", "user@localhost", "qwerty123", "qwerty123");
     mockMvc
         .perform(
             post(Path.AUTH + "/register")
