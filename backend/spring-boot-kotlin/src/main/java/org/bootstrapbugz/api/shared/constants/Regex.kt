@@ -1,10 +1,10 @@
-package org.bootstrapbugz.api.shared.constants;
+package org.bootstrapbugz.api.shared.constants
 
 /*
  * Check for regex on: https://regexr.com/
  * */
-public class Regex {
-  /*
+object Regex {
+    /*
    * At least 2 characters
    * It supports only words with exception to thees characters: ^-`' ",.
    * It supports most languages and their special characters like: šđžčć
@@ -17,9 +17,9 @@ public class Regex {
    * আবাসযোগ্য জমির걸쳐 있는
    *
    * */
-  public static final String FIRST_AND_LAST_NAME =
-      "^[^0-9_!¡?÷¿/\\\\+=@#$%ˆ&*(){}\\[\\]|~<>;:]{2,}$";
-  /*
+    const val FIRST_AND_LAST_NAME = "^[^0-9_!¡?÷¿/\\\\+=@#$%ˆ&*(){}\\[\\]|~<>;:]{2,}$"
+
+    /*
    * Between 2 and 16 characters long
    * It supports only letters, numbers, dot and underscore
    * Username can't start or end with dot or underscore
@@ -34,13 +34,15 @@ public class Regex {
    * test123
    *
    * */
-  public static final String USERNAME = "^(?=[a-zA-Z0-9._]{2,16}$)(?!.*[_.]{2})[^_.].*[^_.]$";
-  /*
+    const val USERNAME = "^(?=[a-zA-Z0-9._]{2,16}$)(?!.*[_.]{2})[^_.].*[^_.]$"
+
+    /*
    * Email Regex base on this article:
    * https://www.baeldung.com/java-email-validation-regex#regular-expression-by-rfc-5322-for-email-validation
    * */
-  public static final String EMAIL = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-  /*
+    const val EMAIL = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"
+
+    /*
    * At least one letter
    * At least one number
    * It can have a special characters
@@ -53,7 +55,5 @@ public class Regex {
    * blaBLA23"#
    *
    * */
-  public static final String PASSWORD = "^(?=.*\\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$";
-
-  private Regex() {}
+    const val PASSWORD = "^(?=.*\\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$"
 }
