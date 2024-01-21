@@ -48,20 +48,20 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO create(UserRequest userRequest) {
-    if (userRepository.existsByUsername(userRequest.username()))
+    if (userRepository.existsByUsername(userRequest.getUsername()))
       throw new ConflictException(messageService.getMessage("username.exists"));
-    if (userRepository.existsByEmail(userRequest.email()))
+    if (userRepository.existsByEmail(userRequest.getEmail()))
       throw new ConflictException(messageService.getMessage("email.exists"));
     final var user =
         User.builder()
-            .firstName(userRequest.firstName())
-            .lastName(userRequest.lastName())
-            .username(userRequest.username())
-            .email(userRequest.email())
-            .password(bCryptPasswordEncoder.encode(userRequest.password()))
-            .active(userRequest.active())
-            .lock(userRequest.lock())
-            .roles(Set.copyOf(roleRepository.findAllByNameIn(userRequest.roleNames())))
+            .firstName(userRequest.getFirstName())
+            .lastName(userRequest.getLastName())
+            .username(userRequest.getUsername())
+            .email(userRequest.getEmail())
+            .password(bCryptPasswordEncoder.encode(userRequest.getPassword()))
+            .active(userRequest.getActive())
+            .lock(userRequest.getLock())
+            .roles(Set.copyOf(roleRepository.findAllByNameIn(userRequest.getRoleNames())))
             .build();
     return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user));
   }
@@ -86,14 +86,14 @@ public class UserServiceImpl implements UserService {
   public UserDTO update(Long id, UserRequest userRequest) {
     final var user = userRepository.findWithRolesById(id).orElse(new User());
 
-    user.setFirstName(userRequest.firstName());
-    user.setLastName(userRequest.lastName());
-    setUsername(user, userRequest.username());
-    setEmail(user, userRequest.email());
-    setPassword(user, userRequest.password());
-    setActive(user, userRequest.active());
-    setLock(user, userRequest.lock());
-    setRoles(user, userRequest.roleNames());
+    user.setFirstName(userRequest.getFirstName());
+    user.setLastName(userRequest.getLastName());
+    setUsername(user, userRequest.getUsername());
+    setEmail(user, userRequest.getEmail());
+    setPassword(user, userRequest.getPassword());
+    setActive(user, userRequest.getActive());
+    setLock(user, userRequest.getLock());
+    setRoles(user, userRequest.getRoleNames());
 
     return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user));
   }
@@ -106,14 +106,14 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(
                 () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
 
-    if (patchUserRequest.firstName() != null) user.setFirstName(patchUserRequest.firstName());
-    if (patchUserRequest.lastName() != null) user.setLastName(patchUserRequest.lastName());
-    if (patchUserRequest.username() != null) setUsername(user, patchUserRequest.username());
-    if (patchUserRequest.email() != null) setEmail(user, patchUserRequest.email());
-    if (patchUserRequest.password() != null) setPassword(user, patchUserRequest.password());
-    if (patchUserRequest.active() != null) setActive(user, patchUserRequest.active());
-    if (patchUserRequest.lock() != null) setLock(user, patchUserRequest.lock());
-    if (patchUserRequest.roleNames() != null) setRoles(user, patchUserRequest.roleNames());
+    if (patchUserRequest.getFirstName() != null) user.setFirstName(patchUserRequest.getFirstName());
+    if (patchUserRequest.getLastName() != null) user.setLastName(patchUserRequest.getLastName());
+    if (patchUserRequest.getUsername() != null) setUsername(user, patchUserRequest.getUsername());
+    if (patchUserRequest.getEmail() != null) setEmail(user, patchUserRequest.getEmail());
+    if (patchUserRequest.getPassword() != null) setPassword(user, patchUserRequest.getPassword());
+    if (patchUserRequest.getActive() != null) setActive(user, patchUserRequest.getActive());
+    if (patchUserRequest.getLock() != null) setLock(user, patchUserRequest.getLock());
+    if (patchUserRequest.getRoleNames() != null) setRoles(user, patchUserRequest.getRoleNames());
 
     return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user));
   }
