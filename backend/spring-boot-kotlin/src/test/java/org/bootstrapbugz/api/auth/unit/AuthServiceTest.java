@@ -105,8 +105,8 @@ class AuthServiceTest {
         new UserDTO(2L, "Test", "Test", "test", "test@localhost", null, null, null, null);
     final var registerUserRequest =
         new RegisterUserRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
-    when(userRepository.existsByUsername(registerUserRequest.username())).thenReturn(false);
-    when(userRepository.existsByEmail(registerUserRequest.email())).thenReturn(false);
+    when(userRepository.existsByUsername(registerUserRequest.getUsername())).thenReturn(false);
+    when(userRepository.existsByEmail(registerUserRequest.getEmail())).thenReturn(false);
     when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(new Role(RoleName.USER)));
     final var testUser = UnitTestUtil.getTestUser();
     testUser.setActive(false);
@@ -121,7 +121,7 @@ class AuthServiceTest {
     final var registerUserRequest =
         new RegisterUserRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
-    when(userRepository.existsByUsername(registerUserRequest.username())).thenReturn(true);
+    when(userRepository.existsByUsername(registerUserRequest.getUsername())).thenReturn(true);
     assertThatThrownBy(() -> authService.register(registerUserRequest))
         .isInstanceOf(ConflictException.class)
         .hasMessage("Username already exists.");
@@ -132,8 +132,8 @@ class AuthServiceTest {
     final var registerUserRequest =
         new RegisterUserRequest("Test", "Test", "test", "test@localhost", "qwerty123", "qwerty123");
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
-    when(userRepository.existsByUsername(registerUserRequest.username())).thenReturn(false);
-    when(userRepository.existsByEmail(registerUserRequest.email())).thenReturn(true);
+    when(userRepository.existsByUsername(registerUserRequest.getUsername())).thenReturn(false);
+    when(userRepository.existsByEmail(registerUserRequest.getEmail())).thenReturn(true);
     assertThatThrownBy(() -> authService.register(registerUserRequest))
         .isInstanceOf(ConflictException.class)
         .hasMessage("Email already exists.");
@@ -192,7 +192,7 @@ class AuthServiceTest {
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(
             bCryptPasswordEncoder.matches(
-                resetPasswordRequest.password(), userArgumentCaptor.getValue().getPassword()))
+                resetPasswordRequest.getPassword(), userArgumentCaptor.getValue().getPassword()))
         .isTrue();
   }
 

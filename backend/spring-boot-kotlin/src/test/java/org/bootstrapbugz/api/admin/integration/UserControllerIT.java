@@ -50,17 +50,16 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void createUser() throws Exception {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("test1")
-            .email("test1@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Test",
+            "Test",
+            "test1",
+            "test1@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
     mockMvc
         .perform(
             post(Path.ADMIN_USERS)
@@ -73,17 +72,16 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void createUser_throwBadRequest_invalidParameters() throws Exception {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("Invalid123")
-            .lastName("Invalid123")
-            .username("invalid#$%")
-            .email("invalid")
-            .password("qwerty123")
-            .confirmPassword("qwerty1234")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Invalid123",
+            "Invalid123",
+            "invalid#$%",
+            "invalid",
+            "qwerty123",
+            "qwerty1234",
+            true,
+            false,
+            Set.of(RoleName.USER));
     mockMvc
         .perform(
             post(Path.ADMIN_USERS)
@@ -101,17 +99,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void createUser_throwConflict_usernameExists() throws Exception {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("admin")
-            .email("test2@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Test",
+            "Test",
+            "admin",
+            "test2@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             post(Path.ADMIN_USERS)
@@ -125,17 +123,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void createUser_throwConflict_emailExists() throws Exception {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("test2")
-            .email("admin@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Test",
+            "Test",
+            "test2",
+            "admin@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             post(Path.ADMIN_USERS)
@@ -198,17 +196,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void updateUser() throws Exception {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("test3")
-            .email("test3@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Test",
+            "Test",
+            "test3",
+            "test3@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             put(Path.ADMIN_USERS + "/{id}", 5L)
@@ -221,17 +219,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void updateUser_throwBadRequest_invalidParameters() throws Exception {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("Invalid123")
-            .lastName("Invalid123")
-            .username("invalid#$%")
-            .email("invalid")
-            .password("qwerty123")
-            .confirmPassword("qwerty1234")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Invalid123",
+            "Invalid123",
+            "invalid#$%",
+            "invalid",
+            "qwerty123",
+            "qwerty1234",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             put(Path.ADMIN_USERS + "/{id}", 5L)
@@ -249,17 +247,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void updateUser_throwConflict_usernameExists() throws Exception {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("admin")
-            .email("test2@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Test",
+            "Test",
+            "admin",
+            "test2@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             put(Path.ADMIN_USERS + "/{id}", 5L)
@@ -273,17 +271,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void updateUser_throwConflict_emailExists() throws Exception {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("test2")
-            .email("admin@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Test",
+            "Test",
+            "test2",
+            "admin@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             put(Path.ADMIN_USERS + "/{id}", 5L)
@@ -297,17 +295,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void patchUser() throws Exception {
     final var patchUserRequest =
-        PatchUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("test4")
-            .email("test4@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Test",
+            "Test",
+            "test4",
+            "test4@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             patch(Path.ADMIN_USERS + "/{id}", 5L)
@@ -320,17 +318,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void patchUser_throwBadRequest_invalidParameters() throws Exception {
     final var patchUserRequest =
-        PatchUserRequest.builder()
-            .firstName("Invalid123")
-            .lastName("Invalid123")
-            .username("invalid#$%")
-            .email("invalid")
-            .password("qwerty123")
-            .confirmPassword("qwerty1234")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Invalid123",
+            "Invalid123",
+            "invalid#$%",
+            "invalid",
+            "qwerty123",
+            "qwerty1234",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             patch(Path.ADMIN_USERS + "/{id}", 5L)
@@ -348,17 +346,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void patchUser_throwConflict_usernameExists() throws Exception {
     final var patchUserRequest =
-        PatchUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("admin")
-            .email("test2@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "Test",
+            "Test",
+            "admin",
+            "test2@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             patch(Path.ADMIN_USERS + "/{id}", 5L)
@@ -372,17 +370,17 @@ class UserControllerIT extends DatabaseContainers {
   @Test
   void patchUser_throwConflict_emailExists() throws Exception {
     final var patchUserRequest =
-        PatchUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
-            .username("test2")
-            .email("admin@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new PatchUserRequest(
+            "Test",
+            "Test",
+            "test2",
+            "admin@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+
     mockMvc
         .perform(
             patch(Path.ADMIN_USERS + "/{id}", 5L)

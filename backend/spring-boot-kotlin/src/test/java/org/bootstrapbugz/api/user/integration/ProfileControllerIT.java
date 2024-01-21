@@ -72,7 +72,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void patchProfile_sameUsernameAndEmail() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update2");
-    final var patchProfileRequest = PatchProfileRequest.builder().firstName("Updated").build();
+    final var patchProfileRequest = new PatchProfileRequest("Updated", null, null, null);
     mockMvc
         .perform(
             patch(Path.PROFILE)
@@ -88,7 +88,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void patchProfile_throwConflict_usernameExists() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
-    final var patchProfileRequest = PatchProfileRequest.builder().username("admin").build();
+    final var patchProfileRequest = new PatchProfileRequest(null, null, "admin", null);
     mockMvc
         .perform(
             patch(Path.PROFILE)
@@ -102,7 +102,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void patchProfile_throwConflict_emailExists() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
-    final var patchProfileRequest = PatchProfileRequest.builder().email("admin@localhost").build();
+    final var patchProfileRequest = new PatchProfileRequest(null, null, null, "admin@localhost");
     mockMvc
         .perform(
             patch(Path.PROFILE)

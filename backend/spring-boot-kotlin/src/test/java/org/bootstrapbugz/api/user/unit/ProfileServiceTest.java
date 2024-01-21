@@ -83,8 +83,8 @@ class ProfileServiceTest {
     final var patchProfileRequest =
         new PatchProfileRequest("User", "User", "user", "user@localhost");
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    when(userRepository.existsByUsername(patchProfileRequest.username())).thenReturn(false);
-    when(userRepository.existsByEmail(patchProfileRequest.email())).thenReturn(false);
+    when(userRepository.existsByUsername(patchProfileRequest.getUsername())).thenReturn(false);
+    when(userRepository.existsByEmail(patchProfileRequest.getEmail())).thenReturn(false);
     profileService.patch(patchProfileRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
@@ -103,7 +103,7 @@ class ProfileServiceTest {
             .lock(false)
             .roles(Set.of(new Role(RoleName.USER)))
             .build();
-    final var patchProfileRequest = PatchProfileRequest.builder().firstName("User").build();
+    final var patchProfileRequest = new PatchProfileRequest("User", null, null, null);
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     profileService.patch(patchProfileRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
@@ -112,9 +112,9 @@ class ProfileServiceTest {
 
   @Test
   void patchProfile_throwConflict_usernameExists() {
-    final var patchProfileRequest = PatchProfileRequest.builder().username("admin").build();
+    final var patchProfileRequest = new PatchProfileRequest("", "", "Admin", "");
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    when(userRepository.existsByUsername(patchProfileRequest.username())).thenReturn(true);
+    when(userRepository.existsByUsername(patchProfileRequest.getUsername())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> profileService.patch(patchProfileRequest))
         .isInstanceOf(ConflictException.class)
@@ -123,9 +123,9 @@ class ProfileServiceTest {
 
   @Test
   void patchProfile_throwConflict_emailExists() {
-    final var patchProfileRequest = PatchProfileRequest.builder().email("admin@localhost").build();
+    final var patchProfileRequest = new PatchProfileRequest("", "", "", "admin@localhost");
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    when(userRepository.existsByEmail(patchProfileRequest.email())).thenReturn(true);
+    when(userRepository.existsByEmail(patchProfileRequest.getEmail())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> profileService.patch(patchProfileRequest))
         .isInstanceOf(ConflictException.class)
@@ -143,7 +143,8 @@ class ProfileServiceTest {
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(
             bCryptPasswordEncoder.matches(
-                changePasswordRequest.newPassword(), userArgumentCaptor.getValue().getPassword()))
+                changePasswordRequest.getNewPassword(),
+                userArgumentCaptor.getValue().getPassword()))
         .isTrue();
   }
 

@@ -50,39 +50,37 @@ class UserServiceTest {
   @Test
   void createUser() {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("user")
-            .email("user@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
-    when(userRepository.existsByUsername(userRequest.username())).thenReturn(false);
-    when(userRepository.existsByEmail(userRequest.email())).thenReturn(false);
+        new UserRequest(
+            "User",
+            "User",
+            "user",
+            "user@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+    when(userRepository.existsByUsername(userRequest.getUsername())).thenReturn(false);
+    when(userRepository.existsByEmail(userRequest.getEmail())).thenReturn(false);
     userService.create(userRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue().getUsername()).isEqualTo(userRequest.username());
+    assertThat(userArgumentCaptor.getValue().getUsername()).isEqualTo(userRequest.getUsername());
   }
 
   @Test
   void createUser_throwConflict_usernameExists() {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("test")
-            .email("user@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
-    when(userRepository.existsByUsername(userRequest.username())).thenReturn(true);
+        new UserRequest(
+            "User",
+            "User",
+            "user",
+            "user@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+    when(userRepository.existsByUsername(userRequest.getUsername())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> userService.create(userRequest))
         .isInstanceOf(ConflictException.class)
@@ -92,18 +90,17 @@ class UserServiceTest {
   @Test
   void createUser_throwConflict_emailExists() {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("user")
-            .email("test@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
-    when(userRepository.existsByEmail(userRequest.email())).thenReturn(true);
+        new UserRequest(
+            "User",
+            "User",
+            "user",
+            "user@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
+    when(userRepository.existsByEmail(userRequest.getEmail())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> userService.create(userRequest))
         .isInstanceOf(ConflictException.class)
@@ -172,41 +169,39 @@ class UserServiceTest {
   @Test
   void updateUser() {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("user")
-            .email("user@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "User",
+            "User",
+            "user",
+            "user@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
     when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    when(userRepository.existsByUsername(userRequest.username())).thenReturn(false);
-    when(userRepository.existsByEmail(userRequest.email())).thenReturn(false);
+    when(userRepository.existsByUsername(userRequest.getUsername())).thenReturn(false);
+    when(userRepository.existsByEmail(userRequest.getEmail())).thenReturn(false);
     userService.update(2L, userRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue().getUsername()).isEqualTo(userRequest.username());
+    assertThat(userArgumentCaptor.getValue().getUsername()).isEqualTo(userRequest.getUsername());
   }
 
   @Test
   void updateUser_throwConflict_usernameExists() {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("admin")
-            .email("user@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "User",
+            "User",
+            "user",
+            "user@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
     when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    when(userRepository.existsByUsername(userRequest.username())).thenReturn(true);
+    when(userRepository.existsByUsername(userRequest.getUsername())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> userService.update(2L, userRequest))
         .isInstanceOf(ConflictException.class)
@@ -216,19 +211,18 @@ class UserServiceTest {
   @Test
   void updateUser_throwConflict_emailExists() {
     final var userRequest =
-        UserRequest.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("user")
-            .email("admin@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new UserRequest(
+            "User",
+            "User",
+            "user",
+            "admin@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
     when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    when(userRepository.existsByEmail(userRequest.email())).thenReturn(true);
+    when(userRepository.existsByEmail(userRequest.getEmail())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> userService.update(2L, userRequest))
         .isInstanceOf(ConflictException.class)
@@ -238,41 +232,40 @@ class UserServiceTest {
   @Test
   void patchUser() {
     final var patchUserRequest =
-        PatchUserRequest.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("user")
-            .email("user@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new PatchUserRequest(
+            "User",
+            "User",
+            "user",
+            "user@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
     when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    when(userRepository.existsByUsername(patchUserRequest.username())).thenReturn(false);
-    when(userRepository.existsByEmail(patchUserRequest.email())).thenReturn(false);
+    when(userRepository.existsByUsername(patchUserRequest.getUsername())).thenReturn(false);
+    when(userRepository.existsByEmail(patchUserRequest.getEmail())).thenReturn(false);
     userService.patch(2L, patchUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue().getUsername()).isEqualTo(patchUserRequest.username());
+    assertThat(userArgumentCaptor.getValue().getUsername())
+        .isEqualTo(patchUserRequest.getUsername());
   }
 
   @Test
   void patchUser_throwConflict_usernameExists() {
     final var patchUserRequest =
-        PatchUserRequest.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("admin")
-            .email("user@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new PatchUserRequest(
+            "User",
+            "User",
+            "admin",
+            "user@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
     when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    when(userRepository.existsByUsername(patchUserRequest.username())).thenReturn(true);
+    when(userRepository.existsByUsername(patchUserRequest.getUsername())).thenReturn(true);
     when(messageService.getMessage("username.exists")).thenReturn("Username already exists.");
     assertThatThrownBy(() -> userService.patch(2L, patchUserRequest))
         .isInstanceOf(ConflictException.class)
@@ -282,19 +275,18 @@ class UserServiceTest {
   @Test
   void patchUser_throwConflict_emailExists() {
     final var patchUserRequest =
-        PatchUserRequest.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("user")
-            .email("admin@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
-            .active(true)
-            .lock(false)
-            .roleNames(Set.of(RoleName.USER))
-            .build();
+        new PatchUserRequest(
+            "User",
+            "User",
+            "user",
+            "admin@localhost",
+            "qwerty123",
+            "qwerty123",
+            true,
+            false,
+            Set.of(RoleName.USER));
     when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
-    when(userRepository.existsByEmail(patchUserRequest.email())).thenReturn(true);
+    when(userRepository.existsByEmail(patchUserRequest.getEmail())).thenReturn(true);
     when(messageService.getMessage("email.exists")).thenReturn("Email already exists.");
     assertThatThrownBy(() -> userService.patch(2L, patchUserRequest))
         .isInstanceOf(ConflictException.class)
