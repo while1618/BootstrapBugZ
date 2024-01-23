@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 abstract class CrudController<T, U> (val service: CrudService<T, U>) {
 
     @PostMapping
-    fun create(@RequestBody saveRequest: @Valid U): ResponseEntity<T> {
+    fun create(@RequestBody @Valid saveRequest:  U): ResponseEntity<T> {
         return ResponseEntity(service.create(saveRequest), HttpStatus.CREATED)
     }
 
@@ -31,7 +31,7 @@ abstract class CrudController<T, U> (val service: CrudService<T, U>) {
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable("id") id: Long, @RequestBody saveRequest: @Valid U): ResponseEntity<T> {
+    fun update(@PathVariable("id") id: Long, @RequestBody @Valid saveRequest: U): ResponseEntity<T> {
         return ResponseEntity.ok(service.update(id, saveRequest))
     }
 

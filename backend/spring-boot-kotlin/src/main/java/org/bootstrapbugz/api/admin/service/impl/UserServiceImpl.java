@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO findById(Long id) {
+  public UserDTO findById(long id) {
     return userRepository
         .findWithRolesById(id)
         .map(UserMapper.INSTANCE::userToAdminUserDTO)
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO update(Long id, UserRequest userRequest) {
+  public UserDTO update(long id, UserRequest userRequest) {
     final var user = userRepository.findWithRolesById(id).orElse(new User());
 
     user.setFirstName(userRequest.getFirstName());
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO patch(Long id, PatchUserRequest patchUserRequest) {
+  public UserDTO patch(long id, PatchUserRequest patchUserRequest) {
     final var user =
         userRepository
             .findWithRolesById(id)
@@ -169,7 +169,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void delete(Long id) {
+  public void delete(long id) {
     deleteAuthTokens(id);
     userRepository.deleteById(id);
   }
