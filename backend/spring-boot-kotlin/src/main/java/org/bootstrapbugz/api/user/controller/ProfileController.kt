@@ -34,7 +34,7 @@ class ProfileController(private val profileService: ProfileService) {
     }
 
     @PatchMapping("/password")
-    fun changePassword(@RequestBody changePasswordRequest: @Valid ChangePasswordRequest): ResponseEntity<Void> {
+    fun changePassword(@Valid @RequestBody changePasswordRequest: ChangePasswordRequest): ResponseEntity<Void> {
         profileService.changePassword(changePasswordRequest)
         return ResponseEntity.noContent().build()
     }
