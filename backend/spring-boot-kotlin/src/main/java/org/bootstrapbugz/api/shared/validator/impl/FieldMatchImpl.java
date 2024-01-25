@@ -15,6 +15,7 @@ public class FieldMatchImpl implements ConstraintValidator<FieldMatch, Object> {
     secondFieldName = constraint.second();
   }
 
+  @Override
   public boolean isValid(Object obj, ConstraintValidatorContext context) {
     final var wrapper = new BeanWrapperImpl(obj);
     final var first = (String) wrapper.getPropertyValue(firstFieldName);
