@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.redis.model.AccessTokenBlacklist;
 import org.bootstrapbugz.api.auth.jwt.redis.model.UserBlacklist;
@@ -86,7 +87,8 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
   @Override
   public void invalidateAllByUserId(Long userId) {
-    userBlacklistRepository.save(
-        UserBlacklist.builder().userId(userId).timeToLive(tokenDuration).build());
+    var userBlacklist =
+        new UserBlacklist(userId, tokenDuration, Instant.now().truncatedTo(ChronoUnit.SECONDS));
+    userBlacklistRepository.save(userBlacklist);
   }
 }

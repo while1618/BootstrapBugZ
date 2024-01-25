@@ -59,11 +59,7 @@ class AccessTokenServiceTest {
   @Test
   void checkToken_userInBlacklist_tokenIssuedAfterUserBlacklisted() {
     final var userBlacklist =
-        UserBlacklist.builder()
-            .userId(1L)
-            .updatedAt(Instant.now().truncatedTo(ChronoUnit.SECONDS).minusSeconds(10))
-            .timeToLive(1000)
-            .build();
+        new UserBlacklist(1L, 1000, Instant.now().truncatedTo(ChronoUnit.SECONDS).minusSeconds(10));
     final var token = accessTokenService.create(1L, Collections.emptySet());
     when(accessTokenBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
@@ -84,11 +80,7 @@ class AccessTokenServiceTest {
   void checkToken_throwUnauthorized_userInBlacklist() {
     final var token = accessTokenService.create(1L, Collections.emptySet());
     final var userBlacklist =
-        UserBlacklist.builder()
-            .userId(1L)
-            .updatedAt(Instant.now().truncatedTo(ChronoUnit.SECONDS).plusSeconds(10))
-            .timeToLive(1000)
-            .build();
+        new UserBlacklist(1L, 1000, Instant.now().truncatedTo(ChronoUnit.SECONDS).plusSeconds(10));
     when(accessTokenBlacklistRepository.existsById(token)).thenReturn(false);
     when(userBlacklistRepository.findById(1L)).thenReturn(Optional.of(userBlacklist));
     when(messageService.getMessage("token.invalid")).thenReturn("Invalid token.");
@@ -110,7 +102,9 @@ class AccessTokenServiceTest {
 
   @Test
   void invalidateAllTokens() {
-    final var expectedUserBlacklist = UserBlacklist.builder().userId(1L).timeToLive(1000).build();
+    final var expectedUserBlacklist =
+        new UserBlacklist(1L, 1000, Instant.now().truncatedTo(ChronoUnit.SECONDS).minusSeconds(10));
+
     accessTokenService.invalidateAllByUserId(1L);
     verify(userBlacklistRepository, times(1)).save(userBlacklistArgumentCaptor.capture());
     assertThat(userBlacklistArgumentCaptor.getValue().getUserId())
