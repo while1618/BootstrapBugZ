@@ -147,14 +147,14 @@ public class UserServiceImpl implements UserService {
   }
 
   private void setActive(User user, Boolean active) {
-    if (user.getActive().equals(active)) return;
+    if (user.getActive() == active) return;
 
     user.setActive(active);
     if (Boolean.FALSE.equals(active)) deleteAuthTokens(user.getId());
   }
 
   private void setLock(User user, Boolean lock) {
-    if (user.getLock().equals(lock)) return;
+    if (user.getLock() == lock) return;
 
     user.setLock(lock);
     if (Boolean.TRUE.equals(lock)) deleteAuthTokens(user.getId());

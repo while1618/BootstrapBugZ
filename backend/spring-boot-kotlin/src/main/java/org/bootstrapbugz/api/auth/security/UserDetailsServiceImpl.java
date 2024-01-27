@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   public UserDetails loadUserByUserId(Long userId) {
     return userRepository
         .findById(userId)
-        .map(UserPrincipal::create)
+        .map(UserPrincipal.Companion::create)
         .orElseThrow(() -> new UnauthorizedException(messageService.getMessage("token.invalid")));
   }
 
@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) {
     return userRepository
         .findByUsernameOrEmail(username, username)
-        .map(UserPrincipal::create)
+        .map(UserPrincipal.Companion::create)
         .orElseThrow(() -> new UnauthorizedException(messageService.getMessage("token.invalid")));
   }
 }
