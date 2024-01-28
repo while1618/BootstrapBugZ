@@ -7,5 +7,5 @@ import org.bootstrapbugz.api.shared.constants.Regex
 data class ForgotPasswordRequest(
     @NotBlank(message = "{email.required}")
     @field:Email(message = "{email.invalid}", regexp = Regex.EMAIL)
-    val email: String?
+    val email: String
 )
