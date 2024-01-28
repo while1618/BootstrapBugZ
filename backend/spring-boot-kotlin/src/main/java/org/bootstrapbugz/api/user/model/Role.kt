@@ -23,7 +23,7 @@ class Role(
 
     @Column(name = "role_name", unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
-    var name: RoleName
+    var name: RoleName = RoleName.USER
 ) : Serializable {
     companion object {
         @Serial

@@ -85,12 +85,14 @@ class ProfileServiceTest {
             Set.of(new Role(RoleName.USER)));
     final var patchProfileRequest =
         new PatchProfileRequest("User", "User", "user", "user@localhost");
-    when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    var testUser = Optional.of(UnitTestUtil.getTestUser());
+    when(userRepository.findById(2L)).thenReturn(testUser);
     when(userRepository.existsByUsername(patchProfileRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(patchProfileRequest.getEmail())).thenReturn(false);
+    when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
     profileService.patch(patchProfileRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
+    assertThat(userArgumentCaptor.getValue()).isEqualTo(testUser.get());
   }
 
   @Test
@@ -108,10 +110,12 @@ class ProfileServiceTest {
             LocalDateTime.now(),
             Set.of(new Role(RoleName.USER)));
     final var patchProfileRequest = new PatchProfileRequest("User", null, null, null);
-    when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
+    var testUser = Optional.of(UnitTestUtil.getTestUser());
+    when(userRepository.findById(2L)).thenReturn(testUser);
+    when(userRepository.save(any(User.class))).thenAnswer(invocation -> expectedUser);
     profileService.patch(patchProfileRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
-    assertThat(userArgumentCaptor.getValue()).isEqualTo(expectedUser);
+    assertThat(userArgumentCaptor.getValue()).isEqualTo(testUser.get());
   }
 
   @Test

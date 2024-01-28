@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.admin.unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,6 +63,7 @@ class UserServiceTest {
             Set.of(RoleName.USER));
     when(userRepository.existsByUsername(userRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(userRequest.getEmail())).thenReturn(false);
+    when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
     userService.create(userRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue().getUsername()).isEqualTo(userRequest.getUsername());
@@ -182,6 +184,7 @@ class UserServiceTest {
     when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByUsername(userRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(userRequest.getEmail())).thenReturn(false);
+    when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
     userService.update(2L, userRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue().getUsername()).isEqualTo(userRequest.getUsername());
@@ -245,6 +248,7 @@ class UserServiceTest {
     when(userRepository.findWithRolesById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     when(userRepository.existsByUsername(patchUserRequest.getUsername())).thenReturn(false);
     when(userRepository.existsByEmail(patchUserRequest.getEmail())).thenReturn(false);
+    when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
     userService.patch(2L, patchUserRequest);
     verify(userRepository, times(1)).save(userArgumentCaptor.capture());
     assertThat(userArgumentCaptor.getValue().getUsername())

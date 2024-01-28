@@ -60,7 +60,7 @@ class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    var roles: Set<Role>? = null
+    var roles: Set<Role> = setOf()
 ) : Serializable {
 
     override fun equals(o: Any?): Boolean {
