@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -143,7 +144,8 @@ class AuthServiceTest {
   void deleteTokens() {
     when(securityContext.getAuthentication()).thenReturn(auth);
     SecurityContextHolder.setContext(securityContext);
-    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
+    when(auth.getPrincipal())
+        .thenReturn(UserPrincipal.Companion.create(UnitTestUtil.getTestUser()));
     final var token = accessTokenService.create(2L, Collections.emptySet());
     assertDoesNotThrow(() -> authService.deleteTokens(token, "ip1"));
   }
@@ -152,7 +154,8 @@ class AuthServiceTest {
   void deleteTokensOnAllDevices() {
     when(securityContext.getAuthentication()).thenReturn(auth);
     SecurityContextHolder.setContext(securityContext);
-    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
+    when(auth.getPrincipal())
+        .thenReturn(UserPrincipal.Companion.create(UnitTestUtil.getTestUser()));
     assertDoesNotThrow(() -> authService.deleteTokensOnAllDevices());
   }
 
@@ -239,15 +242,17 @@ class AuthServiceTest {
   @Test
   void verifyEmail() {
     final var expectedUser =
-        User.builder()
-            .id(2L)
-            .firstName("Test")
-            .lastName("Test")
-            .username("test")
-            .email("test@localhost")
-            .active(true)
-            .roles(Set.of(new Role(RoleName.USER)))
-            .build();
+        new User(
+            2L,
+            "Test",
+            "Test",
+            "test",
+            "test@localhost",
+            "",
+            true,
+            false,
+            LocalDateTime.now(),
+            Set.of(new Role(RoleName.USER)));
     final var token = verificationTokenService.create(2L);
     final var testUser = UnitTestUtil.getTestUser();
     testUser.setActive(false);
