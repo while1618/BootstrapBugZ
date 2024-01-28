@@ -18,14 +18,6 @@
       <pattern testClass="org.bootstrapbugz.api.auth.integration.AuthControllerIT" />
       <pattern testClass="org.bootstrapbugz.api.admin.integration.UserControllerIT" />
       <pattern testClass="org.bootstrapbugz.api.shared.integration.AccessingResourcesIT" />
-      <pattern testClass="org.bootstrapbugz.api.user.unit.UserServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.user.unit.ProfileServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.AuthServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.AccessTokenServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.RefreshTokenServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.VerificationTokenServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.ResetPasswordTokenServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.admin.unit.UserServiceTest" />
       <pattern testClass="org.bootstrapbugz.api.shared.unit.EmailServiceTest" />
       <pattern testClass="org.bootstrapbugz.api.shared.unit.MessageServiceTest" />
       <pattern testClass="org.bootstrapbugz.api.user.data.UserRepositoryIT" />

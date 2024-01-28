@@ -303,11 +303,11 @@ class UserControllerIT extends DatabaseContainers {
             .lastName("Test")
             .username("test4")
             .email("test4@localhost")
-            .password("qwerty123")
-            .confirmPassword("qwerty123")
+            .password("qwerty1234")
+            .confirmPassword("qwerty1234")
             .active(true)
             .lock(false)
-            .roleNames(Set.of(RoleName.USER))
+            .roleNames(Set.of(RoleName.USER, RoleName.ADMIN))
             .build();
     mockMvc
         .perform(
