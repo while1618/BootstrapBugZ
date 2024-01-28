@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Set;
-
 import org.bootstrapbugz.api.auth.jwt.service.impl.ResetPasswordTokenServiceImpl;
 import org.bootstrapbugz.api.auth.jwt.service.impl.VerificationTokenServiceImpl;
 import org.bootstrapbugz.api.auth.payload.request.AuthTokensRequest;
@@ -278,7 +277,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void resetPassword_throwBadRequest_invalidToken() throws Exception {
-    final var user = new User(100L, "", "", "", "", "", false, false, LocalDateTime.now(), Set.of());
+    final var user =
+        new User(100L, "", "", "", "", "", false, false, LocalDateTime.now(), Set.of());
     final var token = resetPasswordService.create(user.getId());
     final var resetPasswordRequest = new ResetPasswordRequest(token, "qwerty1234", "qwerty1234");
     mockMvc
@@ -342,7 +342,8 @@ class AuthControllerIT extends DatabaseContainers {
 
   @Test
   void verifyEmail_throwBadRequest_invalidToken() throws Exception {
-    final var user = new User(100L, "", "", "", "", "", false, false, LocalDateTime.now(), Set.of());
+    final var user =
+        new User(100L, "", "", "", "", "", false, false, LocalDateTime.now(), Set.of());
     final var token = verificationTokenService.create(user.getId());
     final var verifyEmailRequest = new VerifyEmailRequest(token);
     mockMvc
