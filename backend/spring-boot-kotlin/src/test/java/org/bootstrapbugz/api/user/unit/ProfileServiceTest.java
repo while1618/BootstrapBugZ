@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService;
@@ -56,7 +57,8 @@ class ProfileServiceTest {
   void setUp() {
     when(securityContext.getAuthentication()).thenReturn(auth);
     SecurityContextHolder.setContext(securityContext);
-    when(auth.getPrincipal()).thenReturn(UserPrincipal.create(UnitTestUtil.getTestUser()));
+    when(auth.getPrincipal())
+        .thenReturn(UserPrincipal.Companion.create(UnitTestUtil.getTestUser()));
   }
 
   @Test
@@ -70,16 +72,17 @@ class ProfileServiceTest {
   @Test
   void patchProfile_newUsernameAndEmail() {
     final var expectedUser =
-        User.builder()
-            .id(2L)
-            .firstName("User")
-            .lastName("User")
-            .username("user")
-            .email("user@localhost")
-            .active(false)
-            .lock(false)
-            .roles(Set.of(new Role(RoleName.USER)))
-            .build();
+        new User(
+            2L,
+            "User",
+            "User",
+            "user",
+            "user@localhost",
+            "password",
+            false,
+            false,
+            LocalDateTime.now(),
+            Set.of(new Role(RoleName.USER)));
     final var patchProfileRequest =
         new PatchProfileRequest("User", "User", "user", "user@localhost");
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
@@ -93,16 +96,17 @@ class ProfileServiceTest {
   @Test
   void patchProfile_sameUsernameAndEmail() {
     final var expectedUser =
-        User.builder()
-            .id(2L)
-            .firstName("User")
-            .lastName("Test")
-            .username("test")
-            .email("test@localhost")
-            .active(true)
-            .lock(false)
-            .roles(Set.of(new Role(RoleName.USER)))
-            .build();
+        new User(
+            2L,
+            "User",
+            "Test",
+            "test",
+            "test@localhost",
+            "password",
+            true,
+            false,
+            LocalDateTime.now(),
+            Set.of(new Role(RoleName.USER)));
     final var patchProfileRequest = new PatchProfileRequest("User", null, null, null);
     when(userRepository.findById(2L)).thenReturn(Optional.of(UnitTestUtil.getTestUser()));
     profileService.patch(patchProfileRequest);

@@ -1,5 +1,6 @@
 package org.bootstrapbugz.api.shared.util;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import org.bootstrapbugz.api.user.model.Role;
 import org.bootstrapbugz.api.user.model.Role.RoleName;
@@ -9,26 +10,30 @@ public class UnitTestUtil {
   private UnitTestUtil() {}
 
   public static User getAdminUser() {
-    return User.builder()
-        .id(1L)
-        .firstName("Admin")
-        .lastName("Admin")
-        .username("admin")
-        .email("admin@localhost")
-        .active(true)
-        .roles(Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)))
-        .build();
+    return new User(
+        1L,
+        "Admin",
+        "Admin",
+        "admin",
+        "admin@localhost",
+        "",
+        true,
+        false,
+        LocalDateTime.now(),
+        Set.of(new Role(RoleName.USER), new Role(RoleName.ADMIN)));
   }
 
   public static User getTestUser() {
-    return User.builder()
-        .id(2L)
-        .firstName("Test")
-        .lastName("Test")
-        .username("test")
-        .email("test@localhost")
-        .active(true)
-        .roles(Set.of(new Role(RoleName.USER)))
-        .build();
+    return new User(
+        2L,
+        "Test",
+        "Test",
+        "test",
+        "test@localhost",
+        "",
+        true,
+        false,
+        LocalDateTime.now(),
+        Set.of(new Role(RoleName.USER)));
   }
 }

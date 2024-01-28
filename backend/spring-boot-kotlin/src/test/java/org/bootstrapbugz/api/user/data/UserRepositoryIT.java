@@ -2,6 +2,7 @@ package org.bootstrapbugz.api.user.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import org.bootstrapbugz.api.shared.config.DatabaseContainers;
 import org.bootstrapbugz.api.user.model.Role;
@@ -30,23 +31,30 @@ class UserRepositoryIT extends DatabaseContainers {
     final var adminRole = roleRepository.save(new Role(RoleName.ADMIN));
     final var userRole = roleRepository.save(new Role(RoleName.USER));
     userRepository.save(
-        User.builder()
-            .firstName("Admin")
-            .lastName("Admin")
-            .username("admin")
-            .email("admin@localhost")
-            .password("password")
-            .roles(Set.of(adminRole, userRole))
-            .build());
+        new User(
+            null,
+            "Admin",
+            "Admin",
+            "admin",
+            "admin@localhost",
+            "password",
+            false,
+            false,
+            LocalDateTime.now(),
+            Set.of(adminRole, userRole)));
+
     userRepository.save(
-        User.builder()
-            .firstName("User")
-            .lastName("User")
-            .username("user")
-            .email("user@localhost")
-            .password("password")
-            .roles(Set.of(userRole))
-            .build());
+        new User(
+            null,
+            "User",
+            "User",
+            "user",
+            "user@localhost",
+            "password",
+            false,
+            false,
+            LocalDateTime.now(),
+            Set.of(userRole)));
   }
 
   @AfterEach
