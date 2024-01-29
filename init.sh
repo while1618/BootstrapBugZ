@@ -26,6 +26,7 @@ rm -rf ./backend/$BACKEND
 rm -rf ./frontend/$FRONTEND
 
 # TODO: replace all occurences of the name in the files
+# TODO: create .env file in frontend
 
 clear
 echo "Name of your app is: $APP_NAME"
