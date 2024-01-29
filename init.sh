@@ -25,10 +25,8 @@ cp -r ./frontend/$FRONTEND/. ./frontend
 rm -rf ./backend/$BACKEND
 rm -rf ./frontend/$FRONTEND
 
+# TODO: replace all occurences of the name in the files
+
 clear
 echo "Name of your app is: $APP_NAME"
 echo "You picked $BACKEND for the backend, and $FRONTEND for the frontend."
-
-git add -A
-git commit -m "Initial commit."
-git push
