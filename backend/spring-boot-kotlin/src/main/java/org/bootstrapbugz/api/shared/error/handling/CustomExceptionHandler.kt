@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.shared.error.handling
 
-import jakarta.annotation.Nonnull
 import org.bootstrapbugz.api.shared.error.exception.BadRequestException
 import org.bootstrapbugz.api.shared.error.exception.ConflictException
 import org.bootstrapbugz.api.shared.error.exception.ForbiddenException
@@ -26,11 +25,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
-import java.util.*
+import java.util.Objects
 import java.util.function.Consumer
 
 @ControllerAdvice
@@ -97,9 +95,11 @@ class CustomExceptionHandler(private val messageService: MessageService) : Respo
     fun handleAuthenticationException(ex: AuthenticationException?): ResponseEntity<Any> {
         return when (ex) {
             is DisabledException ->
-                createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.notActive"),null)
+                createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.notActive"), null)
+
             is LockedException ->
                 createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.lock"), null)
+
             else ->
                 createError(HttpStatus.UNAUTHORIZED, messageService.getMessage("auth.invalid"), null)
         }
@@ -116,7 +116,8 @@ class CustomExceptionHandler(private val messageService: MessageService) : Respo
         statusCode: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any> {
-        return createError(statusCode as HttpStatus, ex.parameterName + " parameter is missing", null
+        return createError(
+            statusCode as HttpStatus, ex.parameterName + " parameter is missing", null
         )
     }
 
