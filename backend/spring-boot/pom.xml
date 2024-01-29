@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.1</version>
+    <version>3.2.2</version>
     <relativePath/>
     <!-- lookup parent from repository -->
   </parent>
@@ -24,10 +24,10 @@
     <jwt.version>4.4.0</jwt.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <springdoc.version>2.3.0</springdoc.version>
-    <datafaker.version>2.0.2</datafaker.version>
+    <datafaker.version>2.1.0</datafaker.version>
     <jacoco.version>0.8.11</jacoco.version>
     <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
-    <spotless.version>2.41.1</spotless.version>
+    <spotless.version>2.43.0</spotless.version>
     <google-java-format.version>1.17.0</google-java-format.version>
   </properties>
 
