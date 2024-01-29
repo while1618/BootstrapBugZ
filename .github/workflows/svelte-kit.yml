@@ -4,17 +4,17 @@ run-name: ${{ github.actor }} started CI
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [ master ]
     paths:
       - frontend/svelte-kit/**
   pull_request:
-    branches: [master]
+    branches: [ master ]
     paths:
       - frontend/svelte-kit/**
 
 env:
   JWT_SECRET: ${{secrets.JWT_SECRET}}
-  API_URL: ${{secrets.API_URL}}
+  BACKEND_URL: ${{secrets.BACKEND_URL}}
 
 jobs:
   build:
