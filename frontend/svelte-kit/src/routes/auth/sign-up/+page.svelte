@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import FormControl from '$lib/components/form-control.svelte';
-  import FormErrors from '$lib/components/form-errors.svelte';
+  import FormControl from '$lib/components/form/form-control.svelte';
+  import FormErrors from '$lib/components/form/form-errors.svelte';
   import type { ActionData } from './$types';
 
   export let form: ActionData;
@@ -9,7 +9,7 @@
 
 <section class="py-10 md:py-16">
   <div class="container">
-    <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
+    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">Sign up</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/signUp" use:enhance>

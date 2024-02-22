@@ -1,10 +1,10 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import Modal from '$lib/components/modal.svelte';
-  import type { UserDTO } from '$lib/models/user/user';
+  import Modal from '$lib/components/shared/modal.svelte';
+  import type { User } from '$lib/models/user/user';
 
   export let lockDialog: HTMLDialogElement;
-  export let selectedUser: UserDTO;
+  export let selectedUser: User;
 </script>
 
 <Modal bind:dialog={lockDialog} title={selectedUser?.lock ? 'Unlock user' : 'Lock user'}>

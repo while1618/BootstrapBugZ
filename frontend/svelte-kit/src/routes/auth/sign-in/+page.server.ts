@@ -1,5 +1,5 @@
 import en from '$lib/i18n/en.json';
-import type { AuthTokensDTO } from '$lib/models/auth/auth-tokens';
+import type { AuthTokens } from '$lib/models/auth/auth-tokens';
 import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest, setAccessTokenCookie, setRefreshTokenCookie } from '$lib/server/utils/util';
@@ -39,7 +39,7 @@ export const actions = {
         usernameOrEmail: signInForm.data.usernameOrEmail,
       });
 
-    const { accessToken, refreshToken } = response as AuthTokensDTO;
+    const { accessToken, refreshToken } = response as AuthTokens;
     setAccessTokenCookie(cookies, accessToken);
     setRefreshTokenCookie(cookies, refreshToken);
 

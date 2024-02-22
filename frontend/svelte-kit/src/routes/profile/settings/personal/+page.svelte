@@ -1,14 +1,14 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import FormControl from '$lib/components/form-control.svelte';
-  import FormErrors from '$lib/components/form-errors.svelte';
+  import FormControl from '$lib/components/form/form-control.svelte';
+  import FormErrors from '$lib/components/form/form-errors.svelte';
   import { userStore } from '$lib/stores/user';
   import type { ActionData } from '../personal/$types';
 
   export let form: ActionData;
 </script>
 
-<div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
+<div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
   <div class="flex flex-col gap-2">
     <h1 class="mb-6 text-center text-3xl font-bold">Profile</h1>
     <form

@@ -1,5 +1,5 @@
 import { RoleName } from '$lib/models/user/role';
-import type { UserDTO } from '$lib/models/user/user';
+import type { User } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
 import { error, fail, type Cookies, type NumericRange } from '@sveltejs/kit';
@@ -16,7 +16,7 @@ export const load = (async ({ cookies }) => {
     error(response.status as NumericRange<400, 599>, { message: response.error });
 
   return {
-    users: response as UserDTO[],
+    users: response as User[],
     roles: [{ name: RoleName.USER }, { name: RoleName.ADMIN }],
   };
 }) satisfies PageServerLoad;

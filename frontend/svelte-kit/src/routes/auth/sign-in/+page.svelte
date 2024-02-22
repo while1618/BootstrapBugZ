@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import FormControl from '$lib/components/form-control.svelte';
+  import FormControl from '$lib/components/form/form-control.svelte';
   import en from '$lib/i18n/en.json';
   import type { ActionData } from './$types';
 
@@ -9,7 +9,7 @@
 
 <section class="py-10 md:py-16">
   <div class="container">
-    <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
+    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">Sign in</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/signIn" use:enhance>
@@ -39,7 +39,7 @@
                 Sign up
               </a>
             </span>
-            <a href="/auth/forgot-password" class="label-text ml-auto text-info hover:underline">
+            <a href="/auth/forgot-password" class="label-text text-info ml-auto hover:underline">
               Forgot password?
             </a>
           </div>

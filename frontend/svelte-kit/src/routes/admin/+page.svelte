@@ -5,7 +5,7 @@
   import LockOpenIcon from '$lib/icons/lock-open.svelte';
   import PencilIcon from '$lib/icons/pencil.svelte';
   import TrashIcon from '$lib/icons/trash.svelte';
-  import type { UserDTO } from '$lib/models/user/user';
+  import type { User } from '$lib/models/user/user';
   import type { PageServerData } from './$types';
   import ActivateModal from './activate-modal.svelte';
   import DeleteModal from './delete-modal.svelte';
@@ -17,7 +17,7 @@
   let lockDialog: HTMLDialogElement;
   let deleteDialog: HTMLDialogElement;
   let rolesDialog: HTMLDialogElement;
-  let selectedUser: UserDTO;
+  let selectedUser: User;
 
   const tableFieldsLabels = [
     'ID',
@@ -32,7 +32,7 @@
     '',
   ];
 
-  const showModal = (dialog: HTMLDialogElement, user: UserDTO) => {
+  const showModal = (dialog: HTMLDialogElement, user: User) => {
     dialog.showModal();
     selectedUser = user;
   };

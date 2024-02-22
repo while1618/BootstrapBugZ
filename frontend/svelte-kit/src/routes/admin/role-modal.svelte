@@ -1,11 +1,11 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import Modal from '$lib/components/modal.svelte';
-  import type { UserDTO } from '$lib/models/user/user';
+  import Modal from '$lib/components/shared/modal.svelte';
+  import type { User } from '$lib/models/user/user';
   import type { PageServerData } from './$types';
 
   export let rolesDialog: HTMLDialogElement;
-  export let selectedUser: UserDTO;
+  export let selectedUser: User;
   export let data: PageServerData;
 </script>
 
