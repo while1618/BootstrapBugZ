@@ -7,20 +7,22 @@
   export let form: ActionData;
 </script>
 
-<div class="flex h-screen items-center justify-center">
-  <div class="card mx-auto w-full max-w-xl bg-base-100 p-8 shadow-xl">
-    <div class="flex flex-col gap-8">
-      <h1 class="text-center text-3xl font-bold">Sign up</h1>
-      <form class="flex flex-col gap-4" method="POST" action="?/signUp" use:enhance>
-        <FormControl {form} type="text" id="firstName" label="First name" />
-        <FormControl {form} type="text" id="lastName" label="Last name" />
-        <FormControl {form} type="text" id="username" label="Username" />
-        <FormControl {form} type="email" id="email" label="Email" />
-        <FormControl {form} type="password" id="password" label="Password" />
-        <FormControl {form} type="password" id="confirmPassword" label="Confirm password" />
-        <FormErrors {form} />
-        <button class="btn btn-primary">Sign up</button>
-      </form>
+<section class="py-10 md:py-16">
+  <div class="container">
+    <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
+      <div class="flex flex-col gap-8">
+        <h1 class="text-center text-3xl font-bold">Sign up</h1>
+        <form class="flex flex-col gap-4" method="POST" action="?/signUp" use:enhance>
+          <FormControl {form} type="text" id="firstName" label="First name" />
+          <FormControl {form} type="text" id="lastName" label="Last name" />
+          <FormControl {form} type="text" id="username" label="Username" />
+          <FormControl {form} type="email" id="email" label="Email" />
+          <FormControl {form} type="password" id="password" label="Password" />
+          <FormControl {form} type="password" id="confirmPassword" label="Confirm password" />
+          <FormErrors {form} />
+          <button class="btn btn-primary">Sign up</button>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+</section>

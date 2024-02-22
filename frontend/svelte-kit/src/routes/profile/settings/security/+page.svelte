@@ -9,26 +9,24 @@
   let dialog: HTMLDialogElement;
 </script>
 
-<div class="flex h-screen items-center justify-center">
-  <div class="card mx-auto w-full max-w-xl bg-base-100 p-8 shadow-xl">
-    <div class="flex flex-col gap-2">
-      <h1 class="mb-6 text-center text-3xl font-bold">Security</h1>
-      <form class="flex flex-col gap-4" method="POST" action="?/changePassword" use:enhance>
-        <FormControl {form} type="password" id="oldPassword" label="Old password" />
-        <FormControl {form} type="password" id="newPassword" label="New password" />
-        <FormControl {form} type="password" id="confirmNewPassword" label="Confirm new password" />
-        <FormErrors {form} />
-        <button class="btn btn-primary">Change password</button>
-      </form>
-      <div class="divider" />
-      <a href="/auth/sign-out-from-all-devices" class="btn btn-primary">
-        Sign out form all devices
-      </a>
-      <div class="divider" />
-      <button class="btn btn-error" on:click|stopPropagation={() => dialog.showModal()}>
-        Delete Account
-      </button>
-    </div>
+<div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
+  <div class="flex flex-col gap-2">
+    <h1 class="mb-6 text-center text-3xl font-bold">Security</h1>
+    <form class="flex flex-col gap-4" method="POST" action="?/changePassword" use:enhance>
+      <FormControl {form} type="password" id="oldPassword" label="Old password" />
+      <FormControl {form} type="password" id="newPassword" label="New password" />
+      <FormControl {form} type="password" id="confirmNewPassword" label="Confirm new password" />
+      <FormErrors {form} />
+      <button class="btn btn-primary">Change password</button>
+    </form>
+    <div class="divider" />
+    <a href="/auth/sign-out-from-all-devices" class="btn btn-primary">
+      Sign out form all devices
+    </a>
+    <div class="divider" />
+    <button class="btn btn-error" on:click|stopPropagation={() => dialog.showModal()}>
+      Delete Account
+    </button>
   </div>
 </div>
 

@@ -12,7 +12,7 @@
   <label for={id} class="label">
     <span class="label-text">{label}</span>
   </label>
-  <input {type} {id} name={id} {value} class="input input-bordered w-full" />
+  <input {type} {id} name={id} {value} class="input input-bordered w-full bg-base-200" />
   {#if form?.errors && form?.errors[id]}
     <label for={id} class="label">
       <span class="label-text text-error">{form.errors[id][0]}</span>

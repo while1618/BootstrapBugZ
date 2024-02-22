@@ -14,14 +14,12 @@
   });
 </script>
 
-<div class="flex h-screen flex-col overflow-hidden bg-base-200">
-  {#if !data.user}
-    <GuestNavbar />
-    <slot />
-  {:else if !$userStore}
-    <Loading />
-  {:else}
-    <UserNavbar isAdmin={data.isAdmin} />
-    <slot />
-  {/if}
-</div>
+{#if !data.user}
+  <GuestNavbar />
+  <slot />
+{:else if !$userStore}
+  <Loading />
+{:else}
+  <UserNavbar isAdmin={data.isAdmin} />
+  <slot />
+{/if}
