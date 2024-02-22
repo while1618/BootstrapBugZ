@@ -9,7 +9,7 @@
   let dialog: HTMLDialogElement;
 </script>
 
-<div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
+<div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
   <div class="flex flex-col gap-2">
     <h1 class="mb-6 text-center text-3xl font-bold">Security</h1>
     <form class="flex flex-col gap-4" method="POST" action="?/changePassword" use:enhance>
