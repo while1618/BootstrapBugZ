@@ -2,6 +2,7 @@ package org.bootstrapbugz.backend.auth.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.backend.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.backend.auth.jwt.service.ResetPasswordTokenService;
@@ -27,13 +28,17 @@ import org.bootstrapbugz.backend.user.model.User;
 import org.bootstrapbugz.backend.user.payload.dto.UserDTO;
 import org.bootstrapbugz.backend.user.repository.RoleRepository;
 import org.bootstrapbugz.backend.user.repository.UserRepository;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
+  private static final Marker MARKER = MarkerFactory.getMarker("AUTH");
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final MessageService messageService;
@@ -67,10 +72,14 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserDTO register(RegisterUserRequest registerUserRequest) {
-    if (userRepository.existsByUsername(registerUserRequest.username()))
+    if (userRepository.existsByUsername(registerUserRequest.username())) {
+      log.error(MARKER, "username {} already exists", registerUserRequest.username());
       throw new ConflictException(messageService.getMessage("username.exists"));
-    if (userRepository.existsByEmail(registerUserRequest.email()))
+    }
+    if (userRepository.existsByEmail(registerUserRequest.email())) {
+      log.error(MARKER, "email {} already exists", registerUserRequest.email());
       throw new ConflictException(messageService.getMessage("email.exists"));
+    }
     final var user = userRepository.save(createUser(registerUserRequest));
     final var token = verificationTokenService.create(user.getId());
     verificationTokenService.sendToEmail(user, token);
@@ -88,7 +97,10 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findWithRolesByUsername(auth.getName())
             .orElseThrow(
-                () -> new UnauthorizedException(messageService.getMessage("auth.invalid")));
+                () -> {
+                  log.error(MARKER, "invalid authentication, user {} not found", auth.getName());
+                  return new UnauthorizedException(messageService.getMessage("auth.invalid"));
+                });
     final var roleDTOs = UserMapper.INSTANCE.rolesToRoleDTOs(user.getRoles());
     final var accessToken = accessTokenService.create(user.getId(), roleDTOs);
     final var refreshToken =
@@ -102,7 +114,11 @@ public class AuthServiceImpl implements AuthService {
     final var roles =
         roleRepository
             .findByName(RoleName.USER)
-            .orElseThrow(() -> new RuntimeException(messageService.getMessage("role.notFound")));
+            .orElseThrow(
+                () -> {
+                  log.error(MARKER, "role {} not found", RoleName.USER);
+                  return new RuntimeException(messageService.getMessage("role.notFound"));
+                });
     return User.builder()
         .firstName(registerUserRequest.firstName())
         .lastName(registerUserRequest.lastName())
@@ -146,7 +162,10 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findByEmail(forgotPasswordRequest.email())
             .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+                () -> {
+                  log.error(MARKER, "user with email {} not found", forgotPasswordRequest.email());
+                  return new ResourceNotFoundException(messageService.getMessage("user.notFound"));
+                });
     final var token = resetPasswordTokenService.create(user.getId());
     resetPasswordTokenService.sendToEmail(user, token);
   }
@@ -157,7 +176,11 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findById(JwtUtil.getUserId(resetPasswordRequest.token()))
             .orElseThrow(
-                () -> new BadRequestException("token", messageService.getMessage("token.invalid")));
+                () -> {
+                  log.error(MARKER, "invalid reset password token");
+                  return new BadRequestException(
+                      "token", messageService.getMessage("token.invalid"));
+                });
     resetPasswordTokenService.check(resetPasswordRequest.token());
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.password()));
     accessTokenService.invalidateAllByUserId(user.getId());
@@ -171,9 +194,14 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
             .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    if (Boolean.TRUE.equals(user.getActive()))
+                () -> {
+                  log.error(MARKER, "user: {} not found", request.usernameOrEmail());
+                  return new ResourceNotFoundException(messageService.getMessage("user.notFound"));
+                });
+    if (Boolean.TRUE.equals(user.getActive())) {
+      log.error(MARKER, "user {} already active", user.getUsername());
       throw new ConflictException(messageService.getMessage("user.active"));
+    }
     final var token = verificationTokenService.create(user.getId());
     verificationTokenService.sendToEmail(user, token);
   }
@@ -184,9 +212,15 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findById(JwtUtil.getUserId(verifyEmailRequest.token()))
             .orElseThrow(
-                () -> new BadRequestException("token", messageService.getMessage("token.invalid")));
-    if (Boolean.TRUE.equals(user.getActive()))
+                () -> {
+                  log.error(MARKER, "invalid verify email token");
+                  return new BadRequestException(
+                      "token", messageService.getMessage("token.invalid"));
+                });
+    if (Boolean.TRUE.equals(user.getActive())) {
+      log.error(MARKER, "user {} already active", user.getUsername());
       throw new ConflictException(messageService.getMessage("user.active"));
+    }
     verificationTokenService.check(verifyEmailRequest.token());
     user.setActive(true);
     userRepository.save(user);

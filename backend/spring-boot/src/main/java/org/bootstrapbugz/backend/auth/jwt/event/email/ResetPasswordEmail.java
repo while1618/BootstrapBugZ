@@ -7,11 +7,15 @@ import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.shared.email.service.EmailService;
 import org.bootstrapbugz.backend.user.model.User;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
 @Slf4j
 public class ResetPasswordEmail implements JwtEmail {
+  private static final Marker MARKER = MarkerFactory.getMarker("AUTH");
+
   @Override
   public void sendEmail(
       EmailService emailService, Environment environment, User user, String token) {
@@ -27,7 +31,11 @@ public class ResetPasswordEmail implements JwtEmail {
               .replace("$appName", Objects.requireNonNull(environment.getProperty("app.name")));
       emailService.sendHtmlEmail(user.getEmail(), "Reset password", body);
     } catch (IOException e) {
-      log.error(e.getMessage());
+      log.error(
+          MARKER,
+          "failed to send reset password email to user: {} with message: {}",
+          user.getEmail(),
+          e.getMessage());
     }
   }
 }

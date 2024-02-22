@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.backend.auth.util.AuthUtil;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 @Component
 public class JWTFilter extends OncePerRequestFilter {
+  private static final Marker MARKER = MarkerFactory.getMarker("AUTH");
   private final AccessTokenService accessTokenService;
   private final UserDetailsServiceImpl userDetailsService;
 
@@ -41,7 +44,11 @@ public class JWTFilter extends OncePerRequestFilter {
     try {
       SecurityContextHolder.getContext().setAuthentication(getAuth(accessToken));
     } catch (RuntimeException e) {
-      log.error(e.getMessage());
+      log.error(
+          MARKER,
+          "authentication failed for user: {} with message: {}",
+          JwtUtil.getUserId(accessToken),
+          e.getMessage());
     } finally {
       chain.doFilter(request, response);
     }
