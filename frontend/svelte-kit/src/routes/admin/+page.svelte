@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Pagination from '$lib/components/shared/pagination.svelte';
   import CheckCircleIcon from '$lib/icons/check-circle.svelte';
   import CloseCircleIcon from '$lib/icons/close-circle.svelte';
   import LockCloseIcon from '$lib/icons/lock-close.svelte';
@@ -36,14 +37,17 @@
     dialog.showModal();
     selectedUser = user;
   };
+
+  $: totalPages = Math.ceil(data.users.total / data.pageable.size);
+  $: currentPage = data.pageable.page;
 </script>
 
 <section class="py-10 md:py-16">
   <div class="flex items-center justify-center">
-    <div class="card mx-auto w-auto bg-base-200 p-8 shadow-xl">
+    <div class="card bg-base-200 mx-auto w-auto p-8 shadow-xl 2xl:w-2/3">
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">Users</h1>
-        <table class="table table-zebra">
+        <table class="table-zebra table">
           <thead>
             <tr>
               {#each tableFieldsLabels as label}
@@ -52,7 +56,7 @@
             </tr>
           </thead>
           <tbody>
-            {#each data.users as user}
+            {#each data.users.data as user}
               <tr>
                 <th>{user.id}</th>
                 <th>{user.firstName}</th>
@@ -115,6 +119,9 @@
             {/each}
           </tbody>
         </table>
+        <div class="flex items-end justify-end">
+          <Pagination {currentPage} {totalPages} size={data.pageable.size} />
+        </div>
       </div>
     </div>
   </div>
