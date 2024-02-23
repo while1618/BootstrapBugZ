@@ -258,28 +258,46 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/UserDTO"
+                type: object
+                required:
+                  - "data"
+                  - "total"
+                  - "page"
+                  - "limit"
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserDTO"
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
               example:
-                - id: 1
-                  firstName: Admin
-                  lastName: Admin
-                  username: admin
-                  email: null
-                  createdAt: 2023-05-18T00:51:50.758738
-                - id: 2
-                  firstName: User
-                  lastName: User
-                  username: user
-                  email: null
-                  createdAt: 2023-05-18T00:51:50.758738
-                - id: 3
-                  firstName: John
-                  lastName: Doe
-                  username: john.doe
-                  email: null
-                  createdAt: 2023-05-18T00:51:50.758738
+                data:
+                  - id: 1
+                    firstName: Admin
+                    lastName: Admin
+                    username: admin
+                    email: null
+                    createdAt: 2023-05-18T00:51:50.758738
+                  - id: 2
+                    firstName: User
+                    lastName: User
+                    username: user
+                    email: null
+                    createdAt: 2023-05-18T00:51:50.758738
+                  - id: 3
+                    firstName: John
+                    lastName: Doe
+                    username: john.doe
+                    email: null
+                    createdAt: 2023-05-18T00:51:50.758738
+                total: 3
+                page: 0
+                limit: 10
   /users/{id}:
     get:
       tags:
@@ -412,41 +430,59 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/UserDTO"
+                type: object
+                required:
+                  - "data"
+                  - "total"
+                  - "page"
+                  - "limit"
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserDTO"
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
                 example:
-                  - id: 1
-                    firstName: Admin
-                    lastName: Admin
-                    username: admin
-                    email: admin@localhost
-                    active: true
-                    lock: false
-                    createdAt: 2023-05-18T00:51:50.758738
-                    roles:
-                      - name: USER
-                      - name: ADMIN
-                  - id: 2
-                    firstName: User
-                    lastName: User
-                    username: user
-                    email: user@localhost
-                    active: true
-                    lock: false
-                    createdAt: 2023-05-18T00:51:50.758738
-                    roles:
-                      - name: USER
-                  - id: 3
-                    firstName: John
-                    lastName: Doe
-                    username: john.doe
-                    email: john.doe@localhost
-                    active: true
-                    lock: false
-                    createdAt: 2023-05-18T00:51:50.758738
-                    roles:
-                      - name: USER
+                  data:
+                    - id: 1
+                      firstName: Admin
+                      lastName: Admin
+                      username: admin
+                      email: admin@localhost
+                      active: true
+                      lock: false
+                      createdAt: 2023-05-18T00:51:50.758738
+                      roles:
+                        - name: USER
+                        - name: ADMIN
+                    - id: 2
+                      firstName: User
+                      lastName: User
+                      username: user
+                      email: user@localhost
+                      active: true
+                      lock: false
+                      createdAt: 2023-05-18T00:51:50.758738
+                      roles:
+                        - name: USER
+                    - id: 3
+                      firstName: John
+                      lastName: Doe
+                      username: john.doe
+                      email: john.doe@localhost
+                      active: true
+                      lock: false
+                      createdAt: 2023-05-18T00:51:50.758738
+                      roles:
+                        - name: USER
+                  total: 3
+                  page: 0
+                  limit: 10
         401:
           $ref: "#/components/responses/Unauthorized"
         403:

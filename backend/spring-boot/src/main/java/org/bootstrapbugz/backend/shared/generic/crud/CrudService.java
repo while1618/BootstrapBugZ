@@ -1,12 +1,12 @@
 package org.bootstrapbugz.backend.shared.generic.crud;
 
-import java.util.List;
+import org.bootstrapbugz.backend.shared.payload.dto.FindAllDTO;
 import org.springframework.data.domain.Pageable;
 
 public interface CrudService<T, U> {
   T create(U saveRequest);
 
-  List<T> findAll(Pageable pageable);
+  FindAllDTO<T> findAll(Pageable pageable);
 
   T findById(Long id);
 

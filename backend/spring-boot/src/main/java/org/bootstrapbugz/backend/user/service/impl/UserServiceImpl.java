@@ -1,9 +1,9 @@
 package org.bootstrapbugz.backend.user.service.impl;
 
-import java.util.List;
 import org.bootstrapbugz.backend.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.backend.shared.message.service.MessageService;
 import org.bootstrapbugz.backend.shared.payload.dto.AvailabilityDTO;
+import org.bootstrapbugz.backend.shared.payload.dto.FindAllDTO;
 import org.bootstrapbugz.backend.user.mapper.UserMapper;
 import org.bootstrapbugz.backend.user.payload.dto.UserDTO;
 import org.bootstrapbugz.backend.user.payload.request.EmailAvailabilityRequest;
@@ -24,10 +24,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserDTO> findAll(Pageable pageable) {
-    return userRepository.findAll(pageable).stream()
-        .map(UserMapper.INSTANCE::userToSimpleUserDTO)
-        .toList();
+  public FindAllDTO<UserDTO> findAll(Pageable pageable) {
+    final var users =
+        userRepository.findAll(pageable).stream()
+            .map(UserMapper.INSTANCE::userToSimpleUserDTO)
+            .toList();
+    final var total = userRepository.count();
+    return new FindAllDTO<>(users, total, pageable.getPageNumber(), pageable.getPageSize());
   }
 
   @Override
