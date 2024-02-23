@@ -2,8 +2,7 @@ package org.bootstrapbugz.backend.shared.generic.crud;
 
 import jakarta.validation.Valid;
 import org.bootstrapbugz.backend.shared.payload.dto.PageableDTO;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 public abstract class CrudController<T, U> {
   private final CrudService<T, U> service;
@@ -27,9 +25,8 @@ public abstract class CrudController<T, U> {
   }
 
   @GetMapping
-  public ResponseEntity<PageableDTO<T>> findAll(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int limit) {
-    return ResponseEntity.ok(service.findAll(PageRequest.of(page, limit, Sort.by("id"))));
+  public ResponseEntity<PageableDTO<T>> findAll(Pageable pageable) {
+    return ResponseEntity.ok(service.findAll(pageable));
   }
 
   @GetMapping("/{id}")

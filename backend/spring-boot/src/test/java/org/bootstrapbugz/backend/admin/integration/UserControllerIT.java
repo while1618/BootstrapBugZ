@@ -155,8 +155,7 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.length()").value(10))
-        .andExpect(jsonPath("$.page").value(0))
-        .andExpect(jsonPath("$.limit").value(10));
+        .andExpect(jsonPath("$.total").value(11));
   }
 
   @Test

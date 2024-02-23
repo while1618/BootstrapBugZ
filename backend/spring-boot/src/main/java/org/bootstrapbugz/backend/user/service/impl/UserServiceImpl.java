@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
             .map(UserMapper.INSTANCE::userToSimpleUserDTO)
             .toList();
     final var total = userRepository.count();
-    return new PageableDTO<>(users, total, pageable.getPageNumber(), pageable.getPageSize());
+    return new PageableDTO<>(users, total);
   }
 
   @Override
