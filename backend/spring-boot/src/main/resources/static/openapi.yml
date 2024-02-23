@@ -251,7 +251,8 @@ paths:
       summary: Get users with pagination
       parameters:
         - $ref: "#/components/parameters/page"
-        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/sort"
       responses:
         200:
           description: Users retrieved successfully
@@ -262,18 +263,12 @@ paths:
                 required:
                   - "data"
                   - "total"
-                  - "page"
-                  - "limit"
                 properties:
                   data:
                     type: array
                     items:
                       $ref: "#/components/schemas/UserDTO"
                   total:
-                    type: integer
-                  page:
-                    type: integer
-                  limit:
                     type: integer
               example:
                 data:
@@ -296,8 +291,6 @@ paths:
                     email: null
                     createdAt: 2023-05-18T00:51:50.758738
                 total: 3
-                page: 0
-                limit: 10
   /users/{id}:
     get:
       tags:
@@ -423,7 +416,8 @@ paths:
         - BearerAuth: []
       parameters:
         - $ref: "#/components/parameters/page"
-        - $ref: "#/components/parameters/limit"
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/sort"
       responses:
         200:
           description: Users retrieved successfully
@@ -434,18 +428,12 @@ paths:
                 required:
                   - "data"
                   - "total"
-                  - "page"
-                  - "limit"
                 properties:
                   data:
                     type: array
                     items:
                       $ref: "#/components/schemas/UserDTO"
                   total:
-                    type: integer
-                  page:
-                    type: integer
-                  limit:
                     type: integer
                 example:
                   data:
@@ -481,8 +469,6 @@ paths:
                       roles:
                         - name: USER
                   total: 3
-                  page: 0
-                  limit: 10
         401:
           $ref: "#/components/responses/Unauthorized"
         403:
@@ -701,15 +687,24 @@ components:
       required: false
       schema:
         type: integer
-        default: 0
-    limit:
-      name: limit
+        default: 1
+    size:
+      name: size
       in: query
       description: Number of items per page
       required: false
       schema:
         type: integer
         default: 10
+    sort:
+      name: sort
+      in: query
+      description: Sort by field
+      required: false
+      schema:
+        type: string
+        default: unsorted
+      example: id,desc
   requestBodies:
     RegisterUserRequest:
       description: Register user request
