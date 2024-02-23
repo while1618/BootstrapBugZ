@@ -1,7 +1,7 @@
 package org.bootstrapbugz.backend.shared.generic.crud;
 
 import jakarta.validation.Valid;
-import org.bootstrapbugz.backend.shared.payload.dto.FindAllDTO;
+import org.bootstrapbugz.backend.shared.payload.dto.PageableDTO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public abstract class CrudController<T, U> {
   }
 
   @GetMapping
-  public ResponseEntity<FindAllDTO<T>> findAll(
+  public ResponseEntity<PageableDTO<T>> findAll(
       @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int limit) {
     return ResponseEntity.ok(service.findAll(PageRequest.of(page, limit, Sort.by("id"))));
   }
