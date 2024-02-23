@@ -1,6 +1,5 @@
 package org.bootstrapbugz.backend.admin.service.impl;
 
-import java.util.List;
 import java.util.Set;
 import org.bootstrapbugz.backend.admin.payload.request.PatchUserRequest;
 import org.bootstrapbugz.backend.admin.payload.request.UserRequest;
@@ -10,6 +9,7 @@ import org.bootstrapbugz.backend.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.backend.shared.error.exception.ConflictException;
 import org.bootstrapbugz.backend.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.backend.shared.message.service.MessageService;
+import org.bootstrapbugz.backend.shared.payload.dto.FindAllDTO;
 import org.bootstrapbugz.backend.user.mapper.UserMapper;
 import org.bootstrapbugz.backend.user.model.Role.RoleName;
 import org.bootstrapbugz.backend.user.model.User;
@@ -67,10 +67,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserDTO> findAll(Pageable pageable) {
-    return userRepository.findAll(pageable).stream()
-        .map(UserMapper.INSTANCE::userToAdminUserDTO)
-        .toList();
+  public FindAllDTO<UserDTO> findAll(Pageable pageable) {
+    final var users =
+        userRepository.findAll(pageable).stream()
+            .map(UserMapper.INSTANCE::userToAdminUserDTO)
+            .toList();
+    final long total = userRepository.count();
+    return new FindAllDTO<>(users, total, pageable.getPageNumber(), pageable.getPageSize());
   }
 
   @Override

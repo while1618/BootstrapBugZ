@@ -1,9 +1,9 @@
 package org.bootstrapbugz.backend.user.controller;
 
 import jakarta.validation.Valid;
-import java.util.List;
 import org.bootstrapbugz.backend.shared.constants.Path;
 import org.bootstrapbugz.backend.shared.payload.dto.AvailabilityDTO;
+import org.bootstrapbugz.backend.shared.payload.dto.FindAllDTO;
 import org.bootstrapbugz.backend.user.payload.dto.UserDTO;
 import org.bootstrapbugz.backend.user.payload.request.EmailAvailabilityRequest;
 import org.bootstrapbugz.backend.user.payload.request.UsernameAvailabilityRequest;
@@ -29,7 +29,7 @@ public class UserController {
   }
 
   @GetMapping
-  public ResponseEntity<List<UserDTO>> findAll(
+  public ResponseEntity<FindAllDTO<UserDTO>> findAll(
       @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int limit) {
     return ResponseEntity.ok(userService.findAll(PageRequest.of(page, limit, Sort.by("id"))));
   }
