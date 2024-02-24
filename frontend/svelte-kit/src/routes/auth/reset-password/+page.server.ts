@@ -1,6 +1,6 @@
 import { JWT_SECRET } from '$env/static/private';
 import en from '$lib/i18n/en.json';
-import { PASSWORD_REGEX } from '$lib/regex/regex';
+import { PASSWORD_REGEX } from '$lib/server/regex/regex';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';

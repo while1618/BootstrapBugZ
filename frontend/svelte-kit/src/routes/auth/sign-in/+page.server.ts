@@ -1,7 +1,7 @@
 import en from '$lib/i18n/en.json';
 import type { AuthTokens } from '$lib/models/auth/auth-tokens';
-import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
 import { makeRequest } from '$lib/server/apis/api';
+import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest, setAccessTokenCookie, setRefreshTokenCookie } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';

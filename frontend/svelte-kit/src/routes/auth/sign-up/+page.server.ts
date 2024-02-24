@@ -1,12 +1,12 @@
 import en from '$lib/i18n/en.json';
 import type { Availability } from '$lib/models/shared/availability';
+import { makeRequest } from '$lib/server/apis/api';
 import {
   EMAIL_REGEX,
   FIRST_AND_LAST_NAME_REGEX,
   PASSWORD_REGEX,
   USERNAME_REGEX,
-} from '$lib/regex/regex';
-import { makeRequest } from '$lib/server/apis/api';
+} from '$lib/server/regex/regex';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
