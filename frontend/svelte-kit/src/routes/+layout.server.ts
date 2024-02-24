@@ -1,4 +1,4 @@
-import type { UserDTO } from '$lib/models/user/user';
+import type { User } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest, isAdmin, removeAuth } from '$lib/server/utils/util';
 import { error, redirect, type NumericRange } from '@sveltejs/kit';
@@ -22,5 +22,5 @@ export const load = (async ({ locals, cookies }) => {
     error(response.status as NumericRange<400, 599>, { message: response.error });
   }
 
-  return { user: response as UserDTO, isAdmin: isAdmin(accessToken) };
+  return { user: response as User, isAdmin: isAdmin(accessToken) };
 }) satisfies LayoutServerLoad;

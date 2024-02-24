@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.2</version>
+    <version>3.2.3</version>
     <relativePath/>
     <!-- lookup parent from repository -->
   </parent>
@@ -23,6 +23,7 @@
     <guava.version>33.0.0-jre</guava.version>
     <jwt.version>4.4.0</jwt.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <jedis.version>5.1.0</jedis.version>
     <springdoc.version>2.3.0</springdoc.version>
     <datafaker.version>2.1.0</datafaker.version>
     <jacoco.version>0.8.11</jacoco.version>
@@ -91,6 +92,11 @@
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
       <version>${mapstruct.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>${jedis.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springdoc</groupId>
@@ -193,10 +199,6 @@
               <version>${mapstruct.version}</version>
             </path>
           </annotationProcessorPaths>
-          <compilerArgs>
-            <compilerArg>-Amapstruct.defaultComponentModel=spring
-            </compilerArg>
-          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>

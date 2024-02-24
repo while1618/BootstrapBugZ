@@ -1,4 +1,4 @@
-import type { UserDTO } from '$lib/models/user/user';
+import type { User } from '$lib/models/user/user';
 import { writable } from 'svelte/store';
 
-export const userStore = writable<UserDTO | null>(null);
+export const userStore = writable<User | null>(null);

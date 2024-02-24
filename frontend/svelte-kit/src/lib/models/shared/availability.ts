@@ -1,3 +1,3 @@
-export interface AvailabilityDTO {
+export interface Availability {
   available: boolean;
 }

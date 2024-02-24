@@ -1,5 +1,5 @@
 import en from '$lib/i18n/en.json';
-import type { AvailabilityDTO } from '$lib/models/shared/availability';
+import type { Availability } from '$lib/models/shared/availability';
 import {
   EMAIL_REGEX,
   FIRST_AND_LAST_NAME_REGEX,
@@ -30,7 +30,7 @@ const signUpSchema = z
           body: JSON.stringify({ username: value }),
         });
         if ('error' in response) return false;
-        return (response as AvailabilityDTO).available;
+        return (response as Availability).available;
       }, en['username.exists']),
     email: z
       .string()
@@ -42,7 +42,7 @@ const signUpSchema = z
           body: JSON.stringify({ email: value }),
         });
         if ('error' in response) return false;
-        return (response as AvailabilityDTO).available;
+        return (response as Availability).available;
       }, en['email.exists']),
     password: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
     confirmPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),

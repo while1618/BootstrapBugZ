@@ -1,22 +1,20 @@
 package org.bootstrapbugz.backend.user.controller;
 
 import jakarta.validation.Valid;
-import java.util.List;
 import org.bootstrapbugz.backend.shared.constants.Path;
 import org.bootstrapbugz.backend.shared.payload.dto.AvailabilityDTO;
+import org.bootstrapbugz.backend.shared.payload.dto.PageableDTO;
 import org.bootstrapbugz.backend.user.payload.dto.UserDTO;
 import org.bootstrapbugz.backend.user.payload.request.EmailAvailabilityRequest;
 import org.bootstrapbugz.backend.user.payload.request.UsernameAvailabilityRequest;
 import org.bootstrapbugz.backend.user.service.UserService;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,9 +27,8 @@ public class UserController {
   }
 
   @GetMapping
-  public ResponseEntity<List<UserDTO>> findAll(
-      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int limit) {
-    return ResponseEntity.ok(userService.findAll(PageRequest.of(page, limit, Sort.by("id"))));
+  public ResponseEntity<PageableDTO<UserDTO>> findAll(Pageable pageable) {
+    return ResponseEntity.ok(userService.findAll(pageable));
   }
 
   @GetMapping("/{id}")

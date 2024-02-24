@@ -1,4 +1,4 @@
-export interface RoleDTO {
+export interface Role {
   name: RoleName;
 }
 
