@@ -63,7 +63,9 @@ class UserServiceImpl(
     }
 
     override fun update(id: Long, userRequest: UserRequest): UserDTO {
-        val user = userRepository.findWithRolesById(id).orElse(User())
+        val user = userRepository.findWithRolesById(id).orElseThrow {
+            NoSuchElementException("No user found with ID $id")
+        }
         user.apply {
             firstName = userRequest.firstName
             lastName = userRequest.lastName
@@ -102,7 +104,7 @@ class UserServiceImpl(
     private fun setUsername(user: User, username: String) {
         if (user.username == username) return
         if (userRepository.existsByUsername(username))
-            throw ConflictException("username",messageService.getMessage("username.exists"))
+            throw ConflictException("username", messageService.getMessage("username.exists"))
         user.username = username
     }
 
