@@ -223,6 +223,24 @@
           </configuration>
           <executions>
               <execution>
+                  <id>kapt</id>
+                  <goals>
+                      <goal>kapt</goal>
+                  </goals>
+                  <configuration>
+                      <sourceDirs>
+                          <sourceDir>src/main/java</sourceDir>
+                      </sourceDirs>
+                      <annotationProcessorPaths>
+                          <annotationProcessorPath>
+                              <groupId>org.mapstruct</groupId>
+                              <artifactId>mapstruct-processor</artifactId>
+                              <version>${mapstruct.version}</version>
+                          </annotationProcessorPath>
+                      </annotationProcessorPaths>
+                  </configuration>
+              </execution>
+              <execution>
                   <id>compile</id>
                   <phase>compile</phase>
                   <goals>
@@ -245,55 +263,55 @@
               </dependency>
           </dependencies>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-          <executions>
-              <execution>
-                  <id>default-compile</id>
-                  <phase>none</phase>
-              </execution>
-              <execution>
-                  <id>default-testCompile</id>
-                  <phase>none</phase>
-              </execution>
-              <execution>
-                  <id>compile</id>
-                  <phase>compile</phase>
-                  <goals>
-                      <goal>compile</goal>
-                  </goals>
-              </execution>
-              <execution>
-                  <id>testCompile</id>
-                  <phase>test-compile</phase>
-                  <goals>
-                      <goal>testCompile</goal>
-                  </goals>
-              </execution>
-          </executions>
-          <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-              <version>${lombok.version}</version>
-            </path>
-            <path>
-              <groupId>org.mapstruct</groupId>
-              <artifactId>mapstruct-processor</artifactId>
-              <version>${mapstruct.version}</version>
-            </path>
-          </annotationProcessorPaths>
-          <compilerArgs>
-            <compilerArg>-Amapstruct.defaultComponentModel=spring
-            </compilerArg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-compiler-plugin</artifactId>-->
+<!--        <version>${maven-compiler-plugin.version}</version>-->
+<!--          <executions>-->
+<!--              <execution>-->
+<!--                  <id>default-compile</id>-->
+<!--                  <phase>none</phase>-->
+<!--              </execution>-->
+<!--              <execution>-->
+<!--                  <id>default-testCompile</id>-->
+<!--                  <phase>none</phase>-->
+<!--              </execution>-->
+<!--              <execution>-->
+<!--                  <id>compile</id>-->
+<!--                  <phase>compile</phase>-->
+<!--                  <goals>-->
+<!--                      <goal>compile</goal>-->
+<!--                  </goals>-->
+<!--              </execution>-->
+<!--              <execution>-->
+<!--                  <id>testCompile</id>-->
+<!--                  <phase>test-compile</phase>-->
+<!--                  <goals>-->
+<!--                      <goal>testCompile</goal>-->
+<!--                  </goals>-->
+<!--              </execution>-->
+<!--          </executions>-->
+<!--          <configuration>-->
+<!--          <source>${java.version}</source>-->
+<!--          <target>${java.version}</target>-->
+<!--          <annotationProcessorPaths>-->
+<!--            <path>-->
+<!--              <groupId>org.projectlombok</groupId>-->
+<!--              <artifactId>lombok</artifactId>-->
+<!--              <version>${lombok.version}</version>-->
+<!--            </path>-->
+<!--            <path>-->
+<!--              <groupId>org.mapstruct</groupId>-->
+<!--              <artifactId>mapstruct-processor</artifactId>-->
+<!--              <version>${mapstruct.version}</version>-->
+<!--            </path>-->
+<!--          </annotationProcessorPaths>-->
+<!--          <compilerArgs>-->
+<!--            <compilerArg>-Amapstruct.defaultComponentModel=spring-->
+<!--            </compilerArg>-->
+<!--          </compilerArgs>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
     </plugins>
   </build>
 
