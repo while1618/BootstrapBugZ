@@ -31,19 +31,19 @@ class User(
     var id: Long? = null,
 
     @Column(nullable = false)
-    var firstName: String? = null,
+    var firstName: String,
 
     @Column(nullable = false)
-    var lastName: String? = null,
+    var lastName: String,
 
     @Column(unique = true, nullable = false)
-    var username: String? = null,
+    var username: String,
 
     @Column(unique = true, nullable = false)
-    var email: String? = null,
+    var email: String,
 
     @Column(nullable = false)
-    var password: String? = null,
+    var password: String,
 
     @Column(nullable = false)
     var active: Boolean = false,
