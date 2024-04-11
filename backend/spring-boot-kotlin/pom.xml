@@ -18,7 +18,6 @@
 
   <properties>
     <java.version>21</java.version>
-    <lombok.version>1.18.30</lombok.version>
     <gson.version>2.10.1</gson.version>
     <guava.version>33.0.0-jre</guava.version>
     <jwt.version>4.4.0</jwt.version>
@@ -66,12 +65,6 @@
       <artifactId>spring-boot-devtools</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
@@ -270,13 +263,6 @@
 <!--          <configuration>-->
 <!--          <source>${java.version}</source>-->
 <!--          <target>${java.version}</target>-->
-<!--          <annotationProcessorPaths>-->
-<!--            <path>-->
-<!--              <groupId>org.projectlombok</groupId>-->
-<!--              <artifactId>lombok</artifactId>-->
-<!--              <version>${lombok.version}</version>-->
-<!--            </path>-->
-<!--          </annotationProcessorPaths>-->
 <!--          <compilerArgs>-->
 <!--            <compilerArg>-Amapstruct.defaultComponentModel=spring-->
 <!--            </compilerArg>-->
