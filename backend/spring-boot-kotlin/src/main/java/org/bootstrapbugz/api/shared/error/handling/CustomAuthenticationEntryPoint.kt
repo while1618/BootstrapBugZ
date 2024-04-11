@@ -2,7 +2,6 @@ package org.bootstrapbugz.api.shared.error.handling
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import lombok.extern.slf4j.Slf4j
 import org.bootstrapbugz.api.shared.payload.dto.ErrorMessage
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
