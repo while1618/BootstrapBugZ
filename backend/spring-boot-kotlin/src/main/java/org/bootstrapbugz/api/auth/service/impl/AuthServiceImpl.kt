@@ -55,7 +55,7 @@ class AuthServiceImpl(
         val user = userRepository.save(createUser(registerUserRequest))
         val token = verificationTokenService.create(user.id)
         verificationTokenService.sendToEmail(user, token)
-        return UserMapper.INSTANCE.userToProfileUserDTO(user)
+        return UserMapper.userToProfileUserDTO(user)
     }
 
     override fun authenticate(authTokensRequest: AuthTokensRequest, ipAddress: String): AuthTokensDTO {
@@ -67,7 +67,7 @@ class AuthServiceImpl(
         authenticationManager.authenticate(auth)
         val user = userRepository.findWithRolesByUsername(auth.name)
             .orElseThrow { UnauthorizedException(messageService.getMessage("auth.invalid"))}
-        val roleDTOs = UserMapper.INSTANCE.rolesToRoleDTOs(user.roles)
+        val roleDTOs = UserMapper.rolesToRoleDTOs(user.roles)
         val accessToken = accessTokenService.create(user.id, roleDTOs)
         val refreshToken = refreshTokenService.findByUserIdAndIpAddress(user.id, ipAddress)
             .orElse(refreshTokenService.create(user.id, roleDTOs, ipAddress))

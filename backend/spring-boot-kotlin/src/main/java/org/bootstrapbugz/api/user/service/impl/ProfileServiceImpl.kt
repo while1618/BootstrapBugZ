@@ -28,7 +28,7 @@ class ProfileServiceImpl(
     private val verificationTokenService: VerificationTokenService
 ) : ProfileService {
     override fun find(): UserDTO {
-        return UserMapper.INSTANCE.userPrincipalToProfileUserDTO(AuthUtil.findSignedInUser())
+        return UserMapper.userPrincipalToProfileUserDTO(AuthUtil.findSignedInUser())
     }
 
     override fun patch(patchProfileRequest: PatchProfileRequest): UserDTO {
@@ -44,7 +44,7 @@ class ProfileServiceImpl(
         patchProfileRequest.lastName?.let { user.lastName = it }
         patchProfileRequest.username?.let { setUsername(user, it) }
         patchProfileRequest.email?.let { setEmail(user, it) }
-        return UserMapper.INSTANCE.userToProfileUserDTO(userRepository.save(user))
+        return UserMapper.userToProfileUserDTO(userRepository.save(user))
     }
 
     private fun deleteAuthTokens(userId: Long?) {

@@ -21,19 +21,19 @@ class UserServiceImpl(
 
     override fun findAll(pageable: Pageable): List<UserDTO> =
         userRepository.findAll(pageable)
-            .map { UserMapper.INSTANCE.userToSimpleUserDTO(it) }
+            .map { UserMapper.userToSimpleUserDTO(it) }
             .toList()
 
     override fun findById(id: Long): UserDTO =
         userRepository.findById(id)
-            .map(UserMapper.INSTANCE::userToSimpleUserDTO)
+            .map(UserMapper::userToSimpleUserDTO)
             .orElseThrow {
                 ResourceNotFoundException(messageService.getMessage("user.notFound"))
             }
 
     override fun findByUsername(username: String): UserDTO =
         userRepository.findByUsername(username)
-            .map(UserMapper.INSTANCE::userToSimpleUserDTO)
+            .map(UserMapper::userToSimpleUserDTO)
             .orElseThrow {
                 ResourceNotFoundException(messageService.getMessage("user.notFound"))
             }

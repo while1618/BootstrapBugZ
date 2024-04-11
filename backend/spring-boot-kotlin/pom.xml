@@ -22,7 +22,6 @@
     <gson.version>2.10.1</gson.version>
     <guava.version>33.0.0-jre</guava.version>
     <jwt.version>4.4.0</jwt.version>
-    <mapstruct.version>1.5.5.Final</mapstruct.version>
     <springdoc.version>2.3.0</springdoc.version>
     <datafaker.version>2.0.2</datafaker.version>
     <jacoco.version>0.8.11</jacoco.version>
@@ -87,11 +86,6 @@
       <groupId>com.auth0</groupId>
       <artifactId>java-jwt</artifactId>
       <version>${jwt.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mapstruct</groupId>
-      <artifactId>mapstruct</artifactId>
-      <version>${mapstruct.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springdoc</groupId>
@@ -223,24 +217,6 @@
           </configuration>
           <executions>
               <execution>
-                  <id>kapt</id>
-                  <goals>
-                      <goal>kapt</goal>
-                  </goals>
-                  <configuration>
-                      <sourceDirs>
-                          <sourceDir>src/main/java</sourceDir>
-                      </sourceDirs>
-                      <annotationProcessorPaths>
-                          <annotationProcessorPath>
-                              <groupId>org.mapstruct</groupId>
-                              <artifactId>mapstruct-processor</artifactId>
-                              <version>${mapstruct.version}</version>
-                          </annotationProcessorPath>
-                      </annotationProcessorPaths>
-                  </configuration>
-              </execution>
-              <execution>
                   <id>compile</id>
                   <phase>compile</phase>
                   <goals>
@@ -299,11 +275,6 @@
 <!--              <groupId>org.projectlombok</groupId>-->
 <!--              <artifactId>lombok</artifactId>-->
 <!--              <version>${lombok.version}</version>-->
-<!--            </path>-->
-<!--            <path>-->
-<!--              <groupId>org.mapstruct</groupId>-->
-<!--              <artifactId>mapstruct-processor</artifactId>-->
-<!--              <version>${mapstruct.version}</version>-->
 <!--            </path>-->
 <!--          </annotationProcessorPaths>-->
 <!--          <compilerArgs>-->
