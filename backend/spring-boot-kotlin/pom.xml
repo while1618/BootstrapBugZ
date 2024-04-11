@@ -27,7 +27,7 @@
     <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
     <spotless.version>2.41.1</spotless.version>
     <google-java-format.version>1.17.0</google-java-format.version>
-    <kotlin.version>1.9.22</kotlin.version>
+    <kotlin.version>1.9.23</kotlin.version>
   </properties>
 
   <dependencies>
