@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.4</version>
         <relativePath/>
     </parent>
     <groupId>org.bootstrapbugz</groupId>
@@ -151,6 +151,7 @@
                 <artifactId>spotless-maven-plugin</artifactId>
                 <version>${spotless.version}</version>
                 <configuration>
+                    <!-- Remove later when tests are Kotlinized -->
                     <java>
                         <importOrder/>
                         <removeUnusedImports/>
@@ -235,7 +236,7 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>src/test/java</sourceDir>
+                                <sourceDir>src/test/java</sourceDir> <!-- Remove later when tests are migrated -->
                             </sourceDirs>
                         </configuration>
                     </execution>
