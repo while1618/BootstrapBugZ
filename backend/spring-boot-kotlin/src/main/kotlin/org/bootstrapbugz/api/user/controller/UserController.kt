@@ -21,28 +21,35 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(Path.USERS)
 class UserController(private val userService: UserService) {
-    @GetMapping
-    fun findAll(@RequestParam(defaultValue = "0") page: Int, @RequestParam(defaultValue = "10") limit: Int): ResponseEntity<List<UserDTO>> {
-        return ResponseEntity.ok(userService.findAll(PageRequest.of(page, limit, Sort.by("id"))))
-    }
+  @GetMapping
+  fun findAll(
+    @RequestParam(defaultValue = "0") page: Int,
+    @RequestParam(defaultValue = "10") limit: Int
+  ): ResponseEntity<List<UserDTO>> {
+    return ResponseEntity.ok(userService.findAll(PageRequest.of(page, limit, Sort.by("id"))))
+  }
 
-    @GetMapping("/{id}")
-    fun findById(@PathVariable("id") id: Long): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok(userService.findById(id))
-    }
+  @GetMapping("/{id}")
+  fun findById(@PathVariable("id") id: Long): ResponseEntity<UserDTO> {
+    return ResponseEntity.ok(userService.findById(id))
+  }
 
-    @GetMapping("/username/{username}")
-    fun findByUsername(@PathVariable("username") username: String): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok(userService.findByUsername(username))
-    }
+  @GetMapping("/username/{username}")
+  fun findByUsername(@PathVariable("username") username: String): ResponseEntity<UserDTO> {
+    return ResponseEntity.ok(userService.findByUsername(username))
+  }
 
-    @PostMapping("/username/availability")
-    fun usernameAvailability(@Valid @RequestBody request: UsernameAvailabilityRequest): ResponseEntity<AvailabilityDTO> {
-        return ResponseEntity.ok(userService.usernameAvailability(request))
-    }
+  @PostMapping("/username/availability")
+  fun usernameAvailability(
+    @Valid @RequestBody request: UsernameAvailabilityRequest
+  ): ResponseEntity<AvailabilityDTO> {
+    return ResponseEntity.ok(userService.usernameAvailability(request))
+  }
 
-    @PostMapping("/email/availability")
-    fun emailAvailability(@Valid @RequestBody request: EmailAvailabilityRequest): ResponseEntity<AvailabilityDTO> {
-        return ResponseEntity.ok(userService.emailAvailability(request))
-    }
+  @PostMapping("/email/availability")
+  fun emailAvailability(
+    @Valid @RequestBody request: EmailAvailabilityRequest
+  ): ResponseEntity<AvailabilityDTO> {
+    return ResponseEntity.ok(userService.emailAvailability(request))
+  }
 }

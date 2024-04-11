@@ -14,38 +14,38 @@ import java.io.Serial
 import java.io.Serializable
 
 @Entity
-@Table(name = "roles", indexes = [Index(name = "idx_role_name", columnList = "role_name", unique = true)])
+@Table(
+  name = "roles",
+  indexes = [Index(name = "idx_role_name", columnList = "role_name", unique = true)]
+)
 class Role(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
-    var id: Long? = null,
-
-    @Column(name = "role_name", unique = true, nullable = false)
-    @Enumerated(EnumType.STRING)
-    var name: RoleName = RoleName.USER
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "role_id")
+  var id: Long? = null,
+  @Column(name = "role_name", unique = true, nullable = false)
+  @Enumerated(EnumType.STRING)
+  var name: RoleName = RoleName.USER
 ) : Serializable {
-    companion object {
-        @Serial
-        private val serialVersionUID = 3717126169522609755L
-    }
+  companion object {
+    @Serial private val serialVersionUID = 3717126169522609755L
+  }
 
-    constructor(name: RoleName) : this(null, name)
+  constructor(name: RoleName) : this(null, name)
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
-        val role = o as Role
-        return Objects.equal(id, role.id) && name == role.name
-    }
+  override fun equals(o: Any?): Boolean {
+    if (this === o) return true
+    if (o == null || javaClass != o.javaClass) return false
+    val role = o as Role
+    return Objects.equal(id, role.id) && name == role.name
+  }
 
-    override fun hashCode(): Int {
-        return Objects.hashCode(id, name)
-    }
+  override fun hashCode(): Int {
+    return Objects.hashCode(id, name)
+  }
 
-    enum class RoleName {
-        USER,
-        ADMIN
-    }
-
+  enum class RoleName {
+    USER,
+    ADMIN
+  }
 }

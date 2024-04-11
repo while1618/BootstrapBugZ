@@ -17,25 +17,27 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(Path.PROFILE)
 class ProfileController(private val profileService: ProfileService) {
-    @GetMapping
-    fun find(): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok(profileService.find())
-    }
+  @GetMapping
+  fun find(): ResponseEntity<UserDTO> {
+    return ResponseEntity.ok(profileService.find())
+  }
 
-    @PatchMapping
-    fun patch(@Valid @RequestBody patchProfileRequest: PatchProfileRequest): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok(profileService.patch(patchProfileRequest))
-    }
+  @PatchMapping
+  fun patch(@Valid @RequestBody patchProfileRequest: PatchProfileRequest): ResponseEntity<UserDTO> {
+    return ResponseEntity.ok(profileService.patch(patchProfileRequest))
+  }
 
-    @DeleteMapping
-    fun delete(): ResponseEntity<Void> {
-        profileService.delete()
-        return ResponseEntity.noContent().build()
-    }
+  @DeleteMapping
+  fun delete(): ResponseEntity<Void> {
+    profileService.delete()
+    return ResponseEntity.noContent().build()
+  }
 
-    @PatchMapping("/password")
-    fun changePassword(@Valid @RequestBody changePasswordRequest: ChangePasswordRequest): ResponseEntity<Void> {
-        profileService.changePassword(changePasswordRequest)
-        return ResponseEntity.noContent().build()
-    }
+  @PatchMapping("/password")
+  fun changePassword(
+    @Valid @RequestBody changePasswordRequest: ChangePasswordRequest
+  ): ResponseEntity<Void> {
+    profileService.changePassword(changePasswordRequest)
+    return ResponseEntity.noContent().build()
+  }
 }

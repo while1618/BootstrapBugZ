@@ -9,13 +9,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class OnSendJwtEmailListener(
-    private val emailService: EmailService,
-    private val environment: Environment
+  private val emailService: EmailService,
+  private val environment: Environment
 ) : ApplicationListener<OnSendJwtEmail> {
 
-    override fun onApplicationEvent(event: OnSendJwtEmail) {
-        JwtEmailSupplier
-            .supplyEmail(event.purpose)
-            .sendEmail(emailService, environment, event.user, event.token)
-    }
+  override fun onApplicationEvent(event: OnSendJwtEmail) {
+    JwtEmailSupplier.supplyEmail(event.purpose)
+      .sendEmail(emailService, environment, event.user, event.token)
+  }
 }

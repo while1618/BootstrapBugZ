@@ -5,5 +5,5 @@ import org.bootstrapbugz.api.user.model.User
 import org.springframework.core.env.Environment
 
 interface JwtEmail {
-    fun sendEmail(emailService: EmailService, environment: Environment, user: User, token: String)
+  fun sendEmail(emailService: EmailService, environment: Environment, user: User, token: String)
 }
