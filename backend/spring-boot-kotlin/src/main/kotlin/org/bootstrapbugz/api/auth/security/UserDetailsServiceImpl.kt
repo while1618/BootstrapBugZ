@@ -10,19 +10,20 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserDetailsServiceImpl(
-    private val userRepository: UserRepository,
-    private val messageService: MessageService
+  private val userRepository: UserRepository,
+  private val messageService: MessageService
 ) : UserDetailsService {
 
-    @Transactional
-    fun loadUserByUserId(userId: Long): UserDetails =
-        userRepository.findById(userId)
-            .map(UserPrincipal.Companion::create)
-            .orElseThrow { UnauthorizedException(messageService.getMessage("token.invalid")) }
+  @Transactional
+  fun loadUserByUserId(userId: Long): UserDetails =
+    userRepository.findById(userId).map(UserPrincipal.Companion::create).orElseThrow {
+      UnauthorizedException(messageService.getMessage("token.invalid"))
+    }
 
-    @Transactional
-    override fun loadUserByUsername(username: String): UserDetails =
-        userRepository.findByUsernameOrEmail(username, username)
-            .map(UserPrincipal.Companion::create)
-            .orElseThrow { UnauthorizedException(messageService.getMessage("token.invalid")) }
+  @Transactional
+  override fun loadUserByUsername(username: String): UserDetails =
+    userRepository
+      .findByUsernameOrEmail(username, username)
+      .map(UserPrincipal.Companion::create)
+      .orElseThrow { UnauthorizedException(messageService.getMessage("token.invalid")) }
 }

@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController("adminUserController")
 @RequestMapping(Path.ADMIN_USERS)
-class UserController(private val userService: UserService) : CrudController<UserDTO, UserRequest>(userService) {
-    @PatchMapping("/{id}")
-    fun patch(@PathVariable("id") id: Long, @Valid @RequestBody patchUserRequest: PatchUserRequest): ResponseEntity<UserDTO> {
-        return ResponseEntity.ok(userService.patch(id, patchUserRequest))
-    }
+class UserController(private val userService: UserService) :
+  CrudController<UserDTO, UserRequest>(userService) {
+  @PatchMapping("/{id}")
+  fun patch(
+    @PathVariable("id") id: Long,
+    @Valid @RequestBody patchUserRequest: PatchUserRequest
+  ): ResponseEntity<UserDTO> {
+    return ResponseEntity.ok(userService.patch(id, patchUserRequest))
+  }
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class MessageServiceImpl(private val messageSource: MessageSource) : MessageService {
-    override fun getMessage(code: String): String {
-        return messageSource.getMessage(code, null, LocaleContextHolder.getLocale())
-    }
+  override fun getMessage(code: String): String {
+    return messageSource.getMessage(code, null, LocaleContextHolder.getLocale())
+  }
 }

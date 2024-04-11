@@ -7,15 +7,11 @@ import org.bootstrapbugz.api.shared.validator.FieldMatch
 
 @FieldMatch(first = "password", second = "confirmPassword", message = "{passwords.doNotMatch}")
 data class ResetPasswordRequest(
-    @NotBlank(message = "{token.required}")
-    val token: String?,
-    @NotBlank(message = "{password.required}")
-    @field:Pattern(
-        regexp = Regex.PASSWORD,
-        message = "{password.invalid}"
-    )
-    val password: String?,
-    @NotBlank(message = "{password.required}")
-    @field:Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
-    val confirmPassword: String?
+  @NotBlank(message = "{token.required}") val token: String?,
+  @NotBlank(message = "{password.required}")
+  @field:Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+  val password: String?,
+  @NotBlank(message = "{password.required}")
+  @field:Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+  val confirmPassword: String?
 )
