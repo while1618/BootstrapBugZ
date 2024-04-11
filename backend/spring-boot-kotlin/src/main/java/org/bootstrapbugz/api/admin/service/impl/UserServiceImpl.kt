@@ -46,19 +46,19 @@ class UserServiceImpl(
             roles = roleRepository.findAllByNameIn(userRequest.roleNames).toSet()
         )
 
-        return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user))
+        return UserMapper.userToAdminUserDTO(userRepository.save(user))
     }
 
     override fun findAll(pageable: Pageable): List<UserDTO> {
         return userRepository.findAll(pageable).stream()
-            .map(UserMapper.INSTANCE::userToAdminUserDTO)
+            .map(UserMapper::userToAdminUserDTO)
             .toList()
     }
 
     override fun findById(id: Long): UserDTO {
         return userRepository
             .findWithRolesById(id)
-            .map(UserMapper.INSTANCE::userToAdminUserDTO)
+            .map(UserMapper::userToAdminUserDTO)
             .orElseThrow { ResourceNotFoundException(messageService.getMessage("user.notFound")) }
     }
 
@@ -76,7 +76,7 @@ class UserServiceImpl(
             setLock(this, userRequest.lock)
             setRoles(this, userRequest.roleNames)
         }
-        return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user))
+        return UserMapper.userToAdminUserDTO(userRepository.save(user))
     }
 
     override fun patch(id: Long, patchUserRequest: PatchUserRequest): UserDTO {
@@ -93,7 +93,7 @@ class UserServiceImpl(
             patchUserRequest.lock?.let { setLock(this, it) }
             patchUserRequest.roleNames?.let { setRoles(this, it) }
         }
-        return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user))
+        return UserMapper.userToAdminUserDTO(userRepository.save(user))
     }
 
     private fun deleteAuthTokens(userId: Long?) {
