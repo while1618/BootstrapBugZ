@@ -25,7 +25,7 @@ class AccessTokenServiceImpl(
   private val userBlacklistRepository: UserBlacklistRepository,
   private val messageService: MessageService,
   @Value("\${jwt.secret}") private val secret: String,
-  @Value("\${jwt.access-token.duration}") private val tokenDuration: Int
+  @Value("\${jwt.access-token.duration}") private val tokenDuration: Int,
 ) : AccessTokenService {
 
   companion object {
@@ -64,9 +64,10 @@ class AccessTokenServiceImpl(
   private fun isInUserBlacklist(token: String) {
     val userId = getUserId(token)
     val issuedAt = getIssuedAt(token)
-    userBlacklistRepository.findById(userId).let {
-      if (issuedAt.isBefore(it.get().updatedAt) || issuedAt == it.get().updatedAt)
+    userBlacklistRepository.findById(userId).ifPresent {
+      if (issuedAt.isBefore(it.updatedAt) || issuedAt == it.updatedAt) {
         throw UnauthorizedException(messageService.getMessage("token.invalid"))
+      }
     }
   }
 

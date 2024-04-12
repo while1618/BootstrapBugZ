@@ -30,7 +30,7 @@ object AuthUtil {
     return if (ipAddress == null || ipAddress.isEmpty()) request.remoteAddr else ipAddress
   }
 
-  fun getAccessTokenFromRequest(request: HttpServletRequest): String {
+  fun getAccessTokenFromRequest(request: HttpServletRequest): String? {
     return request.getHeader(HttpHeaders.AUTHORIZATION)
   }
 }

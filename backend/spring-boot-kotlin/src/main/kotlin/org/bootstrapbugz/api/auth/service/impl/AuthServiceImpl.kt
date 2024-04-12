@@ -97,14 +97,14 @@ class AuthServiceImpl(
 
   override fun deleteTokens(accessToken: String, ipAddress: String) {
     if (!AuthUtil.isSignedIn()) return
-    val id = AuthUtil.findSignedInUser().id
+    val id = AuthUtil.findSignedInUser().getId()
     refreshTokenService.deleteByUserIdAndIpAddress(id, ipAddress)
     accessTokenService.invalidate(accessToken)
   }
 
   override fun deleteTokensOnAllDevices() {
     if (!AuthUtil.isSignedIn()) return
-    val id = AuthUtil.findSignedInUser().id
+    val id = AuthUtil.findSignedInUser().getId()
     refreshTokenService.deleteAllByUserId(id)
     accessTokenService.invalidateAllByUserId(id)
   }

@@ -49,7 +49,7 @@ class CustomExceptionHandler(private val messageService: MessageService) :
     result.globalErrors.forEach(
       Consumer { error: ObjectError -> errorMessage.addDetails(error.defaultMessage) }
     )
-    return ResponseEntity(errorMessage, setHeaders(), status)
+    return ResponseEntity(errorMessage.toJson(), setHeaders(), status)
   }
 
   private fun createError(
@@ -60,7 +60,7 @@ class CustomExceptionHandler(private val messageService: MessageService) :
     val errorMessage = ErrorMessage(status)
     if (field != null) errorMessage.addDetails(field, message!!)
     else errorMessage.addDetails(message!!)
-    return ResponseEntity(errorMessage, setHeaders(), status)
+    return ResponseEntity(errorMessage.toJson(), setHeaders(), status)
   }
 
   private fun setHeaders(): HttpHeaders {
