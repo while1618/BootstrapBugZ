@@ -1,7 +1,6 @@
 package org.bootstrapbugz.api.shared.payload.dto
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializer
@@ -13,7 +12,7 @@ class ErrorMessage(status: HttpStatus) {
   private val timestamp: LocalDateTime = LocalDateTime.now()
   private val status: Int = status.value()
   private val error: String = status.reasonPhrase
-  private val details: MutableList<Detail> = ArrayList()
+  private val details: MutableList<Detail> = mutableListOf()
 
   fun addDetails(message: String) {
     details.add(Detail(message))
@@ -23,7 +22,7 @@ class ErrorMessage(status: HttpStatus) {
     details.add(Detail(field, message))
   }
 
-  override fun toString(): String {
+  fun toJson(): String {
     return GsonBuilder()
       .setPrettyPrinting()
       .registerTypeAdapter(
@@ -36,10 +35,12 @@ class ErrorMessage(status: HttpStatus) {
       .toJson(this)
   }
 
+  override fun toString(): String {
+    return toJson()
+  }
+
   data class Detail(
     val message: String,
     @JsonInclude(JsonInclude.Include.NON_NULL) val field: String? = null
-  ) {
-    override fun toString(): String = Gson().toJson(this)
-  }
+  )
 }

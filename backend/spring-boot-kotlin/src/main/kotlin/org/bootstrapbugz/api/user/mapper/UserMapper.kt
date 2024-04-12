@@ -41,15 +41,15 @@ object UserMapper {
 
   fun userPrincipalToProfileUserDTO(userPrincipal: UserPrincipal): UserDTO {
     return UserDTO(
-      id = userPrincipal.id,
-      username = userPrincipal.username,
+      id = userPrincipal.getId(),
+      username = userPrincipal.getUsername(),
+      email = userPrincipal.getEmail(),
+      firstName = userPrincipal.getFirstName(),
+      lastName = userPrincipal.getLastName(),
+      createdAt = userPrincipal.getCreatedAt(),
       roleDTOs = setOf(),
       active = false,
       lock = false,
-      email = null,
-      firstName = null,
-      lastName = null,
-      createdAt = null
     )
   }
 
@@ -60,9 +60,9 @@ object UserMapper {
       lastName = user.lastName,
       username = user.username,
       createdAt = user.createdAt,
-      roleDTOs = setOf(),
-      active = false,
-      lock = false,
+      roleDTOs = null,
+      active = null,
+      lock = null,
       email = null,
     )
   }

@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 data class UserPrincipal(
-  val id: Long? = null,
+  private val id: Long? = null,
   private val firstName: String?,
   private val lastName: String?,
   private val username: String?,
@@ -38,6 +38,16 @@ data class UserPrincipal(
       )
     }
   }
+
+  fun getId(): Long? = id
+
+  fun getFirstName(): String? = firstName
+
+  fun getLastName(): String? = lastName
+
+  fun getEmail(): String? = email
+
+  fun getCreatedAt(): LocalDateTime? = createdAt
 
   override fun getUsername(): String? = username
 

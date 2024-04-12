@@ -16,8 +16,8 @@ object JwtUtil {
     return Algorithm.HMAC512(secret.toByteArray())
   }
 
-  fun removeBearer(token: String): String {
-    return token.replace(BEARER, "")
+  fun removeBearer(token: String?): String {
+    return token!!.replace(BEARER, "")
   }
 
   fun isBearer(token: String): Boolean {

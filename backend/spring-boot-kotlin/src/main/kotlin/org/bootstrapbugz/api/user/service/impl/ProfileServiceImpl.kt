@@ -32,7 +32,7 @@ class ProfileServiceImpl(
   }
 
   override fun patch(patchProfileRequest: PatchProfileRequest): UserDTO {
-    val userId = AuthUtil.findSignedInUser().id
+    val userId = AuthUtil.findSignedInUser().getId()
     val user =
       userRepository.findById(userId).orElseThrow {
         UnauthorizedException(messageService.getMessage("token.invalid"))
@@ -68,13 +68,13 @@ class ProfileServiceImpl(
   }
 
   override fun delete() {
-    val userId = AuthUtil.findSignedInUser().id
+    val userId = AuthUtil.findSignedInUser().getId()
     deleteAuthTokens(userId)
     userRepository.deleteById(userId)
   }
 
   override fun changePassword(changePasswordRequest: ChangePasswordRequest) {
-    val userId = AuthUtil.findSignedInUser().id
+    val userId = AuthUtil.findSignedInUser().getId()
     val user =
       userRepository.findById(userId).orElseThrow {
         UnauthorizedException(messageService.getMessage("token.invalid"))
