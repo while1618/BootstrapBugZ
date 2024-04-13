@@ -15,7 +15,7 @@ class FieldMatchImpl : ConstraintValidator<FieldMatch, Any?> {
   }
 
   override fun isValid(obj: Any?, context: ConstraintValidatorContext): Boolean {
-    val wrapper = BeanWrapperImpl(obj)
+    val wrapper = obj?.let { BeanWrapperImpl(it) } ?: return false
     val first = wrapper.getPropertyValue(firstFieldName) as? String
     val second = wrapper.getPropertyValue(secondFieldName) as? String
     return first == null && second == null || first != null && first == second

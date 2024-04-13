@@ -14,11 +14,11 @@ class ErrorMessage(status: HttpStatus) {
   private val error: String = status.reasonPhrase
   private val details: MutableList<Detail> = mutableListOf()
 
-  fun addDetails(message: String) {
+  fun addDetails(message: String?) {
     details.add(Detail(message))
   }
 
-  fun addDetails(field: String, message: String) {
+  fun addDetails(field: String, message: String?) {
     details.add(Detail(field, message))
   }
 
@@ -40,7 +40,7 @@ class ErrorMessage(status: HttpStatus) {
   }
 
   data class Detail(
-    val message: String,
+    val message: String?,
     @JsonInclude(JsonInclude.Include.NON_NULL) val field: String? = null
   )
 }

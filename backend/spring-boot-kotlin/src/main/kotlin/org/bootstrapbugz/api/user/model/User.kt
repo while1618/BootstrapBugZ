@@ -48,10 +48,10 @@ class User(
   var roles: Set<Role> = setOf()
 ) : Serializable {
 
-  override fun equals(o: Any?): Boolean {
-    if (this === o) return true
-    if (o == null || javaClass != o.javaClass) return false
-    val user = o as User
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other == null || javaClass != other.javaClass) return false
+    val user = other as User
     return (active == user.active &&
       lock == user.lock &&
       Objects.equal(id, user.id) &&

@@ -1,6 +1,5 @@
 package org.bootstrapbugz.api.auth.service.impl
 
-import java.lang.Boolean
 import kotlin.RuntimeException
 import kotlin.String
 import org.bootstrapbugz.api.auth.jwt.service.AccessTokenService
@@ -145,8 +144,7 @@ class AuthServiceImpl(
       userRepository
         .findByUsernameOrEmail(request.usernameOrEmail, request.usernameOrEmail)
         .orElseThrow { ResourceNotFoundException(messageService.getMessage("user.notFound")) }
-    if (Boolean.TRUE == user.active)
-      throw ConflictException(messageService.getMessage("user.active"))
+    if (user.active) throw ConflictException(messageService.getMessage("user.active"))
     val token = verificationTokenService.create(user.id)
     verificationTokenService.sendToEmail(user, token)
   }
@@ -156,8 +154,7 @@ class AuthServiceImpl(
       userRepository.findById(JwtUtil.getUserId(verifyEmailRequest.token)).orElseThrow {
         BadRequestException("token", messageService.getMessage("token.invalid"))
       }
-    if (Boolean.TRUE == user.active)
-      throw ConflictException(messageService.getMessage("user.active"))
+    if (user.active) throw ConflictException(messageService.getMessage("user.active"))
     verificationTokenService.check(verifyEmailRequest.token)
     user.active = true
     userRepository.save(user)
