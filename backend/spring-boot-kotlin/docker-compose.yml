@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  bootstrapbugz-api:
-    image: 'bootstrapbugz-api:latest'
+  bootstrapbugz-kotlin-api:
+    image: 'bootstrapbugz-kotlin-api:latest'
     build: .
     ports:
       - '8081:8080'

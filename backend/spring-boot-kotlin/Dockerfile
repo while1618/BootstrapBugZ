@@ -11,6 +11,6 @@ FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar bootstrapbugz-api.jar
+COPY --from=build /app/target/*.jar bootstrapbugz-kotlin-api.jar
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "bootstrapbugz-api.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "bootstrapbugz-kotlin-api.jar"]

@@ -160,6 +160,8 @@
                             <searchRegex>import\s+[^\*\s]+\*;(\r\n|\r|\n)</searchRegex>
                             <replacement>$1</replacement>
                         </replaceRegex>
+                        <endWithNewline/>
+                        <lineEndings>UNIX</lineEndings>
                         <googleJavaFormat>
                             <version>${google-java-format.version}</version>
                         </googleJavaFormat>
@@ -168,6 +170,8 @@
                         <ktfmt>
                             <style>GOOGLE</style>
                         </ktfmt>
+                        <endWithNewline/>
+                        <lineEndings>UNIX</lineEndings>
                     </kotlin>
                 </configuration>
                 <executions>
