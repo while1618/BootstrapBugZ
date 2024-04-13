@@ -1,7 +1,7 @@
 import en from '$lib/i18n/en.json';
-import type { AuthTokensDTO } from '$lib/models/auth/auth-tokens';
-import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex/regex';
+import type { AuthTokens } from '$lib/models/auth/auth-tokens';
 import { makeRequest } from '$lib/server/apis/api';
+import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest, setAccessTokenCookie, setRefreshTokenCookie } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
@@ -33,9 +33,13 @@ export const actions = {
       body: JSON.stringify(signInForm.data),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response)
+      return fail(response.status, {
+        errorMessage: response,
+        usernameOrEmail: signInForm.data.usernameOrEmail,
+      });
 
-    const { accessToken, refreshToken } = response as AuthTokensDTO;
+    const { accessToken, refreshToken } = response as AuthTokens;
     setAccessTokenCookie(cookies, accessToken);
     setRefreshTokenCookie(cookies, refreshToken);
 

@@ -1,16 +1,17 @@
-import type { UserDTO } from '$lib/models/user/user';
+import type { User } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
-import { HttpRequest, removeAuth } from '$lib/server/utils/util';
+import { HttpRequest, isAdmin, removeAuth } from '$lib/server/utils/util';
 import { error, redirect, type NumericRange } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ locals, cookies }) => {
   if (!locals.userId) return { user: null };
+  const accessToken = cookies.get('accessToken');
 
   const response = await makeRequest({
     method: HttpRequest.GET,
     path: `/profile`,
-    auth: cookies.get('accessToken'),
+    auth: accessToken,
   });
 
   if ('error' in response) {
@@ -21,5 +22,5 @@ export const load = (async ({ locals, cookies }) => {
     error(response.status as NumericRange<400, 599>, { message: response.error });
   }
 
-  return { user: response as UserDTO };
+  return { user: response as User, isAdmin: isAdmin(accessToken) };
 }) satisfies LayoutServerLoad;

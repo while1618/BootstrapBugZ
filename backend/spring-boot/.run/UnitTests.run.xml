@@ -1,48 +1,40 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="UnitTests" type="JUnit" factoryName="JUnit">
-    <module name="api"/>
+    <module name="backend"/>
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.user.service.*"/>
+        <option name="PATTERN" value="org.bootstrapbugz.backend.user.service.*"/>
         <option name="ENABLED" value="true"/>
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.auth.service.*"/>
+        <option name="PATTERN" value="org.bootstrapbugz.backend.auth.service.*"/>
         <option name="ENABLED" value="true"/>
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.admin.service.*"/>
+        <option name="PATTERN" value="org.bootstrapbugz.backend.admin.service.*"/>
         <option name="ENABLED" value="true"/>
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.auth.jwt.service.*"/>
+        <option name="PATTERN" value="org.bootstrapbugz.backend.auth.jwt.service.*"/>
         <option name="ENABLED" value="true"/>
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.shared.email.service.*"/>
+        <option name="PATTERN" value="org.bootstrapbugz.backend.shared.email.service.*"/>
         <option name="ENABLED" value="true"/>
       </pattern>
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.shared.message.service.*"/>
+        <option name="PATTERN" value="org.bootstrapbugz.backend.shared.message.service.*"/>
         <option name="ENABLED" value="true"/>
       </pattern>
     </extension>
-    <option name="PACKAGE_NAME" value="org.bootstrapbugz.api"/>
+    <option name="PACKAGE_NAME" value="org.bootstrapbugz.backend"/>
     <option name="MAIN_CLASS_NAME" value=""/>
     <option name="METHOD_NAME" value=""/>
     <option name="TEST_OBJECT" value="pattern"/>
-    <dir value="$PROJECT_DIR$/api/src/test/java/org/bootstrapbugz/api/*/integration"/>
+    <dir value="$PROJECT_DIR$/backend/src/test/java/org/bootstrapbugz/backend/*/integration"/>
     <patterns>
-      <pattern testClass="org.bootstrapbugz.api.user.unit.UserServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.user.unit.ProfileServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.AuthServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.AccessTokenServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.RefreshTokenServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.VerificationTokenServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.auth.unit.ResetPasswordTokenServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.admin.unit.UserServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.shared.unit.EmailServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.api.shared.unit.MessageServiceTest"/>
+      <pattern testClass="org.bootstrapbugz.backend.shared.unit.EmailServiceTest"/>
+      <pattern testClass="org.bootstrapbugz.backend.shared.unit.MessageServiceTest"/>
     </patterns>
     <method v="2">
       <option name="Make" enabled="true"/>

@@ -1,0 +1,9 @@
+package org.bootstrapbugz.backend.auth.jwt.event.email;
+
+import org.bootstrapbugz.backend.shared.email.service.EmailService;
+import org.bootstrapbugz.backend.user.model.User;
+import org.springframework.core.env.Environment;
+
+public interface JwtEmail {
+  void sendEmail(EmailService emailService, Environment environment, User user, String token);
+}

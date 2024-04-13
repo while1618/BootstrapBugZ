@@ -1,23 +1,25 @@
 <script lang="ts">
+  import GuestNavbar from '$lib/components/navbar/guest-navbar.svelte';
+  import UserNavbar from '$lib/components/navbar/user-navbar.svelte';
+  import Loading from '$lib/components/shared/loading.svelte';
   import { userStore } from '$lib/stores/user';
-  import '../app.css';
-
-  import GuestNavbar from '$lib/components/guest-navbar.svelte';
-  import UserNavbar from '$lib/components/user-navbar.svelte';
   import { beforeUpdate } from 'svelte';
+  import '../app.css';
   import type { LayoutData } from './$types';
 
   export let data: LayoutData;
+
   beforeUpdate(() => {
     userStore.set(data.user);
   });
 </script>
 
-<div class="flex h-screen flex-col overflow-hidden bg-base-200">
-  {#if data.user}
-    <UserNavbar />
-  {:else}
-    <GuestNavbar />
-  {/if}
+{#if !data.user}
+  <GuestNavbar />
   <slot />
-</div>
+{:else if !$userStore}
+  <Loading />
+{:else}
+  <UserNavbar isAdmin={data.isAdmin} />
+  <slot />
+{/if}

@@ -1,12 +1,12 @@
 import en from '$lib/i18n/en.json';
-import type { AvailabilityDTO } from '$lib/models/shared/availability';
+import type { Availability } from '$lib/models/shared/availability';
+import { makeRequest } from '$lib/server/apis/api';
 import {
   EMAIL_REGEX,
   FIRST_AND_LAST_NAME_REGEX,
   PASSWORD_REGEX,
   USERNAME_REGEX,
-} from '$lib/regex/regex';
-import { makeRequest } from '$lib/server/apis/api';
+} from '$lib/server/regex/regex';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
@@ -30,7 +30,7 @@ const signUpSchema = z
           body: JSON.stringify({ username: value }),
         });
         if ('error' in response) return false;
-        return (response as AvailabilityDTO).available;
+        return (response as Availability).available;
       }, en['username.exists']),
     email: z
       .string()
@@ -42,7 +42,7 @@ const signUpSchema = z
           body: JSON.stringify({ email: value }),
         });
         if ('error' in response) return false;
-        return (response as AvailabilityDTO).available;
+        return (response as Availability).available;
       }, en['email.exists']),
     password: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
     confirmPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),

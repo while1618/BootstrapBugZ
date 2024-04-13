@@ -1,112 +1,133 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import Modal from '$lib/components/modal.svelte';
+  import Pagination from '$lib/components/shared/pagination.svelte';
   import CheckCircleIcon from '$lib/icons/check-circle.svelte';
   import CloseCircleIcon from '$lib/icons/close-circle.svelte';
   import LockCloseIcon from '$lib/icons/lock-close.svelte';
   import LockOpenIcon from '$lib/icons/lock-open.svelte';
   import PencilIcon from '$lib/icons/pencil.svelte';
   import TrashIcon from '$lib/icons/trash.svelte';
-  import type { UserDTO } from '$lib/models/user/user';
+  import type { User } from '$lib/models/user/user';
   import type { PageServerData } from './$types';
+  import ActivateModal from './activate-modal.svelte';
+  import DeleteModal from './delete-modal.svelte';
+  import LockModal from './lock-modal.svelte';
+  import RoleModal from './role-modal.svelte';
 
   export let data: PageServerData;
-  let dialog: HTMLDialogElement;
-  let selectedUser: UserDTO;
+  let activateDialog: HTMLDialogElement;
+  let lockDialog: HTMLDialogElement;
+  let deleteDialog: HTMLDialogElement;
+  let rolesDialog: HTMLDialogElement;
+  let selectedUser: User;
+
+  const tableFieldsLabels = [
+    'ID',
+    'First name',
+    'Last name',
+    'Username',
+    'Email',
+    'Created at',
+    'Active',
+    'Lock',
+    'Roles',
+    '',
+  ];
+
+  const showModal = (dialog: HTMLDialogElement, user: User) => {
+    dialog.showModal();
+    selectedUser = user;
+  };
+
+  $: totalPages = Math.ceil(data.users.total / data.pageable.size);
+  $: currentPage = data.pageable.page;
 </script>
 
-<div class="overflow-x-auto p-10">
-  <table class="table table-zebra w-full">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Activated</th>
-        <th>Locked</th>
-        <th>Created at</th>
-        <th>Roles</th>
-        <th />
-      </tr>
-    </thead>
-    <tbody>
-      {#each data.users as user}
-        <tr>
-          <th>{user.id}</th>
-          <th>{user.firstName}</th>
-          <th>{user.lastName}</th>
-          <th>{user.username}</th>
-          <th>{user.email}</th>
-          <th>
-            <form
-              method="POST"
-              action="?/{user.active ? 'deactivate' : 'activate'}&id={user.id}"
-              use:enhance
-            >
-              {#if user.active}
-                <button class=" text-green-600 dark:text-green-500">
-                  <CheckCircleIcon />
-                </button>
-              {:else}
-                <button class="text-red-600 dark:text-red-500">
-                  <CloseCircleIcon />
-                </button>
-              {/if}
-            </form>
-          </th>
-          <th>
-            <form method="POST" action="?/{user.lock ? 'unlock' : 'lock'}&id={user.id}" use:enhance>
-              {#if user.lock}
-                <button class="text-red-600 dark:text-red-500">
-                  <LockCloseIcon />
-                </button>
-              {:else}
-                <button class="text-blue-600 dark:text-blue-500">
-                  <LockOpenIcon />
-                </button>
-              {/if}
-            </form>
-          </th>
-          <th>{user.createdAt}</th>
-          <th>
-            {#if user.roles}
-              <div class="flex gap-2">
-                {#each user.roles as role}
-                  {`${role.name} `}
-                {/each}
-                <button on:click={() => alert('modal')} class="text-blue-600 dark:text-blue-500">
-                  <PencilIcon />
-                </button>
-              </div>
-            {/if}
-          </th>
-          <th>
-            <button
-              class="text-red-600 dark:text-red-500"
-              on:click|stopPropagation={() => {
-                dialog.showModal();
-                selectedUser = user;
-              }}
-            >
-              <TrashIcon />
-            </button>
-          </th>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
-</div>
+<section class="py-10 md:py-16">
+  <div class="flex items-center justify-center">
+    <div class="card mx-auto w-auto bg-base-200 p-8 shadow-xl 2xl:w-2/3">
+      <div class="flex flex-col gap-8">
+        <h1 class="text-center text-3xl font-bold">Users</h1>
+        <table class="table table-zebra">
+          <thead>
+            <tr>
+              {#each tableFieldsLabels as label}
+                <th>{label}</th>
+              {/each}
+            </tr>
+          </thead>
+          <tbody>
+            {#each data.users.data as user}
+              <tr>
+                <th>{user.id}</th>
+                <th>{user.firstName}</th>
+                <th>{user.lastName}</th>
+                <th>{user.username}</th>
+                <th>{user.email}</th>
+                <th>{new Date(user.createdAt).toLocaleString()}</th>
+                <th>
+                  <button
+                    class={user.active
+                      ? 'text-green-600 dark:text-green-500'
+                      : 'text-red-600 dark:text-red-500'}
+                    on:click|stopPropagation={() => showModal(activateDialog, user)}
+                  >
+                    {#if user.active}
+                      <CheckCircleIcon />
+                    {:else}
+                      <CloseCircleIcon />
+                    {/if}
+                  </button>
+                </th>
+                <th>
+                  <button
+                    class={user.lock
+                      ? 'text-red-600 dark:text-red-500'
+                      : 'text-blue-600 dark:text-blue-500'}
+                    on:click|stopPropagation={() => showModal(lockDialog, user)}
+                  >
+                    {#if user.lock}
+                      <LockCloseIcon />
+                    {:else}
+                      <LockOpenIcon />
+                    {/if}
+                  </button>
+                </th>
+                <th>
+                  {#if user.roles}
+                    <div class="flex gap-2">
+                      {#each user.roles as role}
+                        <span class="badge badge-neutral">{role.name}</span>
+                      {/each}
+                      <button
+                        class="text-blue-600 dark:text-blue-500"
+                        on:click|stopPropagation={() => showModal(rolesDialog, user)}
+                      >
+                        <PencilIcon />
+                      </button>
+                    </div>
+                  {/if}
+                </th>
+                <th>
+                  <button
+                    class="text-red-600 dark:text-red-500"
+                    on:click|stopPropagation={() => showModal(deleteDialog, user)}
+                  >
+                    <TrashIcon />
+                  </button>
+                </th>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+        <div class="flex items-end justify-end">
+          <Pagination {currentPage} {totalPages} size={data.pageable.size} />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<Modal bind:dialog title="Delete user">
-  <svelte:fragment slot="body">
-    <p class="py-4">Are you sure you want to delete {selectedUser?.username}?</p>
-  </svelte:fragment>
-  <svelte:fragment slot="actions">
-    <form method="POST" action="?/delete&id={selectedUser?.id}" use:enhance>
-      <button type="submit" class="btn text-error" on:click={() => dialog.close()}>Delete</button>
-      <button type="button" class="btn" on:click={() => dialog.close()}>Cancel</button>
-    </form>
-  </svelte:fragment>
-</Modal>
+<ActivateModal bind:activateDialog {selectedUser} />
+<LockModal bind:lockDialog {selectedUser} />
+<DeleteModal bind:deleteDialog {selectedUser} />
+<RoleModal bind:rolesDialog {selectedUser} {data} />

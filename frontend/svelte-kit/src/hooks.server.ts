@@ -1,5 +1,5 @@
 import { JWT_SECRET } from '$env/static/private';
-import type { AuthTokensDTO } from '$lib/models/auth/auth-tokens';
+import type { AuthTokens } from '$lib/models/auth/auth-tokens';
 import type { JwtPayload } from '$lib/models/auth/jwt-payload';
 import { RoleName } from '$lib/models/user/role';
 import { makeRequest } from '$lib/server/apis/api';
@@ -17,8 +17,10 @@ const protectedRoutes = ['/profile', '/admin', '/auth/sign-out', '/auth/sign-out
 export const handle = (async ({ event, resolve }) => {
   await tryToGetSignedInUser(event.cookies, event.locals);
   checkProtectedRoutes(event.url, event.cookies);
-
-  return resolve(event);
+  const theme = event.cookies.get('theme');
+  return await resolve(event, {
+    transformPageChunk: ({ html }) => html.replace('data-theme=""', `data-theme="${theme}"`),
+  });
 }) satisfies Handle;
 
 async function tryToGetSignedInUser(cookies: Cookies, locals: App.Locals): Promise<void> {
@@ -43,7 +45,7 @@ async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<
     if ('error' in response) {
       removeAuth(cookies, locals);
     } else {
-      const { accessToken, refreshToken } = response as AuthTokensDTO;
+      const { accessToken, refreshToken } = response as AuthTokens;
       setAccessTokenCookie(cookies, accessToken);
       setRefreshTokenCookie(cookies, refreshToken);
       const { iss } = jwt.decode(accessToken) as JwtPayload;

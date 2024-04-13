@@ -2,11 +2,8 @@
   import { page } from '$app/stores';
 </script>
 
-<div class="hero min-h-screen">
-  <div class="hero-content text-center">
-    <div class="max-w-md">
-      <h1 class="text-5xl font-bold">{$page.status}</h1>
-      <p class="py-6">{$page?.error?.message}</p>
-    </div>
-  </div>
+<div class="flex h-screen flex-col items-center justify-center">
+  <h1 class="text-9xl font-bold text-primary">{$page.status}</h1>
+  <p class="mb-8 text-lg">{$page.error?.message}</p>
+  <a href="/" class="btn btn-primary">Go Home</a>
 </div>

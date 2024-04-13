@@ -14,7 +14,7 @@ on:
 
 env:
   JWT_SECRET: ${{secrets.JWT_SECRET}}
-  API_URL: ${{secrets.API_URL}}
+  BACKEND_URL: ${{secrets.BACKEND_URL}}
 
 jobs:
   build:
