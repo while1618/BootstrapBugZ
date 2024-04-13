@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 data class UserPrincipal(
-  private val id: Long? = null,
+  private val id: Long,
   private val firstName: String?,
   private val lastName: String?,
   private val username: String?,
@@ -23,9 +23,9 @@ data class UserPrincipal(
     private const val serialVersionUID = 5954870422841373076L
 
     fun create(user: User): UserPrincipal {
-      val authorities = user.roles?.map { SimpleGrantedAuthority(it.name.name) }
+      val authorities = user.roles.map { SimpleGrantedAuthority(it.name.name) }
       return UserPrincipal(
-        user.id,
+        user.id!!,
         user.firstName,
         user.lastName,
         user.username,
@@ -39,7 +39,7 @@ data class UserPrincipal(
     }
   }
 
-  fun getId(): Long? = id
+  fun getId(): Long = id
 
   fun getFirstName(): String? = firstName
 

@@ -29,22 +29,22 @@ class UserServiceImpl(
   private val bCryptPasswordEncoder: PasswordEncoder,
   private val messageService: MessageService
 ) : UserService {
-  override fun create(userRequest: UserRequest): UserDTO {
-    if (userRepository.existsByUsername(userRequest.username))
+  override fun create(request: UserRequest): UserDTO {
+    if (userRepository.existsByUsername(request.username))
       throw ConflictException(messageService.getMessage("username.exists"))
-    if (userRepository.existsByEmail(userRequest.email))
+    if (userRepository.existsByEmail(request.email))
       throw ConflictException(messageService.getMessage("email.exists"))
 
     val user =
       User(
-        firstName = userRequest.firstName,
-        lastName = userRequest.lastName,
-        username = userRequest.username,
-        email = userRequest.email,
-        password = bCryptPasswordEncoder.encode(userRequest.password),
-        active = userRequest.active,
-        lock = userRequest.lock,
-        roles = roleRepository.findAllByNameIn(userRequest.roleNames).toSet()
+        firstName = request.firstName,
+        lastName = request.lastName,
+        username = request.username,
+        email = request.email,
+        password = bCryptPasswordEncoder.encode(request.password),
+        active = request.active,
+        lock = request.lock,
+        roles = roleRepository.findAllByNameIn(request.roleNames).toSet()
       )
 
     return UserMapper.userToAdminUserDTO(userRepository.save(user))
@@ -60,20 +60,20 @@ class UserServiceImpl(
     }
   }
 
-  override fun update(id: Long, userRequest: UserRequest): UserDTO {
+  override fun update(id: Long, request: UserRequest): UserDTO {
     val user =
       userRepository.findWithRolesById(id).orElseThrow {
         NoSuchElementException("No user found with ID $id")
       }
     user.apply {
-      firstName = userRequest.firstName
-      lastName = userRequest.lastName
-      setUsername(this, userRequest.username)
-      setEmail(this, userRequest.email)
-      setPassword(this, userRequest.password)
-      setActive(this, userRequest.active)
-      setLock(this, userRequest.lock)
-      setRoles(this, userRequest.roleNames)
+      firstName = request.firstName
+      lastName = request.lastName
+      setUsername(this, request.username)
+      setEmail(this, request.email)
+      setPassword(this, request.password)
+      setActive(this, request.active)
+      setLock(this, request.lock)
+      setRoles(this, request.roleNames)
     }
     return UserMapper.userToAdminUserDTO(userRepository.save(user))
   }

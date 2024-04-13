@@ -18,10 +18,11 @@ data class UserDTO(
   @JsonProperty("roles") @SerializedName("roles") val roleDTOs: Set<RoleDTO>?,
   val createdAt: LocalDateTime?
 ) {
-  override fun equals(o: Any?): Boolean {
-    if (this === o) return true
-    if (o == null || this::class != o::class) return false
-    val (id1, firstName1, lastName1, username1, email1, active1, lock1, roleDTOs1) = o as UserDTO
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other == null || this::class != other::class) return false
+    val (id1, firstName1, lastName1, username1, email1, active1, lock1, roleDTOs1) =
+      other as UserDTO
     return (active === active1 &&
       lock === lock1 &&
       Objects.equal(id, id1) &&
