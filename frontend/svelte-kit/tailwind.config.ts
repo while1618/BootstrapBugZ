@@ -1,5 +1,7 @@
-/** @type {import('tailwindcss').Config} */
-const config = {
+import daisyui from 'daisyui';
+import type { Config } from 'tailwindcss';
+
+export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
     container: {
@@ -15,10 +17,8 @@ const config = {
       sans: ['Rowdies', 'sans-serif'],
     },
   },
-  plugins: [require('daisyui')],
+  plugins: [daisyui],
   daisyui: {
     themes: ['dark', 'cupcake'],
   },
-};
-
-module.exports = config;
+} as Config;

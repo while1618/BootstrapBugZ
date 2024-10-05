@@ -5,10 +5,11 @@ const config: PlaywrightTestConfig = {
     command: 'pnpm run build && pnpm run preview',
     port: 4173,
   },
-  testDir: 'tests',
   use: {
     browserName: 'firefox',
   },
+  testDir: 'tests',
+  testMatch: /(.+\.)?(test|spec)\.[jt]s/,
 };
 
 export default config;

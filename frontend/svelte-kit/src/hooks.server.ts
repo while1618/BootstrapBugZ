@@ -28,7 +28,7 @@ async function tryToGetSignedInUser(cookies: Cookies, locals: App.Locals): Promi
     const accessToken = cookies.get('accessToken') ?? '';
     const payload = jwt.verify(accessToken, JWT_SECRET) as JwtPayload;
     locals.userId = payload.iss;
-  } catch (error) {
+  } catch (_) {
     await tryToRefreshToken(cookies, locals);
   }
 }

@@ -1,7 +1,7 @@
 import { JWT_SECRET } from '$env/static/private';
 import en from '$lib/i18n/en.json';
-import { PASSWORD_REGEX } from '$lib/server/regex/regex';
 import { makeRequest } from '$lib/server/apis/api';
+import { PASSWORD_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
@@ -18,7 +18,7 @@ const resetPasswordSchema = z
       try {
         jwt.verify(token, JWT_SECRET);
         return true;
-      } catch (e) {
+      } catch (_) {
         return false;
       }
     }, en['token.invalid']),

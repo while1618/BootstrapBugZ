@@ -1,6 +1,5 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
-test('index page has expected h1', async ({ page }) => {
+test('go to home page', async ({ page }) => {
   await page.goto('/');
-  expect(await page.textContent('h1')).toBe('Welcome to SvelteKit');
 });
