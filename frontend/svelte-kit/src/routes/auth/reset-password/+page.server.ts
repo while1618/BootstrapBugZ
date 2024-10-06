@@ -1,5 +1,5 @@
 import { JWT_SECRET } from '$env/static/private';
-import en from '$lib/i18n/en.json';
+import * as m from '$lib/paraglide/messages.js';
 import { makeRequest } from '$lib/server/apis/api';
 import { PASSWORD_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest } from '$lib/server/utils/util';
@@ -21,15 +21,15 @@ const resetPasswordSchema = z
       } catch (_) {
         return false;
       }
-    }, en['token.invalid']),
-    password: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
-    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
+    }, m.tokenInvalid()),
+    password: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
+    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
       ctx.addIssue({
         code: 'custom',
-        message: en['password.doNotMatch'],
+        message: m.passwordDoNotMatch(),
         path: ['confirmPassword'],
       });
     }

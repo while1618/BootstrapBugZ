@@ -1,4 +1,4 @@
-import en from '$lib/i18n/en.json';
+import * as m from '$lib/paraglide/messages.js';
 import { makeRequest } from '$lib/server/apis/api';
 import { EMAIL_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest } from '$lib/server/utils/util';
@@ -11,7 +11,7 @@ export const load = (({ locals }) => {
 }) satisfies PageServerLoad;
 
 const forgotPasswordSchema = z.object({
-  email: z.string().regex(EMAIL_REGEX, { message: en['email.invalid'] }),
+  email: z.string().regex(EMAIL_REGEX, { message: m.emailInvalid() }),
 });
 
 export const actions = {

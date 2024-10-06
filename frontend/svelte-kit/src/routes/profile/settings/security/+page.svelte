@@ -3,41 +3,44 @@
   import FormControl from '$lib/components/form/form-control.svelte';
   import FormErrors from '$lib/components/form/form-errors.svelte';
   import Modal from '$lib/components/shared/modal.svelte';
+  import * as m from '$lib/paraglide/messages.js';
   import type { ActionData } from './$types';
 
   export let form: ActionData;
   let dialog: HTMLDialogElement;
 </script>
 
-<div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
+<div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
   <div class="flex flex-col gap-2">
-    <h1 class="mb-6 text-center text-3xl font-bold">Security</h1>
+    <h1 class="mb-6 text-center text-3xl font-bold">{m.security()}</h1>
     <form class="flex flex-col gap-4" method="POST" action="?/changePassword" use:enhance>
-      <FormControl {form} type="password" id="oldPassword" label="Old password" />
-      <FormControl {form} type="password" id="newPassword" label="New password" />
-      <FormControl {form} type="password" id="confirmNewPassword" label="Confirm new password" />
+      <FormControl {form} type="password" id="oldPassword" label={m.oldPassword()} />
+      <FormControl {form} type="password" id="newPassword" label={m.newPassword()} />
+      <FormControl {form} type="password" id="confirmNewPassword" label={m.confirmNewPassword()} />
       <FormErrors {form} />
-      <button class="btn btn-primary">Change password</button>
+      <button class="btn btn-primary">{m.changePassword()}</button>
     </form>
     <div class="divider" />
     <a href="/auth/sign-out-from-all-devices" class="btn btn-primary">
-      Sign out form all devices
+      {m.signOutFromAllDevices()}
     </a>
     <div class="divider" />
     <button class="btn btn-error" on:click|stopPropagation={() => dialog.showModal()}>
-      Delete Account
+      {m.deleteAccount()}
     </button>
   </div>
 </div>
 
 <Modal bind:dialog title="Delete account">
   <svelte:fragment slot="body">
-    <p class="py-4">Are you sure you want to delete account?</p>
+    <p class="py-4">{m.deleteAccountConfirmation()}</p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
     <form method="POST" action="?/delete" use:enhance>
-      <button type="submit" class="btn text-error" on:click={() => dialog.close()}>Delete</button>
-      <button type="button" class="btn" on:click={() => dialog.close()}>Cancel</button>
+      <button type="submit" class="btn text-error" on:click={() => dialog.close()}>
+        {m.myDelete()}
+      </button>
+      <button type="button" class="btn" on:click={() => dialog.close()}>{m.cancel()}</button>
     </form>
   </svelte:fragment>
 </Modal>

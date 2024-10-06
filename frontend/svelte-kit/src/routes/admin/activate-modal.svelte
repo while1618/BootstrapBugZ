@@ -2,6 +2,7 @@
   import { enhance } from '$app/forms';
   import Modal from '$lib/components/shared/modal.svelte';
   import type { User } from '$lib/models/user/user';
+  import * as m from '$lib/paraglide/messages.js';
 
   export let activateDialog: HTMLDialogElement;
   export let selectedUser: User;
@@ -9,11 +10,11 @@
 
 <Modal
   bind:dialog={activateDialog}
-  title={selectedUser?.active ? 'Deactivate user' : 'Activate user'}
+  title={selectedUser?.active ? m.deactivateUser() : m.activateUser()}
 >
   <svelte:fragment slot="body">
     <p class="py-4">
-      Are you sure you want to {selectedUser?.active ? 'deactivate' : 'activate'}
+      {m.areYouSureYouWantTo()} {selectedUser?.active ? m.deactivate() : m.activate()}
       <strong>{selectedUser?.username}</strong>?
     </p>
   </svelte:fragment>
@@ -25,9 +26,11 @@
     >
       <div class="flex gap-2">
         <button type="submit" class="btn btn-neutral" on:click={() => activateDialog.close()}>
-          {selectedUser?.active ? 'Deactivate' : 'Activate'}
+          {selectedUser?.active ? m.deactivate() : m.activate()}
         </button>
-        <button type="button" class="btn" on:click={() => activateDialog.close()}>Cancel</button>
+        <button type="button" class="btn" on:click={() => activateDialog.close()}>
+          {m.cancel()}
+        </button>
       </div>
     </form>
   </svelte:fragment>

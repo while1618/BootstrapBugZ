@@ -7,6 +7,7 @@
   import PencilIcon from '$lib/icons/pencil.svelte';
   import TrashIcon from '$lib/icons/trash.svelte';
   import type { User } from '$lib/models/user/user';
+  import * as m from '$lib/paraglide/messages.js';
   import type { PageServerData } from './$types';
   import ActivateModal from './activate-modal.svelte';
   import DeleteModal from './delete-modal.svelte';
@@ -21,15 +22,15 @@
   let selectedUser: User;
 
   const tableFieldsLabels = [
-    'ID',
-    'First name',
-    'Last name',
-    'Username',
-    'Email',
-    'Created at',
-    'Active',
-    'Lock',
-    'Roles',
+    m.id(),
+    m.firstName(),
+    m.lastName(),
+    m.username(),
+    m.email(),
+    m.createdAt(),
+    m.active(),
+    m.lock(),
+    m.roles(),
     '',
   ];
 
@@ -44,10 +45,10 @@
 
 <section class="py-10 md:py-16">
   <div class="flex items-center justify-center">
-    <div class="card mx-auto w-auto bg-base-200 p-8 shadow-xl 2xl:w-2/3">
+    <div class="card bg-base-200 mx-auto w-auto p-8 shadow-xl 2xl:w-2/3">
       <div class="flex flex-col gap-8">
-        <h1 class="text-center text-3xl font-bold">Users</h1>
-        <table class="table table-zebra">
+        <h1 class="text-center text-3xl font-bold">{m.users()}</h1>
+        <table class="table-zebra table">
           <thead>
             <tr>
               {#each tableFieldsLabels as label}

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import FormControl from '$lib/components/form/form-control.svelte';
-  import en from '$lib/i18n/en.json';
+  import * as m from '$lib/paraglide/messages.js';
   import type { ActionData } from './$types';
 
   export let form: ActionData;
@@ -9,38 +9,39 @@
 
 <section class="py-10 md:py-16">
   <div class="container">
-    <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
+    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
       <div class="flex flex-col gap-8">
-        <h1 class="text-center text-3xl font-bold">Sign in</h1>
+        <h1 class="text-center text-3xl font-bold">{m.signIn()}</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/signIn" use:enhance>
-          <FormControl {form} type="text" id="usernameOrEmail" label="Username or email" />
-          <FormControl {form} type="password" id="password" label="Password" />
+          <FormControl {form} type="text" id="usernameOrEmail" label={m.usernameOrEmail()} />
+          <FormControl {form} type="password" id="password" label={m.password()} />
 
           {#if form?.errorMessage}
             {#each form.errorMessage.details as error}
               <div class="flex gap-4">
                 <p class="label-text text-error">{error.message}</p>
-                {#if error.message === en['user.notActivated']}
+                {#if error.message === 'User not activated.'}
                   <a
                     href="/auth/resend-confirmation-email?usernameOrEmail={form.usernameOrEmail}"
                     class="label-text text-info hover:underline"
                   >
-                    Resend confirmation email
+                    {m.resendConfirmationEmail()}
                   </a>
                 {/if}
               </div>
             {/each}
           {/if}
 
-          <button class="btn btn-primary">Sign in</button>
+          <button class="btn btn-primary">{m.signIn()}</button>
           <div class="flex gap-4">
             <span class="label-text">
-              Don't have an account? <a href="/auth/sign-up" class="text-info hover:underline">
-                Sign up
+              {m.dontHaveAnAccount()}
+              <a href="/auth/sign-up" class="text-info hover:underline">
+                {m.signUp()}
               </a>
             </span>
-            <a href="/auth/forgot-password" class="label-text ml-auto text-info hover:underline">
-              Forgot password?
+            <a href="/auth/forgot-password" class="label-text text-info ml-auto hover:underline">
+              {m.forgotPassword()}
             </a>
           </div>
         </form>

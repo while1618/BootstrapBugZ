@@ -1,5 +1,5 @@
-import en from '$lib/i18n/en.json';
 import type { Availability } from '$lib/models/shared/availability';
+import * as m from '$lib/paraglide/messages.js';
 import { makeRequest } from '$lib/server/apis/api';
 import {
   EMAIL_REGEX,
@@ -18,11 +18,11 @@ export const load = (({ locals }) => {
 
 const signUpSchema = z
   .object({
-    firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: en['firstName.invalid'] }),
-    lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: en['lastName.invalid'] }),
+    firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.firstNameInvalid() }),
+    lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.lastNameInvalid() }),
     username: z
       .string()
-      .regex(USERNAME_REGEX, { message: en['username.invalid'] })
+      .regex(USERNAME_REGEX, { message: m.usernameInvalid() })
       .refine(async (value) => {
         const response = await makeRequest({
           method: HttpRequest.POST,
@@ -31,10 +31,10 @@ const signUpSchema = z
         });
         if ('error' in response) return false;
         return (response as Availability).available;
-      }, en['username.exists']),
+      }, m.usernameExists()),
     email: z
       .string()
-      .regex(EMAIL_REGEX, { message: en['email.invalid'] })
+      .regex(EMAIL_REGEX, { message: m.emailInvalid() })
       .refine(async (value) => {
         const response = await makeRequest({
           method: HttpRequest.POST,
@@ -43,15 +43,15 @@ const signUpSchema = z
         });
         if ('error' in response) return false;
         return (response as Availability).available;
-      }, en['email.exists']),
-    password: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
-    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
+      }, m.emailExists()),
+    password: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
+    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
       ctx.addIssue({
         code: 'custom',
-        message: en['password.doNotMatch'],
+        message: m.passwordDoNotMatch(),
         path: ['confirmPassword'],
       });
     }

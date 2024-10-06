@@ -2,15 +2,16 @@
   import { enhance } from '$app/forms';
   import Modal from '$lib/components/shared/modal.svelte';
   import type { User } from '$lib/models/user/user';
+  import * as m from '$lib/paraglide/messages.js';
 
   export let lockDialog: HTMLDialogElement;
   export let selectedUser: User;
 </script>
 
-<Modal bind:dialog={lockDialog} title={selectedUser?.lock ? 'Unlock user' : 'Lock user'}>
+<Modal bind:dialog={lockDialog} title={selectedUser?.lock ? m.unlockUser() : m.lockUser()}>
   <svelte:fragment slot="body">
     <p class="py-4">
-      Are you sure you want to {selectedUser?.lock ? 'unlock' : 'lock'}
+      {m.areYouSureYouWantTo()} {selectedUser?.lock ? m.unlock() : m.lock()}
       <strong>{selectedUser?.username}</strong>?
     </p>
   </svelte:fragment>
@@ -22,9 +23,9 @@
     >
       <div class="flex gap-2">
         <button type="submit" class="btn btn-neutral" on:click={() => lockDialog.close()}>
-          {selectedUser?.lock ? 'Unlock' : 'Lock'}
+          {selectedUser?.lock ? m.unlock() : m.lock()}
         </button>
-        <button type="button" class="btn" on:click={() => lockDialog.close()}>Cancel</button>
+        <button type="button" class="btn" on:click={() => lockDialog.close()}>{m.cancel()}</button>
       </div>
     </form>
   </svelte:fragment>

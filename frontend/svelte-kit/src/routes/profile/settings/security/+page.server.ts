@@ -1,4 +1,4 @@
-import en from '$lib/i18n/en.json';
+import * as m from '$lib/paraglide/messages.js';
 import { makeRequest } from '$lib/server/apis/api';
 import { PASSWORD_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest, removeAuth } from '$lib/server/utils/util';
@@ -7,15 +7,15 @@ import { z } from 'zod';
 
 const changePasswordSchema = z
   .object({
-    oldPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
-    newPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
-    confirmNewPassword: z.string().regex(PASSWORD_REGEX, { message: en['password.invalid'] }),
+    oldPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
+    newPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
+    confirmNewPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
   })
   .superRefine(({ newPassword, confirmNewPassword }, ctx) => {
     if (newPassword !== confirmNewPassword) {
       ctx.addIssue({
         code: 'custom',
-        message: en['password.doNotMatch'],
+        message: m.passwordDoNotMatch(),
         path: ['confirmNewPassword'],
       });
     }
