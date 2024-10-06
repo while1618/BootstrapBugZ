@@ -10,7 +10,10 @@
 
 <Modal bind:dialog={deleteDialog} title={m.deleteUser()}>
   <svelte:fragment slot="body">
-    <p class="py-4">{m.areYouSureYouWantTo()} {m.myDelete()} <strong>{selectedUser?.username}</strong>?</p>
+    <p class="py-4">
+      {m.areYouSureYouWantTo()}
+      {m.myDelete()} <strong>{selectedUser?.username}</strong>?
+    </p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
     <form method="POST" action="?/delete&id={selectedUser?.id}" use:enhance>
@@ -18,7 +21,8 @@
         <button type="submit" class="btn btn-error" on:click={() => deleteDialog.close()}>
           {m.myDelete()}
         </button>
-        <button type="button" class="btn" on:click={() => deleteDialog.close()}>{m.cancel()}</button>
+        <button type="button" class="btn" on:click={() => deleteDialog.close()}>{m.cancel()}</button
+        >
       </div>
     </form>
   </svelte:fragment>

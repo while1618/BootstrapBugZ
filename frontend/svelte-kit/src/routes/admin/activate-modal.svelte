@@ -14,7 +14,8 @@
 >
   <svelte:fragment slot="body">
     <p class="py-4">
-      {m.areYouSureYouWantTo()} {selectedUser?.active ? m.deactivate() : m.activate()}
+      {m.areYouSureYouWantTo()}
+      {selectedUser?.active ? m.deactivate() : m.activate()}
       <strong>{selectedUser?.username}</strong>?
     </p>
   </svelte:fragment>

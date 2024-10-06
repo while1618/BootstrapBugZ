@@ -11,7 +11,8 @@
 <Modal bind:dialog={lockDialog} title={selectedUser?.lock ? m.unlockUser() : m.lockUser()}>
   <svelte:fragment slot="body">
     <p class="py-4">
-      {m.areYouSureYouWantTo()} {selectedUser?.lock ? m.unlock() : m.lock()}
+      {m.areYouSureYouWantTo()}
+      {selectedUser?.lock ? m.unlock() : m.lock()}
       <strong>{selectedUser?.username}</strong>?
     </p>
   </svelte:fragment>

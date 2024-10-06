@@ -11,7 +11,7 @@
   export let isAdmin: boolean;
 </script>
 
-<header class="bg-base-100 sticky top-0 z-50 py-2">
+<header class="sticky top-0 z-50 bg-base-100 py-2">
   <div class="container">
     <div class="navbar px-0">
       <div class="navbar-start">
@@ -27,7 +27,7 @@
             </div>
           </div>
           <ul
-            class="menu-compact menu dropdown-content rounded-box bg-base-200 mt-3 w-52 p-2 shadow"
+            class="menu-compact menu dropdown-content mt-3 w-52 rounded-box bg-base-200 p-2 shadow"
           >
             <li><a href="/profile"><ProfileIcon /> {m.profile()}</a></li>
             {#if isAdmin}

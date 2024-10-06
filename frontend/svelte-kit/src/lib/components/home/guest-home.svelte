@@ -4,7 +4,7 @@
 
 <section>
   <div class="container">
-    <div class="hero rounded-box bg-primary h-96 overflow-hidden md:h-[500px]">
+    <div class="hero h-96 overflow-hidden rounded-box bg-primary md:h-[500px]">
       <div class="hero-overlay"></div>
       <div class="hero-content text-center">
         <div class="max-w-lg">
