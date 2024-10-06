@@ -8,21 +8,22 @@
   export let selectedUser: User;
 </script>
 
-<Modal bind:dialog={deleteDialog} title={m.deleteUser()}>
+<Modal bind:dialog={deleteDialog} title={m.admin_deleteUser()}>
   <svelte:fragment slot="body">
     <p class="py-4">
-      {m.areYouSureYouWantTo()}
-      {m.myDelete()} <strong>{selectedUser?.username}</strong>?
+      {m.admin_deleteUserConfirmation()}
+      <strong>{selectedUser?.username}</strong>?
     </p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
     <form method="POST" action="?/delete&id={selectedUser?.id}" use:enhance>
       <div class="flex gap-2">
         <button type="submit" class="btn btn-error" on:click={() => deleteDialog.close()}>
-          {m.myDelete()}
+          {m.general_delete()}
         </button>
-        <button type="button" class="btn" on:click={() => deleteDialog.close()}>{m.cancel()}</button
-        >
+        <button type="button" class="btn" on:click={() => deleteDialog.close()}>
+          {m.general_cancel()}
+        </button>
       </div>
     </form>
   </svelte:fragment>

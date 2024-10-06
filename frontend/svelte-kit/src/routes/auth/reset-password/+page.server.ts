@@ -21,15 +21,15 @@ const resetPasswordSchema = z
       } catch (_) {
         return false;
       }
-    }, m.tokenInvalid()),
-    password: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
-    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
+    }, m.auth_invalidToken()),
+    password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
       ctx.addIssue({
         code: 'custom',
-        message: m.passwordDoNotMatch(),
+        message: m.auth_passwordsDoNotMatch(),
         path: ['confirmPassword'],
       });
     }

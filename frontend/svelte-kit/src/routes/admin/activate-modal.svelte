@@ -10,12 +10,13 @@
 
 <Modal
   bind:dialog={activateDialog}
-  title={selectedUser?.active ? m.deactivateUser() : m.activateUser()}
+  title={selectedUser?.active ? m.admin_deactivateUser() : m.admin_activateUser()}
 >
   <svelte:fragment slot="body">
     <p class="py-4">
-      {m.areYouSureYouWantTo()}
-      {selectedUser?.active ? m.deactivate() : m.activate()}
+      {selectedUser?.active
+        ? m.admin_deactivateUserConfirmation()
+        : m.admin_activateUserConfirmation()}
       <strong>{selectedUser?.username}</strong>?
     </p>
   </svelte:fragment>
@@ -27,10 +28,10 @@
     >
       <div class="flex gap-2">
         <button type="submit" class="btn btn-neutral" on:click={() => activateDialog.close()}>
-          {selectedUser?.active ? m.deactivate() : m.activate()}
+          {selectedUser?.active ? m.admin_deactivate() : m.admin_activate()}
         </button>
         <button type="button" class="btn" on:click={() => activateDialog.close()}>
-          {m.cancel()}
+          {m.general_cancel()}
         </button>
       </div>
     </form>

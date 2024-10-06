@@ -26,26 +26,32 @@
         {form}
         type="text"
         id="firstName"
-        label={m.firstName()}
+        label={m.profile_firstName()}
         value={$userStore?.firstName}
       />
       <FormControl
         {form}
         type="text"
         id="lastName"
-        label={m.lastName()}
+        label={m.profile_lastName()}
         value={$userStore?.lastName}
       />
       <FormControl
         {form}
         type="text"
         id="username"
-        label={m.username()}
+        label={m.profile_username()}
         value={$userStore?.username}
       />
-      <FormControl {form} type="email" id="email" label={m.email()} value={$userStore?.email} />
+      <FormControl
+        {form}
+        type="email"
+        id="email"
+        label={m.profile_email()}
+        value={$userStore?.email}
+      />
       <FormErrors {form} />
-      <button class="btn btn-primary">{m.update()}</button>
+      <button class="btn btn-primary">{m.general_update()}</button>
     </form>
   </div>
 </div>

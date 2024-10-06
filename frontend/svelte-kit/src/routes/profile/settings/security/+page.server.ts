@@ -7,15 +7,15 @@ import { z } from 'zod';
 
 const changePasswordSchema = z
   .object({
-    oldPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
-    newPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
-    confirmNewPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
+    oldPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
+    newPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
+    confirmNewPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
   })
   .superRefine(({ newPassword, confirmNewPassword }, ctx) => {
     if (newPassword !== confirmNewPassword) {
       ctx.addIssue({
         code: 'custom',
-        message: m.passwordDoNotMatch(),
+        message: m.profile_passwordsDoNotMatch(),
         path: ['confirmNewPassword'],
       });
     }

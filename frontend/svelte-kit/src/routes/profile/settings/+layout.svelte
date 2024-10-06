@@ -15,7 +15,7 @@
           class:tab-active={$page.url.pathname.includes('/personal')}
         >
           <ProfileIcon />
-          {m.personalInformation()}
+          {m.profile_personalInformation()}
         </a>
         <a
           href="/profile/settings/security"
@@ -23,7 +23,7 @@
           class:tab-active={$page.url.pathname.includes('/security')}
         >
           <LockCloseIcon />
-          {m.security()}
+          {m.profile_security()}
         </a>
       </div>
       <slot />

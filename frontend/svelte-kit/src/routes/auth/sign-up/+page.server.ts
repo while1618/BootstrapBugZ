@@ -18,11 +18,11 @@ export const load = (({ locals }) => {
 
 const signUpSchema = z
   .object({
-    firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.firstNameInvalid() }),
-    lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.lastNameInvalid() }),
+    firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_invalidFirstName() }),
+    lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_invalidLastName() }),
     username: z
       .string()
-      .regex(USERNAME_REGEX, { message: m.usernameInvalid() })
+      .regex(USERNAME_REGEX, { message: m.auth_invalidUsername() })
       .refine(async (value) => {
         const response = await makeRequest({
           method: HttpRequest.POST,
@@ -31,10 +31,10 @@ const signUpSchema = z
         });
         if ('error' in response) return false;
         return (response as Availability).available;
-      }, m.usernameExists()),
+      }, m.auth_usernameExists()),
     email: z
       .string()
-      .regex(EMAIL_REGEX, { message: m.emailInvalid() })
+      .regex(EMAIL_REGEX, { message: m.auth_invalidEmail() })
       .refine(async (value) => {
         const response = await makeRequest({
           method: HttpRequest.POST,
@@ -43,15 +43,15 @@ const signUpSchema = z
         });
         if ('error' in response) return false;
         return (response as Availability).available;
-      }, m.emailExists()),
-    password: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
-    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
+      }, m.auth_emailExists()),
+    password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
       ctx.addIssue({
         code: 'custom',
-        message: m.passwordDoNotMatch(),
+        message: m.auth_passwordsDoNotMatch(),
         path: ['confirmPassword'],
       });
     }

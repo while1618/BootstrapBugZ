@@ -16,7 +16,7 @@
       </div>
       <div class="px-6 py-4">
         <p class="text-base">
-          {m.description()}
+          {m.profile_bio()}
         </p>
       </div>
     </div>

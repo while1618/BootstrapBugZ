@@ -11,7 +11,7 @@ export const load = (({ locals }) => {
 }) satisfies PageServerLoad;
 
 const forgotPasswordSchema = z.object({
-  email: z.string().regex(EMAIL_REGEX, { message: m.emailInvalid() }),
+  email: z.string().regex(EMAIL_REGEX, { message: m.auth_invalidEmail() }),
 });
 
 export const actions = {

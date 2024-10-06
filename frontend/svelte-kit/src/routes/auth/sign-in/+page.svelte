@@ -11,10 +11,10 @@
   <div class="container">
     <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
       <div class="flex flex-col gap-8">
-        <h1 class="text-center text-3xl font-bold">{m.signIn()}</h1>
+        <h1 class="text-center text-3xl font-bold">{m.auth_signIn()}</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/signIn" use:enhance>
-          <FormControl {form} type="text" id="usernameOrEmail" label={m.usernameOrEmail()} />
-          <FormControl {form} type="password" id="password" label={m.password()} />
+          <FormControl {form} type="text" id="usernameOrEmail" label={m.auth_usernameOrEmail()} />
+          <FormControl {form} type="password" id="password" label={m.auth_password()} />
 
           {#if form?.errorMessage}
             {#each form.errorMessage.details as error}
@@ -25,23 +25,23 @@
                     href="/auth/resend-confirmation-email?usernameOrEmail={form.usernameOrEmail}"
                     class="label-text text-info hover:underline"
                   >
-                    {m.resendConfirmationEmail()}
+                    {m.auth_resendConfirmationEmail()}
                   </a>
                 {/if}
               </div>
             {/each}
           {/if}
 
-          <button class="btn btn-primary">{m.signIn()}</button>
+          <button class="btn btn-primary">{m.auth_signIn()}</button>
           <div class="flex gap-4">
             <span class="label-text">
-              {m.dontHaveAnAccount()}
+              {m.auth_doNotHaveAnAccount()}
               <a href="/auth/sign-up" class="text-info hover:underline">
-                {m.signUp()}
+                {m.auth_signUp()}
               </a>
             </span>
             <a href="/auth/forgot-password" class="label-text ml-auto text-info hover:underline">
-              {m.forgotPassword()}
+              {m.auth_forgotPassword()}
             </a>
           </div>
         </form>

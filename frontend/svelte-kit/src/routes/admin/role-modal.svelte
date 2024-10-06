@@ -2,8 +2,8 @@
   import { enhance } from '$app/forms';
   import Modal from '$lib/components/shared/modal.svelte';
   import type { User } from '$lib/models/user/user';
-  import type { PageServerData } from './$types';
   import * as m from '$lib/paraglide/messages.js';
+  import type { PageServerData } from './$types';
 
   export let rolesDialog: HTMLDialogElement;
   export let selectedUser: User;
@@ -12,7 +12,7 @@
 
 <Modal bind:dialog={rolesDialog} title="Change roles">
   <svelte:fragment slot="body">
-    <p class="py-4">{m.selectRolesFor()} <strong>{selectedUser?.username}</strong>:</p>
+    <p class="py-4">{m.admin_selectUserRoles()} <strong>{selectedUser?.username}</strong></p>
     <form id="roleForm" method="POST" action="?/roles&id={selectedUser?.id}" use:enhance>
       <div class="flex flex-col gap-2">
         {#each data.roles as role}
@@ -33,8 +33,10 @@
       class="btn btn-neutral"
       on:click={() => rolesDialog.close()}
     >
-      {m.save()}
+      {m.general_save()}
     </button>
-    <button type="button" class="btn" on:click={() => rolesDialog.close()}>{m.cancel()}</button>
+    <button type="button" class="btn" on:click={() => rolesDialog.close()}>
+      {m.general_cancel()}
+    </button>
   </svelte:fragment>
 </Modal>

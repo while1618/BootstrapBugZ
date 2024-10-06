@@ -16,9 +16,9 @@ const signInSchema = z.object({
     .string()
     .refine(
       (value) => USERNAME_REGEX.test(value) || EMAIL_REGEX.test(value),
-      m.usernameOrEmailInvalid(),
+      m.auth_invalidUsernameOrEmail(),
     ),
-  password: z.string().regex(PASSWORD_REGEX, { message: m.passwordInvalid() }),
+  password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
 });
 
 export const actions = {

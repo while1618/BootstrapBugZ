@@ -10,7 +10,7 @@
 <div class="gap-2">
   {#if currentPage > 1}
     <a class="btn btn-ghost" href="{$page.route.id}?page={currentPage - 1}&size={size}">
-      {m.previous()}
+      {m.general_previous()}
     </a>
   {/if}
   {#each [2, 1] as i}
@@ -30,7 +30,7 @@
   {/each}
   {#if currentPage < totalPages}
     <a class="btn btn-ghost" href="{$page.route.id}?page={currentPage + 1}&size={size}">
-      {m.next()}
+      {m.general_next()}
     </a>
   {/if}
 </div>

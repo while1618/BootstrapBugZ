@@ -9,8 +9,8 @@
   type Language = 'en' | 'sr';
 
   const labels = {
-    en: `🇬🇧 ${m.english()}`,
-    sr: `🇷🇸 ${m.serbian()}`,
+    en: `🇬🇧 ${m.language_english()}`,
+    sr: `🇷🇸 ${m.language_serbian()}`,
   };
 
   const changeLanguage = (target: EventTarget & HTMLSelectElement) => {

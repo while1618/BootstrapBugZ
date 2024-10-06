@@ -22,15 +22,15 @@
   let selectedUser: User;
 
   const tableFieldsLabels = [
-    m.id(),
-    m.firstName(),
-    m.lastName(),
-    m.username(),
-    m.email(),
-    m.createdAt(),
-    m.active(),
-    m.lock(),
-    m.roles(),
+    m.admin_userId(),
+    m.admin_userFirstName(),
+    m.admin_userLastName(),
+    m.admin_userUsername(),
+    m.admin_userEmail(),
+    m.admin_userCreatedAt(),
+    m.admin_userActive(),
+    m.admin_userLock(),
+    m.admin_userRoles(),
     '',
   ];
 
@@ -47,7 +47,7 @@
   <div class="flex items-center justify-center">
     <div class="card mx-auto w-auto bg-base-200 p-8 shadow-xl 2xl:w-2/3">
       <div class="flex flex-col gap-8">
-        <h1 class="text-center text-3xl font-bold">{m.users()}</h1>
+        <h1 class="text-center text-3xl font-bold">{m.admin_users()}</h1>
         <table class="table table-zebra">
           <thead>
             <tr>

@@ -6,10 +6,10 @@ import { fail, type Actions } from '@sveltejs/kit';
 import { z } from 'zod';
 
 const updateProfileSchema = z.object({
-  firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.firstNameInvalid() }),
-  lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.lastNameInvalid() }),
-  username: z.string().regex(USERNAME_REGEX, { message: m.usernameInvalid() }),
-  email: z.string().regex(EMAIL_REGEX, { message: m.emailInvalid() }),
+  firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_invalidFirstName() }),
+  lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_invalidLastName() }),
+  username: z.string().regex(USERNAME_REGEX, { message: m.profile_invalidUsername() }),
+  email: z.string().regex(EMAIL_REGEX, { message: m.profile_invalidEmail() }),
 });
 
 export const actions = {
