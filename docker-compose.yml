@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   bootstrapbugz-backend:
     image: "bootstrapbugz-backend:latest"

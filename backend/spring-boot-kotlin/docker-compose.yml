@@ -1,11 +1,9 @@
-version: '3'
-
 services:
   bootstrapbugz-kotlin-api:
-    image: 'bootstrapbugz-kotlin-api:latest'
+    image: "bootstrapbugz-kotlin-api:latest"
     build: .
     ports:
-      - '8081:8080'
+      - "8081:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/bootstrapbugz
       SPRING_DATASOURCE_USERNAME: postgres
@@ -18,18 +16,18 @@ services:
       - redis
 
   postgres:
-    image: 'postgres'
+    image: "postgres"
     ports:
-      - '5433:5432'
+      - "5433:5432"
     environment:
       POSTGRES_DB: bootstrapbugz
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
 
   redis:
-    image: 'redis'
+    image: "redis"
     ports:
-      - '6380:6379'
+      - "6380:6379"
     command: redis-server --requirepass root
     environment:
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
