@@ -14,15 +14,15 @@
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">{m.auth_signUp()}</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/signUp" use:enhance>
-          <FormControl {form} type="text" id="firstName" label={m.auth_firstName()} />
-          <FormControl {form} type="text" id="lastName" label={m.auth_lastName()} />
-          <FormControl {form} type="text" id="username" label={m.auth_username()} />
-          <FormControl {form} type="email" id="email" label={m.auth_email()} />
-          <FormControl {form} type="password" id="password" label={m.auth_password()} />
+          <FormControl {form} type="text" name="firstName" label={m.auth_firstName()} />
+          <FormControl {form} type="text" name="lastName" label={m.auth_lastName()} />
+          <FormControl {form} type="text" name="username" label={m.auth_username()} />
+          <FormControl {form} type="email" name="email" label={m.auth_email()} />
+          <FormControl {form} type="password" name="password" label={m.auth_password()} />
           <FormControl
             {form}
             type="password"
-            id="confirmPassword"
+            name="confirmPassword"
             label={m.auth_confirmPassword()}
           />
           <FormErrors {form} />

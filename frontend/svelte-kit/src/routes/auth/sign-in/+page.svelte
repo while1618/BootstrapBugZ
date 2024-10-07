@@ -13,8 +13,8 @@
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">{m.auth_signIn()}</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/signIn" use:enhance>
-          <FormControl {form} type="text" id="usernameOrEmail" label={m.auth_usernameOrEmail()} />
-          <FormControl {form} type="password" id="password" label={m.auth_password()} />
+          <FormControl {form} type="text" name="usernameOrEmail" label={m.auth_usernameOrEmail()} />
+          <FormControl {form} type="password" name="password" label={m.auth_password()} />
 
           {#if form?.errorMessage}
             {#each form.errorMessage.details as error}

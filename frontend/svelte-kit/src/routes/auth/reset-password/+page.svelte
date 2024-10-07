@@ -21,11 +21,11 @@
           action="?/resetPassword&token={token}"
           use:enhance
         >
-          <FormControl {form} type="password" id="password" label={m.auth_password()} />
+          <FormControl {form} type="password" name="password" label={m.auth_password()} />
           <FormControl
             {form}
             type="password"
-            id="confirmPassword"
+            name="confirmPassword"
             label={m.auth_confirmPassword()}
           />
           <FormErrors {form} />

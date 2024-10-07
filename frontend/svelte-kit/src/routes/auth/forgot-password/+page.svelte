@@ -14,7 +14,7 @@
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">{m.auth_forgotPassword()}</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/forgotPassword" use:enhance>
-          <FormControl {form} type="email" id="email" label={m.auth_email()} />
+          <FormControl {form} type="email" name="email" label={m.auth_email()} />
           <FormErrors {form} />
           <button class="btn btn-primary">{m.general_send()}</button>
         </form>

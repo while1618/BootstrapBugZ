@@ -25,28 +25,28 @@
       <FormControl
         {form}
         type="text"
-        id="firstName"
+        name="firstName"
         label={m.profile_firstName()}
         value={$userStore?.firstName}
       />
       <FormControl
         {form}
         type="text"
-        id="lastName"
+        name="lastName"
         label={m.profile_lastName()}
         value={$userStore?.lastName}
       />
       <FormControl
         {form}
         type="text"
-        id="username"
+        name="username"
         label={m.profile_username()}
         value={$userStore?.username}
       />
       <FormControl
         {form}
         type="email"
-        id="email"
+        name="email"
         label={m.profile_email()}
         value={$userStore?.email}
       />
