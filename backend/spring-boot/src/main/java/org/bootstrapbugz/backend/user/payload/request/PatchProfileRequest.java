@@ -7,7 +7,7 @@ import org.bootstrapbugz.backend.shared.constants.Regex;
 
 @Builder
 public record PatchProfileRequest(
-    @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{firstName.invalid}") String firstName,
-    @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{lastName.invalid}") String lastName,
-    @Pattern(regexp = Regex.USERNAME, message = "{username.invalid}") String username,
-    @Email(message = "{email.invalid}", regexp = Regex.EMAIL) String email) {}
+    @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{user.firstNameInvalid}") String firstName,
+    @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{user.lastNameInvalid}") String lastName,
+    @Pattern(regexp = Regex.USERNAME, message = "{user.usernameInvalid}") String username,
+    @Email(message = "{user.emailInvalid}", regexp = Regex.EMAIL) String email) {}

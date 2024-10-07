@@ -67,7 +67,7 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
     if (userInBlacklist.isEmpty()) return;
     if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt())
         || issuedAt.equals(userInBlacklist.get().getUpdatedAt()))
-      throw new BadRequestException("token", messageService.getMessage("token.invalid"));
+      throw new BadRequestException("token", messageService.getMessage("auth.tokenInvalid"));
   }
 
   @Override

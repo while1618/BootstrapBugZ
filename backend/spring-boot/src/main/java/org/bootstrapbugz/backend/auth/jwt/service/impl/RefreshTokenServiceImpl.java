@@ -64,7 +64,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   private void isInRefreshTokenStore(String token) {
     if (!refreshTokenStoreRepository.existsById(token))
-      throw new BadRequestException("token", messageService.getMessage("token.invalid"));
+      throw new BadRequestException("token", messageService.getMessage("auth.tokenInvalid"));
   }
 
   @Override

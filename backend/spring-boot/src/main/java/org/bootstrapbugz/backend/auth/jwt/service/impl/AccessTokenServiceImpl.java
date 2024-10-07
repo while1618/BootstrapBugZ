@@ -66,7 +66,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
   private void isInAccessTokenBlacklist(String token) {
     if (accessTokenBlacklistRepository.existsById(token))
-      throw new UnauthorizedException(messageService.getMessage("token.invalid"));
+      throw new UnauthorizedException(messageService.getMessage("auth.tokenInvalid"));
   }
 
   private void isInUserBlacklist(String token) {
@@ -76,7 +76,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     if (userInBlacklist.isEmpty()) return;
     if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt())
         || issuedAt.equals(userInBlacklist.get().getUpdatedAt()))
-      throw new UnauthorizedException(messageService.getMessage("token.invalid"));
+      throw new UnauthorizedException(messageService.getMessage("auth.tokenInvalid"));
   }
 
   @Override

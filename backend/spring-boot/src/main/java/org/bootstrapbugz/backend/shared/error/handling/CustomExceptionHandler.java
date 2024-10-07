@@ -1,14 +1,14 @@
 package org.bootstrapbugz.backend.shared.error.handling;
 
 import jakarta.annotation.Nonnull;
-import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.backend.shared.error.exception.ConflictException;
 import org.bootstrapbugz.backend.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.backend.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.backend.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.backend.shared.message.service.MessageService;
-import org.bootstrapbugz.backend.shared.payload.dto.ErrorMessage;
+import org.bootstrapbugz.backend.shared.error.ErrorMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -28,6 +28,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@Slf4j
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   private final MessageService messageService;
@@ -38,24 +39,22 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
-      MethodArgumentNotValidException ex,
+      @Nonnull MethodArgumentNotValidException ex,
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
+    log.error(ex.getMessage(), ex);
     final var status = (HttpStatus) statusCode;
     final var errorMessage = new ErrorMessage(status);
     final var result = ex.getBindingResult();
-    result
-        .getFieldErrors()
-        .forEach(error -> errorMessage.addDetails(error.getField(), error.getDefaultMessage()));
-    result.getGlobalErrors().forEach(error -> errorMessage.addDetails(error.getDefaultMessage()));
+    result.getFieldErrors().forEach(error -> errorMessage.addCode(error.getDefaultMessage()));
+    result.getGlobalErrors().forEach(error -> errorMessage.addCode(error.getDefaultMessage()));
     return new ResponseEntity<>(errorMessage, setHeaders(), status);
   }
 
-  private ResponseEntity<Object> createError(HttpStatus status, String message, String field) {
+  private ResponseEntity<Object> createError(HttpStatus status, String code) {
     final var errorMessage = new ErrorMessage(status);
-    if (field != null) errorMessage.addDetails(field, message);
-    else errorMessage.addDetails(message);
+    errorMessage.addCode(code);
     return new ResponseEntity<>(errorMessage, setHeaders(), status);
   }
 
@@ -67,90 +66,95 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({BadRequestException.class})
   public ResponseEntity<Object> handleBadRequestException(BadRequestException ex) {
-    return createError(ex.getStatus(), ex.getMessage(), ex.getField());
+    log.error(ex.getMessage(), ex);
+    return createError(ex.getStatus(), ex.getMessage());
   }
 
   @ExceptionHandler({UnauthorizedException.class})
   public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
-    return createError(ex.getStatus(), ex.getMessage(), null);
+    log.error(ex.getMessage(), ex);
+    return createError(ex.getStatus(), ex.getMessage());
   }
 
   @ExceptionHandler({ForbiddenException.class})
   public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex) {
-    return createError(ex.getStatus(), ex.getMessage(), null);
+    log.error(ex.getMessage(), ex);
+    return createError(ex.getStatus(), ex.getMessage());
   }
 
   @ExceptionHandler({AccessDeniedException.class})
   public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
-    return createError(HttpStatus.FORBIDDEN, ex.getMessage(), null);
+    log.error(ex.getMessage(), ex);
+    return createError(HttpStatus.FORBIDDEN, ex.getMessage());
   }
 
   @ExceptionHandler({ResourceNotFoundException.class})
   public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
-    return createError(ex.getStatus(), ex.getMessage(), null);
+    log.error(ex.getMessage(), ex);
+    return createError(ex.getStatus(), ex.getMessage());
   }
 
   @ExceptionHandler({ConflictException.class})
   public ResponseEntity<Object> handleConflictException(ConflictException ex) {
-    return createError(ex.getStatus(), ex.getMessage(), ex.getField());
+    log.error(ex.getMessage(), ex);
+    return createError(ex.getStatus(), ex.getMessage());
   }
 
   @ExceptionHandler({AuthenticationException.class})
   public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+    log.error(ex.getMessage(), ex);
     if (ex instanceof DisabledException)
-      return createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.notActive"), null);
+      return createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.notActive"));
     else if (ex instanceof LockedException)
-      return createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.lock"), null);
-    else
-      return createError(HttpStatus.UNAUTHORIZED, messageService.getMessage("auth.invalid"), null);
+      return createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.lock"));
+    else return createError(HttpStatus.UNAUTHORIZED, messageService.getMessage("auth.invalid"));
   }
 
   @ExceptionHandler({Exception.class})
   public ResponseEntity<Object> handleGlobalException(Exception ex) {
-    return createError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null);
+    log.error(ex.getMessage(), ex);
+    return createError(
+        HttpStatus.INTERNAL_SERVER_ERROR, messageService.getMessage("server.internalError"));
   }
 
   @Override
   protected ResponseEntity<Object> handleMissingServletRequestParameter(
-      MissingServletRequestParameterException ex,
+      @Nonnull MissingServletRequestParameterException ex,
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
+    log.error(ex.getMessage(), ex);
     return createError(
-        (HttpStatus) statusCode, ex.getParameterName() + " parameter is missing", null);
+        (HttpStatus) statusCode, messageService.getMessage("request.parameterMissing"));
   }
 
   @Override
   protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
-      HttpRequestMethodNotSupportedException ex,
+      @Nonnull HttpRequestMethodNotSupportedException ex,
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
-    final var builder = new StringBuilder();
-    builder.append(ex.getMethod());
-    builder.append(" method is not supported for this request. Supported methods are ");
-    Objects.requireNonNull(ex.getSupportedHttpMethods())
-        .forEach(t -> builder.append(t).append(" "));
-    return createError((HttpStatus) statusCode, builder.toString(), null);
+    log.error(ex.getMessage(), ex);
+    return createError(
+        (HttpStatus) statusCode, messageService.getMessage("request.methodNotSupported"));
   }
 
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
-      HttpMessageNotReadableException ex,
+      @Nonnull HttpMessageNotReadableException ex,
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
-    return createError((HttpStatus) statusCode, ex.getMostSpecificCause().getMessage(), null);
+    log.error(ex.getMessage(), ex);
+    return createError(
+        (HttpStatus) statusCode, messageService.getMessage("request.messageNotReadable"));
   }
 
   @ExceptionHandler({MethodArgumentTypeMismatchException.class})
   public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
       MethodArgumentTypeMismatchException ex) {
+    log.error(ex.getMessage(), ex);
     return createError(
-        HttpStatus.BAD_REQUEST,
-        ex.getName()
-            + " should be of type "
-            + Objects.requireNonNull(ex.getRequiredType()).getName(),
-        null);
+        HttpStatus.BAD_REQUEST, messageService.getMessage("request.parameterTypeMismatch"));
   }
 }

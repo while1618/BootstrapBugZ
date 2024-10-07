@@ -54,7 +54,7 @@ public class ProfileServiceImpl implements ProfileService {
         userRepository
             .findById(userId)
             .orElseThrow(
-                () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
+                () -> new UnauthorizedException(messageService.getMessage("auth.tokenInvalid")));
 
     if (patchProfileRequest.firstName() != null) user.setFirstName(patchProfileRequest.firstName());
     if (patchProfileRequest.lastName() != null) user.setLastName(patchProfileRequest.lastName());
@@ -72,7 +72,7 @@ public class ProfileServiceImpl implements ProfileService {
   private void setUsername(User user, String username) {
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
-      throw new ConflictException("username", messageService.getMessage("username.exists"));
+      throw new ConflictException("username", messageService.getMessage("user.usernameExists"));
 
     user.setUsername(username);
   }
@@ -80,7 +80,7 @@ public class ProfileServiceImpl implements ProfileService {
   private void setEmail(User user, String email) {
     if (user.getEmail().equals(email)) return;
     if (userRepository.existsByEmail(email))
-      throw new ConflictException("email", messageService.getMessage("email.exists"));
+      throw new ConflictException("email", messageService.getMessage("user.emailExists"));
 
     user.setEmail(email);
     user.setActive(false);
@@ -103,10 +103,10 @@ public class ProfileServiceImpl implements ProfileService {
         userRepository
             .findById(userId)
             .orElseThrow(
-                () -> new UnauthorizedException(messageService.getMessage("token.invalid")));
+                () -> new UnauthorizedException(messageService.getMessage("auth.tokenInvalid")));
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.currentPassword(), user.getPassword()))
       throw new BadRequestException(
-          "currentPassword", messageService.getMessage("currentPassword.wrong"));
+          "currentPassword", messageService.getMessage("user.currentPasswordWrong"));
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
     deleteAuthTokens(userId);
     userRepository.save(user);

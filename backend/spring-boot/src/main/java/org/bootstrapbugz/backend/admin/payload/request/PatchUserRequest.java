@@ -9,14 +9,14 @@ import org.bootstrapbugz.backend.shared.validator.FieldMatch;
 import org.bootstrapbugz.backend.user.model.Role.RoleName;
 
 @Builder
-@FieldMatch(first = "password", second = "confirmPassword", message = "{passwords.doNotMatch}")
+@FieldMatch(first = "password", second = "confirmPassword", message = "{user.passwordsDoNotMatch}")
 public record PatchUserRequest(
-    @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{firstName.invalid}") String firstName,
-    @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{lastName.invalid}") String lastName,
-    @Pattern(regexp = Regex.USERNAME, message = "{username.invalid}") String username,
-    @Email(message = "{email.invalid}", regexp = Regex.EMAIL) String email,
-    @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}") String password,
-    @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}") String confirmPassword,
+    @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{user.firstNameInvalid}") String firstName,
+    @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{user.lastNameInvalid}") String lastName,
+    @Pattern(regexp = Regex.USERNAME, message = "{user.usernameInvalid}") String username,
+    @Email(message = "{user.emailInvalid}", regexp = Regex.EMAIL) String email,
+    @Pattern(regexp = Regex.PASSWORD, message = "{user.passwordInvalid}") String password,
+    @Pattern(regexp = Regex.PASSWORD, message = "{user.passwordInvalid}") String confirmPassword,
     Boolean active,
     Boolean lock,
     Set<RoleName> roleNames) {}

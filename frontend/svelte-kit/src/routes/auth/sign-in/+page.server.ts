@@ -17,9 +17,9 @@ function createSignInSchema() {
       .string()
       .refine(
         (value) => USERNAME_REGEX.test(value) || EMAIL_REGEX.test(value),
-        m.auth_invalidUsernameOrEmail(),
+        m.auth_usernameOrEmailInvalid(),
       ),
-    password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+    password: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
   });
 }
 
