@@ -9,10 +9,10 @@ function createUpdateProfileSchema() {
   return z.object({
     firstName: z
       .string()
-      .regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_invalidFirstName() }),
-    lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_invalidLastName() }),
-    username: z.string().regex(USERNAME_REGEX, { message: m.profile_invalidUsername() }),
-    email: z.string().regex(EMAIL_REGEX, { message: m.profile_invalidEmail() }),
+      .regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_firstNameInvalid() }),
+    lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_lastNameInvalid() }),
+    username: z.string().regex(USERNAME_REGEX, { message: m.profile_usernameInvalid() }),
+    email: z.string().regex(EMAIL_REGEX, { message: m.profile_emailInvalid() }),
   });
 }
 

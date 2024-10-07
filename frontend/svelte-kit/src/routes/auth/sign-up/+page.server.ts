@@ -21,11 +21,11 @@ function createSignUpSchema() {
     .object({
       firstName: z
         .string()
-        .regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_invalidFirstName() }),
-      lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_invalidLastName() }),
+        .regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_firstNameInvalid() }),
+      lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_lastNameInvalid() }),
       username: z
         .string()
-        .regex(USERNAME_REGEX, { message: m.auth_invalidUsername() })
+        .regex(USERNAME_REGEX, { message: m.auth_usernameInvalid() })
         .refine(async (value) => {
           const response = await makeRequest({
             method: HttpRequest.POST,
@@ -37,7 +37,7 @@ function createSignUpSchema() {
         }, m.auth_usernameExists()),
       email: z
         .string()
-        .regex(EMAIL_REGEX, { message: m.auth_invalidEmail() })
+        .regex(EMAIL_REGEX, { message: m.auth_emailInvalid() })
         .refine(async (value) => {
           const response = await makeRequest({
             method: HttpRequest.POST,
@@ -47,8 +47,8 @@ function createSignUpSchema() {
           if ('error' in response) return false;
           return (response as Availability).available;
         }, m.auth_emailExists()),
-      password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
-      confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+      password: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
+      confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
     })
     .superRefine(({ password, confirmPassword }, ctx) => {
       if (password !== confirmPassword) {

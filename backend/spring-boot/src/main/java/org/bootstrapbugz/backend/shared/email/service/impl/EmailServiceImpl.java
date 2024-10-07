@@ -26,8 +26,8 @@ public class EmailServiceImpl implements EmailService {
       helper.setSubject(subject);
       helper.setText(body, true);
       mailSender.send(mimeMessage);
-    } catch (MessagingException e) {
-      log.error(e.getMessage());
+    } catch (MessagingException ex) {
+      log.error(ex.getMessage(), ex);
     }
   }
 }
