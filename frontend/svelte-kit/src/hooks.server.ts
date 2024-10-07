@@ -1,4 +1,5 @@
 import { JWT_SECRET } from '$env/static/private';
+import { i18n } from '$lib/i18n';
 import type { AuthTokens } from '$lib/models/auth/auth-tokens';
 import type { JwtPayload } from '$lib/models/auth/jwt-payload';
 import { RoleName } from '$lib/models/user/role';
@@ -10,28 +11,19 @@ import {
   setRefreshTokenCookie,
 } from '$lib/server/utils/util';
 import { redirect, type Cookies, type Handle } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 import jwt from 'jsonwebtoken';
 
-const protectedRoutes = ['/profile', '/admin', '/auth/sign-out', '/auth/sign-out-from-all-devices'];
-
-export const handle = (async ({ event, resolve }) => {
-  await tryToGetSignedInUser(event.cookies, event.locals);
-  checkProtectedRoutes(event.url, event.cookies);
-  const theme = event.cookies.get('theme');
-  return await resolve(event, {
-    transformPageChunk: ({ html }) => html.replace('data-theme=""', `data-theme="${theme}"`),
-  });
-}) satisfies Handle;
-
-async function tryToGetSignedInUser(cookies: Cookies, locals: App.Locals): Promise<void> {
+const tryToGetSignedInUser: Handle = async ({ event, resolve }) => {
   try {
-    const accessToken = cookies.get('accessToken') ?? '';
+    const accessToken = event.cookies.get('accessToken') ?? '';
     const payload = jwt.verify(accessToken, JWT_SECRET) as JwtPayload;
-    locals.userId = payload.iss;
+    event.locals.userId = payload.iss;
   } catch (_) {
-    await tryToRefreshToken(cookies, locals);
+    await tryToRefreshToken(event.cookies, event.locals);
   }
-}
+  return await resolve(event);
+};
 
 async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<void> {
   const refreshToken = cookies.get('refreshToken');
@@ -54,14 +46,31 @@ async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<
   }
 }
 
-function checkProtectedRoutes(url: URL, cookies: Cookies): void {
-  if (protectedRoutes.some((route) => url.pathname.startsWith(route))) {
-    const accessToken = cookies.get('accessToken');
+const protectedRoutes = ['/profile', '/admin', '/auth/sign-out', '/auth/sign-out-from-all-devices'];
+
+const checkProtectedRoutes: Handle = async ({ event, resolve }) => {
+  if (protectedRoutes.some((route) => event.url.pathname.startsWith(route))) {
+    const accessToken = event.cookies.get('accessToken');
     if (!accessToken) redirect(302, '/');
 
-    if (url.pathname.startsWith('/admin')) {
+    if (event.url.pathname.startsWith('/admin')) {
       const { roles } = jwt.decode(accessToken) as JwtPayload;
       if (!roles?.includes(RoleName.ADMIN)) redirect(302, '/');
     }
   }
-}
+  return await resolve(event);
+};
+
+const applyTheme: Handle = async ({ event, resolve }) => {
+  const theme = event.cookies.get('theme');
+  return await resolve(event, {
+    transformPageChunk: ({ html }) => html.replace('data-theme=""', `data-theme="${theme}"`),
+  });
+};
+
+export const handle = sequence(
+  i18n.handle(),
+  tryToGetSignedInUser,
+  checkProtectedRoutes,
+  applyTheme,
+);

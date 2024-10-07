@@ -12,34 +12,37 @@ export const load = (({ locals }) => {
   if (locals.userId) redirect(302, '/');
 }) satisfies PageServerLoad;
 
-const resetPasswordSchema = z
-  .object({
-    token: z.string().refine((token) => {
-      try {
-        jwt.verify(token, JWT_SECRET);
-        return true;
-      } catch (_) {
-        return false;
+function createResetPasswordSchema() {
+  return z
+    .object({
+      token: z.string().refine((token) => {
+        try {
+          jwt.verify(token, JWT_SECRET);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }, m.auth_invalidToken()),
+      password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+      confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+    })
+    .superRefine(({ password, confirmPassword }, ctx) => {
+      if (password !== confirmPassword) {
+        ctx.addIssue({
+          code: 'custom',
+          message: m.auth_passwordsDoNotMatch(),
+          path: ['confirmPassword'],
+        });
       }
-    }, m.auth_invalidToken()),
-    password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
-    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
-  })
-  .superRefine(({ password, confirmPassword }, ctx) => {
-    if (password !== confirmPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        message: m.auth_passwordsDoNotMatch(),
-        path: ['confirmPassword'],
-      });
-    }
-  });
+    });
+}
 
 export const actions = {
   resetPassword: async ({ request, url }) => {
     const formData = Object.fromEntries(await request.formData());
     const data = { ...formData, token: url.searchParams.get('token') };
-    const resetPasswordForm = resetPasswordSchema.safeParse(data);
+    const schema = createResetPasswordSchema();
+    const resetPasswordForm = schema.safeParse(data);
     if (!resetPasswordForm.success)
       return fail(400, { errors: resetPasswordForm.error.flatten().fieldErrors });
 

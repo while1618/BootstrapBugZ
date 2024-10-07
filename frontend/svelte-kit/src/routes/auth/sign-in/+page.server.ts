@@ -11,20 +11,23 @@ export const load = (({ locals }) => {
   if (locals.userId) redirect(302, '/');
 }) satisfies PageServerLoad;
 
-const signInSchema = z.object({
-  usernameOrEmail: z
-    .string()
-    .refine(
-      (value) => USERNAME_REGEX.test(value) || EMAIL_REGEX.test(value),
-      m.auth_invalidUsernameOrEmail(),
-    ),
-  password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
-});
+function createSignInSchema() {
+  return z.object({
+    usernameOrEmail: z
+      .string()
+      .refine(
+        (value) => USERNAME_REGEX.test(value) || EMAIL_REGEX.test(value),
+        m.auth_invalidUsernameOrEmail(),
+      ),
+    password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+  });
+}
 
 export const actions = {
   signIn: async ({ request, cookies }) => {
     const formData = Object.fromEntries(await request.formData());
-    const signInForm = signInSchema.safeParse(formData);
+    const schema = createSignInSchema();
+    const signInForm = schema.safeParse(formData);
     if (!signInForm.success) return fail(400, { errors: signInForm.error.flatten().fieldErrors });
 
     const response = await makeRequest({

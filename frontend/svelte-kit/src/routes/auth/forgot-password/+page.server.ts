@@ -10,14 +10,17 @@ export const load = (({ locals }) => {
   if (locals.userId) redirect(302, '/');
 }) satisfies PageServerLoad;
 
-const forgotPasswordSchema = z.object({
-  email: z.string().regex(EMAIL_REGEX, { message: m.auth_invalidEmail() }),
-});
+function createForgotPasswordSchema() {
+  return z.object({
+    email: z.string().regex(EMAIL_REGEX, { message: m.auth_invalidEmail() }),
+  });
+}
 
 export const actions = {
   forgotPassword: async ({ request }) => {
     const formData = Object.fromEntries(await request.formData());
-    const forgotPasswordForm = forgotPasswordSchema.safeParse(formData);
+    const schema = createForgotPasswordSchema();
+    const forgotPasswordForm = schema.safeParse(formData);
     if (!forgotPasswordForm.success)
       return fail(400, { errors: forgotPasswordForm.error.flatten().fieldErrors });
 

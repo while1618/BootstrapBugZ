@@ -5,17 +5,22 @@ import { HttpRequest } from '$lib/server/utils/util';
 import { fail, type Actions } from '@sveltejs/kit';
 import { z } from 'zod';
 
-const updateProfileSchema = z.object({
-  firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_invalidFirstName() }),
-  lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_invalidLastName() }),
-  username: z.string().regex(USERNAME_REGEX, { message: m.profile_invalidUsername() }),
-  email: z.string().regex(EMAIL_REGEX, { message: m.profile_invalidEmail() }),
-});
+function createUpdateProfileSchema() {
+  return z.object({
+    firstName: z
+      .string()
+      .regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_invalidFirstName() }),
+    lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_invalidLastName() }),
+    username: z.string().regex(USERNAME_REGEX, { message: m.profile_invalidUsername() }),
+    email: z.string().regex(EMAIL_REGEX, { message: m.profile_invalidEmail() }),
+  });
+}
 
 export const actions = {
   updateProfile: async ({ request, cookies }) => {
     const formData = Object.fromEntries(await request.formData());
-    const updateProfileForm = updateProfileSchema.safeParse(formData);
+    const schema = createUpdateProfileSchema();
+    const updateProfileForm = schema.safeParse(formData);
     if (!updateProfileForm.success)
       return fail(400, { errors: updateProfileForm.error.flatten().fieldErrors });
 

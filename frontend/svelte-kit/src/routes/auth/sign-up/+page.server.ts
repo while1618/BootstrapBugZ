@@ -16,51 +16,56 @@ export const load = (({ locals }) => {
   if (locals.userId) redirect(302, '/');
 }) satisfies PageServerLoad;
 
-const signUpSchema = z
-  .object({
-    firstName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_invalidFirstName() }),
-    lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_invalidLastName() }),
-    username: z
-      .string()
-      .regex(USERNAME_REGEX, { message: m.auth_invalidUsername() })
-      .refine(async (value) => {
-        const response = await makeRequest({
-          method: HttpRequest.POST,
-          path: '/users/username/availability',
-          body: JSON.stringify({ username: value }),
+function createSignUpSchema() {
+  return z
+    .object({
+      firstName: z
+        .string()
+        .regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_invalidFirstName() }),
+      lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_invalidLastName() }),
+      username: z
+        .string()
+        .regex(USERNAME_REGEX, { message: m.auth_invalidUsername() })
+        .refine(async (value) => {
+          const response = await makeRequest({
+            method: HttpRequest.POST,
+            path: '/users/username/availability',
+            body: JSON.stringify({ username: value }),
+          });
+          if ('error' in response) return false;
+          return (response as Availability).available;
+        }, m.auth_usernameExists()),
+      email: z
+        .string()
+        .regex(EMAIL_REGEX, { message: m.auth_invalidEmail() })
+        .refine(async (value) => {
+          const response = await makeRequest({
+            method: HttpRequest.POST,
+            path: '/users/email/availability',
+            body: JSON.stringify({ email: value }),
+          });
+          if ('error' in response) return false;
+          return (response as Availability).available;
+        }, m.auth_emailExists()),
+      password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+      confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+    })
+    .superRefine(({ password, confirmPassword }, ctx) => {
+      if (password !== confirmPassword) {
+        ctx.addIssue({
+          code: 'custom',
+          message: m.auth_passwordsDoNotMatch(),
+          path: ['confirmPassword'],
         });
-        if ('error' in response) return false;
-        return (response as Availability).available;
-      }, m.auth_usernameExists()),
-    email: z
-      .string()
-      .regex(EMAIL_REGEX, { message: m.auth_invalidEmail() })
-      .refine(async (value) => {
-        const response = await makeRequest({
-          method: HttpRequest.POST,
-          path: '/users/email/availability',
-          body: JSON.stringify({ email: value }),
-        });
-        if ('error' in response) return false;
-        return (response as Availability).available;
-      }, m.auth_emailExists()),
-    password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
-    confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
-  })
-  .superRefine(({ password, confirmPassword }, ctx) => {
-    if (password !== confirmPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        message: m.auth_passwordsDoNotMatch(),
-        path: ['confirmPassword'],
-      });
-    }
-  });
+      }
+    });
+}
 
 export const actions = {
   signUp: async ({ request }) => {
     const formData = Object.fromEntries(await request.formData());
-    const signUpForm = await signUpSchema.safeParseAsync(formData);
+    const schema = createSignUpSchema();
+    const signUpForm = await schema.safeParseAsync(formData);
     if (!signUpForm.success) return fail(400, { errors: signUpForm.error.flatten().fieldErrors });
 
     const response = await makeRequest({

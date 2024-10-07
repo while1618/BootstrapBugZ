@@ -5,26 +5,31 @@ import { HttpRequest, removeAuth } from '$lib/server/utils/util';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { z } from 'zod';
 
-const changePasswordSchema = z
-  .object({
-    oldPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
-    newPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
-    confirmNewPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
-  })
-  .superRefine(({ newPassword, confirmNewPassword }, ctx) => {
-    if (newPassword !== confirmNewPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        message: m.profile_passwordsDoNotMatch(),
-        path: ['confirmNewPassword'],
-      });
-    }
-  });
+function createChangePasswordSchema() {
+  return z
+    .object({
+      oldPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
+      newPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
+      confirmNewPassword: z
+        .string()
+        .regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
+    })
+    .superRefine(({ newPassword, confirmNewPassword }, ctx) => {
+      if (newPassword !== confirmNewPassword) {
+        ctx.addIssue({
+          code: 'custom',
+          message: m.profile_passwordsDoNotMatch(),
+          path: ['confirmNewPassword'],
+        });
+      }
+    });
+}
 
 export const actions = {
   changePassword: async ({ request, cookies, locals }) => {
     const formData = Object.fromEntries(await request.formData());
-    const changePasswordForm = changePasswordSchema.safeParse(formData);
+    const schema = createChangePasswordSchema();
+    const changePasswordForm = schema.safeParse(formData);
     if (!changePasswordForm.success)
       return fail(400, { errors: changePasswordForm.error.flatten().fieldErrors });
 

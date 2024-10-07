@@ -67,7 +67,7 @@
   "auth_resendConfirmationEmail": "Resend confirmation email",
   "auth_doNotHaveAnAccount": "Don't have an account?",
   "auth_forgotPassword": "Forgot password",
-  "auth_resetPassword": "Reset passwrod",
+  "auth_resetPassword": "Reset password",
   "auth_invalidToken": "Invalid token",
 
   "admin_users": "Users",
