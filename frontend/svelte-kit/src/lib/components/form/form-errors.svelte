@@ -1,12 +1,13 @@
 <script lang="ts">
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  import * as m from '$lib/paraglide/messages.js';
+
   export let form: any;
 </script>
 
 {#if form?.errorMessage}
-  {#each form.errorMessage.details as error}
+  {#each form.errorMessage.codes as code}
     <div class="flex gap-4">
-      <p class="label-text text-error">{error.message}</p>
+      <p class="label-text text-error">{m[code] ? m[code]() : m.api_unknown_error()}</p>
     </div>
   {/each}
 {/if}
