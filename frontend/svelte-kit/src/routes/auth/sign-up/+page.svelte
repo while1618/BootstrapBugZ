@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import FormApiErrors from '$lib/components/form/form-api-errors.svelte';
   import FormControl from '$lib/components/form/form-control.svelte';
+  import PrintApiErrors from '$lib/components/form/print-api-errors.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { ActionData } from './$types';
 
@@ -25,7 +25,7 @@
             name="confirmPassword"
             label={m.auth_confirmPassword()}
           />
-          <FormApiErrors {form} />
+          <PrintApiErrors {form} />
           <button class="btn btn-primary">{m.auth_signUp()}</button>
         </form>
       </div>

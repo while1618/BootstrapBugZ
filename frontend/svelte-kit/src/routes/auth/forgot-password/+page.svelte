@@ -2,8 +2,8 @@
   import { enhance } from '$app/forms';
   import FormControl from '$lib/components/form/form-control.svelte';
   import * as m from '$lib/paraglide/messages.js';
+  import PrintApiErrors from '../../../lib/components/form/print-api-errors.svelte';
   import type { ActionData } from './$types';
-  import FormApiErrors from './../../../lib/components/form/form-api-errors.svelte';
 
   export let form: ActionData;
 </script>
@@ -15,7 +15,7 @@
         <h1 class="text-center text-3xl font-bold">{m.auth_forgotPassword()}</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/forgotPassword" use:enhance>
           <FormControl {form} type="email" name="email" label={m.auth_email()} />
-          <FormApiErrors {form} />
+          <PrintApiErrors {form} />
           <button class="btn btn-primary">{m.general_send()}</button>
         </form>
       </div>

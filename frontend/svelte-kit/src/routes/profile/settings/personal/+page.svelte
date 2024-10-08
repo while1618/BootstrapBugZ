@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import FormApiErrors from '$lib/components/form/form-api-errors.svelte';
   import FormControl from '$lib/components/form/form-control.svelte';
+  import PrintApiErrors from '$lib/components/form/print-api-errors.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import { userStore } from '$lib/stores/user';
   import type { ActionData } from '../personal/$types';
@@ -50,7 +50,7 @@
         label={m.profile_email()}
         value={$userStore?.email}
       />
-      <FormApiErrors {form} />
+      <PrintApiErrors {form} />
       <button class="btn btn-primary">{m.general_update()}</button>
     </form>
   </div>
