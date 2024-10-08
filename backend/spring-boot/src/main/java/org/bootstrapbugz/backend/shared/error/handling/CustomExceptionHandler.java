@@ -2,13 +2,13 @@ package org.bootstrapbugz.backend.shared.error.handling;
 
 import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
+import org.bootstrapbugz.backend.shared.error.ErrorMessage;
 import org.bootstrapbugz.backend.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.backend.shared.error.exception.ConflictException;
 import org.bootstrapbugz.backend.shared.error.exception.ForbiddenException;
 import org.bootstrapbugz.backend.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.backend.shared.error.exception.UnauthorizedException;
 import org.bootstrapbugz.backend.shared.message.service.MessageService;
-import org.bootstrapbugz.backend.shared.error.ErrorMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

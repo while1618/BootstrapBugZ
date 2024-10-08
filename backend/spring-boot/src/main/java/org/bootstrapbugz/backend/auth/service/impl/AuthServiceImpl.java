@@ -102,7 +102,8 @@ public class AuthServiceImpl implements AuthService {
     final var roles =
         roleRepository
             .findByName(RoleName.USER)
-            .orElseThrow(() -> new RuntimeException(messageService.getMessage("user.roleNotFound")));
+            .orElseThrow(
+                () -> new RuntimeException(messageService.getMessage("user.roleNotFound")));
     return User.builder()
         .firstName(registerUserRequest.firstName())
         .lastName(registerUserRequest.lastName())
@@ -157,8 +158,9 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findById(JwtUtil.getUserId(resetPasswordRequest.token()))
             .orElseThrow(
-                () -> new BadRequestException("token", messageService.getMessage(
-                    "auth.tokenInvalid")));
+                () ->
+                    new BadRequestException(
+                        "token", messageService.getMessage("auth.tokenInvalid")));
     resetPasswordTokenService.check(resetPasswordRequest.token());
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.password()));
     accessTokenService.invalidateAllByUserId(user.getId());
@@ -185,8 +187,9 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findById(JwtUtil.getUserId(verifyEmailRequest.token()))
             .orElseThrow(
-                () -> new BadRequestException("token", messageService.getMessage(
-                    "auth.tokenInvalid")));
+                () ->
+                    new BadRequestException(
+                        "token", messageService.getMessage("auth.tokenInvalid")));
     if (Boolean.TRUE.equals(user.getActive()))
       throw new ConflictException(messageService.getMessage("user.active"));
     verificationTokenService.check(verifyEmailRequest.token());
