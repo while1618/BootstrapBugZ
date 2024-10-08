@@ -17,7 +17,7 @@
           <FormControl {form} type="text" name="usernameOrEmail" label={m.auth_usernameOrEmail()} />
           <FormControl {form} type="password" name="password" label={m.auth_password()} />
           <FormApiErrors {form} />
-          {#if form?.errorMessage && form.errorMessage.codes.includes('API_USER_NOT_ACTIVE')}
+          {#if form?.errorMessage && form.errorMessage.codes.includes('API_ERROR_USER_NOT_ACTIVE')}
             <a
               href="/auth/resend-confirmation-email?usernameOrEmail={form.usernameOrEmail}"
               class="label-text text-info hover:underline"
