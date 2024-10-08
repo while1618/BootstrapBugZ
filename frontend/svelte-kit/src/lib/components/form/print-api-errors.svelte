@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ErrorCode } from '$lib/models/shared/error-code';
+  import { ErrorCode } from '$lib/models/shared/error-message';
   import * as m from '$lib/paraglide/messages.js';
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
