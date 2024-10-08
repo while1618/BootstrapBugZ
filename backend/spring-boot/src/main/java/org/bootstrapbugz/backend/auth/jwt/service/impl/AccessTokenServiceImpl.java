@@ -3,6 +3,7 @@ package org.bootstrapbugz.backend.auth.jwt.service.impl;
 import com.auth0.jwt.JWT;
 import java.time.Instant;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.auth.jwt.redis.model.AccessTokenBlacklist;
 import org.bootstrapbugz.backend.auth.jwt.redis.model.UserBlacklist;
 import org.bootstrapbugz.backend.auth.jwt.redis.repository.AccessTokenBlacklistRepository;
@@ -16,6 +17,7 @@ import org.bootstrapbugz.backend.user.payload.dto.RoleDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.ACCESS_TOKEN;
@@ -60,7 +62,8 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      throw new UnauthorizedException(e.getMessage());
+      log.error(e.getMessage(), e);
+      throw new UnauthorizedException(messageService.getMessage("auth.tokenInvalid"));
     }
   }
 

@@ -39,14 +39,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
-      @Nonnull MethodArgumentNotValidException ex,
+      @Nonnull MethodArgumentNotValidException e,
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
-    log.error(ex.getMessage(), ex);
+    log.error(e.getMessage(), e);
     final var status = (HttpStatus) statusCode;
     final var errorMessage = new ErrorMessage(status);
-    final var result = ex.getBindingResult();
+    final var result = e.getBindingResult();
     result.getFieldErrors().forEach(error -> errorMessage.addCode(error.getDefaultMessage()));
     result.getGlobalErrors().forEach(error -> errorMessage.addCode(error.getDefaultMessage()));
     return new ResponseEntity<>(errorMessage, setHeaders(), status);
@@ -65,95 +65,95 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler({BadRequestException.class})
-  public ResponseEntity<Object> handleBadRequestException(BadRequestException ex) {
-    log.error(ex.getMessage(), ex);
-    return createError(ex.getStatus(), ex.getMessage());
+  public ResponseEntity<Object> handleBadRequestException(BadRequestException e) {
+    log.error(e.getMessage(), e);
+    return createError(e.getStatus(), e.getMessage());
   }
 
   @ExceptionHandler({UnauthorizedException.class})
-  public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
-    log.error(ex.getMessage(), ex);
-    return createError(ex.getStatus(), ex.getMessage());
+  public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException e) {
+    log.error(e.getMessage(), e);
+    return createError(e.getStatus(), e.getMessage());
   }
 
   @ExceptionHandler({ForbiddenException.class})
-  public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex) {
-    log.error(ex.getMessage(), ex);
-    return createError(ex.getStatus(), ex.getMessage());
+  public ResponseEntity<Object> handleForbiddenException(ForbiddenException e) {
+    log.error(e.getMessage(), e);
+    return createError(e.getStatus(), e.getMessage());
   }
 
   @ExceptionHandler({AccessDeniedException.class})
-  public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
-    log.error(ex.getMessage(), ex);
-    return createError(HttpStatus.FORBIDDEN, ex.getMessage());
+  public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException e) {
+    log.error(e.getMessage(), e);
+    return createError(HttpStatus.FORBIDDEN, e.getMessage());
   }
 
   @ExceptionHandler({ResourceNotFoundException.class})
-  public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
-    log.error(ex.getMessage(), ex);
-    return createError(ex.getStatus(), ex.getMessage());
+  public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException e) {
+    log.error(e.getMessage(), e);
+    return createError(e.getStatus(), e.getMessage());
   }
 
   @ExceptionHandler({ConflictException.class})
-  public ResponseEntity<Object> handleConflictException(ConflictException ex) {
-    log.error(ex.getMessage(), ex);
-    return createError(ex.getStatus(), ex.getMessage());
+  public ResponseEntity<Object> handleConflictException(ConflictException e) {
+    log.error(e.getMessage(), e);
+    return createError(e.getStatus(), e.getMessage());
   }
 
   @ExceptionHandler({AuthenticationException.class})
-  public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
-    log.error(ex.getMessage(), ex);
-    if (ex instanceof DisabledException)
+  public ResponseEntity<Object> handleAuthenticationException(AuthenticationException e) {
+    log.error(e.getMessage(), e);
+    if (e instanceof DisabledException)
       return createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.notActive"));
-    else if (ex instanceof LockedException)
+    else if (e instanceof LockedException)
       return createError(HttpStatus.FORBIDDEN, messageService.getMessage("user.lock"));
     else return createError(HttpStatus.UNAUTHORIZED, messageService.getMessage("auth.invalid"));
   }
 
   @ExceptionHandler({Exception.class})
-  public ResponseEntity<Object> handleGlobalException(Exception ex) {
-    log.error(ex.getMessage(), ex);
+  public ResponseEntity<Object> handleGlobalException(Exception e) {
+    log.error(e.getMessage(), e);
     return createError(
         HttpStatus.INTERNAL_SERVER_ERROR, messageService.getMessage("server.internalError"));
   }
 
   @Override
   protected ResponseEntity<Object> handleMissingServletRequestParameter(
-      @Nonnull MissingServletRequestParameterException ex,
+      @Nonnull MissingServletRequestParameterException e,
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
-    log.error(ex.getMessage(), ex);
+    log.error(e.getMessage(), e);
     return createError(
         (HttpStatus) statusCode, messageService.getMessage("request.parameterMissing"));
   }
 
   @Override
   protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
-      @Nonnull HttpRequestMethodNotSupportedException ex,
+      @Nonnull HttpRequestMethodNotSupportedException e,
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
-    log.error(ex.getMessage(), ex);
+    log.error(e.getMessage(), e);
     return createError(
         (HttpStatus) statusCode, messageService.getMessage("request.methodNotSupported"));
   }
 
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
-      @Nonnull HttpMessageNotReadableException ex,
+      @Nonnull HttpMessageNotReadableException e,
       @Nonnull HttpHeaders headers,
       @Nonnull HttpStatusCode statusCode,
       @Nonnull WebRequest request) {
-    log.error(ex.getMessage(), ex);
+    log.error(e.getMessage(), e);
     return createError(
         (HttpStatus) statusCode, messageService.getMessage("request.messageNotReadable"));
   }
 
   @ExceptionHandler({MethodArgumentTypeMismatchException.class})
   public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
-      MethodArgumentTypeMismatchException ex) {
-    log.error(ex.getMessage(), ex);
+      MethodArgumentTypeMismatchException e) {
+    log.error(e.getMessage(), e);
     return createError(
         HttpStatus.BAD_REQUEST, messageService.getMessage("request.parameterTypeMismatch"));
   }
