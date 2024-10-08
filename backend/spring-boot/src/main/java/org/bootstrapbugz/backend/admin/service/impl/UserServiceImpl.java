@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
   private void setUsername(User user, String username) {
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
-      throw new ConflictException("username", messageService.getMessage("user.usernameExists"));
+      throw new ConflictException(messageService.getMessage("user.usernameExists"));
 
     user.setUsername(username);
   }
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
   private void setEmail(User user, String email) {
     if (user.getEmail().equals(email)) return;
     if (userRepository.existsByEmail(email))
-      throw new ConflictException("email", messageService.getMessage("user.emailExists"));
+      throw new ConflictException(messageService.getMessage("user.emailExists"));
 
     user.setEmail(email);
   }

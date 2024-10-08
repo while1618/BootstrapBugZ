@@ -2,6 +2,7 @@ package org.bootstrapbugz.backend.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
 import java.time.Instant;
+import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.backend.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.backend.auth.jwt.service.ResetPasswordTokenService;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.RESET_PASSWORD_TOKEN;
@@ -56,7 +58,8 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      throw new BadRequestException("token", e.getMessage());
+      log.error(e.getMessage(), e);
+      throw new BadRequestException(messageService.getMessage("auth.tokenInvalid"));
     }
   }
 
@@ -67,7 +70,7 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
     if (userInBlacklist.isEmpty()) return;
     if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt())
         || issuedAt.equals(userInBlacklist.get().getUpdatedAt()))
-      throw new BadRequestException("token", messageService.getMessage("auth.tokenInvalid"));
+      throw new BadRequestException(messageService.getMessage("auth.tokenInvalid"));
   }
 
   @Override

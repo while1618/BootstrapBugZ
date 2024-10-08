@@ -158,9 +158,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findById(JwtUtil.getUserId(resetPasswordRequest.token()))
             .orElseThrow(
-                () ->
-                    new BadRequestException(
-                        "token", messageService.getMessage("auth.tokenInvalid")));
+                () -> new BadRequestException(messageService.getMessage("auth.tokenInvalid")));
     resetPasswordTokenService.check(resetPasswordRequest.token());
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.password()));
     accessTokenService.invalidateAllByUserId(user.getId());
@@ -187,9 +185,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository
             .findById(JwtUtil.getUserId(verifyEmailRequest.token()))
             .orElseThrow(
-                () ->
-                    new BadRequestException(
-                        "token", messageService.getMessage("auth.tokenInvalid")));
+                () -> new BadRequestException(messageService.getMessage("auth.tokenInvalid")));
     if (Boolean.TRUE.equals(user.getActive()))
       throw new ConflictException(messageService.getMessage("user.active"));
     verificationTokenService.check(verifyEmailRequest.token());
