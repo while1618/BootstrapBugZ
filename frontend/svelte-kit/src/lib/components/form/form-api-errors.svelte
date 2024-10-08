@@ -6,7 +6,7 @@
   export let form: any;
 
   function printApiError(code: keyof typeof ErrorCode) {
-    return ErrorCode[code] ? m[ErrorCode[code]]() : m.api_unknown_error();
+    return ErrorCode[code] ? m[ErrorCode[code]]() : m.unknown_error();
   }
 </script>
 
