@@ -609,11 +609,9 @@ components:
             timestamp: 2023-05-18T00:51:50.758738
             status: 400
             error: Bad Request
-            details:
-              - field: field1
-                message: Invalid field1.
-              - field: field2
-                message: Invalid field2.
+            codes:
+              - API_ERROR_1
+              - API_ERROR_2
     Unauthorized:
       description: Unauthorized
       content:
@@ -624,8 +622,8 @@ components:
             timestamp: 2023-05-18T00:51:50.758738
             status: 401
             error: Unauthorized
-            details:
-              - message: Unauthorized.
+            codes:
+              - API_ERROR_1
     Forbidden:
       description: Forbidden
       content:
@@ -636,8 +634,8 @@ components:
             timestamp: 2023-05-18T00:51:50.758738
             status: 403
             error: Forbidden
-            details:
-              - message: Forbidden.
+            codes:
+              - API_ERROR_1
     NotFound:
       description: Not Found
       content:
@@ -648,8 +646,8 @@ components:
             timestamp: 2023-05-18T00:51:50.758738
             status: 404
             error: Not Found
-            details:
-              - message: Resource Not Found.
+            codes:
+              - API_ERROR_1
     Conflict:
       description: Conflict
       content:
@@ -660,9 +658,8 @@ components:
             timestamp: 2023-05-18T00:51:50.758738
             status: 409
             error: Conflict
-            details:
-              - field: field
-                message: Conflict.
+            codes:
+              - API_ERROR_1
   parameters:
     id:
       name: id
@@ -1080,7 +1077,7 @@ components:
         - timestamp
         - status
         - error
-        - details
+        - codes
       properties:
         timestamp:
           type: string
@@ -1090,18 +1087,10 @@ components:
           format: int32
         error:
           type: string
-        details:
+        codes:
           type: array
           items:
-            type: object
-            required:
-              - message
-            properties:
-              field:
-                type: string
-                nullable: true
-              message:
-                type: string
+            type: string
   securitySchemes:
     BearerAuth:
       type: http
