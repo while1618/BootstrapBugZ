@@ -96,6 +96,7 @@
   "admin_selectUserRoles": "Izaberi permisije za ",
 
   "auth_invalid": "Pogrešni kredencijali",
+  "auth_forbidden": "Zabranjen pristup",
   "auth_tokenRequired": "Token je obavezan",
   "auth_tokenInvalid": "Nevalidan token",
   "user_firstNameRequired": "Ime je obavezno",

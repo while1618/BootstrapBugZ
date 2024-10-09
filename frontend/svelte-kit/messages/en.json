@@ -96,6 +96,7 @@
   "admin_selectUserRoles": "Select roles for ",
 
   "auth_invalid": "Invalid credentials",
+  "auth_forbidden": "Forbidden",
   "auth_tokenRequired": "Token is required",
   "auth_tokenInvalid": "Invalid token",
   "user_firstNameRequired": "First name is required",

@@ -7,6 +7,7 @@ export interface ErrorMessage {
 
 export enum ErrorCode {
   API_ERROR_AUTH_INVALID = 'auth_invalid',
+  API_ERROR_AUTH_FORBIDDEN = 'auth_forbidden',
   API_ERROR_AUTH_TOKEN_REQUIRED = 'auth_tokenRequired',
   API_ERROR_AUTH_TOKEN_INVALID = 'auth_tokenInvalid',
   API_ERROR_USER_FIRST_NAME_REQUIRED = 'user_firstNameRequired',
