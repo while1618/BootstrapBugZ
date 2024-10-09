@@ -2,6 +2,7 @@
   import { enhance } from '$app/forms';
   import FormControl from '$lib/components/form/form-control.svelte';
   import PrintApiErrors from '$lib/components/form/print-api-errors.svelte';
+  import { ErrorCode } from '$lib/models/shared/error-message';
   import * as m from '$lib/paraglide/messages.js';
   import type { ActionData } from './$types';
 
@@ -17,7 +18,7 @@
           <FormControl {form} type="text" name="usernameOrEmail" label={m.auth_usernameOrEmail()} />
           <FormControl {form} type="password" name="password" label={m.auth_password()} />
           <PrintApiErrors {form} />
-          {#if form?.errorMessage && form.errorMessage.codes.includes('API_ERROR_USER_NOT_ACTIVE')}
+          {#if form?.errorMessage && form.errorMessage.codes.includes(ErrorCode.API_ERROR_USER_NOT_ACTIVE)}
             <a
               href="/auth/resend-confirmation-email?usernameOrEmail={form.usernameOrEmail}"
               class="label-text text-info hover:underline"
