@@ -23,8 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return userRepository
         .findById(userId)
         .map(UserPrincipal::create)
-        .orElseThrow(
-            () -> new UnauthorizedException(messageService.getMessage("auth.tokenInvalid")));
+        .orElseThrow(() -> new UnauthorizedException(messageService.getMessage("auth.invalid")));
   }
 
   @Override
@@ -33,7 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return userRepository
         .findByUsernameOrEmail(username, username)
         .map(UserPrincipal::create)
-        .orElseThrow(
-            () -> new UnauthorizedException(messageService.getMessage("auth.tokenInvalid")));
+        .orElseThrow(() -> new UnauthorizedException(messageService.getMessage("auth.invalid")));
   }
 }

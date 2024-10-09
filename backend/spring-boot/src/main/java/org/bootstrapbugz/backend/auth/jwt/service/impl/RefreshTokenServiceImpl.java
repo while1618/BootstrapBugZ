@@ -60,8 +60,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      log.error(e.getMessage(), e);
-      throw new BadRequestException(messageService.getMessage("auth.tokenInvalid"));
+      final var code = messageService.getMessage("auth.tokenInvalid");
+      log.error(code, e);
+      throw new BadRequestException(code);
     }
   }
 

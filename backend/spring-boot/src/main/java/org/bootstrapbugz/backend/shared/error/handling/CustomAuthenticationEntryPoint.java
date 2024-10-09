@@ -31,7 +31,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
       response.setStatus(HttpStatus.UNAUTHORIZED.value());
       response.getOutputStream().println(errorMessage.toString());
     } catch (IOException e) {
-      log.error(e.getMessage(), e);
+      log.error(messageService.getMessage("auth.invalid"), e);
     }
   }
 }

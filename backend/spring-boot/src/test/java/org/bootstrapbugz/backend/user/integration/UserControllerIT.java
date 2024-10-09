@@ -69,7 +69,7 @@ class UserControllerIT extends DatabaseContainers {
     mockMvc
         .perform(get(Path.USERS + "/{id}", 100L).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound())
-        .andExpect(content().string(containsString("User not found.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_NOT_FOUND")));
   }
 
   @Test
@@ -94,7 +94,7 @@ class UserControllerIT extends DatabaseContainers {
             get(Path.USERS + "/username/{username}", "unknown")
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound())
-        .andExpect(content().string(containsString("User not found.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_NOT_FOUND")));
   }
 
   @Test
