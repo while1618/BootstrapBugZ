@@ -8,7 +8,9 @@ import org.bootstrapbugz.backend.shared.validator.UsernameOrEmail;
 
 public class UsernameOrEmailImpl implements ConstraintValidator<UsernameOrEmail, String> {
   public boolean isValid(String usernameOrEmail, ConstraintValidatorContext context) {
-    return Pattern.compile(Regex.USERNAME).matcher(usernameOrEmail).matches()
-        || Pattern.compile(Regex.EMAIL).matcher(usernameOrEmail).matches();
+    return usernameOrEmail != null
+        && !usernameOrEmail.isEmpty()
+        && (Pattern.compile(Regex.USERNAME).matcher(usernameOrEmail).matches()
+            || Pattern.compile(Regex.EMAIL).matcher(usernameOrEmail).matches());
   }
 }

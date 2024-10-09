@@ -12,26 +12,26 @@ import org.bootstrapbugz.backend.shared.validator.FieldMatch;
 import org.bootstrapbugz.backend.user.model.Role.RoleName;
 
 @Builder
-@FieldMatch(first = "password", second = "confirmPassword", message = "{passwords.doNotMatch}")
+@FieldMatch(first = "password", second = "confirmPassword", message = "{user.passwordsDoNotMatch}")
 public record UserRequest(
-    @NotBlank(message = "{firstName.required}")
-        @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{firstName.invalid}")
+    @NotBlank(message = "{user.firstNameRequired}")
+        @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{user.firstNameInvalid}")
         String firstName,
-    @NotBlank(message = "{lastName.required}")
-        @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{lastName.invalid}")
+    @NotBlank(message = "{user.lastNameRequired}")
+        @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{user.lastNameInvalid}")
         String lastName,
-    @NotBlank(message = "{username.required}")
-        @Pattern(regexp = Regex.USERNAME, message = "{username.invalid}")
+    @NotBlank(message = "{user.usernameRequired}")
+        @Pattern(regexp = Regex.USERNAME, message = "{user.usernameInvalid}")
         String username,
-    @NotBlank(message = "{email.required}")
-        @Email(message = "{email.invalid}", regexp = Regex.EMAIL)
+    @NotBlank(message = "{user.emailRequired}")
+        @Email(message = "{user.emailInvalid}", regexp = Regex.EMAIL)
         String email,
-    @NotBlank(message = "{password.required}")
-        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{user.passwordRequired}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{user.passwordInvalid}")
         String password,
-    @NotBlank(message = "{password.required}")
-        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{user.passwordRequired}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{user.passwordInvalid}")
         String confirmPassword,
-    @NotNull(message = "{user.active.required}") Boolean active,
-    @NotNull(message = "{user.lock.required}") Boolean lock,
-    @NotEmpty(message = "{roles.empty}") Set<RoleName> roleNames) {}
+    @NotNull(message = "{user.activeRequired}") Boolean active,
+    @NotNull(message = "{user.lockRequired}") Boolean lock,
+    @NotEmpty(message = "{user.rolesEmpty}") Set<RoleName> roleNames) {}

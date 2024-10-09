@@ -91,11 +91,11 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Invalid first name.")))
-        .andExpect(content().string(containsString("Invalid last name.")))
-        .andExpect(content().string(containsString("Invalid username.")))
-        .andExpect(content().string(containsString("Invalid email.")))
-        .andExpect(content().string(containsString("Passwords do not match.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
   }
 
   @Test
@@ -119,7 +119,7 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Username already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_EXISTS")));
   }
 
   @Test
@@ -143,7 +143,7 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Email already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_EXISTS")));
   }
 
   @Test
@@ -194,7 +194,7 @@ class UserControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isNotFound())
-        .andExpect(content().string(containsString("User not found.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_NOT_FOUND")));
   }
 
   @Test
@@ -241,11 +241,11 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Invalid first name.")))
-        .andExpect(content().string(containsString("Invalid last name.")))
-        .andExpect(content().string(containsString("Invalid username.")))
-        .andExpect(content().string(containsString("Invalid email.")))
-        .andExpect(content().string(containsString("Passwords do not match.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
   }
 
   @Test
@@ -269,7 +269,7 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Username already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_EXISTS")));
   }
 
   @Test
@@ -293,7 +293,7 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Email already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_EXISTS")));
   }
 
   @Test
@@ -340,11 +340,11 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(patchUserRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Invalid first name.")))
-        .andExpect(content().string(containsString("Invalid last name.")))
-        .andExpect(content().string(containsString("Invalid username.")))
-        .andExpect(content().string(containsString("Invalid email.")))
-        .andExpect(content().string(containsString("Passwords do not match.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
   }
 
   @Test
@@ -368,7 +368,7 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(patchUserRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Username already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_EXISTS")));
   }
 
   @Test
@@ -392,7 +392,7 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(patchUserRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Email already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_EXISTS")));
   }
 
   @Test

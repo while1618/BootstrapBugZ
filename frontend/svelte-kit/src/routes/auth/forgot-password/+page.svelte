@@ -1,8 +1,8 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import FormControl from '$lib/components/form/form-control.svelte';
-  import FormErrors from '$lib/components/form/form-errors.svelte';
   import * as m from '$lib/paraglide/messages.js';
+  import ApiErrors from '../../../lib/components/form/api-errors.svelte';
   import type { ActionData } from './$types';
 
   export let form: ActionData;
@@ -15,7 +15,7 @@
         <h1 class="text-center text-3xl font-bold">{m.auth_forgotPassword()}</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/forgotPassword" use:enhance>
           <FormControl {form} type="email" name="email" label={m.auth_email()} />
-          <FormErrors {form} />
+          <ApiErrors {form} />
           <button class="btn btn-primary">{m.general_send()}</button>
         </form>
       </div>

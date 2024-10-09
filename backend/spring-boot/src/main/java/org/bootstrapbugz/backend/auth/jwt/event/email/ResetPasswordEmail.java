@@ -27,7 +27,7 @@ public class ResetPasswordEmail implements JwtEmail {
               .replace("$appName", Objects.requireNonNull(environment.getProperty("app.name")));
       emailService.sendHtmlEmail(user.getEmail(), "Reset password", body);
     } catch (IOException e) {
-      log.error(e.getMessage());
+      log.error(e.getMessage(), e);
     }
   }
 }

@@ -1,6 +1,8 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import ApiErrors from '$lib/components/form/api-errors.svelte';
   import FormControl from '$lib/components/form/form-control.svelte';
+  import { ErrorCode } from '$lib/models/shared/error-message';
   import * as m from '$lib/paraglide/messages.js';
   import type { ActionData } from './$types';
 
@@ -15,21 +17,14 @@
         <form class="flex flex-col gap-4" method="POST" action="?/signIn" use:enhance>
           <FormControl {form} type="text" name="usernameOrEmail" label={m.auth_usernameOrEmail()} />
           <FormControl {form} type="password" name="password" label={m.auth_password()} />
-
-          {#if form?.errorMessage}
-            {#each form.errorMessage.details as error}
-              <div class="flex gap-4">
-                <p class="label-text text-error">{error.message}</p>
-                {#if error.message === 'User not activated.'}
-                  <a
-                    href="/auth/resend-confirmation-email?usernameOrEmail={form.usernameOrEmail}"
-                    class="label-text text-info hover:underline"
-                  >
-                    {m.auth_resendConfirmationEmail()}
-                  </a>
-                {/if}
-              </div>
-            {/each}
+          <ApiErrors {form} />
+          {#if form?.errorMessage && form.errorMessage.codes.includes(ErrorCode.API_ERROR_USER_NOT_ACTIVE)}
+            <a
+              href="/auth/resend-confirmation-email?usernameOrEmail={form.usernameOrEmail}"
+              class="label-text text-info hover:underline"
+            >
+              {m.auth_resendConfirmationEmail()}
+            </a>
           {/if}
 
           <button class="btn btn-primary">{m.auth_signIn()}</button>

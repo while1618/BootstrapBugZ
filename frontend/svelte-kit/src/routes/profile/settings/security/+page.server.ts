@@ -8,11 +8,11 @@ import { z } from 'zod';
 function createChangePasswordSchema() {
   return z
     .object({
-      oldPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
-      newPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
+      oldPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_passwordInvalid() }),
+      newPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_passwordInvalid() }),
       confirmNewPassword: z
         .string()
-        .regex(PASSWORD_REGEX, { message: m.profile_invalidPassword() }),
+        .regex(PASSWORD_REGEX, { message: m.profile_passwordInvalid() }),
     })
     .superRefine(({ newPassword, confirmNewPassword }, ctx) => {
       if (newPassword !== confirmNewPassword) {

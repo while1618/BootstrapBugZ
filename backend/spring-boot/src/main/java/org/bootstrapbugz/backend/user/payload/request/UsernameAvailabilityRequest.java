@@ -5,6 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import org.bootstrapbugz.backend.shared.constants.Regex;
 
 public record UsernameAvailabilityRequest(
-    @NotBlank(message = "{username.required}")
-        @Pattern(regexp = Regex.USERNAME, message = "{username.invalid}")
+    @NotBlank(message = "{user.usernameRequired}")
+        @Pattern(regexp = Regex.USERNAME, message = "{user.usernameInvalid}")
         String username) {}

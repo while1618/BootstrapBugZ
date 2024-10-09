@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import org.bootstrapbugz.backend.shared.constants.Regex;
 
 public record ForgotPasswordRequest(
-    @NotBlank(message = "{email.required}")
-        @Email(message = "{email.invalid}", regexp = Regex.EMAIL)
+    @NotBlank(message = "{user.emailRequired}")
+        @Email(message = "{user.emailInvalid}", regexp = Regex.EMAIL)
         String email) {}

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.auth.jwt.redis.model.RefreshTokenStore;
 import org.bootstrapbugz.backend.auth.jwt.redis.repository.RefreshTokenStoreRepository;
 import org.bootstrapbugz.backend.auth.jwt.service.RefreshTokenService;
@@ -15,6 +16,7 @@ import org.bootstrapbugz.backend.user.payload.dto.RoleDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.REFRESH_TOKEN;
@@ -58,13 +60,15 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      throw new BadRequestException("token", e.getMessage());
+      final var code = messageService.getMessage("auth.tokenInvalid");
+      log.error(code, e);
+      throw new BadRequestException(code);
     }
   }
 
   private void isInRefreshTokenStore(String token) {
     if (!refreshTokenStoreRepository.existsById(token))
-      throw new BadRequestException("token", messageService.getMessage("token.invalid"));
+      throw new BadRequestException(messageService.getMessage("auth.tokenInvalid"));
   }
 
   @Override

@@ -8,14 +8,14 @@ import org.bootstrapbugz.backend.shared.validator.FieldMatch;
 @FieldMatch(
     first = "newPassword",
     second = "confirmNewPassword",
-    message = "{passwords.doNotMatch}")
+    message = "{user.passwordsDoNotMatch}")
 public record ChangePasswordRequest(
-    @NotBlank(message = "{password.required}")
-        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{user.passwordRequired}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{user.passwordInvalid}")
         String currentPassword,
-    @NotBlank(message = "{password.required}")
-        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{user.passwordRequired}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{user.passwordInvalid}")
         String newPassword,
-    @NotBlank(message = "{password.required}")
-        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{user.passwordRequired}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{user.passwordInvalid}")
         String confirmNewPassword) {}

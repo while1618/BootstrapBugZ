@@ -22,9 +22,9 @@ function createResetPasswordSchema() {
         } catch (_) {
           return false;
         }
-      }, m.auth_invalidToken()),
-      password: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
-      confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_invalidPassword() }),
+      }, m.auth_tokenInvalid()),
+      password: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
+      confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
     })
     .superRefine(({ password, confirmPassword }, ctx) => {
       if (password !== confirmPassword) {

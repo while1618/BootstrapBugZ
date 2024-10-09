@@ -5,12 +5,12 @@ import jakarta.validation.constraints.Pattern;
 import org.bootstrapbugz.backend.shared.constants.Regex;
 import org.bootstrapbugz.backend.shared.validator.FieldMatch;
 
-@FieldMatch(first = "password", second = "confirmPassword", message = "{passwords.doNotMatch}")
+@FieldMatch(first = "password", second = "confirmPassword", message = "{user.passwordsDoNotMatch}")
 public record ResetPasswordRequest(
-    @NotBlank(message = "{token.required}") String token,
-    @NotBlank(message = "{password.required}")
-        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{auth.tokenRequired}") String token,
+    @NotBlank(message = "{user.passwordRequired}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{user.passwordInvalid}")
         String password,
-    @NotBlank(message = "{password.required}")
-        @Pattern(regexp = Regex.PASSWORD, message = "{password.invalid}")
+    @NotBlank(message = "{user.passwordRequired}")
+        @Pattern(regexp = Regex.PASSWORD, message = "{user.passwordInvalid}")
         String confirmPassword) {}

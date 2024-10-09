@@ -1,8 +1,5 @@
-package org.bootstrapbugz.backend.shared.payload.dto;
+package org.bootstrapbugz.backend.shared.error;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
@@ -18,21 +15,17 @@ public class ErrorMessage {
   private final LocalDateTime timestamp;
   private final int status;
   private final String error;
-  private final List<Detail> details;
+  private final List<String> codes;
 
   public ErrorMessage(HttpStatus status) {
     this.timestamp = LocalDateTime.now();
     this.status = status.value();
     this.error = status.getReasonPhrase();
-    this.details = new ArrayList<>();
+    this.codes = new ArrayList<>();
   }
 
-  public void addDetails(String message) {
-    this.details.add(new Detail(message));
-  }
-
-  public void addDetails(String field, String message) {
-    this.details.add(new Detail(field, message));
+  public void addCode(String code) {
+    this.codes.add(code);
   }
 
   @Override
@@ -46,27 +39,5 @@ public class ErrorMessage {
                     new JsonPrimitive(localDateTime.format(DateTimeFormatter.ISO_DATE_TIME)))
         .create()
         .toJson(this);
-  }
-
-  @Getter
-  private static final class Detail {
-    private final String message;
-
-    @JsonInclude(Include.NON_NULL)
-    private String field;
-
-    private Detail(String message) {
-      this.message = message;
-    }
-
-    private Detail(String field, String message) {
-      this.field = field;
-      this.message = message;
-    }
-
-    @Override
-    public String toString() {
-      return new Gson().toJson(this);
-    }
   }
 }

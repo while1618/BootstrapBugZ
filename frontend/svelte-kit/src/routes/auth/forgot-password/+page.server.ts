@@ -12,7 +12,7 @@ export const load = (({ locals }) => {
 
 function createForgotPasswordSchema() {
   return z.object({
-    email: z.string().regex(EMAIL_REGEX, { message: m.auth_invalidEmail() }),
+    email: z.string().regex(EMAIL_REGEX, { message: m.auth_emailInvalid() }),
   });
 }
 
