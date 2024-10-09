@@ -34,7 +34,7 @@ class AccessingResourcesIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
-  private final String unauthorized = "API_ERROR_AUTH_INVALID";
+  private final String unauthorized = "API_ERROR_AUTH_UNAUTHORIZED";
   private final String forbidden = "API_ERROR_AUTH_FORBIDDEN";
 
   @Test

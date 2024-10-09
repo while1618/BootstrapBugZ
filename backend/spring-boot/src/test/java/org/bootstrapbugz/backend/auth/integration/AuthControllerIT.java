@@ -158,7 +158,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(authTokensRequest)))
         .andExpect(status().isUnauthorized())
-        .andExpect(content().string(containsString("API_ERROR_AUTH_INVALID")));
+        .andExpect(content().string(containsString("API_ERROR_AUTH_UNAUTHORIZED")));
   }
 
   @ParameterizedTest
@@ -211,7 +211,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isUnauthorized())
-        .andExpect(content().string(containsString("API_ERROR_AUTH_INVALID")));
+        .andExpect(content().string(containsString("API_ERROR_AUTH_UNAUTHORIZED")));
   }
 
   private void invalidRefreshToken(String refreshToken) throws Exception {
