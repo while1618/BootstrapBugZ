@@ -96,7 +96,7 @@ class ProfileControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Username already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_EXISTS")));
   }
 
   @Test
@@ -110,7 +110,7 @@ class ProfileControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Email already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_EXISTS")));
   }
 
   @Test
@@ -125,10 +125,10 @@ class ProfileControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Invalid first name.")))
-        .andExpect(content().string(containsString("Invalid last name.")))
-        .andExpect(content().string(containsString("Invalid username.")))
-        .andExpect(content().string(containsString("Invalid email.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_INVALID")));
   }
 
   @Test
@@ -168,7 +168,7 @@ class ProfileControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Wrong current password.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_CURRENT_PASSWORD_WRONG")));
   }
 
   @Test
@@ -183,7 +183,7 @@ class ProfileControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Passwords do not match.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
   }
 
   @Test
@@ -197,9 +197,6 @@ class ProfileControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(changePasswordRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("currentPassword")))
-        .andExpect(content().string(containsString("newPassword")))
-        .andExpect(content().string(containsString("confirmNewPassword")))
-        .andExpect(content().string(containsString("Invalid password.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_PASSWORD_INVALID")));
   }
 }

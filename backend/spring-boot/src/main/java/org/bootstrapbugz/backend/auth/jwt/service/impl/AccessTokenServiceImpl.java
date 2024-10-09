@@ -62,8 +62,9 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      log.error(e.getMessage(), e);
-      throw new UnauthorizedException(messageService.getMessage("auth.tokenInvalid"));
+      final var code = messageService.getMessage("auth.tokenInvalid");
+      log.error(code, e);
+      throw new UnauthorizedException(code);
     }
   }
 

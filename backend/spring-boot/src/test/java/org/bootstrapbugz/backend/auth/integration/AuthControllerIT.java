@@ -91,9 +91,9 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerUserRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Invalid first name.")))
-        .andExpect(content().string(containsString("Invalid last name.")))
-        .andExpect(content().string(containsString("Passwords do not match.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
   }
 
   @Test
@@ -113,7 +113,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerUserRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Username already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_EXISTS")));
   }
 
   @Test
@@ -133,7 +133,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerUserRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("Email already exists.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_EXISTS")));
   }
 
   @Test
@@ -158,13 +158,13 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(authTokensRequest)))
         .andExpect(status().isUnauthorized())
-        .andExpect(content().string(containsString("Invalid credentials.")));
+        .andExpect(content().string(containsString("API_ERROR_AUTH_INVALID")));
   }
 
   @ParameterizedTest
   @CsvSource({
-    "locked, User locked.",
-    "deactivated1, User not activated.",
+    "locked, API_ERROR_USER_LOCK",
+    "deactivated1, API_ERROR_USER_NOT_ACTIVE",
   })
   void authenticate_throwForbidden_lockedDeactivatedUser(String username, String message)
       throws Exception {
@@ -211,9 +211,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(IntegrationTestUtil.authHeader(accessToken)))
         .andExpect(status().isUnauthorized())
-        .andExpect(
-            content()
-                .string(containsString("Full authentication is required to access this resource")));
+        .andExpect(content().string(containsString("API_ERROR_AUTH_INVALID")));
   }
 
   private void invalidRefreshToken(String refreshToken) throws Exception {
@@ -224,7 +222,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(refreshTokenRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Invalid token.")));
+        .andExpect(content().string(containsString("API_ERROR_AUTH_TOKEN_INVALID")));
   }
 
   @Test
@@ -261,7 +259,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
         .andExpect(status().isNotFound())
-        .andExpect(content().string(containsString("User not found.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_NOT_FOUND")));
   }
 
   @Test
@@ -295,7 +293,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Passwords do not match.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
   }
 
   @Test
@@ -309,7 +307,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resetPasswordRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Invalid token.")));
+        .andExpect(content().string(containsString("API_ERROR_AUTH_TOKEN_INVALID")));
   }
 
   @Test
@@ -334,7 +332,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(verificationMailRequest)))
         .andExpect(status().isNotFound())
-        .andExpect(content().string(containsString("User not found.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_NOT_FOUND")));
   }
 
   @Test
@@ -346,7 +344,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(verificationMailRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("User already activated.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_ACTIVE")));
   }
 
   @Test
@@ -373,7 +371,7 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(verifyEmailRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("Invalid token.")));
+        .andExpect(content().string(containsString("API_ERROR_AUTH_TOKEN_INVALID")));
   }
 
   @Test
@@ -387,6 +385,6 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(verifyEmailRequest)))
         .andExpect(status().isConflict())
-        .andExpect(content().string(containsString("User already activated.")));
+        .andExpect(content().string(containsString("API_ERROR_USER_ACTIVE")));
   }
 }

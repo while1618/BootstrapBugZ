@@ -34,8 +34,8 @@ class AccessingResourcesIT extends DatabaseContainers {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
 
-  private final String unauthorized = "Full authentication is required to access this resource";
-  private final String forbidden = "Access Denied";
+  private final String unauthorized = "API_ERROR_AUTH_INVALID";
+  private final String forbidden = "API_ERROR_AUTH_FORBIDDEN";
 
   @Test
   void getProfile_throwUnauthorized_userNotSignedIn() throws Exception {
