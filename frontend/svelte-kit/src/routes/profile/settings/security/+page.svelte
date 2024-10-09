@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import ApiErrors from '$lib/components/form/api-errors.svelte';
   import FormControl from '$lib/components/form/form-control.svelte';
-  import PrintApiErrors from '$lib/components/form/print-api-errors.svelte';
   import Modal from '$lib/components/shared/modal.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { ActionData } from './$types';
@@ -22,7 +22,7 @@
         name="confirmNewPassword"
         label={m.profile_confirmNewPassword()}
       />
-      <PrintApiErrors {form} />
+      <ApiErrors {form} />
       <button class="btn btn-primary">{m.profile_changePassword()}</button>
     </form>
     <div class="divider" />

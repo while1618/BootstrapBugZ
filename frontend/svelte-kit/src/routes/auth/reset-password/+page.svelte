@@ -1,8 +1,8 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import { page } from '$app/stores';
+  import ApiErrors from '$lib/components/form/api-errors.svelte';
   import FormControl from '$lib/components/form/form-control.svelte';
-  import PrintApiErrors from '$lib/components/form/print-api-errors.svelte';
   import * as m from '$lib/paraglide/messages.js';
   import type { ActionData } from './$types';
 
@@ -33,7 +33,7 @@
               <p class="label-text text-error">{form.errors.token[0]}</p>
             </div>
           {/if}
-          <PrintApiErrors {form} />
+          <ApiErrors {form} />
 
           <button class="btn btn-primary">{m.auth_resetPassword()}</button>
         </form>
