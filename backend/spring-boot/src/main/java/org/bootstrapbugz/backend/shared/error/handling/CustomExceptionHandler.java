@@ -98,7 +98,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
       log.error(code, e);
       return createError(HttpStatus.FORBIDDEN, code);
     } else {
-      final var code = messageService.getMessage("auth.invalid");
+      final var code = messageService.getMessage("auth.unauthorized");
       log.error(code, e);
       return createError(HttpStatus.UNAUTHORIZED, code);
     }

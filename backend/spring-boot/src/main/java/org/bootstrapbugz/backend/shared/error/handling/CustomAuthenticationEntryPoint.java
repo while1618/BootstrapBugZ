@@ -26,12 +26,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
       HttpServletRequest request, HttpServletResponse response, AuthenticationException ex) {
     try {
       final var errorMessage = new ErrorMessage(HttpStatus.UNAUTHORIZED);
-      errorMessage.addCode(messageService.getMessage("auth.invalid"));
+      errorMessage.addCode(messageService.getMessage("auth.unauthorized"));
       response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
       response.setStatus(HttpStatus.UNAUTHORIZED.value());
       response.getOutputStream().println(errorMessage.toString());
     } catch (IOException e) {
-      log.error(messageService.getMessage("auth.invalid"), e);
+      log.error(e.getMessage(), e);
     }
   }
 }
