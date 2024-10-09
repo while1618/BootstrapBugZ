@@ -68,7 +68,6 @@
   "auth_doNotHaveAnAccount": "Nemaš nalog?",
   "auth_forgotPassword": "Zaboravljena lozinka",
   "auth_resetPassword": "Resetuj lozinku",
-  "auth_invalid": "Pogrešni kredencijali",
 
   "admin_users": "Korisnici",
   "admin_userId": "Korisničko ime",
@@ -96,7 +95,7 @@
   "admin_lockUserConfirmation": "Da li si siguran da želiš da zaključaš ",
   "admin_selectUserRoles": "Izaberi permisije za ",
 
-  "API_ERROR_AUTH_INVALID": "Pogrešni kredencijali",
+  "API_ERROR_AUTH_UNAUTHORIZED": "Pogrešni kredencijali",
   "API_ERROR_AUTH_FORBIDDEN": "Zabranjen pristup",
   "API_ERROR_AUTH_TOKEN_REQUIRED": "Token je obavezan",
   "API_ERROR_AUTH_TOKEN_INVALID": "Nevalidan token",
