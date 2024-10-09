@@ -68,7 +68,6 @@
   "auth_doNotHaveAnAccount": "Don't have an account?",
   "auth_forgotPassword": "Forgot password",
   "auth_resetPassword": "Reset password",
-  "auth_invalid": "Invalid credentials",
 
   "admin_users": "Users",
   "admin_userId": "User ID",
@@ -96,7 +95,7 @@
   "admin_lockUserConfirmation": "Are you sure you want to lock ",
   "admin_selectUserRoles": "Select roles for ",
 
-  "API_ERROR_AUTH_INVALID": "Invalid credentials",
+  "API_ERROR_AUTH_UNAUTHORIZED": "Invalid credentials",
   "API_ERROR_AUTH_FORBIDDEN": "Forbidden",
   "API_ERROR_AUTH_TOKEN_REQUIRED": "Token is required",
   "API_ERROR_AUTH_TOKEN_INVALID": "Invalid token",
