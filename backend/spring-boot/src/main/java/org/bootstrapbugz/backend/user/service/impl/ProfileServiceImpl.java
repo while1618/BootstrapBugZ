@@ -7,7 +7,6 @@ import org.bootstrapbugz.backend.auth.util.AuthUtil;
 import org.bootstrapbugz.backend.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.backend.shared.error.exception.ConflictException;
 import org.bootstrapbugz.backend.shared.error.exception.UnauthorizedException;
-import org.bootstrapbugz.backend.shared.message.service.MessageService;
 import org.bootstrapbugz.backend.user.mapper.UserMapper;
 import org.bootstrapbugz.backend.user.model.User;
 import org.bootstrapbugz.backend.user.payload.dto.UserDTO;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProfileServiceImpl implements ProfileService {
   private final UserRepository userRepository;
-  private final MessageService messageService;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
@@ -29,13 +27,11 @@ public class ProfileServiceImpl implements ProfileService {
 
   public ProfileServiceImpl(
       UserRepository userRepository,
-      MessageService messageService,
       PasswordEncoder bCryptPasswordEncoder,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
       VerificationTokenService verificationTokenService) {
     this.userRepository = userRepository;
-    this.messageService = messageService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
@@ -53,8 +49,7 @@ public class ProfileServiceImpl implements ProfileService {
     final var user =
         userRepository
             .findById(userId)
-            .orElseThrow(
-                () -> new UnauthorizedException(messageService.getMessage("auth.tokenInvalid")));
+            .orElseThrow(() -> new UnauthorizedException("auth.tokenInvalid"));
 
     if (patchProfileRequest.firstName() != null) user.setFirstName(patchProfileRequest.firstName());
     if (patchProfileRequest.lastName() != null) user.setLastName(patchProfileRequest.lastName());
@@ -72,15 +67,14 @@ public class ProfileServiceImpl implements ProfileService {
   private void setUsername(User user, String username) {
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
-      throw new ConflictException(messageService.getMessage("user.usernameExists"));
+      throw new ConflictException("user.usernameExists");
 
     user.setUsername(username);
   }
 
   private void setEmail(User user, String email) {
     if (user.getEmail().equals(email)) return;
-    if (userRepository.existsByEmail(email))
-      throw new ConflictException(messageService.getMessage("user.emailExists"));
+    if (userRepository.existsByEmail(email)) throw new ConflictException("user.emailExists");
 
     user.setEmail(email);
     user.setActive(false);
@@ -102,10 +96,9 @@ public class ProfileServiceImpl implements ProfileService {
     final var user =
         userRepository
             .findById(userId)
-            .orElseThrow(
-                () -> new UnauthorizedException(messageService.getMessage("auth.tokenInvalid")));
+            .orElseThrow(() -> new UnauthorizedException("auth.tokenInvalid"));
     if (!bCryptPasswordEncoder.matches(changePasswordRequest.currentPassword(), user.getPassword()))
-      throw new BadRequestException(messageService.getMessage("user.currentPasswordWrong"));
+      throw new BadRequestException("user.currentPasswordWrong");
     user.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.newPassword()));
     deleteAuthTokens(userId);
     userRepository.save(user);

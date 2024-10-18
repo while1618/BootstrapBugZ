@@ -65,26 +65,30 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({BadRequestException.class})
   public ResponseEntity<Object> handleBadRequestException(BadRequestException e) {
-    log.error(e.getMessage(), e);
-    return createError(e.getStatus(), e.getMessage());
+    final var code = messageService.getMessage(e.getMessage());
+    log.error(code, e);
+    return createError(e.getStatus(), code);
   }
 
   @ExceptionHandler({UnauthorizedException.class})
   public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException e) {
-    log.error(e.getMessage(), e);
-    return createError(e.getStatus(), e.getMessage());
+    final var code = messageService.getMessage(e.getMessage());
+    log.error(code, e);
+    return createError(e.getStatus(), code);
   }
 
   @ExceptionHandler({ResourceNotFoundException.class})
   public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException e) {
-    log.error(e.getMessage(), e);
-    return createError(e.getStatus(), e.getMessage());
+    final var code = messageService.getMessage(e.getMessage());
+    log.error(code, e);
+    return createError(e.getStatus(), code);
   }
 
   @ExceptionHandler({ConflictException.class})
   public ResponseEntity<Object> handleConflictException(ConflictException e) {
-    log.error(e.getMessage(), e);
-    return createError(e.getStatus(), e.getMessage());
+    final var code = messageService.getMessage(e.getMessage());
+    log.error(code, e);
+    return createError(e.getStatus(), code);
   }
 
   @ExceptionHandler({AuthenticationException.class})

@@ -12,7 +12,6 @@ import org.bootstrapbugz.backend.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.backend.shared.error.exception.UnauthorizedException;
-import org.bootstrapbugz.backend.shared.message.service.MessageService;
 import org.bootstrapbugz.backend.user.payload.dto.RoleDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ public class AccessTokenServiceImpl implements AccessTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.ACCESS_TOKEN;
   private final AccessTokenBlacklistRepository accessTokenBlacklistRepository;
   private final UserBlacklistRepository userBlacklistRepository;
-  private final MessageService messageService;
 
   @Value("${jwt.secret}")
   private String secret;
@@ -33,11 +31,9 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
   public AccessTokenServiceImpl(
       AccessTokenBlacklistRepository accessTokenBlacklistRepository,
-      UserBlacklistRepository userBlacklistRepository,
-      MessageService messageService) {
+      UserBlacklistRepository userBlacklistRepository) {
     this.accessTokenBlacklistRepository = accessTokenBlacklistRepository;
     this.userBlacklistRepository = userBlacklistRepository;
-    this.messageService = messageService;
   }
 
   @Override
@@ -62,15 +58,14 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      final var code = messageService.getMessage("auth.tokenInvalid");
-      log.error(code, e);
-      throw new UnauthorizedException(code);
+      log.error(e.getMessage(), e);
+      throw new UnauthorizedException("auth.tokenInvalid");
     }
   }
 
   private void isInAccessTokenBlacklist(String token) {
     if (accessTokenBlacklistRepository.existsById(token))
-      throw new UnauthorizedException(messageService.getMessage("auth.tokenInvalid"));
+      throw new UnauthorizedException("auth.tokenInvalid");
   }
 
   private void isInUserBlacklist(String token) {
@@ -80,7 +75,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     if (userInBlacklist.isEmpty()) return;
     if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt())
         || issuedAt.equals(userInBlacklist.get().getUpdatedAt()))
-      throw new UnauthorizedException(messageService.getMessage("auth.tokenInvalid"));
+      throw new UnauthorizedException("auth.tokenInvalid");
   }
 
   @Override
