@@ -11,8 +11,7 @@
 <Modal bind:dialog={deleteDialog} title={m.admin_deleteUser()}>
   <svelte:fragment slot="body">
     <p class="py-4">
-      {m.admin_deleteUserConfirmation()}
-      <strong>{selectedUser?.username}</strong>?
+      {m.admin_deleteUserConfirmation({ username: selectedUser?.username })}
     </p>
   </svelte:fragment>
   <svelte:fragment slot="actions">

@@ -12,7 +12,7 @@
 
 <Modal bind:dialog={rolesDialog} title="Change roles">
   <svelte:fragment slot="body">
-    <p class="py-4">{m.admin_selectUserRoles()} <strong>{selectedUser?.username}</strong></p>
+    <p class="py-4">{m.admin_selectUserRoles({ username: selectedUser?.username })}</p>
     <form id="roleForm" method="POST" action="?/roles&id={selectedUser?.id}" use:enhance>
       <div class="flex flex-col gap-2">
         {#each data.roles as role}

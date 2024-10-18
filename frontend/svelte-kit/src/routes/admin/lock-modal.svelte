@@ -14,8 +14,9 @@
 >
   <svelte:fragment slot="body">
     <p class="py-4">
-      {selectedUser?.lock ? m.admin_unlockUserConfirmation() : m.admin_lockUserConfirmation()}
-      <strong>{selectedUser?.username}</strong>?
+      {selectedUser?.lock
+        ? m.admin_unlockUserConfirmation({ username: selectedUser?.username })
+        : m.admin_lockUserConfirmation({ username: selectedUser?.username })}
     </p>
   </svelte:fragment>
   <svelte:fragment slot="actions">

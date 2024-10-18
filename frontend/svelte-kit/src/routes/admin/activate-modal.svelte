@@ -15,9 +15,8 @@
   <svelte:fragment slot="body">
     <p class="py-4">
       {selectedUser?.active
-        ? m.admin_deactivateUserConfirmation()
-        : m.admin_activateUserConfirmation()}
-      <strong>{selectedUser?.username}</strong>?
+        ? m.admin_deactivateUserConfirmation({ username: selectedUser?.username })
+        : m.admin_activateUserConfirmation({ username: selectedUser?.username })}
     </p>
   </svelte:fragment>
   <svelte:fragment slot="actions">
