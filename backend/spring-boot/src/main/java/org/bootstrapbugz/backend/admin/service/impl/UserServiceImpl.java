@@ -8,7 +8,6 @@ import org.bootstrapbugz.backend.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.backend.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.backend.shared.error.exception.ConflictException;
 import org.bootstrapbugz.backend.shared.error.exception.ResourceNotFoundException;
-import org.bootstrapbugz.backend.shared.message.service.MessageService;
 import org.bootstrapbugz.backend.shared.payload.dto.PageableDTO;
 import org.bootstrapbugz.backend.user.mapper.UserMapper;
 import org.bootstrapbugz.backend.user.model.Role.RoleName;
@@ -29,29 +28,26 @@ public class UserServiceImpl implements UserService {
   private final AccessTokenService accessTokenService;
   private final RefreshTokenService refreshTokenService;
   private final PasswordEncoder bCryptPasswordEncoder;
-  private final MessageService messageService;
 
   public UserServiceImpl(
       UserRepository userRepository,
       RoleRepository roleRepository,
       AccessTokenService accessTokenService,
       RefreshTokenService refreshTokenService,
-      PasswordEncoder bCryptPasswordEncoder,
-      MessageService messageService) {
+      PasswordEncoder bCryptPasswordEncoder) {
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
     this.accessTokenService = accessTokenService;
     this.refreshTokenService = refreshTokenService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    this.messageService = messageService;
   }
 
   @Override
   public UserDTO create(UserRequest userRequest) {
     if (userRepository.existsByUsername(userRequest.username()))
-      throw new ConflictException(messageService.getMessage("user.usernameExists"));
+      throw new ConflictException("user.usernameExists");
     if (userRepository.existsByEmail(userRequest.email()))
-      throw new ConflictException(messageService.getMessage("user.emailExists"));
+      throw new ConflictException("user.emailExists");
     final var user =
         User.builder()
             .firstName(userRequest.firstName())
@@ -81,8 +77,7 @@ public class UserServiceImpl implements UserService {
     return userRepository
         .findWithRolesById(id)
         .map(UserMapper.INSTANCE::userToAdminUserDTO)
-        .orElseThrow(
-            () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+        .orElseThrow(() -> new ResourceNotFoundException("user.notFound"));
   }
 
   @Override
@@ -106,8 +101,7 @@ public class UserServiceImpl implements UserService {
     final var user =
         userRepository
             .findWithRolesById(id)
-            .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+            .orElseThrow(() -> new ResourceNotFoundException("user.notFound"));
 
     if (patchUserRequest.firstName() != null) user.setFirstName(patchUserRequest.firstName());
     if (patchUserRequest.lastName() != null) user.setLastName(patchUserRequest.lastName());
@@ -129,15 +123,14 @@ public class UserServiceImpl implements UserService {
   private void setUsername(User user, String username) {
     if (user.getUsername().equals(username)) return;
     if (userRepository.existsByUsername(username))
-      throw new ConflictException(messageService.getMessage("user.usernameExists"));
+      throw new ConflictException("user.usernameExists");
 
     user.setUsername(username);
   }
 
   private void setEmail(User user, String email) {
     if (user.getEmail().equals(email)) return;
-    if (userRepository.existsByEmail(email))
-      throw new ConflictException(messageService.getMessage("user.emailExists"));
+    if (userRepository.existsByEmail(email)) throw new ConflictException("user.emailExists");
 
     user.setEmail(email);
   }

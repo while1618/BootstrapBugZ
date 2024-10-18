@@ -20,7 +20,6 @@ import org.bootstrapbugz.backend.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.backend.shared.error.exception.ConflictException;
 import org.bootstrapbugz.backend.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.backend.shared.error.exception.UnauthorizedException;
-import org.bootstrapbugz.backend.shared.message.service.MessageService;
 import org.bootstrapbugz.backend.user.mapper.UserMapper;
 import org.bootstrapbugz.backend.user.model.Role.RoleName;
 import org.bootstrapbugz.backend.user.model.User;
@@ -36,7 +35,6 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
-  private final MessageService messageService;
   private final PasswordEncoder bCryptPasswordEncoder;
   private final AuthenticationManager authenticationManager;
   private final AccessTokenService accessTokenService;
@@ -47,7 +45,6 @@ public class AuthServiceImpl implements AuthService {
   public AuthServiceImpl(
       UserRepository userRepository,
       RoleRepository roleRepository,
-      MessageService messageService,
       PasswordEncoder bCryptPasswordEncoder,
       AuthenticationManager authenticationManager,
       AccessTokenService accessTokenService,
@@ -56,7 +53,6 @@ public class AuthServiceImpl implements AuthService {
       ResetPasswordTokenService resetPasswordTokenService) {
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
-    this.messageService = messageService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.authenticationManager = authenticationManager;
     this.accessTokenService = accessTokenService;
@@ -68,9 +64,9 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public UserDTO register(RegisterUserRequest registerUserRequest) {
     if (userRepository.existsByUsername(registerUserRequest.username()))
-      throw new ConflictException(messageService.getMessage("user.usernameExists"));
+      throw new ConflictException("user.usernameExists");
     if (userRepository.existsByEmail(registerUserRequest.email()))
-      throw new ConflictException(messageService.getMessage("user.emailExists"));
+      throw new ConflictException("user.emailExists");
     final var user = userRepository.save(createUser(registerUserRequest));
     final var token = verificationTokenService.create(user.getId());
     verificationTokenService.sendToEmail(user, token);
@@ -87,8 +83,7 @@ public class AuthServiceImpl implements AuthService {
     final var user =
         userRepository
             .findWithRolesByUsername(auth.getName())
-            .orElseThrow(
-                () -> new UnauthorizedException(messageService.getMessage("auth.unauthorized")));
+            .orElseThrow(() -> new UnauthorizedException("auth.unauthorized"));
     final var roleDTOs = UserMapper.INSTANCE.rolesToRoleDTOs(user.getRoles());
     final var accessToken = accessTokenService.create(user.getId(), roleDTOs);
     final var refreshToken =
@@ -102,8 +97,7 @@ public class AuthServiceImpl implements AuthService {
     final var roles =
         roleRepository
             .findByName(RoleName.USER)
-            .orElseThrow(
-                () -> new RuntimeException(messageService.getMessage("user.roleNotFound")));
+            .orElseThrow(() -> new RuntimeException("user.roleNotFound"));
     return User.builder()
         .firstName(registerUserRequest.firstName())
         .lastName(registerUserRequest.lastName())
@@ -146,8 +140,7 @@ public class AuthServiceImpl implements AuthService {
     final var user =
         userRepository
             .findByEmail(forgotPasswordRequest.email())
-            .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+            .orElseThrow(() -> new ResourceNotFoundException("user.notFound"));
     final var token = resetPasswordTokenService.create(user.getId());
     resetPasswordTokenService.sendToEmail(user, token);
   }
@@ -157,8 +150,7 @@ public class AuthServiceImpl implements AuthService {
     final var user =
         userRepository
             .findById(JwtUtil.getUserId(resetPasswordRequest.token()))
-            .orElseThrow(
-                () -> new BadRequestException(messageService.getMessage("auth.tokenInvalid")));
+            .orElseThrow(() -> new BadRequestException("auth.tokenInvalid"));
     resetPasswordTokenService.check(resetPasswordRequest.token());
     user.setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.password()));
     accessTokenService.invalidateAllByUserId(user.getId());
@@ -171,10 +163,8 @@ public class AuthServiceImpl implements AuthService {
     final var user =
         userRepository
             .findByUsernameOrEmail(request.usernameOrEmail(), request.usernameOrEmail())
-            .orElseThrow(
-                () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
-    if (Boolean.TRUE.equals(user.getActive()))
-      throw new ConflictException(messageService.getMessage("user.active"));
+            .orElseThrow(() -> new ResourceNotFoundException("user.notFound"));
+    if (Boolean.TRUE.equals(user.getActive())) throw new ConflictException("user.active");
     final var token = verificationTokenService.create(user.getId());
     verificationTokenService.sendToEmail(user, token);
   }
@@ -184,10 +174,8 @@ public class AuthServiceImpl implements AuthService {
     final var user =
         userRepository
             .findById(JwtUtil.getUserId(verifyEmailRequest.token()))
-            .orElseThrow(
-                () -> new BadRequestException(messageService.getMessage("auth.tokenInvalid")));
-    if (Boolean.TRUE.equals(user.getActive()))
-      throw new ConflictException(messageService.getMessage("user.active"));
+            .orElseThrow(() -> new BadRequestException("auth.tokenInvalid"));
+    if (Boolean.TRUE.equals(user.getActive())) throw new ConflictException("user.active");
     verificationTokenService.check(verifyEmailRequest.token());
     user.setActive(true);
     userRepository.save(user);

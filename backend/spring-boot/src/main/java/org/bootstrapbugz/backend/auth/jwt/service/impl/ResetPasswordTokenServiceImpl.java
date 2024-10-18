@@ -9,7 +9,6 @@ import org.bootstrapbugz.backend.auth.jwt.service.ResetPasswordTokenService;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.backend.shared.error.exception.BadRequestException;
-import org.bootstrapbugz.backend.shared.message.service.MessageService;
 import org.bootstrapbugz.backend.user.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.RESET_PASSWORD_TOKEN;
   private final UserBlacklistRepository userBlacklistRepository;
-  private final MessageService messageService;
   private final ApplicationEventPublisher eventPublisher;
 
   @Value("${jwt.secret}")
@@ -30,11 +28,8 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
   private int tokenDuration;
 
   public ResetPasswordTokenServiceImpl(
-      UserBlacklistRepository userBlacklistRepository,
-      MessageService messageService,
-      ApplicationEventPublisher eventPublisher) {
+      UserBlacklistRepository userBlacklistRepository, ApplicationEventPublisher eventPublisher) {
     this.userBlacklistRepository = userBlacklistRepository;
-    this.messageService = messageService;
     this.eventPublisher = eventPublisher;
   }
 
@@ -58,9 +53,8 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      final var code = messageService.getMessage("auth.tokenInvalid");
-      log.error(code, e);
-      throw new BadRequestException(code);
+      log.error(e.getMessage(), e);
+      throw new BadRequestException("auth.tokenInvalid");
     }
   }
 
@@ -71,7 +65,7 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
     if (userInBlacklist.isEmpty()) return;
     if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt())
         || issuedAt.equals(userInBlacklist.get().getUpdatedAt()))
-      throw new BadRequestException(messageService.getMessage("auth.tokenInvalid"));
+      throw new BadRequestException("auth.tokenInvalid");
   }
 
   @Override

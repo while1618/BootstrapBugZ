@@ -11,7 +11,6 @@ import org.bootstrapbugz.backend.auth.jwt.service.RefreshTokenService;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.backend.shared.error.exception.BadRequestException;
-import org.bootstrapbugz.backend.shared.message.service.MessageService;
 import org.bootstrapbugz.backend.user.payload.dto.RoleDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 public class RefreshTokenServiceImpl implements RefreshTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.REFRESH_TOKEN;
   private final RefreshTokenStoreRepository refreshTokenStoreRepository;
-  private final MessageService messageService;
 
   @Value("${jwt.secret}")
   private String secret;
@@ -29,10 +27,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
   @Value("${jwt.refresh-token.duration}")
   private int tokenDuration;
 
-  public RefreshTokenServiceImpl(
-      RefreshTokenStoreRepository refreshTokenStoreRepository, MessageService messageService) {
+  public RefreshTokenServiceImpl(RefreshTokenStoreRepository refreshTokenStoreRepository) {
     this.refreshTokenStoreRepository = refreshTokenStoreRepository;
-    this.messageService = messageService;
   }
 
   @Override
@@ -60,15 +56,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      final var code = messageService.getMessage("auth.tokenInvalid");
-      log.error(code, e);
-      throw new BadRequestException(code);
+      log.error(e.getMessage(), e);
+      throw new BadRequestException("auth.tokenInvalid");
     }
   }
 
   private void isInRefreshTokenStore(String token) {
     if (!refreshTokenStoreRepository.existsById(token))
-      throw new BadRequestException(messageService.getMessage("auth.tokenInvalid"));
+      throw new BadRequestException("auth.tokenInvalid");
   }
 
   @Override

@@ -8,7 +8,6 @@ import org.bootstrapbugz.backend.auth.jwt.service.VerificationTokenService;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil.JwtPurpose;
 import org.bootstrapbugz.backend.shared.error.exception.BadRequestException;
-import org.bootstrapbugz.backend.shared.message.service.MessageService;
 import org.bootstrapbugz.backend.user.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class VerificationTokenServiceImpl implements VerificationTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.VERIFY_EMAIL_TOKEN;
-  private final MessageService messageService;
   private final ApplicationEventPublisher eventPublisher;
 
   @Value("${jwt.secret}")
@@ -27,9 +25,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
   @Value("${jwt.verify-email-token.duration}")
   private int tokenDuration;
 
-  public VerificationTokenServiceImpl(
-      MessageService messageService, ApplicationEventPublisher eventPublisher) {
-    this.messageService = messageService;
+  public VerificationTokenServiceImpl(ApplicationEventPublisher eventPublisher) {
     this.eventPublisher = eventPublisher;
   }
 
@@ -48,9 +44,8 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      final var code = messageService.getMessage("auth.tokenInvalid");
-      log.error(code, e);
-      throw new BadRequestException(code);
+      log.error(e.getMessage(), e);
+      throw new BadRequestException("auth.tokenInvalid");
     }
   }
 

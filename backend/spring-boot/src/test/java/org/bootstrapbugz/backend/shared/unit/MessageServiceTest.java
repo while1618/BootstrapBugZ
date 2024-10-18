@@ -19,9 +19,9 @@ class MessageServiceTest {
 
   @Test
   void getMessage() {
-    when(messageSource.getMessage("{token.invalid}", null, LocaleContextHolder.getLocale()))
-        .thenReturn("Invalid token.");
-    final var actualMessage = messageService.getMessage("{token.invalid}");
-    assertThat(actualMessage).isEqualTo("Invalid token.");
+    when(messageSource.getMessage("{auth.unauthorized}", null, LocaleContextHolder.getLocale()))
+        .thenReturn("API_ERROR_AUTH_UNAUTHORIZED");
+    final var actualMessage = messageService.getMessage("{auth.unauthorized}");
+    assertThat(actualMessage).isEqualTo("API_ERROR_AUTH_UNAUTHORIZED");
   }
 }

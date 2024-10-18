@@ -1,7 +1,6 @@
 package org.bootstrapbugz.backend.user.service.impl;
 
 import org.bootstrapbugz.backend.shared.error.exception.ResourceNotFoundException;
-import org.bootstrapbugz.backend.shared.message.service.MessageService;
 import org.bootstrapbugz.backend.shared.payload.dto.AvailabilityDTO;
 import org.bootstrapbugz.backend.shared.payload.dto.PageableDTO;
 import org.bootstrapbugz.backend.user.mapper.UserMapper;
@@ -16,11 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
-  private final MessageService messageService;
 
-  public UserServiceImpl(UserRepository userRepository, MessageService messageService) {
+  public UserServiceImpl(UserRepository userRepository) {
     this.userRepository = userRepository;
-    this.messageService = messageService;
   }
 
   @Override
@@ -38,8 +35,7 @@ public class UserServiceImpl implements UserService {
     return userRepository
         .findById(id)
         .map(UserMapper.INSTANCE::userToSimpleUserDTO)
-        .orElseThrow(
-            () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+        .orElseThrow(() -> new ResourceNotFoundException("user.notFound"));
   }
 
   @Override
@@ -47,8 +43,7 @@ public class UserServiceImpl implements UserService {
     return userRepository
         .findByUsername(username)
         .map(UserMapper.INSTANCE::userToSimpleUserDTO)
-        .orElseThrow(
-            () -> new ResourceNotFoundException(messageService.getMessage("user.notFound")));
+        .orElseThrow(() -> new ResourceNotFoundException("user.notFound"));
   }
 
   @Override
