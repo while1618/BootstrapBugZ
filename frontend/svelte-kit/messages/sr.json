@@ -128,5 +128,5 @@
   "API_ERROR_REQUEST_MESSAGE_NOT_READABLE": "Telo zahteva nije korentno",
   "API_ERROR_REQUEST_PARAMETER_TYPE_MISMATCH": "Parametar zahteva je pogrešnog tipa",
   "API_ERROR_INTERNAL_SERVER_ERROR": "Interna greška na serveru",
-  "API_ERROR_UNKNOWN": "Nepoznata greška sa api-ja"
+  "API_ERROR_UNKNOWN": "Nepoznata greška"
 }
