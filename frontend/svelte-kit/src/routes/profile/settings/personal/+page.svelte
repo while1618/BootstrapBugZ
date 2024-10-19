@@ -25,20 +25,6 @@
       <FormControl
         {form}
         type="text"
-        name="firstName"
-        label={m.profile_firstName()}
-        value={$userStore?.firstName}
-      />
-      <FormControl
-        {form}
-        type="text"
-        name="lastName"
-        label={m.profile_lastName()}
-        value={$userStore?.lastName}
-      />
-      <FormControl
-        {form}
-        type="text"
         name="username"
         label={m.profile_username()}
         value={$userStore?.username}

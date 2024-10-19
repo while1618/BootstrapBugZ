@@ -1,21 +1,4 @@
 /*
- * Check for regex on: https://regexr.com/
- * */
-/*
- * At least 2 characters
- * It supports only words with exception to thees characters: ^-`' ",.
- * It supports most languages and their special characters like: šđžčć
- *
- * e.g.
- * Dejan Zdravković
- * Дејан Здравковић
- * 德揚·茲德拉夫科維奇
- * ñÑâê都道府県Федерации
- * আবাসযোগ্য জমির걸쳐 있는
- *
- * */
-export const FIRST_AND_LAST_NAME_REGEX = /^[^0-9_!¡?÷¿/\\+=@#$%ˆ&*(){}[\]|~<>;:]{2,}$/;
-/*
  * Between 2 and 16 characters long
  * It supports only letters, numbers, dot and underscore
  * Username can't start or end with dot or underscore
