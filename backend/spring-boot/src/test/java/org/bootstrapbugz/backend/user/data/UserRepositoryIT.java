@@ -31,8 +31,6 @@ class UserRepositoryIT extends DatabaseContainers {
     final var userRole = roleRepository.save(new Role(RoleName.USER));
     userRepository.save(
         User.builder()
-            .firstName("Admin")
-            .lastName("Admin")
             .username("admin")
             .email("admin@localhost")
             .password("password")
@@ -40,8 +38,6 @@ class UserRepositoryIT extends DatabaseContainers {
             .build());
     userRepository.save(
         User.builder()
-            .firstName("User")
-            .lastName("User")
             .username("user")
             .email("user@localhost")
             .password("password")

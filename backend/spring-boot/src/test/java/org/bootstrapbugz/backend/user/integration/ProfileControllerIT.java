@@ -54,8 +54,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void patchProfile_newUsernameAndEmail() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update1");
-    final var patchProfileRequest =
-        new PatchProfileRequest("Updated", "Updated", "updated1", "updated1@localhost");
+    final var patchProfileRequest = new PatchProfileRequest("updated1", "updated1@localhost");
     mockMvc
         .perform(
             patch(Path.PROFILE)
@@ -72,7 +71,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void patchProfile_sameUsernameAndEmail() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update2");
-    final var patchProfileRequest = PatchProfileRequest.builder().firstName("Updated").build();
+    final var patchProfileRequest = PatchProfileRequest.builder().build();
     mockMvc
         .perform(
             patch(Path.PROFILE)
@@ -80,7 +79,6 @@ class ProfileControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.firstName").value("Updated"))
         .andExpect(jsonPath("$.username").value("update2"))
         .andExpect(jsonPath("$.email").value("update2@localhost"));
   }
@@ -116,8 +114,7 @@ class ProfileControllerIT extends DatabaseContainers {
   @Test
   void patchProfile_throwBadRequest_invalidParameters() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
-    final var patchProfileRequest =
-        new PatchProfileRequest("Invalid123", "Invalid123", "invalid#$%", "invalid");
+    final var patchProfileRequest = new PatchProfileRequest("invalid#$%", "invalid");
     mockMvc
         .perform(
             patch(Path.PROFILE)
@@ -125,8 +122,6 @@ class ProfileControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(authTokens.accessToken()))
                 .content(objectMapper.writeValueAsString(patchProfileRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
-        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_INVALID")));
   }

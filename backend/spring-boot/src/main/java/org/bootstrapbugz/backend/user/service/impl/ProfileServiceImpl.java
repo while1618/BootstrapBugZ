@@ -51,8 +51,6 @@ public class ProfileServiceImpl implements ProfileService {
             .findById(userId)
             .orElseThrow(() -> new UnauthorizedException("auth.tokenInvalid"));
 
-    if (patchProfileRequest.firstName() != null) user.setFirstName(patchProfileRequest.firstName());
-    if (patchProfileRequest.lastName() != null) user.setLastName(patchProfileRequest.lastName());
     if (patchProfileRequest.username() != null) setUsername(user, patchProfileRequest.username());
     if (patchProfileRequest.email() != null) setEmail(user, patchProfileRequest.email());
 

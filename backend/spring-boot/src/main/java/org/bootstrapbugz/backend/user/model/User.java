@@ -43,12 +43,6 @@ public class User implements Serializable {
   @Column(name = "user_id")
   private Long id;
 
-  @Column(nullable = false)
-  private String firstName;
-
-  @Column(nullable = false)
-  private String lastName;
-
   @Column(unique = true, nullable = false)
   private String username;
 
@@ -86,8 +80,6 @@ public class User implements Serializable {
     return active == user.active
         && lock == user.lock
         && Objects.equal(id, user.id)
-        && Objects.equal(firstName, user.firstName)
-        && Objects.equal(lastName, user.lastName)
         && Objects.equal(username, user.username)
         && Objects.equal(email, user.email)
         && Objects.equal(password, user.password)
@@ -96,7 +88,6 @@ public class User implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(
-        id, firstName, lastName, username, email, password, active, lock, roles);
+    return Objects.hashCode(id, username, email, password, active, lock, roles);
   }
 }
