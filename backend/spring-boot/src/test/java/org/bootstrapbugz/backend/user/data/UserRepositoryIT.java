@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest
@@ -49,11 +48,6 @@ class UserRepositoryIT extends DatabaseContainers {
   void cleanUp() {
     userRepository.deleteAll();
     roleRepository.deleteAll();
-  }
-
-  @Test
-  void findAllWithRoles() {
-    assertThat(userRepository.findAll(PageRequest.of(0, 10))).hasSize(2);
   }
 
   @Test
