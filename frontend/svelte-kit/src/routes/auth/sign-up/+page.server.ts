@@ -1,12 +1,7 @@
 import type { Availability } from '$lib/models/shared/availability';
 import * as m from '$lib/paraglide/messages.js';
 import { makeRequest } from '$lib/server/apis/api';
-import {
-  EMAIL_REGEX,
-  FIRST_AND_LAST_NAME_REGEX,
-  PASSWORD_REGEX,
-  USERNAME_REGEX,
-} from '$lib/server/regex/regex';
+import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
@@ -19,10 +14,6 @@ export const load = (({ locals }) => {
 function createSignUpSchema() {
   return z
     .object({
-      firstName: z
-        .string()
-        .regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_firstNameInvalid() }),
-      lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.auth_lastNameInvalid() }),
       username: z
         .string()
         .regex(USERNAME_REGEX, { message: m.auth_usernameInvalid() })

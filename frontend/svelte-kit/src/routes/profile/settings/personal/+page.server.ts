@@ -1,16 +1,12 @@
 import * as m from '$lib/paraglide/messages.js';
 import { makeRequest } from '$lib/server/apis/api';
-import { EMAIL_REGEX, FIRST_AND_LAST_NAME_REGEX, USERNAME_REGEX } from '$lib/server/regex/regex';
+import { EMAIL_REGEX, USERNAME_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, type Actions } from '@sveltejs/kit';
 import { z } from 'zod';
 
 function createUpdateProfileSchema() {
   return z.object({
-    firstName: z
-      .string()
-      .regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_firstNameInvalid() }),
-    lastName: z.string().regex(FIRST_AND_LAST_NAME_REGEX, { message: m.profile_lastNameInvalid() }),
     username: z.string().regex(USERNAME_REGEX, { message: m.profile_usernameInvalid() }),
     email: z.string().regex(EMAIL_REGEX, { message: m.profile_emailInvalid() }),
   });

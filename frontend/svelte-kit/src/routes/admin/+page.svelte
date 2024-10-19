@@ -23,8 +23,6 @@
 
   const tableFieldsLabels = [
     m.admin_userId(),
-    m.admin_userFirstName(),
-    m.admin_userLastName(),
     m.admin_userUsername(),
     m.admin_userEmail(),
     m.admin_userCreatedAt(),
@@ -60,8 +58,6 @@
             {#each data.users.data as user}
               <tr>
                 <th>{user.id}</th>
-                <th>{user.firstName}</th>
-                <th>{user.lastName}</th>
                 <th>{user.username}</th>
                 <th>{user.email}</th>
                 <th>{new Date(user.createdAt).toLocaleString()}</th>

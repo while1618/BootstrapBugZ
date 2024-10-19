@@ -14,7 +14,6 @@
       </div>
       <div class="mb-4 mt-6 text-center">
         <h1 class="text-2xl font-bold">{data.user.username}</h1>
-        <p class="text-sm">{`${data.user.firstName} ${data.user.lastName}`}</p>
       </div>
       <div class="px-6 py-4">
         <p class="text-base">{m.user_bio()}</p>

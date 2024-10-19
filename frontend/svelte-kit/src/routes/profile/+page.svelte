@@ -12,7 +12,6 @@
       </div>
       <div class="mb-4 mt-6 text-center">
         <h1 class="text-2xl font-bold">{$userStore?.username}</h1>
-        <p class="text-sm">{`${$userStore?.firstName} ${$userStore?.lastName}`}</p>
       </div>
       <div class="px-6 py-4">
         <p class="text-base">
