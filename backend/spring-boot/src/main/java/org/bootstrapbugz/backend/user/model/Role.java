@@ -9,9 +9,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +36,9 @@ public class Role implements Serializable {
   @Column(name = "role_name", unique = true, nullable = false)
   @Enumerated(EnumType.STRING)
   private RoleName name;
+
+  @ManyToMany(mappedBy = "roles")
+  private Set<User> users;
 
   public Role(RoleName name) {
     this.name = name;
