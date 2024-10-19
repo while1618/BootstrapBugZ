@@ -40,8 +40,6 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 5
-                firstName: John
-                lastName: Doe
                 username: john.doe
                 email: john.doe@localhost
                 createdAt: 2023-05-18T00:51:50.758738
@@ -182,8 +180,6 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 2
-                firstName: User
-                lastName: User
                 username: user
                 email: user@localhost
                 createdAt: 2023-05-18T00:51:50.758738
@@ -206,8 +202,6 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 2
-                firstName: John
-                lastName: Doe
                 username: john.doe
                 email: john.doe@localhost
                 createdAt: 2023-05-18T00:51:50.758738
@@ -273,20 +267,14 @@ paths:
               example:
                 data:
                   - id: 1
-                    firstName: Admin
-                    lastName: Admin
                     username: admin
                     email: null
                     createdAt: 2023-05-18T00:51:50.758738
                   - id: 2
-                    firstName: User
-                    lastName: User
                     username: user
                     email: null
                     createdAt: 2023-05-18T00:51:50.758738
                   - id: 3
-                    firstName: John
-                    lastName: Doe
                     username: john.doe
                     email: null
                     createdAt: 2023-05-18T00:51:50.758738
@@ -307,8 +295,6 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 2
-                firstName: User
-                lastName: User
                 username: user
                 email: null
                 createdAt: 2023-05-18T00:51:50.758738
@@ -330,8 +316,6 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 2
-                firstName: user
-                lastName: user
                 username: user
                 email: null
                 createdAt: 2023-05-18T00:51:50.758738
@@ -391,8 +375,6 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 5
-                firstName: John
-                lastName: Doe
                 username: john.doe
                 email: john.doe@localhost
                 active: true
@@ -438,8 +420,6 @@ paths:
                 example:
                   data:
                     - id: 1
-                      firstName: Admin
-                      lastName: Admin
                       username: admin
                       email: admin@localhost
                       active: true
@@ -449,8 +429,6 @@ paths:
                         - name: USER
                         - name: ADMIN
                     - id: 2
-                      firstName: User
-                      lastName: User
                       username: user
                       email: user@localhost
                       active: true
@@ -459,8 +437,6 @@ paths:
                       roles:
                         - name: USER
                     - id: 3
-                      firstName: John
-                      lastName: Doe
                       username: john.doe
                       email: john.doe@localhost
                       active: true
@@ -491,8 +467,6 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 2
-                firstName: User
-                lastName: User
                 username: user
                 email: user@localhost
                 active: true
@@ -525,8 +499,6 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 2
-                firstName: John
-                lastName: Doe
                 username: john.doe
                 email: john.doe@localhost
                 active: true
@@ -562,8 +534,6 @@ paths:
                 $ref: "#/components/schemas/UserDTO"
               example:
                 id: 2
-                firstName: John
-                lastName: Doe
                 username: john.doe
                 email: john.doe@localhost
                 active: true
@@ -711,17 +681,11 @@ components:
           schema:
             type: object
             required:
-              - firstName
-              - lastName
               - username
               - email
               - password
               - confirmPassword
             properties:
-              firstName:
-                type: string
-              lastName:
-                type: string
               username:
                 type: string
               email:
@@ -732,8 +696,6 @@ components:
               confirmPassword:
                 type: string
           example:
-            firstName: John
-            lastName: Doe
             username: John.doe
             email: john.doe@localhost
             password: qwerty123
@@ -846,18 +808,12 @@ components:
           schema:
             type: object
             properties:
-              firstName:
-                type: string
-              lastName:
-                type: string
               username:
                 type: string
               email:
                 type: string
                 format: email
           example:
-            firstName: John
-            lastName: Doe
             username: John.doe
             email: john.doe@localhost
     ChangePasswordRequest:
@@ -890,8 +846,6 @@ components:
           schema:
             type: object
             required:
-              - firstName
-              - lastName
               - username
               - email
               - password
@@ -900,10 +854,6 @@ components:
               - lock
               - roleNames
             properties:
-              firstName:
-                type: string
-              lastName:
-                type: string
               username:
                 type: string
               email:
@@ -925,8 +875,6 @@ components:
                     - USER
                     - ADMIN
           example:
-            firstName: John
-            lastName: Doe
             username: John.doe
             email: john.doe@localhost
             password: qwerty123
@@ -943,10 +891,6 @@ components:
           schema:
             type: object
             properties:
-              firstName:
-                type: string
-              lastName:
-                type: string
               username:
                 type: string
               email:
@@ -968,8 +912,6 @@ components:
                     - USER
                     - ADMIN
           example:
-            firstName: John
-            lastName: Doe
             username: John.doe
             email: john.doe@localhost
             active: true
@@ -1034,8 +976,6 @@ components:
       type: object
       required:
         - id
-        - firstName
-        - lastName
         - username
         - email
         - createdAt
@@ -1043,10 +983,6 @@ components:
         id:
           type: integer
           format: int64
-        firstName:
-          type: string
-        lastName:
-          type: string
         username:
           type: string
         email:
