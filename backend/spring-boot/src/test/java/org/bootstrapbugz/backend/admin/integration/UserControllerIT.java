@@ -51,8 +51,6 @@ class UserControllerIT extends DatabaseContainers {
   void createUser() throws Exception {
     final var userRequest =
         UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("test1")
             .email("test1@localhost")
             .password("qwerty123")
@@ -74,8 +72,6 @@ class UserControllerIT extends DatabaseContainers {
   void createUser_throwBadRequest_invalidParameters() throws Exception {
     final var userRequest =
         UserRequest.builder()
-            .firstName("Invalid123")
-            .lastName("Invalid123")
             .username("invalid#$%")
             .email("invalid")
             .password("qwerty123")
@@ -91,10 +87,8 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_INVALID")))
-        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
-        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_INVALID")))
+        .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
   }
 
@@ -102,8 +96,6 @@ class UserControllerIT extends DatabaseContainers {
   void createUser_throwConflict_usernameExists() throws Exception {
     final var userRequest =
         UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("admin")
             .email("test2@localhost")
             .password("qwerty123")
@@ -126,8 +118,6 @@ class UserControllerIT extends DatabaseContainers {
   void createUser_throwConflict_emailExists() throws Exception {
     final var userRequest =
         UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("test2")
             .email("admin@localhost")
             .password("qwerty123")
@@ -163,8 +153,6 @@ class UserControllerIT extends DatabaseContainers {
     final var expectedUserDTO =
         UserDTO.builder()
             .id(2L)
-            .firstName("User")
-            .lastName("User")
             .username("user")
             .email("user@localhost")
             .active(true)
@@ -201,8 +189,6 @@ class UserControllerIT extends DatabaseContainers {
   void updateUser() throws Exception {
     final var userRequest =
         UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("test3")
             .email("test3@localhost")
             .password("qwerty123")
@@ -224,8 +210,6 @@ class UserControllerIT extends DatabaseContainers {
   void updateUser_throwBadRequest_invalidParameters() throws Exception {
     final var userRequest =
         UserRequest.builder()
-            .firstName("Invalid123")
-            .lastName("Invalid123")
             .username("invalid#$%")
             .email("invalid")
             .password("qwerty123")
@@ -241,8 +225,6 @@ class UserControllerIT extends DatabaseContainers {
                 .headers(IntegrationTestUtil.authHeader(accessToken))
                 .content(objectMapper.writeValueAsString(userRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
-        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
@@ -252,8 +234,6 @@ class UserControllerIT extends DatabaseContainers {
   void updateUser_throwConflict_usernameExists() throws Exception {
     final var userRequest =
         UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("admin")
             .email("test2@localhost")
             .password("qwerty123")
@@ -276,8 +256,6 @@ class UserControllerIT extends DatabaseContainers {
   void updateUser_throwConflict_emailExists() throws Exception {
     final var userRequest =
         UserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("test2")
             .email("admin@localhost")
             .password("qwerty123")
@@ -300,8 +278,6 @@ class UserControllerIT extends DatabaseContainers {
   void patchUser() throws Exception {
     final var patchUserRequest =
         PatchUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("test4")
             .email("test4@localhost")
             .password("qwerty1234")
@@ -323,8 +299,6 @@ class UserControllerIT extends DatabaseContainers {
   void patchUser_throwBadRequest_invalidParameters() throws Exception {
     final var patchUserRequest =
         PatchUserRequest.builder()
-            .firstName("Invalid123")
-            .lastName("Invalid123")
             .username("invalid#$%")
             .email("invalid")
             .password("qwerty123")
@@ -342,8 +316,6 @@ class UserControllerIT extends DatabaseContainers {
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("API_ERROR_USER_USERNAME_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_EMAIL_INVALID")))
-        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
-        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
   }
 
@@ -351,8 +323,6 @@ class UserControllerIT extends DatabaseContainers {
   void patchUser_throwConflict_usernameExists() throws Exception {
     final var patchUserRequest =
         PatchUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("admin")
             .email("test2@localhost")
             .password("qwerty123")
@@ -375,8 +345,6 @@ class UserControllerIT extends DatabaseContainers {
   void patchUser_throwConflict_emailExists() throws Exception {
     final var patchUserRequest =
         PatchUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("test2")
             .email("admin@localhost")
             .password("qwerty123")

@@ -57,8 +57,6 @@ public class DataInit implements ApplicationRunner {
     userRepository.saveAll(
         List.of(
             User.builder()
-                .firstName("Admin")
-                .lastName("Admin")
                 .username("admin")
                 .email("admin@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -67,8 +65,6 @@ public class DataInit implements ApplicationRunner {
                 .roles(Set.of(userRole, adminRole))
                 .build(),
             User.builder()
-                .firstName("User")
-                .lastName("User")
                 .username("user")
                 .email("user@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -86,8 +82,6 @@ public class DataInit implements ApplicationRunner {
             .collection(
                 () ->
                     User.builder()
-                        .firstName(faker.name().firstName())
-                        .lastName(faker.name().lastName())
                         .username(faker.internet().username())
                         .email(faker.internet().emailAddress())
                         .password(bCryptPasswordEncoder.encode(password))
@@ -104,8 +98,6 @@ public class DataInit implements ApplicationRunner {
     userRepository.saveAll(
         List.of(
             User.builder()
-                .firstName("Deactivated1")
-                .lastName("Deactivated1")
                 .username("deactivated1")
                 .email("deactivate1d@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -114,8 +106,6 @@ public class DataInit implements ApplicationRunner {
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
-                .firstName("Deactivated2")
-                .lastName("Deactivated2")
                 .username("deactivated2")
                 .email("deactivated2@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -124,8 +114,6 @@ public class DataInit implements ApplicationRunner {
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
-                .firstName("Locked")
-                .lastName("Locked")
                 .username("locked")
                 .email("locked@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -134,8 +122,6 @@ public class DataInit implements ApplicationRunner {
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
-                .firstName("Update1")
-                .lastName("Update1")
                 .username("update1")
                 .email("update1@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -144,8 +130,6 @@ public class DataInit implements ApplicationRunner {
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
-                .firstName("Update2")
-                .lastName("Update2")
                 .username("update2")
                 .email("update2@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -154,8 +138,6 @@ public class DataInit implements ApplicationRunner {
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
-                .firstName("Update3")
-                .lastName("Update3")
                 .username("update3")
                 .email("update3@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -164,8 +146,6 @@ public class DataInit implements ApplicationRunner {
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
-                .firstName("Update4")
-                .lastName("Update4")
                 .username("update4")
                 .email("update4@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -174,8 +154,6 @@ public class DataInit implements ApplicationRunner {
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
-                .firstName("Delete1")
-                .lastName("Delete1")
                 .username("delete1")
                 .email("delete1@localhost")
                 .password(bCryptPasswordEncoder.encode(password))
@@ -184,8 +162,6 @@ public class DataInit implements ApplicationRunner {
                 .roles(Collections.singleton(userRole))
                 .build(),
             User.builder()
-                .firstName("Delete2")
-                .lastName("Delete2")
                 .username("delete2")
                 .email("delete2@localhost")
                 .password(bCryptPasswordEncoder.encode(password))

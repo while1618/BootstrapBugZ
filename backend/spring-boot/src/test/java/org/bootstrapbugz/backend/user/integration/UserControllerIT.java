@@ -33,14 +33,7 @@ class UserControllerIT extends DatabaseContainers {
   @Autowired private ObjectMapper objectMapper;
 
   private final UserDTO expectedUserDTO =
-      UserDTO.builder()
-          .id(2L)
-          .firstName("User")
-          .lastName("User")
-          .username("user")
-          .email(null)
-          .createdAt(LocalDateTime.now())
-          .build();
+      UserDTO.builder().id(2L).username("user").email(null).createdAt(LocalDateTime.now()).build();
 
   @Test
   void findAllUsers() throws Exception {

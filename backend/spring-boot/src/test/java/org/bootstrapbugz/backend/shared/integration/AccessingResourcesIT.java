@@ -82,8 +82,6 @@ class AccessingResourcesIT extends DatabaseContainers {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user");
     final var userRequest =
         UserRequest.builder()
-            .firstName("test")
-            .lastName("test")
             .username("test")
             .email("test@localhost")
             .password("qwerty123")
@@ -155,8 +153,6 @@ class AccessingResourcesIT extends DatabaseContainers {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user");
     final var userRequest =
         UserRequest.builder()
-            .firstName("test")
-            .lastName("test")
             .username("test")
             .email("test@localhost")
             .password("qwerty123")

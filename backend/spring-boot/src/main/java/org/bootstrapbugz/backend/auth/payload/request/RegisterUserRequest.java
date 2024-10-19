@@ -10,12 +10,6 @@ import org.bootstrapbugz.backend.shared.validator.FieldMatch;
 @Builder
 @FieldMatch(first = "password", second = "confirmPassword", message = "{user.passwordsDoNotMatch}")
 public record RegisterUserRequest(
-    @NotBlank(message = "{user.firstNameRequired}")
-        @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{user.firstNameInvalid}")
-        String firstName,
-    @NotBlank(message = "{user.lastNameRequired}")
-        @Pattern(regexp = Regex.FIRST_AND_LAST_NAME, message = "{user.lastNameInvalid}")
-        String lastName,
     @NotBlank(message = "{user.usernameRequired}")
         @Pattern(regexp = Regex.USERNAME, message = "{user.usernameInvalid}")
         String username,

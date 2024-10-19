@@ -56,8 +56,6 @@ class AuthControllerIT extends DatabaseContainers {
   void registerUser() throws Exception {
     final var registerUserRequest =
         RegisterUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("test")
             .email("test@localhost")
             .password("qwerty123")
@@ -78,8 +76,6 @@ class AuthControllerIT extends DatabaseContainers {
   void registerUser_throwBadRequest_invalidParameters() throws Exception {
     final var registerUserRequest =
         RegisterUserRequest.builder()
-            .firstName("User1")
-            .lastName("User1")
             .username("user")
             .email("user@localhost")
             .password("qwerty123")
@@ -91,8 +87,6 @@ class AuthControllerIT extends DatabaseContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerUserRequest)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("API_ERROR_USER_FIRST_NAME_INVALID")))
-        .andExpect(content().string(containsString("API_ERROR_USER_LAST_NAME_INVALID")))
         .andExpect(content().string(containsString("API_ERROR_USER_PASSWORDS_DO_NOT_MATCH")));
   }
 
@@ -100,8 +94,6 @@ class AuthControllerIT extends DatabaseContainers {
   void registerUser_throwConflict_usernameExists() throws Exception {
     final var registerUserRequest =
         RegisterUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("user")
             .email("test123@localhost")
             .password("qwerty123")
@@ -120,8 +112,6 @@ class AuthControllerIT extends DatabaseContainers {
   void registerUser_throwConflict_emailExists() throws Exception {
     final var registerUserRequest =
         RegisterUserRequest.builder()
-            .firstName("Test")
-            .lastName("Test")
             .username("test123")
             .email("user@localhost")
             .password("qwerty123")

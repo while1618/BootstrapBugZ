@@ -12,8 +12,6 @@ import lombok.Builder;
 @Builder
 public record UserDTO(
     Long id,
-    String firstName,
-    String lastName,
     String username,
     String email,
     @JsonInclude(Include.NON_NULL) Boolean active,
@@ -30,8 +28,6 @@ public record UserDTO(
     return active == userDTO.active
         && lock == userDTO.lock
         && Objects.equal(id, userDTO.id)
-        && Objects.equal(firstName, userDTO.firstName)
-        && Objects.equal(lastName, userDTO.lastName)
         && Objects.equal(username, userDTO.username)
         && Objects.equal(email, userDTO.email)
         && Objects.equal(roleDTOs, userDTO.roleDTOs);
@@ -39,6 +35,6 @@ public record UserDTO(
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(id, firstName, lastName, username, email, active, lock, roleDTOs);
+    return Objects.hashCode(id, username, email, active, lock, roleDTOs);
   }
 }

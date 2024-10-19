@@ -50,8 +50,6 @@ public class UserServiceImpl implements UserService {
       throw new ConflictException("user.emailExists");
     final var user =
         User.builder()
-            .firstName(userRequest.firstName())
-            .lastName(userRequest.lastName())
             .username(userRequest.username())
             .email(userRequest.email())
             .password(bCryptPasswordEncoder.encode(userRequest.password()))
@@ -84,8 +82,6 @@ public class UserServiceImpl implements UserService {
   public UserDTO update(Long id, UserRequest userRequest) {
     final var user = userRepository.findWithRolesById(id).orElse(new User());
 
-    user.setFirstName(userRequest.firstName());
-    user.setLastName(userRequest.lastName());
     setUsername(user, userRequest.username());
     setEmail(user, userRequest.email());
     setPassword(user, userRequest.password());
@@ -103,8 +99,6 @@ public class UserServiceImpl implements UserService {
             .findWithRolesById(id)
             .orElseThrow(() -> new ResourceNotFoundException("user.notFound"));
 
-    if (patchUserRequest.firstName() != null) user.setFirstName(patchUserRequest.firstName());
-    if (patchUserRequest.lastName() != null) user.setLastName(patchUserRequest.lastName());
     if (patchUserRequest.username() != null) setUsername(user, patchUserRequest.username());
     if (patchUserRequest.email() != null) setEmail(user, patchUserRequest.email());
     if (patchUserRequest.password() != null) setPassword(user, patchUserRequest.password());

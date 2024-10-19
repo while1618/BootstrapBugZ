@@ -99,8 +99,6 @@ public class AuthServiceImpl implements AuthService {
             .findByName(RoleName.USER)
             .orElseThrow(() -> new RuntimeException("user.roleNotFound"));
     return User.builder()
-        .firstName(registerUserRequest.firstName())
-        .lastName(registerUserRequest.lastName())
         .username(registerUserRequest.username())
         .email(registerUserRequest.email())
         .password(bCryptPasswordEncoder.encode(registerUserRequest.password()))
