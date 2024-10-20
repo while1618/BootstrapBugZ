@@ -40,6 +40,7 @@ public class JWTFilter extends OncePerRequestFilter {
     }
     try {
       SecurityContextHolder.getContext().setAuthentication(getAuth(accessToken));
+    } catch (RuntimeException ignored) {
     } finally {
       chain.doFilter(request, response);
     }
