@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import org.bootstrapbugz.backend.shared.email.service.impl.EmailServiceImpl;
@@ -21,7 +22,7 @@ class EmailServiceTest {
   @InjectMocks private EmailServiceImpl emailService;
 
   @Test
-  void sendHtmlEmail() {
+  void sendHtmlEmail() throws MessagingException {
     final var to = "user";
     final var subject = "subject";
     final var body =
