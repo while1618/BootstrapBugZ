@@ -18,16 +18,12 @@ public class EmailServiceImpl implements EmailService {
   }
 
   @Override
-  public void sendHtmlEmail(String to, String subject, String body) {
-    try {
-      final var mimeMessage = mailSender.createMimeMessage();
-      final var helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
-      helper.setTo(to);
-      helper.setSubject(subject);
-      helper.setText(body, true);
-      mailSender.send(mimeMessage);
-    } catch (MessagingException e) {
-      log.error(e.getMessage(), e);
-    }
+  public void sendHtmlEmail(String to, String subject, String body) throws MessagingException {
+    final var mimeMessage = mailSender.createMimeMessage();
+    final var helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
+    helper.setTo(to);
+    helper.setSubject(subject);
+    helper.setText(body, true);
+    mailSender.send(mimeMessage);
   }
 }

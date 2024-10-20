@@ -44,7 +44,6 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     try {
       JwtUtil.verify(token, secret, PURPOSE);
     } catch (RuntimeException e) {
-      log.error(e.getMessage(), e);
       throw new BadRequestException("auth.tokenInvalid");
     }
   }
