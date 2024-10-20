@@ -1,5 +1,7 @@
 package org.bootstrapbugz.backend.auth.jwt.event.listener;
 
+import jakarta.mail.MessagingException;
+import java.io.IOException;
 import org.bootstrapbugz.backend.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.backend.auth.jwt.event.email.JwtEmailSupplier;
 import org.bootstrapbugz.backend.shared.email.service.EmailService;
@@ -19,8 +21,12 @@ public class OnSendJwtEmailListener implements ApplicationListener<OnSendJwtEmai
 
   @Override
   public void onApplicationEvent(OnSendJwtEmail event) {
-    new JwtEmailSupplier()
-        .supplyEmail(event.getPurpose())
-        .sendEmail(emailService, environment, event.getUser(), event.getToken());
+    try {
+      new JwtEmailSupplier()
+          .supplyEmail(event.getPurpose())
+          .sendEmail(emailService, environment, event.getUser(), event.getToken());
+    } catch (IOException | MessagingException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
