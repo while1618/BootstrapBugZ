@@ -25,26 +25,23 @@ public class LoggingAspect {
   @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
   public void controllerLayer() {}
 
-  @Pointcut("within(@org.springframework.stereotype.Service *)")
-  public void serviceLayer() {}
-
   @Pointcut(
       "execution(public * org.bootstrapbugz.backend.shared.error.handling.CustomExceptionHandler.handleMethodArgumentNotValid(..))")
   public void handleMethodArgumentNotValid() {}
 
-  @Before(value = "serviceLayer() || controllerLayer()")
+  @Before(value = "controllerLayer()")
   public void logBefore(JoinPoint joinPoint) {
     Object[] args = joinPoint.getArgs();
     String clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
     String methodName = joinPoint.getSignature().getName();
-    log.info(">> {}.{}() - {}", clazz, methodName, Arrays.toString(args));
+    log.debug(">> {}.{}() - {}", clazz, methodName, Arrays.toString(args));
   }
 
-  @AfterReturning(value = "serviceLayer() || controllerLayer()", returning = "result")
+  @AfterReturning(value = "controllerLayer()", returning = "result")
   public void logAfter(JoinPoint joinPoint, Object result) {
     String clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
     String methodName = joinPoint.getSignature().getName();
-    log.info("<< {}.{}() - {}", clazz, methodName, result);
+    log.debug("<< {}.{}() - {}", clazz, methodName, result);
   }
 
   @AfterThrowing(pointcut = "controllerLayer()", throwing = "exception")
