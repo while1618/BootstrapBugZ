@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User, Long> {
   @Query("SELECT u.id FROM User u")
-  List<Long> findUserIds(Pageable pageable);
+  List<Long> findAllUserIds(Pageable pageable);
 
   @EntityGraph(attributePaths = "roles")
-  List<User> findByIdIn(List<Long> ids);
+  List<User> findAllByIdIn(List<Long> ids);
 
   @EntityGraph(attributePaths = "roles")
   Optional<User> findWithRolesById(Long id);
