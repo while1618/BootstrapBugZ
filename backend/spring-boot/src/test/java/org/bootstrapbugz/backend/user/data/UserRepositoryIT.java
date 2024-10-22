@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest
@@ -48,6 +49,15 @@ class UserRepositoryIT extends DatabaseContainers {
   void cleanUp() {
     userRepository.deleteAll();
     roleRepository.deleteAll();
+  }
+
+  @Test
+  void findAllByIdIn() {
+    final var userIds = userRepository.findAllUserIds(PageRequest.of(0, 10));
+    assertThat(userIds).hasSize(2);
+    final var users = userRepository.findAllByIdIn(userIds);
+    assertThat(users.getFirst().getUsername()).isEqualTo("admin");
+    assertThat(users).hasSize(2);
   }
 
   @Test
