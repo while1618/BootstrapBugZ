@@ -60,6 +60,11 @@ public class UserServiceImpl implements UserService {
     return UserMapper.INSTANCE.userToAdminUserDTO(userRepository.save(user));
   }
 
+  /*
+  * This method is using two query calls because of HHH000104 warning
+  * https://vladmihalcea.com/fix-hibernate-hhh000104-entity-fetch-pagination-warning-message/
+  * https://vladmihalcea.com/join-fetch-pagination-spring/
+  * */
   @Override
   public PageableDTO<UserDTO> findAll(Pageable pageable) {
     final var userIds = userRepository.findAllUserIds(pageable);
