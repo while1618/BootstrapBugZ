@@ -62,13 +62,10 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public PageableDTO<UserDTO> findAll(Pageable pageable) {
+    final var userIds = userRepository.findUserIds(pageable);
     final var users =
-        userRepository.findAll(pageable).stream()
-            .map(
-                user -> {
-                  user.setRoles(roleRepository.findRolesByUserId(user.getId()));
-                  return UserMapper.INSTANCE.userToAdminUserDTO(user);
-                })
+        userRepository.findByIdIn(userIds).stream()
+            .map(UserMapper.INSTANCE::userToAdminUserDTO)
             .toList();
     final long total = userRepository.count();
     return new PageableDTO<>(users, total);
