@@ -1,6 +1,5 @@
 package org.bootstrapbugz.backend.shared.logger;
 
-import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -8,8 +7,11 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.bootstrapbugz.backend.auth.util.AuthUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Aspect
 @Component
@@ -18,9 +20,6 @@ public class LoggingAspect {
   public LoggingAspect() {
     log.info("LoggingAspect initialized");
   }
-
-  @Pointcut("execution(public * org.bootstrapbugz.backend..*.*(..)))")
-  public void allPublicMethods() {}
 
   @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
   public void controllerLayer() {}
@@ -31,30 +30,41 @@ public class LoggingAspect {
 
   @Before(value = "controllerLayer()")
   public void logBefore(JoinPoint joinPoint) {
-    Object[] args = joinPoint.getArgs();
-    String clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
-    String methodName = joinPoint.getSignature().getName();
-    log.debug(">> {}.{}() - {}", clazz, methodName, Arrays.toString(args));
+    final var request =
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    final var ipAddress = AuthUtil.getUserIpAddress(request);
+    final var clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
+    final var methodName = joinPoint.getSignature().getName();
+    log.info(">> {} - {}.{}() called", ipAddress, clazz, methodName);
   }
 
-  @AfterReturning(value = "controllerLayer()", returning = "result")
-  public void logAfter(JoinPoint joinPoint, Object result) {
-    String clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
-    String methodName = joinPoint.getSignature().getName();
-    log.debug("<< {}.{}() - {}", clazz, methodName, result);
+  @AfterReturning(value = "controllerLayer()")
+  public void logAfter(JoinPoint joinPoint) {
+    final var request =
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    final var ipAddress = AuthUtil.getUserIpAddress(request);
+    final var clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
+    final var methodName = joinPoint.getSignature().getName();
+    log.info("<< {} - {}.{}() finished", ipAddress, clazz, methodName);
   }
 
-  @AfterThrowing(pointcut = "controllerLayer()", throwing = "exception")
-  public void logException(JoinPoint joinPoint, Throwable exception) {
-    String clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
-    String methodName = joinPoint.getSignature().getName();
-    log.error("<< {}.{}() - {}", clazz, methodName, exception.getMessage(), exception);
+  @AfterThrowing(pointcut = "controllerLayer()", throwing = "e")
+  public void logException(JoinPoint joinPoint, Throwable e) {
+    final var request =
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    final var ipAddress = AuthUtil.getUserIpAddress(request);
+    final var clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
+    final var methodName = joinPoint.getSignature().getName();
+    log.error("<< {} - {}.{}() thrown", ipAddress, clazz, methodName, e);
   }
 
   @Before(value = "handleMethodArgumentNotValid()")
   public void beforeHandleMethodArgumentNotValid(JoinPoint joinPoint) {
-    Object[] args = joinPoint.getArgs();
-    MethodArgumentNotValidException e = (MethodArgumentNotValidException) args[0];
-    log.error("<< Invalid arguments for object - {}", e.getBindingResult().getObjectName(), e);
+    final var request =
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    final var ipAddress = AuthUtil.getUserIpAddress(request);
+    final var e = (MethodArgumentNotValidException) joinPoint.getArgs()[0];
+    final var objectName = e.getBindingResult().getObjectName();
+    log.error("<< {} - {} invalid arguments", ipAddress, objectName, e);
   }
 }
