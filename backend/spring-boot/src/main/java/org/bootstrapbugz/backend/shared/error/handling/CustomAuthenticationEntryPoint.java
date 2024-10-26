@@ -23,7 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
   @Override
   public void commence(
-      HttpServletRequest request, HttpServletResponse response, AuthenticationException ex)
+      HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
       throws IOException {
     final var errorMessage = new ErrorMessage(HttpStatus.UNAUTHORIZED);
     errorMessage.addCode(messageService.getMessage("auth.unauthorized"));
