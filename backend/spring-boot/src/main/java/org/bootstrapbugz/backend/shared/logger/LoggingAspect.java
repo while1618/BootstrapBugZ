@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.bootstrapbugz.backend.auth.util.AuthUtil;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -27,6 +28,10 @@ public class LoggingAspect {
   @Pointcut(
       "execution(public * org.bootstrapbugz.backend.shared.error.handling.CustomExceptionHandler.handleMethodArgumentNotValid(..))")
   public void handleMethodArgumentNotValid() {}
+
+  @Pointcut(
+      "execution(public * org.bootstrapbugz.backend.shared.error.handling.CustomAuthenticationEntryPoint.commence(..))")
+  public void authEntryPoint() {}
 
   @Before(value = "controllerLayer()")
   public void logBefore(JoinPoint joinPoint) {
@@ -66,5 +71,16 @@ public class LoggingAspect {
     final var e = (MethodArgumentNotValidException) joinPoint.getArgs()[0];
     final var objectName = e.getBindingResult().getObjectName();
     log.error("<< {} - {} invalid arguments", ipAddress, objectName, e);
+  }
+
+  @Before(value = "authEntryPoint()")
+  public void beforeAuthEntryPoint(JoinPoint joinPoint) {
+    final var request =
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    final var ipAddress = AuthUtil.getUserIpAddress(request);
+    final var method = request.getMethod();
+    final var endpoint = request.getRequestURL().toString();
+    final var e = (AuthenticationException) joinPoint.getArgs()[2];
+    log.error("<< {} - {} {} auth failed", ipAddress, method, endpoint, e);
   }
 }
