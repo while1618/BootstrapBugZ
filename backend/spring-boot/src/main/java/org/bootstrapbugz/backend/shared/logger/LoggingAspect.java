@@ -34,33 +34,33 @@ public class LoggingAspect {
   public void authEntryPoint() {}
 
   @Before(value = "controllerLayer()")
-  public void logBefore(JoinPoint joinPoint) {
+  public void logBefore() {
     final var request =
         ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
-    final var methodName = joinPoint.getSignature().getName();
-    log.info(">> {} - {}.{}() called", ipAddress, clazz, methodName);
+    final var method = request.getMethod();
+    final var endpoint = request.getRequestURL().toString();
+    log.info("{} - {} {} called", ipAddress, method, endpoint);
   }
 
   @AfterReturning(value = "controllerLayer()")
-  public void logAfter(JoinPoint joinPoint) {
+  public void logAfter() {
     final var request =
         ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
-    final var methodName = joinPoint.getSignature().getName();
-    log.info("<< {} - {}.{}() finished", ipAddress, clazz, methodName);
+    final var method = request.getMethod();
+    final var endpoint = request.getRequestURL().toString();
+    log.info("{} - {} {} finished", ipAddress, method, endpoint);
   }
 
   @AfterThrowing(pointcut = "controllerLayer()", throwing = "e")
-  public void logException(JoinPoint joinPoint, Throwable e) {
+  public void logException(Throwable e) {
     final var request =
         ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var clazz = joinPoint.getSignature().getDeclaringType().getSimpleName();
-    final var methodName = joinPoint.getSignature().getName();
-    log.error("<< {} - {}.{}() thrown", ipAddress, clazz, methodName, e);
+    final var method = request.getMethod();
+    final var endpoint = request.getRequestURL().toString();
+    log.error("{} - {} {} thrown", ipAddress, method, endpoint, e);
   }
 
   @Before(value = "handleMethodArgumentNotValid()")
@@ -68,9 +68,10 @@ public class LoggingAspect {
     final var request =
         ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     final var ipAddress = AuthUtil.getUserIpAddress(request);
+    final var method = request.getMethod();
+    final var endpoint = request.getRequestURL().toString();
     final var e = (MethodArgumentNotValidException) joinPoint.getArgs()[0];
-    final var objectName = e.getBindingResult().getObjectName();
-    log.error("<< {} - {} invalid arguments", ipAddress, objectName, e);
+    log.error("{} - {} {} invalid arguments", ipAddress, method, endpoint, e);
   }
 
   @Before(value = "authEntryPoint()")
@@ -81,6 +82,6 @@ public class LoggingAspect {
     final var method = request.getMethod();
     final var endpoint = request.getRequestURL().toString();
     final var e = (AuthenticationException) joinPoint.getArgs()[2];
-    log.error("<< {} - {} {} auth failed", ipAddress, method, endpoint, e);
+    log.error("{} - {} {} auth failed", ipAddress, method, endpoint, e);
   }
 }
