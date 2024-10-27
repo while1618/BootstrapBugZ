@@ -2,7 +2,9 @@ package org.bootstrapbugz.backend.shared.generic.crud;
 
 import org.bootstrapbugz.backend.shared.payload.dto.PageableDTO;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface CrudService<T, U> {
   T create(U saveRequest);
 
