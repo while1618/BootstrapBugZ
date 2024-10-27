@@ -22,7 +22,7 @@ public class LoggingAspect {
     log.info("LoggingAspect initialized");
   }
 
-  @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
+  @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
   public void controllerLayer() {}
 
   @Pointcut(
