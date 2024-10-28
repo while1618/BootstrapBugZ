@@ -33,55 +33,74 @@ public class LoggingAspect {
       "execution(public * org.bootstrapbugz.backend.shared.error.handling.CustomAuthenticationEntryPoint.commence(..))")
   public void authEntryPoint() {}
 
-  @Before(value = "controllerLayer()")
-  public void logBefore() {
+  private LoggerDTO createLoggerDTO() {
     final var request =
         ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    var username = "anonymousUser";
+    if (AuthUtil.isSignedIn()) username = AuthUtil.findSignedInUser().getUsername();
     final var ipAddress = AuthUtil.getUserIpAddress(request);
     final var method = request.getMethod();
     final var endpoint = request.getRequestURL().toString();
-    log.info("{} - {} {} called", ipAddress, method, endpoint);
+    return new LoggerDTO(username, ipAddress, method, endpoint);
+  }
+
+  @Before(value = "controllerLayer()")
+  public void logBefore() {
+    final var loggerDTO = createLoggerDTO();
+    log.info(
+        "{} {} - {} {} called",
+        loggerDTO.username(),
+        loggerDTO.ipAddress(),
+        loggerDTO.method(),
+        loggerDTO.endpoint());
   }
 
   @AfterReturning(value = "controllerLayer()")
   public void logAfter() {
-    final var request =
-        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var method = request.getMethod();
-    final var endpoint = request.getRequestURL().toString();
-    log.info("{} - {} {} finished", ipAddress, method, endpoint);
+    final var loggerDTO = createLoggerDTO();
+    log.info(
+        "{} {} - {} {} finished",
+        loggerDTO.username(),
+        loggerDTO.ipAddress(),
+        loggerDTO.method(),
+        loggerDTO.endpoint());
   }
 
   @AfterThrowing(pointcut = "controllerLayer()", throwing = "e")
   public void logException(Throwable e) {
-    final var request =
-        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var method = request.getMethod();
-    final var endpoint = request.getRequestURL().toString();
-    log.error("{} - {} {} thrown", ipAddress, method, endpoint, e);
+    final var loggerDTO = createLoggerDTO();
+    log.error(
+        "{} {} - {} {} thrown",
+        loggerDTO.username(),
+        loggerDTO.ipAddress(),
+        loggerDTO.method(),
+        loggerDTO.endpoint(),
+        e);
   }
 
   @Before(value = "handleMethodArgumentNotValid()")
   public void beforeHandleMethodArgumentNotValid(JoinPoint joinPoint) {
-    final var request =
-        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var method = request.getMethod();
-    final var endpoint = request.getRequestURL().toString();
+    final var loggerDTO = createLoggerDTO();
     final var e = (MethodArgumentNotValidException) joinPoint.getArgs()[0];
-    log.error("{} - {} {} invalid arguments", ipAddress, method, endpoint, e);
+    log.error(
+        "{} {} - {} {} invalid arguments",
+        loggerDTO.username(),
+        loggerDTO.ipAddress(),
+        loggerDTO.method(),
+        loggerDTO.endpoint(),
+        e);
   }
 
   @Before(value = "authEntryPoint()")
   public void beforeAuthEntryPoint(JoinPoint joinPoint) {
-    final var request =
-        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    final var ipAddress = AuthUtil.getUserIpAddress(request);
-    final var method = request.getMethod();
-    final var endpoint = request.getRequestURL().toString();
+    final var loggerDTO = createLoggerDTO();
     final var e = (AuthenticationException) joinPoint.getArgs()[2];
-    log.error("{} - {} {} auth failed", ipAddress, method, endpoint, e);
+    log.error(
+        "{} {} - {} {} auth failed",
+        loggerDTO.username(),
+        loggerDTO.ipAddress(),
+        loggerDTO.method(),
+        loggerDTO.endpoint(),
+        e);
   }
 }
