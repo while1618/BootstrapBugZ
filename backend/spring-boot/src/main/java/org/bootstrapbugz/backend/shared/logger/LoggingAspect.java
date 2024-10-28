@@ -33,73 +33,45 @@ public class LoggingAspect {
       "execution(public * org.bootstrapbugz.backend.shared.error.handling.CustomAuthenticationEntryPoint.commence(..))")
   public void authEntryPoint() {}
 
-  private LoggerDTO createLoggerDTO() {
+  private Logger createLogger() {
     final var request =
         ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     final var username = AuthUtil.getAuthName();
     final var ipAddress = AuthUtil.getUserIpAddress(request);
     final var method = request.getMethod();
     final var endpoint = request.getRequestURL().toString();
-    return new LoggerDTO(username, ipAddress, method, endpoint);
+    return new Logger(username, ipAddress, method, endpoint);
   }
 
   @Before(value = "controllerLayer()")
   public void logBefore() {
-    final var loggerDTO = createLoggerDTO();
-    log.info(
-        "{} {} - {} {} called",
-        loggerDTO.username(),
-        loggerDTO.ipAddress(),
-        loggerDTO.method(),
-        loggerDTO.endpoint());
+    final var logger = createLogger();
+    logger.info("Called");
   }
 
   @AfterReturning(value = "controllerLayer()")
   public void logAfter() {
-    final var loggerDTO = createLoggerDTO();
-    log.info(
-        "{} {} - {} {} finished",
-        loggerDTO.username(),
-        loggerDTO.ipAddress(),
-        loggerDTO.method(),
-        loggerDTO.endpoint());
+    final var logger = createLogger();
+    logger.info("Finished");
   }
 
   @AfterThrowing(pointcut = "controllerLayer()", throwing = "e")
-  public void logException(Throwable e) {
-    final var loggerDTO = createLoggerDTO();
-    log.error(
-        "{} {} - {} {} thrown",
-        loggerDTO.username(),
-        loggerDTO.ipAddress(),
-        loggerDTO.method(),
-        loggerDTO.endpoint(),
-        e);
+  public void logException(Exception e) {
+    final var logger = createLogger();
+    logger.error("Thrown", e);
   }
 
   @Before(value = "handleMethodArgumentNotValid()")
   public void beforeHandleMethodArgumentNotValid(JoinPoint joinPoint) {
-    final var loggerDTO = createLoggerDTO();
     final var e = (MethodArgumentNotValidException) joinPoint.getArgs()[0];
-    log.error(
-        "{} {} - {} {} invalid arguments",
-        loggerDTO.username(),
-        loggerDTO.ipAddress(),
-        loggerDTO.method(),
-        loggerDTO.endpoint(),
-        e);
+    final var logger = createLogger();
+    logger.error("Invalid arguments", e);
   }
 
   @Before(value = "authEntryPoint()")
   public void beforeAuthEntryPoint(JoinPoint joinPoint) {
-    final var loggerDTO = createLoggerDTO();
     final var e = (AuthenticationException) joinPoint.getArgs()[2];
-    log.error(
-        "{} {} - {} {} auth failed",
-        loggerDTO.username(),
-        loggerDTO.ipAddress(),
-        loggerDTO.method(),
-        loggerDTO.endpoint(),
-        e);
+    final var logger = createLogger();
+    logger.error("Auth failed", e);
   }
 }
