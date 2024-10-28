@@ -26,6 +26,12 @@ public class AuthUtil {
     return (UserPrincipal) auth.getPrincipal();
   }
 
+  public static String getAuthName() {
+    final var auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || auth.getPrincipal().equals("anonymousUser")) return "anonymousUser";
+    return auth.getName();
+  }
+
   public static String getUserIpAddress(HttpServletRequest request) {
     final var ipAddress = request.getHeader("x-forwarded-for");
     if (ipAddress == null || ipAddress.isEmpty()) return request.getRemoteAddr();
