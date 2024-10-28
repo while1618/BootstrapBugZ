@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.backend.auth.jwt.util.JwtUtil;
 import org.bootstrapbugz.backend.auth.util.AuthUtil;
@@ -15,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@Slf4j
 @Component
 public class JWTFilter extends OncePerRequestFilter {
   private final AccessTokenService accessTokenService;

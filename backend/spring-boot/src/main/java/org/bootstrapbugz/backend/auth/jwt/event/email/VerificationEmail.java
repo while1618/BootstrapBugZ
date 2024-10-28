@@ -5,13 +5,11 @@ import jakarta.mail.MessagingException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.shared.email.service.EmailService;
 import org.bootstrapbugz.backend.user.model.User;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 
-@Slf4j
 public class VerificationEmail implements JwtEmail {
   @Override
   public void sendEmail(EmailService emailService, Environment environment, User user, String token)
