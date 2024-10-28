@@ -1,7 +1,6 @@
 package org.bootstrapbugz.backend.shared.error.handling;
 
 import jakarta.annotation.Nonnull;
-import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.shared.error.ErrorMessage;
 import org.bootstrapbugz.backend.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.backend.shared.error.exception.ConflictException;
@@ -27,7 +26,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@Slf4j
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   private final MessageService messageService;

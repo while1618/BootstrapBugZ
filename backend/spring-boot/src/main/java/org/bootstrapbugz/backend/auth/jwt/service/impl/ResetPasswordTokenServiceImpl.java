@@ -2,7 +2,6 @@ package org.bootstrapbugz.backend.auth.jwt.service.impl;
 
 import com.auth0.jwt.JWT;
 import java.time.Instant;
-import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.auth.jwt.event.OnSendJwtEmail;
 import org.bootstrapbugz.backend.auth.jwt.redis.repository.UserBlacklistRepository;
 import org.bootstrapbugz.backend.auth.jwt.service.ResetPasswordTokenService;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.RESET_PASSWORD_TOKEN;

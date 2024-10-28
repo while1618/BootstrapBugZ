@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.auth.jwt.redis.model.RefreshTokenStore;
 import org.bootstrapbugz.backend.auth.jwt.redis.repository.RefreshTokenStoreRepository;
 import org.bootstrapbugz.backend.auth.jwt.service.RefreshTokenService;
@@ -15,7 +14,6 @@ import org.bootstrapbugz.backend.user.payload.dto.RoleDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
   private static final JwtPurpose PURPOSE = JwtPurpose.REFRESH_TOKEN;
