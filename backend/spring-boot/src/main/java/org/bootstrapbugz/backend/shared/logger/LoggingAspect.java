@@ -36,8 +36,7 @@ public class LoggingAspect {
   private LoggerDTO createLoggerDTO() {
     final var request =
         ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    var username = "anonymousUser";
-    if (AuthUtil.isSignedIn()) username = AuthUtil.findSignedInUser().getUsername();
+    final var username = AuthUtil.getAuthName();
     final var ipAddress = AuthUtil.getUserIpAddress(request);
     final var method = request.getMethod();
     final var endpoint = request.getRequestURL().toString();
