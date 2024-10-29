@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-public class LoggerAspect {
+public class AspectLogger {
   private final CustomLogger customLogger;
 
-  public LoggerAspect(CustomLogger customLogger) {
-    log.info("LoggerAspect Initialized");
+  public AspectLogger(CustomLogger customLogger) {
+    log.info("AspectLogger Initialized");
     this.customLogger = customLogger;
   }
 
