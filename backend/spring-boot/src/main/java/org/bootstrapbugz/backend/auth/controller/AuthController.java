@@ -30,9 +30,9 @@ public class AuthController {
   private final AuthService authService;
   private final Logger logger;
 
-  public AuthController(AuthService authService) {
+  public AuthController(AuthService authService, Logger logger) {
     this.authService = authService;
-    this.logger = new Logger();
+    this.logger = logger;
   }
 
   @PostMapping("/register")

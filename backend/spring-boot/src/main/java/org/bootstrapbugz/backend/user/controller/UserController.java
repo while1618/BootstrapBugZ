@@ -24,9 +24,9 @@ public class UserController {
   private final UserService userService;
   private final Logger logger;
 
-  public UserController(UserService userService) {
+  public UserController(UserService userService, Logger logger) {
     this.userService = userService;
-    this.logger = new Logger();
+    this.logger = logger;
   }
 
   @GetMapping
