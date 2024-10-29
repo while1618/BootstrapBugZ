@@ -1,7 +1,6 @@
 package org.bootstrapbugz.backend.shared.generic.crud;
 
 import jakarta.validation.Valid;
-import org.bootstrapbugz.backend.shared.logger.Logger;
 import org.bootstrapbugz.backend.shared.payload.dto.PageableDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,50 +16,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public abstract class CrudController<T, U> {
   private final CrudService<T, U> service;
-  private final Logger logger;
 
-  protected CrudController(CrudService<T, U> service, Logger logger) {
+  protected CrudController(CrudService<T, U> service) {
     this.service = service;
-    this.logger = logger;
   }
 
   @PostMapping
   public ResponseEntity<T> create(@Valid @RequestBody U saveRequest) {
-    logger.info("Called");
-    final var response = new ResponseEntity<>(service.create(saveRequest), HttpStatus.CREATED);
-    logger.info("Finished");
-    return response;
+    return new ResponseEntity<>(service.create(saveRequest), HttpStatus.CREATED);
   }
 
   @GetMapping
   public ResponseEntity<PageableDTO<T>> findAll(Pageable pageable) {
-    logger.info("Called");
-    final var response = ResponseEntity.ok(service.findAll(pageable));
-    logger.info("Finished");
-    return response;
+    return ResponseEntity.ok(service.findAll(pageable));
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<T> findById(@PathVariable("id") Long id) {
-    logger.info("Called");
-    final var response = ResponseEntity.ok(service.findById(id));
-    logger.info("Finished");
-    return response;
+    return ResponseEntity.ok(service.findById(id));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<T> update(@PathVariable("id") Long id, @Valid @RequestBody U saveRequest) {
-    logger.info("Called");
-    final var response = ResponseEntity.ok(service.update(id, saveRequest));
-    logger.info("Finished");
-    return response;
+    return ResponseEntity.ok(service.update(id, saveRequest));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-    logger.info("Called");
     service.delete(id);
-    logger.info("Finished");
     return ResponseEntity.noContent().build();
   }
 }
