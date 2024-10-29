@@ -1,4 +1,4 @@
-package org.bootstrapbugz.backend.shared.logger;
+package org.bootstrapbugz.backend.shared.interceptor;
 
 import com.google.common.net.HttpHeaders;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-public class MDCInterceptor implements HandlerInterceptor {
+public class RequestInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(
       HttpServletRequest request, HttpServletResponse response, Object handler) {
