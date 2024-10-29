@@ -1,13 +1,13 @@
 package org.bootstrapbugz.backend.shared.logger;
 
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bootstrapbugz.backend.auth.util.AuthUtil;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Slf4j
-@NoArgsConstructor
+@Component
 public class Logger {
   public void info(String message) {
     final var request =

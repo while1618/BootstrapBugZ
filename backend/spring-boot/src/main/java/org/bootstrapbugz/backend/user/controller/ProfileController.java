@@ -21,9 +21,9 @@ public class ProfileController {
   private final ProfileService profileService;
   private final Logger logger;
 
-  public ProfileController(ProfileService profileService) {
+  public ProfileController(ProfileService profileService, Logger logger) {
     this.profileService = profileService;
-    this.logger = new Logger();
+    this.logger = logger;
   }
 
   @GetMapping

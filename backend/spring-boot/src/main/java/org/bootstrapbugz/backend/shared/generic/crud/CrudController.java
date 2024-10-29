@@ -19,9 +19,9 @@ public abstract class CrudController<T, U> {
   private final CrudService<T, U> service;
   private final Logger logger;
 
-  protected CrudController(CrudService<T, U> service) {
+  protected CrudController(CrudService<T, U> service, Logger logger) {
     this.service = service;
-    this.logger = new Logger();
+    this.logger = logger;
   }
 
   @PostMapping

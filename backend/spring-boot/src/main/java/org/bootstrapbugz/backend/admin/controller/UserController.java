@@ -21,10 +21,10 @@ public class UserController extends CrudController<UserDTO, UserRequest> {
   private final UserService userService;
   private final Logger logger;
 
-  public UserController(UserService userService) {
-    super(userService);
+  public UserController(UserService userService, Logger logger) {
+    super(userService, logger);
     this.userService = userService;
-    this.logger = new Logger();
+    this.logger = logger;
   }
 
   @PatchMapping("/{id}")
