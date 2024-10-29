@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class LoggerAspect {
-  private final Logger logger;
+  private final CustomLogger customLogger;
 
-  public LoggerAspect(Logger logger) {
+  public LoggerAspect(CustomLogger customLogger) {
     log.info("LoggerAspect Initialized");
-    this.logger = logger;
+    this.customLogger = customLogger;
   }
 
   @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
@@ -23,11 +23,11 @@ public class LoggerAspect {
 
   @Before(value = "controllerLayer()")
   public void logBefore() {
-    logger.info("Called");
+    customLogger.info("Called");
   }
 
   @AfterReturning(value = "controllerLayer()")
   public void logAfter() {
-    logger.info("Finished");
+    customLogger.info("Finished");
   }
 }
