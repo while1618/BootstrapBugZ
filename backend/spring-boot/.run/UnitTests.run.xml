@@ -1,43 +1,17 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="UnitTests" type="JUnit" factoryName="JUnit">
-    <module name="backend"/>
-    <extension name="coverage">
-      <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.backend.user.service.*"/>
-        <option name="ENABLED" value="true"/>
-      </pattern>
-      <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.backend.auth.service.*"/>
-        <option name="ENABLED" value="true"/>
-      </pattern>
-      <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.backend.admin.service.*"/>
-        <option name="ENABLED" value="true"/>
-      </pattern>
-      <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.backend.auth.jwt.service.*"/>
-        <option name="ENABLED" value="true"/>
-      </pattern>
-      <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.backend.shared.email.service.*"/>
-        <option name="ENABLED" value="true"/>
-      </pattern>
-      <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.backend.shared.message.service.*"/>
-        <option name="ENABLED" value="true"/>
-      </pattern>
-    </extension>
-    <option name="PACKAGE_NAME" value="org.bootstrapbugz.backend"/>
-    <option name="MAIN_CLASS_NAME" value=""/>
-    <option name="METHOD_NAME" value=""/>
-    <option name="TEST_OBJECT" value="pattern"/>
-    <dir value="$PROJECT_DIR$/backend/src/test/java/org/bootstrapbugz/backend/*/integration"/>
+    <module name="backend" />
+    <option name="PACKAGE_NAME" value="org.bootstrapbugz.backend" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="pattern" />
+    <dir value="$PROJECT_DIR$/backend/src/test/java/org/bootstrapbugz/backend/*/integration" />
     <patterns>
-      <pattern testClass="org.bootstrapbugz.backend.shared.unit.EmailServiceTest"/>
-      <pattern testClass="org.bootstrapbugz.backend.shared.unit.MessageServiceTest"/>
+      <pattern testClass="org.bootstrapbugz.backend.shared.unit.EmailServiceTest" />
+      <pattern testClass="org.bootstrapbugz.backend.shared.unit.MessageServiceTest" />
     </patterns>
     <method v="2">
-      <option name="Make" enabled="true"/>
+      <option name="Make" enabled="true" />
     </method>
   </configuration>
 </component>
