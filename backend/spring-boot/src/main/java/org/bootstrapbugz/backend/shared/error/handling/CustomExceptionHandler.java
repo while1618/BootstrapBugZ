@@ -32,9 +32,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   private final MessageService messageService;
   private final Logger logger;
 
-  public CustomExceptionHandler(MessageService messageService) {
+  public CustomExceptionHandler(MessageService messageService, Logger logger) {
     this.messageService = messageService;
-    this.logger = new Logger();
+    this.logger = logger;
   }
 
   @Override
