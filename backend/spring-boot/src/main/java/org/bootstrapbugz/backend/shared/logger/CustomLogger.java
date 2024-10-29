@@ -10,7 +10,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Slf4j
 @Component
-public class Logger {
+public class CustomLogger {
   public void info(String message) {
     final var logDetails = new LogDetails();
     log.info(
