@@ -6,7 +6,6 @@ import org.bootstrapbugz.backend.admin.payload.request.UserRequest;
 import org.bootstrapbugz.backend.admin.service.UserService;
 import org.bootstrapbugz.backend.shared.constants.Path;
 import org.bootstrapbugz.backend.shared.generic.crud.CrudController;
-import org.bootstrapbugz.backend.shared.logger.Logger;
 import org.bootstrapbugz.backend.user.payload.dto.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,20 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(Path.ADMIN_USERS)
 public class UserController extends CrudController<UserDTO, UserRequest> {
   private final UserService userService;
-  private final Logger logger;
 
-  public UserController(UserService userService, Logger logger) {
-    super(userService, logger);
+  public UserController(UserService userService) {
+    super(userService);
     this.userService = userService;
-    this.logger = logger;
   }
 
   @PatchMapping("/{id}")
   public ResponseEntity<UserDTO> patch(
       @PathVariable("id") Long id, @Valid @RequestBody PatchUserRequest patchUserRequest) {
-    logger.info("Called");
-    final var response = ResponseEntity.ok(userService.patch(id, patchUserRequest));
-    logger.info("Finished");
-    return response;
+    return ResponseEntity.ok(userService.patch(id, patchUserRequest));
   }
 }
