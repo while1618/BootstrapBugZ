@@ -41,8 +41,8 @@
     selectedUser = user;
   };
 
-  let totalPages = $derived(Math.ceil(data.users.total / data.pageable.size));
-  let currentPage = $derived(data.pageable.page);
+  const totalPages = $derived(Math.ceil(data.users.total / data.pageable.size));
+  const currentPage = $derived(data.pageable.page);
 </script>
 
 <section class="py-10 md:py-16">
