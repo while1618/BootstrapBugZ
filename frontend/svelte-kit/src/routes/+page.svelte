@@ -3,7 +3,11 @@
   import UserHome from '$lib/components/home/user-home.svelte';
   import type { LayoutData } from './$types';
 
-  export let data: LayoutData;
+  interface Props {
+    data: LayoutData;
+  }
+
+  let { data }: Props = $props();
 </script>
 
 {#if data.user}

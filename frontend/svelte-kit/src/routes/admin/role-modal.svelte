@@ -5,13 +5,17 @@
   import * as m from '$lib/paraglide/messages.js';
   import type { PageServerData } from './$types';
 
-  export let rolesDialog: HTMLDialogElement;
-  export let selectedUser: User;
-  export let data: PageServerData;
+  interface Props {
+    rolesDialog: HTMLDialogElement;
+    selectedUser: User;
+    data: PageServerData;
+  }
+
+  let { rolesDialog = $bindable(), selectedUser, data }: Props = $props();
 </script>
 
 <Modal bind:dialog={rolesDialog} title="Change roles">
-  <svelte:fragment slot="body">
+  {#snippet body()}
     <p class="py-4">{m.admin_selectUserRoles({ username: selectedUser?.username })}</p>
     <form id="roleForm" method="POST" action="?/roles&id={selectedUser?.id}" use:enhance>
       <div class="flex flex-col gap-2">
@@ -25,18 +29,18 @@
         {/each}
       </div>
     </form>
-  </svelte:fragment>
-  <svelte:fragment slot="actions">
+  {/snippet}
+  {#snippet actions()}
     <button
       type="submit"
       form="roleForm"
       class="btn btn-neutral"
-      on:click={() => rolesDialog.close()}
+      onclick={() => rolesDialog.close()}
     >
       {m.general_save()}
     </button>
-    <button type="button" class="btn" on:click={() => rolesDialog.close()}>
+    <button type="button" class="btn" onclick={() => rolesDialog.close()}>
       {m.general_cancel()}
     </button>
-  </svelte:fragment>
+  {/snippet}
 </Modal>

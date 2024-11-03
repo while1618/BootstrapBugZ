@@ -6,8 +6,12 @@
   import * as m from '$lib/paraglide/messages.js';
   import type { ActionData } from './$types';
 
-  export let form: ActionData;
-  export let token = $page.url.searchParams.get('token');
+  interface Props {
+    form: ActionData;
+    token: string | null;
+  }
+
+  let { form, token = $page.url.searchParams.get('token') }: Props = $props();
 </script>
 
 <section class="py-10 md:py-16">

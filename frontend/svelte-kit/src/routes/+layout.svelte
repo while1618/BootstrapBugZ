@@ -6,13 +6,17 @@
   import { i18n } from '$lib/i18n';
   import { userStore } from '$lib/stores/user';
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
-  import { beforeUpdate } from 'svelte';
   import '../app.css';
   import type { LayoutData } from './$types';
 
-  export let data: LayoutData;
+  interface Props {
+    data: LayoutData;
+    children?: import('svelte').Snippet;
+  }
 
-  beforeUpdate(() => {
+  let { data, children }: Props = $props();
+
+  $effect.pre(() => {
     userStore.set(data.user);
   });
 </script>
@@ -23,12 +27,12 @@
   <ParaglideJS {i18n}>
     {#if !data.user}
       <GuestNavbar />
-      <slot />
+      {@render children?.()}
     {:else if !$userStore}
       <Loading />
     {:else}
       <UserNavbar isAdmin={data.isAdmin} />
-      <slot />
+      {@render children?.()}
     {/if}
   </ParaglideJS>
 {/if}

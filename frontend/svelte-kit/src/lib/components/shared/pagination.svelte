@@ -2,9 +2,13 @@
   import { page } from '$app/stores';
   import * as m from '$lib/paraglide/messages.js';
 
-  export let currentPage: number;
-  export let totalPages: number;
-  export let size: number;
+  interface Props {
+    currentPage: number;
+    totalPages: number;
+    size: number;
+  }
+
+  let { currentPage, totalPages, size }: Props = $props();
 </script>
 
 <div class="gap-2">

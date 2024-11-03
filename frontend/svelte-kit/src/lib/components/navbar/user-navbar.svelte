@@ -8,7 +8,11 @@
   import LanguageSwitcher from './language-switcher.svelte';
   import ThemeSelector from './theme-selector.svelte';
 
-  export let isAdmin: boolean;
+  interface Props {
+    isAdmin: boolean;
+  }
+
+  let { isAdmin }: Props = $props();
 </script>
 
 <header class="sticky top-0 z-50 bg-base-100 py-2">

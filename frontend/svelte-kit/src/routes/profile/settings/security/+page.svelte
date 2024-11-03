@@ -6,8 +6,12 @@
   import * as m from '$lib/paraglide/messages.js';
   import type { ActionData } from './$types';
 
-  export let form: ActionData;
-  let dialog: HTMLDialogElement;
+  interface Props {
+    form: ActionData;
+  }
+
+  let { form }: Props = $props();
+  let dialog: HTMLDialogElement = $state()!;
 </script>
 
 <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
@@ -25,29 +29,29 @@
       <ApiErrors {form} />
       <button class="btn btn-primary">{m.profile_changePassword()}</button>
     </form>
-    <div class="divider" />
+    <div class="divider"></div>
     <a href="/auth/sign-out-from-all-devices" class="btn btn-primary">
       {m.profile_signOutFromAllDevices()}
     </a>
-    <div class="divider" />
-    <button class="btn btn-error" on:click|stopPropagation={() => dialog.showModal()}>
+    <div class="divider"></div>
+    <button class="btn btn-error" onclick={() => dialog?.showModal()}>
       {m.profile_delete()}
     </button>
   </div>
 </div>
 
 <Modal bind:dialog title="Delete account">
-  <svelte:fragment slot="body">
+  {#snippet body()}
     <p class="py-4">{m.profile_deleteAccountConfirmation()}</p>
-  </svelte:fragment>
-  <svelte:fragment slot="actions">
+  {/snippet}
+  {#snippet actions()}
     <form method="POST" action="?/delete" use:enhance>
-      <button type="submit" class="btn text-error" on:click={() => dialog.close()}>
+      <button type="submit" class="btn text-error" onclick={() => dialog?.close()}>
         {m.general_delete()}
       </button>
-      <button type="button" class="btn" on:click={() => dialog.close()}>
+      <button type="button" class="btn" onclick={() => dialog?.close()}>
         {m.general_cancel()}
       </button>
     </form>
-  </svelte:fragment>
+  {/snippet}
 </Modal>
