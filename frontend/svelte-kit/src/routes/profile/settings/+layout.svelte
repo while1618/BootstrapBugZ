@@ -3,6 +3,12 @@
   import LockCloseIcon from '$lib/icons/lock-close.svelte';
   import ProfileIcon from '$lib/icons/profile.svelte';
   import * as m from '$lib/paraglide/messages.js';
+
+  interface Props {
+    children?: import('svelte').Snippet;
+  }
+
+  let { children }: Props = $props();
 </script>
 
 <section class="py-10 md:py-16">
@@ -26,7 +32,7 @@
           {m.profile_security()}
         </a>
       </div>
-      <slot />
+      {@render children?.()}
     </div>
   </div>
 </section>

@@ -1,11 +1,15 @@
 <script lang="ts">
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  export let form: any;
-  export let type: string;
-  export let name: string;
-  export let label: string;
-  export let value: any = null;
-  /* eslint-enable */
+  interface Props {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    form: any;
+    type: string;
+    name: string;
+    label: string;
+    value?: any;
+    /* eslint-enable */
+  }
+
+  let { form, type, name, label, value }: Props = $props();
 </script>
 
 <div class="form-control w-full">

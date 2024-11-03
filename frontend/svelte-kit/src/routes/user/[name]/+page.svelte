@@ -3,7 +3,11 @@
   import * as m from '$lib/paraglide/messages.js';
   import type { PageServerData } from './$types';
 
-  export let data: PageServerData;
+  interface Props {
+    data: PageServerData;
+  }
+
+  let { data }: Props = $props();
 </script>
 
 <section class="py-10 md:py-16">

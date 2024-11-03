@@ -2,8 +2,13 @@
   import { ErrorCode } from '$lib/models/shared/error-message';
   import * as m from '$lib/paraglide/messages.js';
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  export let form: any;
+  interface Props {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    form: any;
+    /* eslint-enable */
+  }
+
+  let { form }: Props = $props();
 
   function printApiError(code: keyof typeof ErrorCode) {
     return ErrorCode[code] ? m[ErrorCode[code]]() : m.API_ERROR_UNKNOWN();

@@ -6,7 +6,11 @@
   import { userStore } from '$lib/stores/user';
   import type { ActionData } from '../personal/$types';
 
-  export let form: ActionData;
+  interface Props {
+    form: ActionData;
+  }
+
+  let { form }: Props = $props();
 </script>
 
 <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">

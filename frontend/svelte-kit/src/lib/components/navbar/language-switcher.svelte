@@ -23,7 +23,7 @@
 
 <select
   class="select select-info w-36 max-w-xs border-none"
-  on:change={(event) => changeLanguage(event.currentTarget)}
+  onchange={(event) => changeLanguage(event.currentTarget)}
 >
   {#each availableLanguageTags as lang}
     <option value={lang} selected={lang === languageTag()}>{labels[lang]}</option>

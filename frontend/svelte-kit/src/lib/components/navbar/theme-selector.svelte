@@ -25,7 +25,7 @@
 </script>
 
 <label class="swap swap-rotate">
-  <input type="checkbox" class="theme-controller" on:click={changeTheme} />
+  <input type="checkbox" class="theme-controller" onclick={changeTheme} />
   <SunIcon />
   <MoonIcon />
 </label>

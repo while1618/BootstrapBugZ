@@ -5,7 +5,11 @@
   import ApiErrors from '../../../lib/components/form/api-errors.svelte';
   import type { ActionData } from './$types';
 
-  export let form: ActionData;
+  interface Props {
+    form: ActionData;
+  }
+
+  let { form }: Props = $props();
 </script>
 
 <section class="py-10 md:py-16">

@@ -14,12 +14,16 @@
   import LockModal from './lock-modal.svelte';
   import RoleModal from './role-modal.svelte';
 
-  export let data: PageServerData;
-  let activateDialog: HTMLDialogElement;
-  let lockDialog: HTMLDialogElement;
-  let deleteDialog: HTMLDialogElement;
-  let rolesDialog: HTMLDialogElement;
-  let selectedUser: User;
+  interface Props {
+    data: PageServerData;
+  }
+
+  let { data }: Props = $props();
+  let activateDialog: HTMLDialogElement = $state()!;
+  let lockDialog: HTMLDialogElement = $state()!;
+  let deleteDialog: HTMLDialogElement = $state()!;
+  let rolesDialog: HTMLDialogElement = $state()!;
+  let selectedUser: User = $state()!;
 
   const tableFieldsLabels = [
     m.admin_userId(),
@@ -37,8 +41,8 @@
     selectedUser = user;
   };
 
-  $: totalPages = Math.ceil(data.users.total / data.pageable.size);
-  $: currentPage = data.pageable.page;
+  let totalPages = $derived(Math.ceil(data.users.total / data.pageable.size));
+  let currentPage = $derived(data.pageable.page);
 </script>
 
 <section class="py-10 md:py-16">
@@ -66,7 +70,7 @@
                     class={user.active
                       ? 'text-green-600 dark:text-green-500'
                       : 'text-red-600 dark:text-red-500'}
-                    on:click|stopPropagation={() => showModal(activateDialog, user)}
+                    onclick={() => showModal(activateDialog, user)}
                   >
                     {#if user.active}
                       <CheckCircleIcon />
@@ -80,7 +84,7 @@
                     class={user.lock
                       ? 'text-red-600 dark:text-red-500'
                       : 'text-blue-600 dark:text-blue-500'}
-                    on:click|stopPropagation={() => showModal(lockDialog, user)}
+                    onclick={() => showModal(lockDialog, user)}
                   >
                     {#if user.lock}
                       <LockCloseIcon />
@@ -97,7 +101,7 @@
                       {/each}
                       <button
                         class="text-blue-600 dark:text-blue-500"
-                        on:click|stopPropagation={() => showModal(rolesDialog, user)}
+                        onclick={() => showModal(rolesDialog, user)}
                       >
                         <PencilIcon />
                       </button>
@@ -107,7 +111,7 @@
                 <th>
                   <button
                     class="text-red-600 dark:text-red-500"
-                    on:click|stopPropagation={() => showModal(deleteDialog, user)}
+                    onclick={() => showModal(deleteDialog, user)}
                   >
                     <TrashIcon />
                   </button>
