@@ -70,7 +70,10 @@
                     class={user.active
                       ? 'text-green-600 dark:text-green-500'
                       : 'text-red-600 dark:text-red-500'}
-                    onclick={() => showModal(activateDialog, user)}
+                    onclick={(event: Event) => {
+                      event.stopPropagation();
+                      showModal(activateDialog, user);
+                    }}
                   >
                     {#if user.active}
                       <CheckCircleIcon />
@@ -84,7 +87,10 @@
                     class={user.lock
                       ? 'text-red-600 dark:text-red-500'
                       : 'text-blue-600 dark:text-blue-500'}
-                    onclick={() => showModal(lockDialog, user)}
+                    onclick={(event: Event) => {
+                      event.stopPropagation();
+                      showModal(lockDialog, user);
+                    }}
                   >
                     {#if user.lock}
                       <LockCloseIcon />
@@ -101,7 +107,10 @@
                       {/each}
                       <button
                         class="text-blue-600 dark:text-blue-500"
-                        onclick={() => showModal(rolesDialog, user)}
+                        onclick={(event: Event) => {
+                          event.stopPropagation();
+                          showModal(rolesDialog, user);
+                        }}
                       >
                         <PencilIcon />
                       </button>
@@ -111,7 +120,10 @@
                 <th>
                   <button
                     class="text-red-600 dark:text-red-500"
-                    onclick={() => showModal(deleteDialog, user)}
+                    onclick={(event: Event) => {
+                      event.stopPropagation();
+                      showModal(deleteDialog, user);
+                    }}
                   >
                     <TrashIcon />
                   </button>
