@@ -11,7 +11,7 @@
   }
 
   let { form }: Props = $props();
-  let dialog: HTMLDialogElement = $state()!;
+  let dialog: HTMLDialogElement = $state() as HTMLDialogElement;
 </script>
 
 <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">

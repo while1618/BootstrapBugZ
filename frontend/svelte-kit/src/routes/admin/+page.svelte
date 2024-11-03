@@ -19,11 +19,11 @@
   }
 
   let { data }: Props = $props();
-  let activateDialog: HTMLDialogElement = $state()!;
-  let lockDialog: HTMLDialogElement = $state()!;
-  let deleteDialog: HTMLDialogElement = $state()!;
-  let rolesDialog: HTMLDialogElement = $state()!;
-  let selectedUser: User = $state()!;
+  let activateDialog: HTMLDialogElement = $state() as HTMLDialogElement;
+  let lockDialog: HTMLDialogElement = $state() as HTMLDialogElement;
+  let deleteDialog: HTMLDialogElement = $state() as HTMLDialogElement;
+  let rolesDialog: HTMLDialogElement = $state() as HTMLDialogElement;
+  let selectedUser: User = $state() as User;
 
   const tableFieldsLabels = [
     m.admin_userId(),
