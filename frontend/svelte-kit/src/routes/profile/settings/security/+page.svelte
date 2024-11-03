@@ -34,7 +34,7 @@
       {m.profile_signOutFromAllDevices()}
     </a>
     <div class="divider"></div>
-    <button class="btn btn-error" onclick={() => dialog?.showModal()}>
+    <button class="btn btn-error" onclick={() => dialog.showModal()}>
       {m.profile_delete()}
     </button>
   </div>
@@ -46,10 +46,10 @@
   {/snippet}
   {#snippet actions()}
     <form method="POST" action="?/delete" use:enhance>
-      <button type="submit" class="btn text-error" onclick={() => dialog?.close()}>
+      <button type="submit" class="btn text-error" onclick={() => dialog.close()}>
         {m.general_delete()}
       </button>
-      <button type="button" class="btn" onclick={() => dialog?.close()}>
+      <button type="button" class="btn" onclick={() => dialog.close()}>
         {m.general_cancel()}
       </button>
     </form>
