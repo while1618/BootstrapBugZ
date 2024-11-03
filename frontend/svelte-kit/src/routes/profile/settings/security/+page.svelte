@@ -34,7 +34,13 @@
       {m.profile_signOutFromAllDevices()}
     </a>
     <div class="divider"></div>
-    <button class="btn btn-error" onclick={() => dialog.showModal()}>
+    <button
+      class="btn btn-error"
+      onclick={(event: Event) => {
+        event.stopPropagation();
+        dialog.showModal();
+      }}
+    >
       {m.profile_delete()}
     </button>
   </div>
