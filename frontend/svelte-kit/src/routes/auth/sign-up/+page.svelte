@@ -1,36 +1,58 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import ApiErrors from '$lib/components/form/api-errors.svelte';
-  import FormControl from '$lib/components/form/form-control.svelte';
+  import * as Form from '$lib/components/ui/form/index.js';
+  import { Input } from '$lib/components/ui/input/index.js';
   import * as m from '$lib/paraglide/messages.js';
-  import type { ActionData } from './$types';
+  import { superForm } from 'sveltekit-superforms';
+  import { type PageServerData } from './$types.js';
 
   interface Props {
-    form: ActionData;
+    data: PageServerData;
   }
 
-  let { form }: Props = $props();
+  let { data }: Props = $props();
+  const form = superForm(data.form, {
+    validators: false,
+  });
+
+  const { form: formData, enhance } = form;
 </script>
 
-<section class="py-10 md:py-16">
-  <div class="container">
-    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
-      <div class="flex flex-col gap-8">
-        <h1 class="text-center text-3xl font-bold">{m.auth_signUp()}</h1>
-        <form class="flex flex-col gap-4" method="POST" action="?/signUp" use:enhance>
-          <FormControl {form} type="text" name="username" label={m.auth_username()} />
-          <FormControl {form} type="email" name="email" label={m.auth_email()} />
-          <FormControl {form} type="password" name="password" label={m.auth_password()} />
-          <FormControl
-            {form}
-            type="password"
-            name="confirmPassword"
-            label={m.auth_confirmPassword()}
-          />
-          <ApiErrors {form} />
-          <button class="btn btn-primary">{m.auth_signUp()}</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
+<form method="POST" use:enhance>
+  <Form.Field {form} name="username">
+    <Form.Control>
+      {#snippet children({ props })}
+        <Form.Label>{m.auth_username()}</Form.Label>
+        <Input {...props} bind:value={$formData.username} />
+      {/snippet}
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Field {form} name="email">
+    <Form.Control>
+      {#snippet children({ props })}
+        <Form.Label>{m.auth_email()}</Form.Label>
+        <Input {...props} bind:value={$formData.email} />
+      {/snippet}
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Field {form} name="password">
+    <Form.Control>
+      {#snippet children({ props })}
+        <Form.Label>{m.auth_password()}</Form.Label>
+        <Input {...props} bind:value={$formData.password} />
+      {/snippet}
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Field {form} name="confirmPassword">
+    <Form.Control>
+      {#snippet children({ props })}
+        <Form.Label>{m.auth_confirmPassword()}</Form.Label>
+        <Input {...props} bind:value={$formData.confirmPassword} />
+      {/snippet}
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Button>{m.auth_signUp()}</Form.Button>
+</form>

@@ -1,7 +1,5 @@
 <script lang="ts">
   import { navigating } from '$app/stores';
-  import GuestNavbar from '$lib/components/navbar/guest-navbar.svelte';
-  import UserNavbar from '$lib/components/navbar/user-navbar.svelte';
   import Loading from '$lib/components/shared/loading.svelte';
   import { i18n } from '$lib/i18n';
   import { userStore } from '$lib/stores/user';
@@ -25,7 +23,7 @@
   <Loading />
 {:else}
   <ParaglideJS {i18n}>
-    {#if !data.user}
+    <!-- {#if !data.user}
       <GuestNavbar />
       {@render children?.()}
     {:else if !$userStore}
@@ -33,6 +31,7 @@
     {:else}
       <UserNavbar isAdmin={data.isAdmin} />
       {@render children?.()}
-    {/if}
+    {/if} -->
+    {@render children?.()}
   </ParaglideJS>
 {/if}
