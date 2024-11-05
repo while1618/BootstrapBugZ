@@ -1,28 +1,33 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import FormControl from '$lib/components/form/form-control.svelte';
+  import * as Form from '$lib/components/ui/form/index.js';
+  import { Input } from '$lib/components/ui/input/index.js';
   import * as m from '$lib/paraglide/messages.js';
-  import ApiErrors from '../../../lib/components/form/api-errors.svelte';
-  import type { ActionData } from './$types';
+  import { superForm } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+  import type { PageServerData } from './$types';
+  import { formSchema } from './schema';
 
   interface Props {
-    form: ActionData;
+    data: PageServerData;
   }
 
-  let { form }: Props = $props();
+  let { data }: Props = $props();
+  const form = superForm(data.form, {
+    validators: zodClient(formSchema),
+  });
+
+  const { form: formData, enhance } = form;
 </script>
 
-<section class="py-10 md:py-16">
-  <div class="container">
-    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
-      <div class="flex flex-col gap-8">
-        <h1 class="text-center text-3xl font-bold">{m.auth_forgotPassword()}</h1>
-        <form class="flex flex-col gap-4" method="POST" action="?/forgotPassword" use:enhance>
-          <FormControl {form} type="email" name="email" label={m.auth_email()} />
-          <ApiErrors {form} />
-          <button class="btn btn-primary">{m.general_send()}</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
+<form method="POST" use:enhance>
+  <Form.Field {form} name="email">
+    <Form.Control>
+      {#snippet children({ props })}
+        <Form.Label>{m.auth_email()}</Form.Label>
+        <Input {...props} bind:value={$formData.email} />
+      {/snippet}
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Button>{m.general_send()}</Form.Button>
+</form>

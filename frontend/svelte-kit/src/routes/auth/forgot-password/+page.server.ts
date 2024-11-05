@@ -1,37 +1,31 @@
-import * as m from '$lib/paraglide/messages.js';
-import { EMAIL_REGEX } from '$lib/regex';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
-import { z } from 'zod';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
+import { formSchema } from './schema';
 
-export const load = (({ locals }) => {
+export const load: PageServerLoad = async ({ locals }) => {
   if (locals.userId) redirect(302, '/');
-}) satisfies PageServerLoad;
 
-function createForgotPasswordSchema() {
-  return z.object({
-    email: z.string().regex(EMAIL_REGEX, { message: m.auth_emailInvalid() }),
-  });
-}
+  return {
+    form: await superValidate(zod(formSchema)),
+  };
+};
 
-export const actions = {
-  forgotPassword: async ({ request }) => {
-    const formData = Object.fromEntries(await request.formData());
-    const schema = createForgotPasswordSchema();
-    const forgotPasswordForm = schema.safeParse(formData);
-    if (!forgotPasswordForm.success)
-      return fail(400, { errors: forgotPasswordForm.error.flatten().fieldErrors });
+export const actions: Actions = {
+  default: async (event) => {
+    const form = await superValidate(event, zod(formSchema));
+    if (!form.valid) return fail(400, { form });
 
     const response = await makeRequest({
       method: HttpRequest.POST,
       path: '/auth/password/forgot',
-      body: JSON.stringify(forgotPasswordForm.data),
+      body: JSON.stringify(form.data),
     });
-
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response) return fail(response.status, { form, apiErrors: response.codes });
 
     redirect(302, '/auth/sign-in');
   },
-} satisfies Actions;
+};
