@@ -1,47 +1,45 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
   import { page } from '$app/stores';
-  import ApiErrors from '$lib/components/form/api-errors.svelte';
-  import FormControl from '$lib/components/form/form-control.svelte';
+  import * as Form from '$lib/components/ui/form/index.js';
+  import { Input } from '$lib/components/ui/input/index.js';
   import * as m from '$lib/paraglide/messages.js';
-  import type { ActionData } from './$types';
+  import { superForm } from 'sveltekit-superforms';
+  import type { PageServerData } from './$types';
 
   interface Props {
-    form: ActionData;
+    data: PageServerData;
     token: string | null;
   }
 
-  let { form, token = $page.url.searchParams.get('token') }: Props = $props();
+  let { data, token = $page.url.searchParams.get('token') }: Props = $props();
+  const form = superForm(data.form, {
+    validators: false,
+  });
+
+  const { form: formData, enhance } = form;
 </script>
 
-<section class="py-10 md:py-16">
-  <div class="container">
-    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
-      <div class="flex flex-col gap-8">
-        <h1 class="text-center text-3xl font-bold">{m.auth_resetPassword()}</h1>
-        <form
-          class="flex flex-col gap-4"
-          method="POST"
-          action="?/resetPassword&token={token}"
-          use:enhance
-        >
-          <FormControl {form} type="password" name="password" label={m.auth_password()} />
-          <FormControl
-            {form}
-            type="password"
-            name="confirmPassword"
-            label={m.auth_confirmPassword()}
-          />
-          {#if form?.errors?.token}
-            <div class="flex">
-              <p class="label-text text-error">{form.errors.token[0]}</p>
-            </div>
-          {/if}
-          <ApiErrors {form} />
-
-          <button class="btn btn-primary">{m.auth_resetPassword()}</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
+<form method="POST" action="?/resetPassword&token={token}" use:enhance>
+  <Form.Field {form} name="password">
+    <Form.Control>
+      {#snippet children({ props })}
+        <Form.Label>{m.auth_password()}</Form.Label>
+        <Input {...props} bind:value={$formData.password} />
+      {/snippet}
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Field {form} name="confirmPassword">
+    <Form.Control>
+      {#snippet children({ props })}
+        <Form.Label>{m.auth_confirmPassword()}</Form.Label>
+        <Input {...props} bind:value={$formData.confirmPassword} />
+      {/snippet}
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Field {form} name="token">
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Button>{m.auth_resetPassword()}</Form.Button>
+</form>
