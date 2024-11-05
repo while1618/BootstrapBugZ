@@ -1,32 +1,28 @@
-import * as m from '$lib/paraglide/messages.js';
-import { EMAIL_REGEX, USERNAME_REGEX } from '$lib/regex';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, type Actions } from '@sveltejs/kit';
-import { z } from 'zod';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import type { PageServerLoad } from './$types';
+import { formSchema } from './schema';
 
-function createUpdateProfileSchema() {
-  return z.object({
-    username: z.string().regex(USERNAME_REGEX, { message: m.profile_usernameInvalid() }),
-    email: z.string().regex(EMAIL_REGEX, { message: m.profile_emailInvalid() }),
-  });
-}
+export const load: PageServerLoad = async () => {
+  return {
+    form: await superValidate(zod(formSchema)),
+  };
+};
 
-export const actions = {
-  updateProfile: async ({ request, cookies }) => {
-    const formData = Object.fromEntries(await request.formData());
-    const schema = createUpdateProfileSchema();
-    const updateProfileForm = schema.safeParse(formData);
-    if (!updateProfileForm.success)
-      return fail(400, { errors: updateProfileForm.error.flatten().fieldErrors });
+export const actions: Actions = {
+  default: async (event) => {
+    const form = await superValidate(event, zod(formSchema));
+    if (!form.valid) return fail(400, { form });
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
       path: '/profile',
-      body: JSON.stringify(updateProfileForm.data),
-      auth: cookies.get('accessToken'),
+      body: JSON.stringify(form.data),
+      auth: event.cookies.get('accessToken'),
     });
-
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response) return fail(response.status, { form, apiErrors: response.codes });
   },
-} satisfies Actions;
+};

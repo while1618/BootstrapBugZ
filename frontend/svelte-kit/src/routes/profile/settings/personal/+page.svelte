@@ -1,47 +1,42 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import ApiErrors from '$lib/components/form/api-errors.svelte';
-  import FormControl from '$lib/components/form/form-control.svelte';
+  import * as Form from '$lib/components/ui/form/index.js';
+  import { Input } from '$lib/components/ui/input/index.js';
   import * as m from '$lib/paraglide/messages.js';
-  import { userStore } from '$lib/stores/user';
-  import type { ActionData } from '../personal/$types';
+  import { superForm } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+  import type { PageServerData } from '../personal/$types';
+  import { formSchema } from './schema';
 
   interface Props {
-    form: ActionData;
+    data: PageServerData;
   }
 
-  let { form }: Props = $props();
+  let { data }: Props = $props();
+  const form = superForm(data.form, {
+    validators: zodClient(formSchema),
+  });
+
+  const { form: formData, enhance } = form;
 </script>
 
-<div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
-  <div class="flex flex-col gap-2">
-    <h1 class="mb-6 text-center text-3xl font-bold">{m.profile()}</h1>
-    <form
-      class="flex flex-col gap-4"
-      method="POST"
-      action="?/updateProfile"
-      use:enhance={() => {
-        return async ({ update }) => {
-          update({ reset: false });
-        };
-      }}
-    >
-      <FormControl
-        {form}
-        type="text"
-        name="username"
-        label={m.profile_username()}
-        value={$userStore?.username}
-      />
-      <FormControl
-        {form}
-        type="email"
-        name="email"
-        label={m.profile_email()}
-        value={$userStore?.email}
-      />
-      <ApiErrors {form} />
-      <button class="btn btn-primary">{m.general_update()}</button>
-    </form>
-  </div>
-</div>
+<form method="POST" use:enhance>
+  <Form.Field {form} name="username">
+    <Form.Control>
+      {#snippet children({ props })}
+        <Form.Label>{m.profile_username()}</Form.Label>
+        <Input {...props} bind:value={$formData.username} />
+      {/snippet}
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Field {form} name="email">
+    <Form.Control>
+      {#snippet children({ props })}
+        <Form.Label>{m.profile_email()}</Form.Label>
+        <Input {...props} bind:value={$formData.email} />
+      {/snippet}
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <Form.Button>{m.general_update()}</Form.Button>
+</form>

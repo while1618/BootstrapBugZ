@@ -1,48 +1,32 @@
-import * as m from '$lib/paraglide/messages.js';
-import { PASSWORD_REGEX } from '$lib/regex';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest, removeAuth } from '$lib/server/utils/util';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { z } from 'zod';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import type { PageServerLoad } from './$types';
+import { formSchema } from './schema';
 
-function createChangePasswordSchema() {
-  return z
-    .object({
-      oldPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_passwordInvalid() }),
-      newPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_passwordInvalid() }),
-      confirmNewPassword: z
-        .string()
-        .regex(PASSWORD_REGEX, { message: m.profile_passwordInvalid() }),
-    })
-    .superRefine(({ newPassword, confirmNewPassword }, ctx) => {
-      if (newPassword !== confirmNewPassword) {
-        ctx.addIssue({
-          code: 'custom',
-          message: m.profile_passwordsDoNotMatch(),
-          path: ['confirmNewPassword'],
-        });
-      }
-    });
-}
+export const load: PageServerLoad = async () => {
+  return {
+    form: await superValidate(zod(formSchema)),
+  };
+};
 
-export const actions = {
-  changePassword: async ({ request, cookies, locals }) => {
-    const formData = Object.fromEntries(await request.formData());
-    const schema = createChangePasswordSchema();
-    const changePasswordForm = schema.safeParse(formData);
-    if (!changePasswordForm.success)
-      return fail(400, { errors: changePasswordForm.error.flatten().fieldErrors });
-
+export const actions: Actions = {
+  changePassword: async (event) => {
+    const form = await superValidate(event, zod(formSchema));
+    if (!form.valid) return fail(400, { form });
+    console.log(JSON.stringify(form.data));
     const response = await makeRequest({
       method: HttpRequest.PATCH,
       path: '/profile/password',
-      body: JSON.stringify(changePasswordForm.data),
-      auth: cookies.get('accessToken'),
+      body: JSON.stringify(form.data),
+      auth: event.cookies.get('accessToken'),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response) return fail(response.status, { form, apiErrors: response.codes });
 
-    removeAuth(cookies, locals);
+    removeAuth(event.cookies, event.locals);
     redirect(302, '/');
   },
   delete: async ({ cookies, locals }) => {
@@ -52,9 +36,9 @@ export const actions = {
       auth: cookies.get('accessToken'),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response) return fail(response.status, { apiErrors: response.codes });
 
     removeAuth(cookies, locals);
     redirect(302, '/');
   },
-} satisfies Actions;
+};
