@@ -58,8 +58,9 @@
   "auth_passwordsDoNotMatch": "Lozinke se ne poklapaju",
   "auth_resendConfirmationEmail": "Ponovo pošalji email za potvrdu",
   "auth_doNotHaveAnAccount": "Nemaš nalog?",
-  "auth_forgotPassword": "Zaboravljena lozinka",
+  "auth_forgotPassword": "Zaboravljena lozinka?",
   "auth_resetPassword": "Resetuj lozinku",
+  "auth_tokenInvalid": "Nevalidan token",
 
   "admin_users": "Korisnici",
   "admin_userId": "Korisničko ime",

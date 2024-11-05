@@ -1,8 +1,8 @@
 import type { Availability } from '$lib/models/shared/availability';
 import { ErrorCode } from '$lib/models/shared/error-message';
 import * as m from '$lib/paraglide/messages.js';
+import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex';
 import { makeRequest } from '$lib/server/apis/api';
-import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest } from '$lib/server/utils/util';
 import { z } from 'zod';
 

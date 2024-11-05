@@ -1,6 +1,6 @@
 import * as m from '$lib/paraglide/messages.js';
+import { EMAIL_REGEX } from '$lib/regex';
 import { makeRequest } from '$lib/server/apis/api';
-import { EMAIL_REGEX } from '$lib/server/regex/regex';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';

@@ -58,8 +58,9 @@
   "auth_passwordsDoNotMatch": "Passwords do not match",
   "auth_resendConfirmationEmail": "Resend confirmation email",
   "auth_doNotHaveAnAccount": "Don't have an account?",
-  "auth_forgotPassword": "Forgot password",
+  "auth_forgotPassword": "Forgot password?",
   "auth_resetPassword": "Reset password",
+  "auth_tokenInvalid": "Invalid token",
 
   "admin_users": "Users",
   "admin_userId": "User ID",
