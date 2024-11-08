@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as Form from '$lib/components/ui/form/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
+  import { Separator } from '$lib/components/ui/separator';
   import * as m from '$lib/paraglide/messages.js';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
@@ -49,7 +50,7 @@
   </Form.Field>
   <Form.Button>{m.profile_changePassword()}</Form.Button>
 </form>
-
+<Separator class="my-6" />
 <form method="POST" action="?/delete">
   <Form.Button>{m.profile_delete()}</Form.Button>
 </form>
