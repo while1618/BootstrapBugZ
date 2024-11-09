@@ -152,7 +152,7 @@ class ProfileControllerIT extends DatabaseContainers {
   }
 
   @Test
-  void changePassword_throwBadRequest_wrongOldPassword() throws Exception {
+  void changePassword_throwBadRequest_wrongCurrentPassword() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "update3");
     final var changePasswordRequest =
         new ChangePasswordRequest("qwerty12345", "qwerty1234", "qwerty1234");

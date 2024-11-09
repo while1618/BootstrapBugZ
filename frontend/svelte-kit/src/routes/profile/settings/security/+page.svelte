@@ -18,7 +18,7 @@
   <div class="flex flex-col gap-2">
     <h1 class="mb-6 text-center text-3xl font-bold">{m.profile_security()}</h1>
     <form class="flex flex-col gap-4" method="POST" action="?/changePassword" use:enhance>
-      <FormControl {form} type="password" name="oldPassword" label={m.profile_oldPassword()} />
+      <FormControl {form} type="password" name="oldPassword" label={m.profile_currentPassword()} />
       <FormControl {form} type="password" name="newPassword" label={m.profile_newPassword()} />
       <FormControl
         {form}
