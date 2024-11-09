@@ -16,7 +16,7 @@
   <label for={name} class="label">
     <span class="label-text">{label}</span>
   </label>
-  <input {type} id={name} {name} {value} class="input input-bordered bg-base-200 w-full" />
+  <input {type} id={name} {name} {value} class="input input-bordered w-full bg-base-200" />
   {#if form?.errors && form?.errors[name]}
     <label for={name} class="label">
       <span class="label-text text-error">{form.errors[name][0]}</span>

@@ -6,7 +6,7 @@
 
 <section class="py-10 md:py-16">
   <div class="container">
-    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
+    <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
       <div class="flex justify-center">
         <img class="mt-6 h-32 w-32 rounded-full" src={avatar} alt="Avatar" />
       </div>
