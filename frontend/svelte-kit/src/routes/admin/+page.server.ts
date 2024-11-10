@@ -3,7 +3,7 @@ import { RoleName } from '$lib/models/user/role';
 import type { User } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { error, fail, type Cookies, type NumericRange } from '@sveltejs/kit';
+import { error, type Cookies, type NumericRange } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ cookies, url }) => {
@@ -38,7 +38,8 @@ const makeAction = async (cookies: Cookies, url: URL, method: HttpRequest, body?
     body,
   });
 
-  if ('error' in response) return fail(response.status, { errorMessage: response });
+  if ('error' in response)
+    error(response.status as NumericRange<400, 599>, { message: response.error });
 };
 
 export const actions = {

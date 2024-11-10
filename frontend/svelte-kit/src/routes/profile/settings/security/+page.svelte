@@ -1,16 +1,21 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import ApiErrors from '$lib/components/form/api-errors.svelte';
   import FormControl from '$lib/components/form/form-control.svelte';
   import Modal from '$lib/components/shared/modal.svelte';
   import * as m from '$lib/paraglide/messages.js';
-  import type { ActionData } from './$types';
+  import { superForm } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+  import type { PageServerData } from './$types';
+  import { changePasswordSchema } from './change-password-schema';
 
   interface Props {
-    form: ActionData;
+    data: PageServerData;
   }
 
-  let { form }: Props = $props();
+  const { data }: Props = $props();
+  const superform = superForm(data.form, {
+    validators: zodClient(changePasswordSchema),
+  });
+  const { errors, enhance } = superform;
   let dialog: HTMLDialogElement = $state() as HTMLDialogElement;
 </script>
 
@@ -18,15 +23,25 @@
   <div class="flex flex-col gap-2">
     <h1 class="mb-6 text-center text-3xl font-bold">{m.profile_security()}</h1>
     <form class="flex flex-col gap-4" method="POST" action="?/changePassword" use:enhance>
-      <FormControl {form} type="password" name="oldPassword" label={m.profile_currentPassword()} />
-      <FormControl {form} type="password" name="newPassword" label={m.profile_newPassword()} />
       <FormControl
-        {form}
+        {superform}
+        field="currentPassword"
         type="password"
-        name="confirmNewPassword"
+        label={m.profile_currentPassword()}
+      />
+      <FormControl
+        {superform}
+        field="newPassword"
+        type="password"
+        label={m.profile_newPassword()}
+      />
+      <FormControl
+        {superform}
+        field="confirmNewPassword"
+        type="password"
         label={m.profile_confirmNewPassword()}
       />
-      <ApiErrors {form} />
+      <p class="label-text text-error">{$errors?._errors}</p>
       <button class="btn btn-primary">{m.profile_changePassword()}</button>
     </form>
     <div class="divider"></div>

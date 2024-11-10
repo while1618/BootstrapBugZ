@@ -1,7 +1,11 @@
 import type { JwtPayload } from '$lib/models/auth/jwt-payload';
+import type { ErrorMessage } from '$lib/models/shared/error-message';
+import { ErrorCode } from '$lib/models/shared/error-message';
 import { RoleName } from '$lib/models/user/role';
-import type { Cookies } from '@sveltejs/kit';
+import * as m from '$lib/paraglide/messages.js';
+import { fail, type Cookies } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
+import { setError } from 'sveltekit-superforms';
 
 export enum HttpRequest {
   GET = 'GET',
@@ -43,4 +47,13 @@ export function isAdmin(accessToken: string | undefined): boolean {
   if (!accessToken) return false;
   const { roles } = jwt.decode(accessToken) as JwtPayload;
   return roles?.includes(RoleName.ADMIN) ?? false;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function apiErrors(errorMessage: ErrorMessage, form: any) {
+  for (const code of errorMessage.codes) {
+    const message = ErrorCode[code] ? m[ErrorCode[code]]() : m.API_ERROR_UNKNOWN();
+    setError(form, message);
+  }
+  return fail(errorMessage.status, { form });
 }

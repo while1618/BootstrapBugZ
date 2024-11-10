@@ -1,17 +1,20 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import { page } from '$app/stores';
-  import ApiErrors from '$lib/components/form/api-errors.svelte';
   import FormControl from '$lib/components/form/form-control.svelte';
   import * as m from '$lib/paraglide/messages.js';
-  import type { ActionData } from './$types';
+  import { superForm } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+  import type { PageServerData } from './$types';
+  import { resetPasswordSchema } from './reset-password-schema';
 
   interface Props {
-    form: ActionData;
-    token: string | null;
+    data: PageServerData;
   }
 
-  let { form, token = $page.url.searchParams.get('token') }: Props = $props();
+  const { data }: Props = $props();
+  const superform = superForm(data.form, {
+    validators: zodClient(resetPasswordSchema),
+  });
+  const { errors, enhance } = superform;
 </script>
 
 <section class="py-10 md:py-16">
@@ -19,26 +22,15 @@
     <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">{m.auth_resetPassword()}</h1>
-        <form
-          class="flex flex-col gap-4"
-          method="POST"
-          action="?/resetPassword&token={token}"
-          use:enhance
-        >
-          <FormControl {form} type="password" name="password" label={m.auth_password()} />
+        <form class="flex flex-col gap-4" method="POST" action="?/resetPassword" use:enhance>
+          <FormControl {superform} field="password" type="password" label={m.auth_password()} />
           <FormControl
-            {form}
+            {superform}
+            field="confirmPassword"
             type="password"
-            name="confirmPassword"
             label={m.auth_confirmPassword()}
           />
-          {#if form?.errors?.token}
-            <div class="flex">
-              <p class="label-text text-error">{form.errors.token[0]}</p>
-            </div>
-          {/if}
-          <ApiErrors {form} />
-
+          <p class="label-text text-error">{$errors?._errors}</p>
           <button class="btn btn-primary">{m.auth_resetPassword()}</button>
         </form>
       </div>

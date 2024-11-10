@@ -1,72 +1,62 @@
 import type { Availability } from '$lib/models/shared/availability';
 import * as m from '$lib/paraglide/messages.js';
 import { makeRequest } from '$lib/server/apis/api';
-import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/server/regex/regex';
-import { HttpRequest } from '$lib/server/utils/util';
+import { apiErrors, HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
-import { z } from 'zod';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
+import { signUpSchema } from './sign-up-schema';
 
-export const load = (({ locals }) => {
+export const load = (async ({ locals }) => {
   if (locals.userId) redirect(302, '/');
-}) satisfies PageServerLoad;
 
-function createSignUpSchema() {
-  return z
-    .object({
-      username: z
-        .string()
-        .regex(USERNAME_REGEX, { message: m.auth_usernameInvalid() })
-        .refine(async (value) => {
-          const response = await makeRequest({
-            method: HttpRequest.POST,
-            path: '/users/username/availability',
-            body: JSON.stringify({ username: value }),
-          });
-          if ('error' in response) return false;
-          return (response as Availability).available;
-        }, m.auth_usernameExists()),
-      email: z
-        .string()
-        .regex(EMAIL_REGEX, { message: m.auth_emailInvalid() })
-        .refine(async (value) => {
-          const response = await makeRequest({
-            method: HttpRequest.POST,
-            path: '/users/email/availability',
-            body: JSON.stringify({ email: value }),
-          });
-          if ('error' in response) return false;
-          return (response as Availability).available;
-        }, m.auth_emailExists()),
-      password: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
-      confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
-    })
-    .superRefine(({ password, confirmPassword }, ctx) => {
-      if (password !== confirmPassword) {
-        ctx.addIssue({
-          code: 'custom',
-          message: m.auth_passwordsDoNotMatch(),
-          path: ['confirmPassword'],
-        });
-      }
-    });
-}
+  return {
+    form: await superValidate(zod(signUpSchema)),
+  };
+}) satisfies PageServerLoad;
 
 export const actions = {
   signUp: async ({ request }) => {
-    const formData = Object.fromEntries(await request.formData());
-    const schema = createSignUpSchema();
-    const signUpForm = await schema.safeParseAsync(formData);
-    if (!signUpForm.success) return fail(400, { errors: signUpForm.error.flatten().fieldErrors });
+    const form = await superValidate(request, zod(signUpSchema));
+    if (!form.valid) return fail(400, { form });
+
+    if (!(await usernameAvailability(form.data.username))) {
+      setError(form, 'username', m.auth_usernameExists());
+      form.valid = false;
+    }
+    if (!(await emailAvailability(form.data.email))) {
+      setError(form, 'email', m.auth_emailExists());
+      form.valid = false;
+    }
+    if (!form.valid) return fail(409, { form });
 
     const response = await makeRequest({
       method: HttpRequest.POST,
       path: '/auth/register',
-      body: JSON.stringify(signUpForm.data),
+      body: JSON.stringify(form.data),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response) return apiErrors(response, form);
 
     redirect(302, '/auth/sign-in');
   },
 } satisfies Actions;
+
+const usernameAvailability = async (username: string) => {
+  const response = await makeRequest({
+    method: HttpRequest.POST,
+    path: '/users/username/availability',
+    body: JSON.stringify({ username }),
+  });
+  return (response as Availability).available;
+};
+
+const emailAvailability = async (email: string) => {
+  const response = await makeRequest({
+    method: HttpRequest.POST,
+    path: '/users/email/availability',
+    body: JSON.stringify({ email }),
+  });
+  return (response as Availability).available;
+};
