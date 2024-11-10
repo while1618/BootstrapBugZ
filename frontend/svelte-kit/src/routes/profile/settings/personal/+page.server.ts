@@ -6,10 +6,11 @@ import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad } from './$types';
 import { updateProfileSchema } from './update-profile-schema';
 
-export const load = (async () => {
-  return {
-    form: await superValidate(zod(updateProfileSchema)),
-  };
+export const load = (async ({ parent }) => {
+  const { user } = await parent();
+  const initialData = { username: user?.username, email: user?.email };
+  const form = await superValidate(initialData, zod(updateProfileSchema));
+  return { form };
 }) satisfies PageServerLoad;
 
 export const actions = {
