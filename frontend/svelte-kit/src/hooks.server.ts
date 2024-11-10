@@ -3,6 +3,7 @@ import { i18n } from '$lib/i18n';
 import type { AuthTokens } from '$lib/models/auth/auth-tokens';
 import type { JwtPayload } from '$lib/models/auth/jwt-payload';
 import { RoleName } from '$lib/models/user/role';
+import { languageTag } from '$lib/paraglide/runtime';
 import { makeRequest } from '$lib/server/apis/api';
 import {
   HttpRequest,
@@ -49,11 +50,13 @@ async function tryToRefreshToken(cookies: Cookies, locals: App.Locals): Promise<
 const protectedRoutes = ['/profile', '/admin', '/auth/sign-out', '/auth/sign-out-from-all-devices'];
 
 const checkProtectedRoutes: Handle = async ({ event, resolve }) => {
-  if (protectedRoutes.some((route) => event.url.pathname.startsWith(route))) {
+  const languageInPathRegex = new RegExp(`^/${languageTag()}/`);
+  const pathWithoutLanguage = event.url.pathname.replace(languageInPathRegex, '/');
+  if (protectedRoutes.some((route) => pathWithoutLanguage.startsWith(route))) {
     const accessToken = event.cookies.get('accessToken');
     if (!accessToken) redirect(302, '/');
 
-    if (event.url.pathname.startsWith('/admin')) {
+    if (pathWithoutLanguage.startsWith('/admin')) {
       const { roles } = jwt.decode(accessToken) as JwtPayload;
       if (!roles?.includes(RoleName.ADMIN)) redirect(302, '/');
     }
