@@ -1,58 +1,40 @@
 import { JWT_SECRET } from '$env/static/private';
 import * as m from '$lib/paraglide/messages.js';
 import { makeRequest } from '$lib/server/apis/api';
-import { PASSWORD_REGEX } from '$lib/server/regex/regex';
-import { HttpRequest } from '$lib/server/utils/util';
+import { apiErrors, HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
-import { z } from 'zod';
+import { setError, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
+import { resetPasswordSchema } from './reset-password-schema';
 
-export const load = (({ locals }) => {
+export const load = (async ({ locals, url }) => {
   if (locals.userId) redirect(302, '/');
+
+  const initialData = { token: url.searchParams.get('token') ?? '' };
+  const form = await superValidate(initialData, zod(resetPasswordSchema), { errors: false });
+  return { form };
 }) satisfies PageServerLoad;
 
-function createResetPasswordSchema() {
-  return z
-    .object({
-      token: z.string().refine((token) => {
-        try {
-          jwt.verify(token, JWT_SECRET);
-          return true;
-        } catch (_) {
-          return false;
-        }
-      }, m.auth_tokenInvalid()),
-      password: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
-      confirmPassword: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
-    })
-    .superRefine(({ password, confirmPassword }, ctx) => {
-      if (password !== confirmPassword) {
-        ctx.addIssue({
-          code: 'custom',
-          message: m.auth_passwordsDoNotMatch(),
-          path: ['confirmPassword'],
-        });
-      }
-    });
-}
-
 export const actions = {
-  resetPassword: async ({ request, url }) => {
-    const formData = Object.fromEntries(await request.formData());
-    const data = { ...formData, token: url.searchParams.get('token') };
-    const schema = createResetPasswordSchema();
-    const resetPasswordForm = schema.safeParse(data);
-    if (!resetPasswordForm.success)
-      return fail(400, { errors: resetPasswordForm.error.flatten().fieldErrors });
+  resetPassword: async ({ request }) => {
+    const form = await superValidate(request, zod(resetPasswordSchema));
+    if (!form.valid) return fail(400, { form });
+
+    try {
+      jwt.verify(form.data.token, JWT_SECRET);
+    } catch (_) {
+      return setError(form, m.auth_tokenInvalid());
+    }
 
     const response = await makeRequest({
       method: HttpRequest.POST,
       path: '/auth/password/reset',
-      body: JSON.stringify(resetPasswordForm.data),
+      body: JSON.stringify(form.data),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response) return apiErrors(response, form);
 
     redirect(302, '/auth/sign-in');
   },

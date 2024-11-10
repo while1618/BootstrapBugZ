@@ -1,16 +1,20 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import ApiErrors from '$lib/components/form/api-errors.svelte';
   import FormControl from '$lib/components/form/form-control.svelte';
-  import { ErrorCode } from '$lib/models/shared/error-message';
   import * as m from '$lib/paraglide/messages.js';
-  import type { ActionData } from './$types';
+  import { superForm } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+  import type { PageServerData } from './$types';
+  import { signInSchema } from './sign-in-schema';
 
   interface Props {
-    form: ActionData;
+    data: PageServerData;
   }
 
-  let { form }: Props = $props();
+  const { data }: Props = $props();
+  const superform = superForm(data.form, {
+    validators: zodClient(signInSchema),
+  });
+  const { errors, enhance } = superform;
 </script>
 
 <section class="py-10 md:py-16">
@@ -19,18 +23,14 @@
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">{m.auth_signIn()}</h1>
         <form class="flex flex-col gap-4" method="POST" action="?/signIn" use:enhance>
-          <FormControl {form} type="text" name="usernameOrEmail" label={m.auth_usernameOrEmail()} />
-          <FormControl {form} type="password" name="password" label={m.auth_password()} />
-          <ApiErrors {form} />
-          {#if form?.errorMessage && form.errorMessage.codes.includes(ErrorCode.API_ERROR_USER_NOT_ACTIVE)}
-            <a
-              href="/auth/resend-confirmation-email?usernameOrEmail={form.usernameOrEmail}"
-              class="label-text text-info hover:underline"
-            >
-              {m.auth_resendConfirmationEmail()}
-            </a>
-          {/if}
-
+          <FormControl
+            {superform}
+            field="usernameOrEmail"
+            type="text"
+            label={m.auth_usernameOrEmail()}
+          />
+          <FormControl {superform} field="password" type="password" label={m.auth_password()} />
+          <p class="label-text text-error">{$errors?._errors}</p>
           <button class="btn btn-primary">{m.auth_signIn()}</button>
           <div class="flex gap-4">
             <span class="label-text">

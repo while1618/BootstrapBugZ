@@ -1,25 +1,36 @@
-<script lang="ts">
+<script lang="ts" module>
+  type T = Record<string, unknown>;
+</script>
+
+<script lang="ts" generics="T extends Record<string, unknown>">
+  import { formFieldProxy, type FormPathLeaves, type SuperForm } from 'sveltekit-superforms';
+
   interface Props {
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    form: any;
     type: string;
-    name: string;
     label: string;
-    value?: any;
-    /* eslint-enable */
+    superform: SuperForm<T>;
+    field: FormPathLeaves<T>;
   }
 
-  let { form, type, name, label, value }: Props = $props();
+  const { type, label, superform, field }: Props = $props();
+  const { value, errors, constraints } = formFieldProxy(superform, field);
 </script>
 
 <div class="form-control w-full">
-  <label for={name} class="label">
+  <label for={field} class="label">
     <span class="label-text">{label}</span>
   </label>
-  <input {type} id={name} {name} {value} class="input input-bordered w-full bg-base-200" />
-  {#if form?.errors && form?.errors[name]}
-    <label for={name} class="label">
-      <span class="label-text text-error">{form.errors[name][0]}</span>
+  <input
+    {type}
+    name={field}
+    aria-invalid={$errors ? 'true' : undefined}
+    bind:value={$value}
+    {...$constraints}
+    class="input input-bordered w-full bg-base-200"
+  />
+  {#if $errors}
+    <label for={field} class="label">
+      <span class="label-text text-error">{$errors}</span>
     </label>
   {/if}
 </div>

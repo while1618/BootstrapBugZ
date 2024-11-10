@@ -1,46 +1,30 @@
-import * as m from '$lib/paraglide/messages.js';
 import { makeRequest } from '$lib/server/apis/api';
-import { PASSWORD_REGEX } from '$lib/server/regex/regex';
-import { HttpRequest, removeAuth } from '$lib/server/utils/util';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { z } from 'zod';
+import { apiErrors, HttpRequest, removeAuth } from '$lib/server/utils/util';
+import { error, fail, redirect, type Actions, type NumericRange } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import type { PageServerLoad } from './$types';
+import { changePasswordSchema } from './change-password-schema';
 
-function createChangePasswordSchema() {
-  return z
-    .object({
-      oldPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_passwordInvalid() }),
-      newPassword: z.string().regex(PASSWORD_REGEX, { message: m.profile_passwordInvalid() }),
-      confirmNewPassword: z
-        .string()
-        .regex(PASSWORD_REGEX, { message: m.profile_passwordInvalid() }),
-    })
-    .superRefine(({ newPassword, confirmNewPassword }, ctx) => {
-      if (newPassword !== confirmNewPassword) {
-        ctx.addIssue({
-          code: 'custom',
-          message: m.profile_passwordsDoNotMatch(),
-          path: ['confirmNewPassword'],
-        });
-      }
-    });
-}
+export const load = (async () => {
+  return {
+    form: await superValidate(zod(changePasswordSchema)),
+  };
+}) satisfies PageServerLoad;
 
 export const actions = {
   changePassword: async ({ request, cookies, locals }) => {
-    const formData = Object.fromEntries(await request.formData());
-    const schema = createChangePasswordSchema();
-    const changePasswordForm = schema.safeParse(formData);
-    if (!changePasswordForm.success)
-      return fail(400, { errors: changePasswordForm.error.flatten().fieldErrors });
+    const form = await superValidate(request, zod(changePasswordSchema));
+    if (!form.valid) return fail(400, { form });
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
       path: '/profile/password',
-      body: JSON.stringify(changePasswordForm.data),
+      body: JSON.stringify(form.data),
       auth: cookies.get('accessToken'),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response) return apiErrors(response, form);
 
     removeAuth(cookies, locals);
     redirect(302, '/');
@@ -52,7 +36,8 @@ export const actions = {
       auth: cookies.get('accessToken'),
     });
 
-    if ('error' in response) return fail(response.status, { errorMessage: response });
+    if ('error' in response)
+      error(response.status as NumericRange<400, 599>, { message: response.error });
 
     removeAuth(cookies, locals);
     redirect(302, '/');
