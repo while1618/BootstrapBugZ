@@ -17,7 +17,7 @@
   });
 
   function changeTheme() {
-    const changeTo = currentTheme === 'dark' ? 'cupcake' : 'dark';
+    const changeTo = currentTheme === 'dark' ? 'pastel' : 'dark';
     currentTheme = changeTo;
     document.cookie = `theme=${changeTo}; max-age=${60 * 60 * 24 * 365}; path=/; SameSite=Strict;`;
     document.documentElement.setAttribute('data-theme', changeTo);
