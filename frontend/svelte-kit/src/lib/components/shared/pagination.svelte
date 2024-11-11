@@ -8,7 +8,7 @@
     size: number;
   }
 
-  let { currentPage, totalPages, size }: Props = $props();
+  const { currentPage, totalPages, size }: Props = $props();
 </script>
 
 <div class="gap-2">

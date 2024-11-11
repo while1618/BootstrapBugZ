@@ -1,8 +1,11 @@
 import { BACKEND_URL } from '$env/static/private';
-import type { ErrorMessage } from '$lib/models/shared/error-message';
+import { ErrorCode, type ErrorMessage } from '$lib/models/shared/error-message';
+import * as m from '$lib/paraglide/messages.js';
 import type { HttpRequest } from '$lib/server/utils/util';
+import { fail } from '@sveltejs/kit';
+import { type SuperValidated, setError } from 'sveltekit-superforms';
 
-export interface RequestParams {
+interface RequestParams {
   method: HttpRequest;
   path: string;
   body?: string;
@@ -29,4 +32,15 @@ export async function makeRequest(params: RequestParams): Promise<object | Error
 
   const text = await response.text();
   return text ? JSON.parse(text) : {};
+}
+
+export function apiErrors(
+  errorMessage: ErrorMessage,
+  form: SuperValidated<Record<string, unknown>>,
+) {
+  for (const code of errorMessage.codes) {
+    const message = ErrorCode[code] ? m[ErrorCode[code]]() : m.API_ERROR_UNKNOWN();
+    setError(form, message);
+  }
+  return fail(errorMessage.status, { form });
 }

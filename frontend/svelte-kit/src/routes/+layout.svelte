@@ -14,7 +14,7 @@
     children?: import('svelte').Snippet;
   }
 
-  let { data, children }: Props = $props();
+  const { data, children }: Props = $props();
 
   $effect.pre(() => {
     userStore.set(data.user);

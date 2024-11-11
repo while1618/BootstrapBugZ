@@ -18,7 +18,7 @@
     data: PageServerData;
   }
 
-  let { data }: Props = $props();
+  const { data }: Props = $props();
   let activateDialog: HTMLDialogElement = $state() as HTMLDialogElement;
   let lockDialog: HTMLDialogElement = $state() as HTMLDialogElement;
   let deleteDialog: HTMLDialogElement = $state() as HTMLDialogElement;

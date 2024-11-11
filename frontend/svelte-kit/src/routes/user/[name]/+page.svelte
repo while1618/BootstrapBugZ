@@ -7,7 +7,7 @@
     data: PageServerData;
   }
 
-  let { data }: Props = $props();
+  const { data }: Props = $props();
 </script>
 
 <section class="py-10 md:py-16">

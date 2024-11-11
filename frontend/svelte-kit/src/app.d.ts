@@ -4,10 +4,9 @@ import type { AvailableLanguageTag } from '../../lib/paraglide/runtime';
 
 declare global {
   namespace App {
-    // TODO: add user
     interface Locals {
-      paraglide: ParaglideLocals<AvailableLanguageTag>;
       userId: string | null;
+      paraglide: ParaglideLocals<AvailableLanguageTag>;
     }
     interface Error {
       message: string;

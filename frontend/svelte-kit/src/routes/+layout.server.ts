@@ -6,8 +6,8 @@ import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ locals, cookies }) => {
   if (!locals.userId) return { user: null };
-  const accessToken = cookies.get('accessToken');
 
+  const accessToken = cookies.get('accessToken');
   const response = await makeRequest({
     method: HttpRequest.GET,
     path: `/profile`,

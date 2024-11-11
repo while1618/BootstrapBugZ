@@ -14,6 +14,5 @@ export const GET = (async ({ locals, cookies }) => {
     error(response.status as NumericRange<400, 599>, { message: response.error });
 
   removeAuth(cookies, locals);
-
   redirect(302, '/');
 }) satisfies RequestHandler;

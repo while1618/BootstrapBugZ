@@ -12,7 +12,7 @@
     isAdmin: boolean;
   }
 
-  let { isAdmin }: Props = $props();
+  const { isAdmin }: Props = $props();
 </script>
 
 <header class="sticky top-0 z-50 bg-base-100 py-2">

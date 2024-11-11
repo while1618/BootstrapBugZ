@@ -18,8 +18,8 @@ import jwt from 'jsonwebtoken';
 const tryToGetSignedInUser: Handle = async ({ event, resolve }) => {
   try {
     const accessToken = event.cookies.get('accessToken') ?? '';
-    const payload = jwt.verify(accessToken, JWT_SECRET) as JwtPayload;
-    event.locals.userId = payload.iss;
+    const { iss } = jwt.verify(accessToken, JWT_SECRET) as JwtPayload;
+    event.locals.userId = iss;
   } catch (_) {
     await tryToRefreshToken(event.cookies, event.locals);
   }
