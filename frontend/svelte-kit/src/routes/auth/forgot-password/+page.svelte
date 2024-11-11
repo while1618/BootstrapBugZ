@@ -22,7 +22,13 @@
     <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">{m.auth_forgotPassword()}</h1>
-        <form class="flex flex-col gap-4" method="POST" action="?/forgotPassword" use:enhance>
+        <form
+          class="flex flex-col gap-4"
+          method="POST"
+          action="?/forgotPassword"
+          use:enhance
+          novalidate
+        >
           <FormControl {superform} field="email" type="email" label={m.auth_email()} />
           <p class="label-text text-error">{$errors?._errors}</p>
           <button class="btn btn-primary">{m.general_send()}</button>

@@ -22,7 +22,7 @@
     <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">{m.auth_signIn()}</h1>
-        <form class="flex flex-col gap-4" method="POST" action="?/signIn" use:enhance>
+        <form class="flex flex-col gap-4" method="POST" action="?/signIn" use:enhance novalidate>
           <FormControl
             {superform}
             field="usernameOrEmail"
