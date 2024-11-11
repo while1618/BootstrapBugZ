@@ -54,7 +54,7 @@ class ResetPasswordTokenServiceImpl(
     val issuedAt = JwtUtil.getIssuedAt(token)
 
     userBlacklistRepository.findById(userId).ifPresent {
-      if (issuedAt.isBefore(it.updatedAt) || issuedAt == it.updatedAt) {
+      if (issuedAt.isBefore(it.updatedAt)) {
         throw BadRequestException("token", messageService.getMessage("token.invalid"))
       }
     }

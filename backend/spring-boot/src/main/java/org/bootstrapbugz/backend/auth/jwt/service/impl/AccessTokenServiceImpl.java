@@ -70,8 +70,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     final var issuedAt = JwtUtil.getIssuedAt(token);
     final var userInBlacklist = userBlacklistRepository.findById(userId);
     if (userInBlacklist.isEmpty()) return;
-    if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt())
-        || issuedAt.equals(userInBlacklist.get().getUpdatedAt()))
+    if (issuedAt.isBefore(userInBlacklist.get().getUpdatedAt()))
       throw new UnauthorizedException("auth.tokenInvalid");
   }
 
