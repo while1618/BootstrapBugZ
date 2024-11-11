@@ -25,7 +25,7 @@
     <form
       class="flex flex-col gap-4"
       method="POST"
-      action="?/changePassword"
+      action="?/changePassword&username={data.user?.username}"
       use:enhance
       novalidate
     >

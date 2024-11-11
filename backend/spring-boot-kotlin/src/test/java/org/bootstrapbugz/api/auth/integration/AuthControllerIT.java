@@ -171,6 +171,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Test
   void deleteTokensOnAllDevices() throws Exception {
     final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "delete2");
+    Thread.sleep(1000);
     mockMvc
         .perform(
             delete(Path.AUTH + "/tokens/devices")

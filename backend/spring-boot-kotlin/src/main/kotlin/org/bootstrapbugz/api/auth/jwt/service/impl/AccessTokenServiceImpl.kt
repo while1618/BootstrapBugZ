@@ -65,7 +65,7 @@ class AccessTokenServiceImpl(
     val userId = getUserId(token)
     val issuedAt = getIssuedAt(token)
     userBlacklistRepository.findById(userId).ifPresent {
-      if (issuedAt.isBefore(it.updatedAt) || issuedAt == it.updatedAt) {
+      if (issuedAt.isBefore(it.updatedAt)) {
         throw UnauthorizedException(messageService.getMessage("token.invalid"))
       }
     }
