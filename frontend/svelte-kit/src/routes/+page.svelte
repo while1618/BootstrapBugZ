@@ -11,7 +11,7 @@
 </script>
 
 {#if data.user}
-  <UserHome />
+  <UserHome user={data.user} />
 {:else}
   <GuestHome />
 {/if}
