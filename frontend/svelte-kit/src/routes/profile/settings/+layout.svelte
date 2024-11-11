@@ -1,8 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import LockCloseIcon from '$lib/icons/lock-close.svelte';
-  import ProfileIcon from '$lib/icons/profile.svelte';
   import * as m from '$lib/paraglide/messages.js';
+  import { LockKeyholeIcon, UserIcon } from 'lucide-svelte';
 
   interface Props {
     children?: import('svelte').Snippet;
@@ -17,18 +16,18 @@
       <div class="tabs-boxed tabs flex justify-center bg-base-100">
         <a
           href="/profile/settings/personal"
-          class="tab"
+          class="tab gap-2"
           class:tab-active={$page.url.pathname.includes('/personal')}
         >
-          <ProfileIcon />
+          <UserIcon />
           {m.profile_personalInformation()}
         </a>
         <a
           href="/profile/settings/security"
-          class="tab"
+          class="tab gap-2"
           class:tab-active={$page.url.pathname.includes('/security')}
         >
-          <LockCloseIcon />
+          <LockKeyholeIcon />
           {m.profile_security()}
         </a>
       </div>

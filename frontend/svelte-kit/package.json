@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@inlang/paraglide-sveltekit": "0.11.5",
-    "jsonwebtoken": "9.0.2"
+    "jsonwebtoken": "9.0.2",
+    "lucide-svelte": "0.456.0"
   },
   "devDependencies": {
     "@inlang/paraglide-js": "1.11.3",

@@ -1,13 +1,15 @@
 <script lang="ts">
   import Pagination from '$lib/components/shared/pagination.svelte';
-  import CheckCircleIcon from '$lib/icons/check-circle.svelte';
-  import CloseCircleIcon from '$lib/icons/close-circle.svelte';
-  import LockCloseIcon from '$lib/icons/lock-close.svelte';
-  import LockOpenIcon from '$lib/icons/lock-open.svelte';
-  import PencilIcon from '$lib/icons/pencil.svelte';
-  import TrashIcon from '$lib/icons/trash.svelte';
   import type { User } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
+  import {
+    CheckIcon,
+    LockKeyholeIcon,
+    LockKeyholeOpenIcon,
+    PencilIcon,
+    Trash2Icon,
+    XIcon,
+  } from 'lucide-svelte';
   import type { PageServerData } from './$types';
   import ActivateModal from './activate-modal.svelte';
   import DeleteModal from './delete-modal.svelte';
@@ -76,9 +78,9 @@
                     }}
                   >
                     {#if user.active}
-                      <CheckCircleIcon />
+                      <CheckIcon />
                     {:else}
-                      <CloseCircleIcon />
+                      <XIcon />
                     {/if}
                   </button>
                 </th>
@@ -93,9 +95,9 @@
                     }}
                   >
                     {#if user.lock}
-                      <LockCloseIcon />
+                      <LockKeyholeIcon />
                     {:else}
-                      <LockOpenIcon />
+                      <LockKeyholeOpenIcon />
                     {/if}
                   </button>
                 </th>
@@ -125,7 +127,7 @@
                       showModal(deleteDialog, user);
                     }}
                   >
-                    <TrashIcon />
+                    <Trash2Icon />
                   </button>
                 </th>
               </tr>

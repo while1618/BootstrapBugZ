@@ -1,6 +1,5 @@
 <script lang="ts">
-  import MoonIcon from '$lib/icons/moon.svelte';
-  import SunIcon from '$lib/icons/sun.svelte';
+  import { MoonIcon, SunIcon } from 'lucide-svelte';
   import { onMount } from 'svelte';
 
   const defaultTheme = 'dark';
@@ -26,6 +25,6 @@
 
 <label class="swap swap-rotate">
   <input type="checkbox" class="theme-controller" onclick={changeTheme} />
-  <SunIcon />
-  <MoonIcon />
+  <SunIcon class="swap-on" />
+  <MoonIcon class="swap-off" />
 </label>
