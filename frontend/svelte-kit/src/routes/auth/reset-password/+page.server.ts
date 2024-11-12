@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
-import { resetPasswordSchema } from './reset-password-schema';
+import { resetPasswordSchema } from './schema';
 
 export const load = (async ({ locals, url }) => {
   if (locals.userId) redirect(302, '/');

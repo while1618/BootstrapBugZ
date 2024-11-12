@@ -11,5 +11,3 @@ export const signInSchema = z.object({
     ),
   password: z.string().regex(PASSWORD_REGEX, { message: m.auth_passwordInvalid() }),
 });
-
-export type FormSchema = typeof signInSchema;

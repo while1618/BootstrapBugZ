@@ -10,8 +10,7 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad } from './$types';
-import { changePasswordSchema } from './change-password-schema';
-import { deleteSchema } from './delete-schema';
+import { changePasswordSchema, deleteSchema } from './schema';
 
 export const load = (async ({ parent }) => {
   const changePasswordForm = await superValidate(zod(changePasswordSchema));

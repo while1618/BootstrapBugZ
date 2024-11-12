@@ -4,7 +4,7 @@
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { PageServerData } from './$types';
-  import { signUpSchema } from './sign-up-schema';
+  import { signUpSchema } from './schema';
 
   interface Props {
     data: PageServerData;

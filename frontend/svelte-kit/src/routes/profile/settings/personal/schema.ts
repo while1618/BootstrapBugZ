@@ -6,5 +6,3 @@ export const updateProfileSchema = z.object({
   username: z.string().regex(USERNAME_REGEX, { message: m.profile_usernameInvalid() }),
   email: z.string().regex(EMAIL_REGEX, { message: m.profile_emailInvalid() }),
 });
-
-export type FormSchema = typeof updateProfileSchema;

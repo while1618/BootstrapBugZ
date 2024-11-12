@@ -5,7 +5,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
-import { signInSchema } from './sign-in-schema';
+import { signInSchema } from './schema';
 
 export const load = (async ({ locals }) => {
   if (locals.userId) redirect(302, '/');

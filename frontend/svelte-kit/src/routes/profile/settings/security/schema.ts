@@ -17,4 +17,4 @@ export const changePasswordSchema = z
     }
   });
 
-export type FormSchema = typeof changePasswordSchema;
+export const deleteSchema = z.object({});

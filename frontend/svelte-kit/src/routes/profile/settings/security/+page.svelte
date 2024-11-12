@@ -5,8 +5,7 @@
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { PageServerData } from './$types';
-  import { changePasswordSchema } from './change-password-schema';
-  import { deleteSchema } from './delete-schema';
+  import { changePasswordSchema, deleteSchema } from './schema';
 
   interface Props {
     data: PageServerData;
