@@ -6,16 +6,24 @@
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { PageServerData } from './$types';
   import { changePasswordSchema } from './change-password-schema';
+  import { deleteSchema } from './delete-schema';
 
   interface Props {
     data: PageServerData;
   }
 
   const { data }: Props = $props();
-  const superform = superForm(data.form, {
+
+  const changePasswordForm = superForm(data.changePasswordForm, {
     validators: zodClient(changePasswordSchema),
   });
-  const { errors, enhance } = superform;
+  const { errors: changePasswordErrors, enhance: changePasswordEnhance } = changePasswordForm;
+
+  const deleteForm = superForm(data.deleteForm, {
+    validators: zodClient(deleteSchema),
+  });
+  const { errors: deleteErrors, enhance: deleteEnhance } = deleteForm;
+
   let dialog: HTMLDialogElement = $state() as HTMLDialogElement;
 </script>
 
@@ -26,28 +34,28 @@
       class="flex flex-col gap-4"
       method="POST"
       action="?/changePassword&username={data.user?.username}"
-      use:enhance
+      use:changePasswordEnhance
       novalidate
     >
       <FormControl
-        {superform}
+        superform={changePasswordForm}
         field="currentPassword"
         type="password"
         label={m.profile_currentPassword()}
       />
       <FormControl
-        {superform}
+        superform={changePasswordForm}
         field="newPassword"
         type="password"
         label={m.profile_newPassword()}
       />
       <FormControl
-        {superform}
+        superform={changePasswordForm}
         field="confirmNewPassword"
         type="password"
         label={m.profile_confirmNewPassword()}
       />
-      <p class="label-text text-error">{$errors?._errors}</p>
+      <p class="label-text text-error">{$changePasswordErrors?._errors}</p>
       <button class="btn btn-primary">{m.profile_changePassword()}</button>
     </form>
     <div class="divider"></div>
@@ -64,6 +72,7 @@
     >
       {m.profile_delete()}
     </button>
+    <p class="label-text text-center text-error">{$deleteErrors?._errors}</p>
   </div>
 </div>
 
@@ -72,7 +81,7 @@
     <p class="py-4">{m.profile_deleteAccountConfirmation()}</p>
   {/snippet}
   {#snippet actions()}
-    <form method="POST" action="?/delete" use:enhance>
+    <form method="POST" action="?/delete" use:deleteEnhance>
       <button type="submit" class="btn text-error" onclick={() => dialog.close()}>
         {m.general_delete()}
       </button>

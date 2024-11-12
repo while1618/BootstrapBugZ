@@ -10,7 +10,7 @@
     Trash2Icon,
     XIcon,
   } from 'lucide-svelte';
-  import type { PageServerData } from './$types';
+  import type { ActionData, PageServerData } from './$types';
   import ActivateModal from './activate-modal.svelte';
   import DeleteModal from './delete-modal.svelte';
   import LockModal from './lock-modal.svelte';
@@ -18,9 +18,10 @@
 
   interface Props {
     data: PageServerData;
+    form: ActionData;
   }
 
-  const { data }: Props = $props();
+  const { data, form }: Props = $props();
   let activateDialog: HTMLDialogElement = $state() as HTMLDialogElement;
   let lockDialog: HTMLDialogElement = $state() as HTMLDialogElement;
   let deleteDialog: HTMLDialogElement = $state() as HTMLDialogElement;
@@ -52,6 +53,9 @@
     <div class="card mx-auto w-auto bg-base-200 p-8 shadow-xl 2xl:w-2/3">
       <div class="flex flex-col gap-8">
         <h1 class="text-center text-3xl font-bold">{m.admin_users()}</h1>
+        {#if form?.error}
+          <p class="label-text text-center text-xl text-error">{form.error}</p>
+        {/if}
         <table class="table table-zebra">
           <thead>
             <tr>

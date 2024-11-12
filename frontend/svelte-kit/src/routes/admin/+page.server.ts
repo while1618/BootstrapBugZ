@@ -3,7 +3,7 @@ import { RoleName } from '$lib/models/user/role';
 import type { User } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { error, type Cookies, type NumericRange } from '@sveltejs/kit';
+import { error, fail, type Cookies } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ cookies, url }) => {
@@ -19,8 +19,7 @@ export const load = (async ({ cookies, url }) => {
     auth: cookies.get('accessToken'),
   });
 
-  if ('error' in response)
-    error(response.status as NumericRange<400, 599>, { message: response.error });
+  if ('error' in response) error(response.status, { message: response.error });
 
   return {
     users: response as Pageable<User>,
@@ -38,29 +37,28 @@ const makeAction = async (cookies: Cookies, url: URL, method: HttpRequest, body?
     body,
   });
 
-  if ('error' in response)
-    error(response.status as NumericRange<400, 599>, { message: response.error });
+  if ('error' in response) return fail(response.status, { error: response.error });
 };
 
 export const actions = {
   activate: async ({ cookies, url }) => {
-    await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ active: true }));
+    return await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ active: true }));
   },
   deactivate: async ({ cookies, url }) => {
-    await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ active: false }));
+    return await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ active: false }));
   },
   unlock: async ({ cookies, url }) => {
-    await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ lock: false }));
+    return await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ lock: false }));
   },
   lock: async ({ cookies, url }) => {
-    await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ lock: true }));
+    return await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ lock: true }));
   },
   delete: async ({ cookies, url }) => {
-    await makeAction(cookies, url, HttpRequest.DELETE);
+    return await makeAction(cookies, url, HttpRequest.DELETE);
   },
   roles: async ({ cookies, url, request }) => {
     const formData = Object.fromEntries(await request.formData());
-    await makeAction(
+    return await makeAction(
       cookies,
       url,
       HttpRequest.PATCH,

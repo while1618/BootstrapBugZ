@@ -6,16 +6,18 @@ import {
   setAccessTokenCookie,
   setRefreshTokenCookie,
 } from '$lib/server/utils/util';
-import { error, fail, redirect, type Actions, type NumericRange } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad } from './$types';
 import { changePasswordSchema } from './change-password-schema';
+import { deleteSchema } from './delete-schema';
 
 export const load = (async ({ parent }) => {
-  const form = await superValidate(zod(changePasswordSchema));
+  const changePasswordForm = await superValidate(zod(changePasswordSchema));
+  const deleteForm = await superValidate(zod(deleteSchema));
   const { user } = await parent();
-  return { form, user };
+  return { changePasswordForm, deleteForm, user };
 }) satisfies PageServerLoad;
 
 export const actions = {
@@ -47,15 +49,16 @@ export const actions = {
     setAccessTokenCookie(cookies, accessToken);
     setRefreshTokenCookie(cookies, refreshToken);
   },
-  delete: async ({ cookies, locals }) => {
+  delete: async ({ request, cookies, locals }) => {
+    const form = await superValidate(request, zod(deleteSchema));
+
     const response = await makeRequest({
       method: HttpRequest.DELETE,
       path: '/profile',
       auth: cookies.get('accessToken'),
     });
 
-    if ('error' in response)
-      error(response.status as NumericRange<400, 599>, { message: response.error });
+    if ('error' in response) return apiErrors(response, form);
 
     removeAuth(cookies, locals);
     redirect(302, '/');
