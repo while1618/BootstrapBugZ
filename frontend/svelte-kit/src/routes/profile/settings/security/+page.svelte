@@ -14,15 +14,15 @@
 
   const { data }: Props = $props();
 
-  const changePasswordForm = superForm(data.changePasswordForm, {
+  const changePasswordSuperform = superForm(data.changePasswordForm, {
     validators: zodClient(changePasswordSchema),
   });
-  const { errors: changePasswordErrors, enhance: changePasswordEnhance } = changePasswordForm;
+  const { errors: changePasswordErrors, enhance: changePasswordEnhance } = changePasswordSuperform;
 
-  const deleteForm = superForm(data.deleteForm, {
+  const deleteSuperform = superForm(data.deleteForm, {
     validators: zodClient(deleteSchema),
   });
-  const { errors: deleteErrors, enhance: deleteEnhance } = deleteForm;
+  const { errors: deleteErrors, enhance: deleteEnhance } = deleteSuperform;
 
   let dialog: HTMLDialogElement = $state() as HTMLDialogElement;
 </script>
@@ -38,19 +38,19 @@
       novalidate
     >
       <FormControl
-        superform={changePasswordForm}
+        superform={changePasswordSuperform}
         field="currentPassword"
         type="password"
         label={m.profile_currentPassword()}
       />
       <FormControl
-        superform={changePasswordForm}
+        superform={changePasswordSuperform}
         field="newPassword"
         type="password"
         label={m.profile_newPassword()}
       />
       <FormControl
-        superform={changePasswordForm}
+        superform={changePasswordSuperform}
         field="confirmNewPassword"
         type="password"
         label={m.profile_confirmNewPassword()}

@@ -1,10 +1,13 @@
 import type { Pageable } from '$lib/models/shared/pageable';
 import { RoleName } from '$lib/models/user/role';
 import type { User } from '$lib/models/user/user';
-import { makeRequest } from '$lib/server/apis/api';
+import { apiErrors, makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { error, fail, type Cookies } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
+import { adminSchema, roleSchema } from './schema';
 
 export const load = (async ({ cookies, url }) => {
   let page = Number(url.searchParams.get('page')) || 1;
@@ -21,48 +24,98 @@ export const load = (async ({ cookies, url }) => {
 
   if ('error' in response) error(response.status, { message: response.error });
 
+  const activateForm = await superValidate(zod(adminSchema));
+  const lockForm = await superValidate(zod(adminSchema));
+  const deleteForm = await superValidate(zod(adminSchema));
+  const roleForm = await superValidate(zod(roleSchema));
+
   return {
     users: response as Pageable<User>,
     pageable: { page, size },
-    roles: [{ name: RoleName.USER }, { name: RoleName.ADMIN }],
+    roleNames: [RoleName.USER, RoleName.ADMIN],
+    activateForm,
+    lockForm,
+    deleteForm,
+    roleForm,
   };
 }) satisfies PageServerLoad;
 
-const makeAction = async (cookies: Cookies, url: URL, method: HttpRequest, body?: string) => {
-  const id = url.searchParams.get('id');
-  const response = await makeRequest({
-    method,
-    path: `/admin/users/${id}`,
-    auth: cookies.get('accessToken'),
-    body,
-  });
-
-  if ('error' in response) return fail(response.status, { error: response.error });
-};
-
 export const actions = {
-  activate: async ({ cookies, url }) => {
-    return await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ active: true }));
+  activate: async ({ request, cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const form = await superValidate(request, zod(adminSchema));
+
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ active: true }),
+    });
+
+    if ('error' in response) return apiErrors(response, form);
   },
-  deactivate: async ({ cookies, url }) => {
-    return await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ active: false }));
+  deactivate: async ({ request, cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const form = await superValidate(request, zod(adminSchema));
+
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ active: false }),
+    });
+
+    if ('error' in response) return apiErrors(response, form);
   },
-  unlock: async ({ cookies, url }) => {
-    return await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ lock: false }));
+  unlock: async ({ request, cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const form = await superValidate(request, zod(adminSchema));
+
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ lock: false }),
+    });
+
+    if ('error' in response) return apiErrors(response, form);
   },
-  lock: async ({ cookies, url }) => {
-    return await makeAction(cookies, url, HttpRequest.PATCH, JSON.stringify({ lock: true }));
+  lock: async ({ request, cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const form = await superValidate(request, zod(adminSchema));
+
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ lock: true }),
+    });
+
+    if ('error' in response) return apiErrors(response, form);
   },
-  delete: async ({ cookies, url }) => {
-    return await makeAction(cookies, url, HttpRequest.DELETE);
+  delete: async ({ request, cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const form = await superValidate(request, zod(adminSchema));
+
+    const response = await makeRequest({
+      method: HttpRequest.DELETE,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+    });
+
+    if ('error' in response) return apiErrors(response, form);
   },
-  roles: async ({ cookies, url, request }) => {
-    const formData = Object.fromEntries(await request.formData());
-    return await makeAction(
-      cookies,
-      url,
-      HttpRequest.PATCH,
-      JSON.stringify({ roleNames: Object.keys(formData) }),
-    );
+  roles: async ({ request, cookies, url }) => {
+    const id = url.searchParams.get('id');
+    const form = await superValidate(request, zod(roleSchema));
+
+    const response = await makeRequest({
+      method: HttpRequest.PATCH,
+      path: `/admin/users/${id}`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify({ roleNames: form.data.names }),
+    });
+
+    if ('error' in response) return apiErrors(response, form);
   },
 } satisfies Actions;
