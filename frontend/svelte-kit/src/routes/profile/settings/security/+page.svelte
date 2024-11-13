@@ -30,7 +30,7 @@
   let dialog: HTMLDialogElement = $state() as HTMLDialogElement;
 </script>
 
-<div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
+<div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
   <div class="flex flex-col gap-2">
     <h1 class="mb-6 text-center text-3xl font-bold">{m.profile_security()}</h1>
     <form
@@ -75,7 +75,7 @@
     >
       {m.profile_delete()}
     </button>
-    <p class="label-text text-error text-center">{$deleteErrors?._errors}</p>
+    <p class="label-text text-center text-error">{$deleteErrors?._errors}</p>
   </div>
 </div>
 {#if $message}
