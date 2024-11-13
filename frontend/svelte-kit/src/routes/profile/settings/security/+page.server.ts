@@ -1,4 +1,5 @@
 import type { AuthTokens } from '$lib/models/auth/auth-tokens';
+import * as m from '$lib/paraglide/messages.js';
 import { apiErrors, makeRequest } from '$lib/server/apis/api';
 import {
   HttpRequest,
@@ -7,7 +8,7 @@ import {
   setRefreshTokenCookie,
 } from '$lib/server/utils/util';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad } from './$types';
 import { changePasswordSchema, deleteSchema } from './schema';
@@ -47,6 +48,8 @@ export const actions = {
     const { accessToken, refreshToken } = signInResponse as AuthTokens;
     setAccessTokenCookie(cookies, accessToken);
     setRefreshTokenCookie(cookies, refreshToken);
+
+    return message(form, m.profile_changePasswordSuccess());
   },
   delete: async ({ request, cookies, locals }) => {
     const form = await superValidate(request, zod(deleteSchema));

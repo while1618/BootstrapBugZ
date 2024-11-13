@@ -32,6 +32,7 @@
   "profile_newPassword": "New password",
   "profile_confirmNewPassword": "Confirm new password",
   "profile_changePassword": "Change password",
+  "profile_changePasswordSuccess": "Password changed successfully",
   "profile_signOutFromAllDevices": "Sign out from all devices",
   "profile_delete": "Delete account",
   "profile_deleteAccountConfirmation": "Are you sure you want to delete your account? This action cannot be undone",
@@ -41,6 +42,7 @@
   "profile_usernameInvalid": "Invalid username",
   "profile_email": "Email",
   "profile_emailInvalid": "Invalid email",
+  "profile_updateSuccess": "Profile updated successfully",
 
   "auth_signIn": "Sign in",
   "auth_signUp": "Sign up",
@@ -58,7 +60,8 @@
   "auth_passwordsDoNotMatch": "Passwords do not match",
   "auth_resendConfirmationEmail": "Resend confirmation email",
   "auth_doNotHaveAnAccount": "Don't have an account?",
-  "auth_forgotPassword": "Forgot password?",
+  "auth_forgotPassword": "Forgot password",
+  "auth_forgotPasswordSuccess": "Forgot password email sent successfully",
   "auth_resetPassword": "Reset password",
   "auth_tokenInvalid": "Invalid token",
 

@@ -1,7 +1,8 @@
+import * as m from '$lib/paraglide/messages.js';
 import { apiErrors, makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, redirect } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import { forgotPasswordSchema } from './schema';
@@ -27,6 +28,6 @@ export const actions = {
 
     if ('error' in response) return apiErrors(response, form);
 
-    redirect(302, '/auth/sign-in');
+    return message(form, m.auth_forgotPasswordSuccess());
   },
 } satisfies Actions;

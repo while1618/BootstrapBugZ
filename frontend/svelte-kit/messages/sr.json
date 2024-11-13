@@ -32,6 +32,7 @@
   "profile_newPassword": "Nova lozinka",
   "profile_confirmNewPassword": "Potvrdi novu lozinku",
   "profile_changePassword": "Promena lozinke",
+  "profile_changePasswordSuccess": "Uspešno ažuriran lozinka",
   "profile_signOutFromAllDevices": "Odjavi se sa svih uređaja",
   "profile_delete": "Obriši nalog",
   "profile_deleteAccountConfirmation": "Da li si siguran da želiš da obrišeš svoj nalog? Ova akcija se ne može poništiti",
@@ -41,6 +42,7 @@
   "profile_usernameInvalid": "Nevalidno korisničko ime",
   "profile_email": "Email",
   "profile_emailInvalid": "Nevalidan email",
+  "profile_updateSuccess": "Uspešno ažuriran profil",
 
   "auth_signIn": "Prijavi se",
   "auth_signUp": "Registruj se",
@@ -58,7 +60,8 @@
   "auth_passwordsDoNotMatch": "Lozinke se ne poklapaju",
   "auth_resendConfirmationEmail": "Ponovo pošalji email za potvrdu",
   "auth_doNotHaveAnAccount": "Nemaš nalog?",
-  "auth_forgotPassword": "Zaboravljena lozinka?",
+  "auth_forgotPassword": "Zaboravljena lozinka",
+  "auth_forgotPasswordSuccess": "Email za zaboravljenu lozinku uspešno poslat",
   "auth_resetPassword": "Resetuj lozinku",
   "auth_tokenInvalid": "Nevalidan token",
 

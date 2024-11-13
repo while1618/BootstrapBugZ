@@ -1,7 +1,8 @@
+import * as m from '$lib/paraglide/messages.js';
 import { apiErrors, makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
 import { fail, type Actions } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad } from './$types';
 import { updateProfileSchema } from './schema';
@@ -26,5 +27,7 @@ export const actions = {
     });
 
     if ('error' in response) return apiErrors(response, form);
+
+    return message(form, m.profile_updateSuccess());
   },
 } satisfies Actions;
