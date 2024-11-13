@@ -1,37 +1,41 @@
 <script lang="ts">
-  import logo from '$lib/images/logo.png';
   import * as m from '$lib/paraglide/messages.js';
+  import { MenuIcon } from 'lucide-svelte';
   import LanguageSwitcher from './language-switcher.svelte';
   import ThemeSelector from './theme-selector.svelte';
 </script>
 
-<header class="sticky top-0 z-50 bg-base-100 py-2">
+<header class="sticky top-0 z-50 py-2">
   <div class="container">
     <div class="navbar px-0">
       <div class="navbar-start">
-        <div class="dropdown">
-          <div tabIndex={0} class="btn btn-circle mr-1 w-12 rounded-full lg:hidden">
-            <img alt="logo" src={logo} />
-          </div>
-          <ul
-            tabIndex={0}
-            class="menu-compact menu dropdown-content mt-1 w-52 rounded-box bg-base-200 p-2 shadow"
-          >
-            <li><a href="/auth/sign-in">{m.navbar_singIn()}</a></li>
-            <li><a href="/auth/sign-up">{m.navbar_signUp()}</a></li>
-          </ul>
-        </div>
-        <a href="/" class="btn btn-ghost text-2xl normal-case">BootstrapBugZ</a>
+        <label for="my-drawer" class="btn btn-square btn-ghost lg:hidden">
+          <MenuIcon />
+        </label>
+        <a href="/" class="btn btn-ghost text-2xl">BootstrapBugZ</a>
       </div>
       <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal p-0 font-medium">
+        <ul class="menu menu-horizontal p-0">
           <li><a href="/auth/sign-in">{m.navbar_singIn()}</a></li>
           <li><a href="/auth/sign-up">{m.navbar_signUp()}</a></li>
         </ul>
       </div>
-      <div class="navbar-end gap-3">
+      <div class="navbar-end hidden gap-3 lg:flex">
         <ThemeSelector />
         <LanguageSwitcher />
+      </div>
+    </div>
+
+    <div class="drawer">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-side">
+        <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+        <ul class="menu min-h-full w-80 gap-2 bg-base-200 p-4 text-base-content">
+          <li><a href="/auth/sign-in">{m.navbar_singIn()}</a></li>
+          <li><a href="/auth/sign-up">{m.navbar_signUp()}</a></li>
+          <li><LanguageSwitcher /></li>
+          <li class="w-8"><ThemeSelector /></li>
+        </ul>
       </div>
     </div>
   </div>

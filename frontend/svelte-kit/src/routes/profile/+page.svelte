@@ -1,5 +1,4 @@
 <script lang="ts">
-  import avatar from '$lib/images/avatar.jpg';
   import * as m from '$lib/paraglide/messages.js';
   import type { PageServerData } from './$types';
 
@@ -12,10 +11,7 @@
 
 <section class="py-10 md:py-16">
   <div class="container">
-    <div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
-      <div class="flex justify-center">
-        <img class="mt-6 h-32 w-32 rounded-full" src={avatar} alt="Avatar" />
-      </div>
+    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
       <div class="mb-4 mt-6 text-center">
         <h1 class="text-2xl font-bold">{data.user?.username}</h1>
       </div>
