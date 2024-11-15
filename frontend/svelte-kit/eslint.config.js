@@ -28,14 +28,7 @@ export default [
     },
   },
   {
-    ignores: [
-      'build/',
-      '.svelte-kit/',
-      'dist/',
-      'src/lib/paraglide',
-      'src/lib/components/ui',
-      'components.json',
-    ],
+    ignores: ['build/', '.svelte-kit/', 'dist/', 'src/lib/paraglide'],
   },
   {
     rules: {
