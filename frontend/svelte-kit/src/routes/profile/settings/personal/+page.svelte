@@ -17,7 +17,7 @@
   const { message, errors, enhance } = superform;
 </script>
 
-<div class="card mx-auto w-full max-w-xl bg-base-200 p-8 shadow-xl">
+<div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
   <div class="flex flex-col gap-2">
     <h1 class="mb-6 text-center text-3xl font-bold">{m.profile()}</h1>
     <form class="flex flex-col gap-4" method="POST" action="?/updateProfile" use:enhance novalidate>

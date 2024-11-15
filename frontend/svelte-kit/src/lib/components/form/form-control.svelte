@@ -26,7 +26,7 @@
     aria-invalid={$errors ? 'true' : undefined}
     bind:value={$value}
     {...$constraints}
-    class="input input-bordered w-full bg-base-200"
+    class="input input-bordered bg-base-200 w-full"
   />
   {#if $errors}
     <label for={field} class="label">
