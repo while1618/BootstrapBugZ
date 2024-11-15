@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { Button } from '$lib/components/ui/button';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+  import * as Sheet from '$lib/components/ui/sheet';
   import * as m from '$lib/paraglide/messages.js';
   import {
     ChartBarIncreasingIcon,
@@ -19,43 +22,98 @@
 
 <header class="sticky top-0 z-50 py-2">
   <div class="container">
-    <div class="navbar px-0">
-      <div class="navbar-start">
-        <label for="my-drawer" class="btn btn-square btn-ghost lg:hidden">
-          <MenuIcon />
-        </label>
-        <a href="/" class="btn btn-ghost text-2xl">BootstrapBugZ</a>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3 lg:hidden">
+        <Sheet.Root>
+          <Sheet.Trigger>
+            <MenuIcon />
+            <span class="sr-only">Open Menu</span>
+          </Sheet.Trigger>
+          <Sheet.Content side="left">
+            <Sheet.Header>
+              <Sheet.Description>
+                <div class="flex flex-col gap-2">
+                  <LanguageSwitcher />
+                  <Button href="/profile" variant="ghost" class="w-full justify-start">
+                    <UserIcon />
+                    {m.navbar_profile()}
+                  </Button>
+                  {#if isAdmin}
+                    <Button href="/admin" variant="ghost" class="w-full justify-start">
+                      <ChartBarIncreasingIcon />
+                      {m.navbar_admin()}
+                    </Button>
+                  {/if}
+                  <Button
+                    href="/profile/settings/personal"
+                    variant="ghost"
+                    class="w-full justify-start"
+                  >
+                    <SettingsIcon />
+                    {m.navbar_settings()}
+                  </Button>
+                  <Button href="/auth/sign-out" variant="ghost" class="w-full justify-start">
+                    <LogOutIcon />
+                    {m.navbar_signOut()}
+                  </Button>
+                </div>
+              </Sheet.Description>
+            </Sheet.Header>
+          </Sheet.Content>
+        </Sheet.Root>
       </div>
-      <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal p-0">
-          <li><a href="/profile"><UserIcon /> {m.navbar_profile()}</a></li>
-          {#if isAdmin}
-            <li><a href="/admin"><ChartBarIncreasingIcon /> {m.navbar_admin()}</a></li>
-          {/if}
-          <li><a href="/profile/settings/personal"><SettingsIcon /> {m.navbar_settings()}</a></li>
-          <li><a href="/auth/sign-out"><LogOutIcon /> {m.navbar_signOut()}</a></li>
-        </ul>
-      </div>
-      <div class="navbar-end hidden gap-3 lg:flex">
-        <ThemeSelector />
-        <LanguageSwitcher />
-      </div>
-    </div>
 
-    <div class="drawer">
-      <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-side">
-        <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul class="menu min-h-full w-80 gap-2 bg-base-200 p-4 text-base-content">
-          <li><a href="/profile"><UserIcon /> {m.navbar_profile()}</a></li>
-          {#if isAdmin}
-            <li><a href="/admin"><ChartBarIncreasingIcon /> {m.navbar_admin()}</a></li>
-          {/if}
-          <li><a href="/profile/settings/personal"><SettingsIcon /> {m.navbar_settings()}</a></li>
-          <li><a href="/auth/sign-out"><LogOutIcon /> {m.navbar_signOut()}</a></li>
-          <li><LanguageSwitcher /></li>
-          <li class="w-8"><ThemeSelector /></li>
-        </ul>
+      <Button href="/" class="text-2xl" variant="ghost">BootstrapBugZ</Button>
+
+      <div class="ml-auto flex items-center gap-3">
+        <div class="flex gap-3 lg:hidden">
+          <ThemeSelector />
+        </div>
+
+        <div class="hidden gap-3 lg:flex">
+          <ThemeSelector />
+          <LanguageSwitcher />
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <Button variant="ghost" size="icon"><UserIcon /></Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content class="w-56">
+              <DropdownMenu.Group>
+                <DropdownMenu.GroupHeading>My Account</DropdownMenu.GroupHeading>
+                <DropdownMenu.Separator />
+                <DropdownMenu.Group>
+                  <DropdownMenu.Item class="cursor-pointer">
+                    {#snippet child({ props })}
+                      <a {...props} href="/profile"><UserIcon />{m.navbar_profile()}</a>
+                    {/snippet}
+                  </DropdownMenu.Item>
+                  {#if isAdmin}
+                    <DropdownMenu.Item class="cursor-pointer">
+                      {#snippet child({ props })}
+                        <a {...props} href="/admin"><ChartBarIncreasingIcon />{m.navbar_admin()}</a>
+                      {/snippet}
+                    </DropdownMenu.Item>
+                  {/if}
+                  <DropdownMenu.Item class="cursor-pointer">
+                    {#snippet child({ props })}
+                      <a {...props} href="/profile/settings/personal">
+                        <SettingsIcon />{m.navbar_settings()}
+                      </a>
+                    {/snippet}
+                  </DropdownMenu.Item>
+                </DropdownMenu.Group>
+                <DropdownMenu.Separator />
+                <DropdownMenu.Group>
+                  <DropdownMenu.Item class="cursor-pointer">
+                    {#snippet child({ props })}
+                      <a {...props} href="/auth/sign-out"><LogOutIcon />{m.navbar_signOut()}</a>
+                    {/snippet}
+                  </DropdownMenu.Item>
+                </DropdownMenu.Group>
+              </DropdownMenu.Group>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+        </div>
       </div>
     </div>
   </div>
