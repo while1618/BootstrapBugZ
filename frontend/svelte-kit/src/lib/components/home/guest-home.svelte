@@ -9,7 +9,7 @@
       <div class="flex max-w-lg flex-col items-center gap-5 text-center">
         <h1 class="text-6xl font-extrabold">{m.home_greetings()}</h1>
         <p>{m.home_info()}</p>
-        <Button class="bg-blue-400 hover:bg-blue-300">{m.home_getStarted()}</Button>
+        <Button href="/" class="bg-blue-400 hover:bg-blue-300">{m.home_getStarted()}</Button>
       </div>
     </div>
   </div>

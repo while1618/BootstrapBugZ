@@ -1,10 +1,17 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { Button } from '$lib/components/ui/button';
   import * as m from '$lib/paraglide/messages.js';
 </script>
 
-<div class="flex h-screen flex-col items-center justify-center">
-  <h1 class="text-9xl font-bold text-primary">{$page.status}</h1>
-  <p class="mb-8 text-lg">{$page.error?.message}</p>
-  <a href="/" class="btn btn-primary">{m.general_homepage()}</a>
-</div>
+<section>
+  <div class="container">
+    <div class="m-20 flex items-center justify-center">
+      <div class="flex max-w-lg flex-col items-center gap-5 text-center">
+        <h1 class="text-6xl font-extrabold">{$page.status}</h1>
+        <p>{$page.error?.message}</p>
+        <Button href="/" class="bg-blue-400 hover:bg-blue-300">{m.general_homepage()}</Button>
+      </div>
+    </div>
+  </div>
+</section>
