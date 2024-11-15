@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Button } from '$lib/components/ui/button';
   import type { User } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
 
@@ -11,17 +12,16 @@
 
 <section>
   <div class="container">
-    <div class="hero rounded-box h-96 overflow-hidden md:h-[500px]">
-      <div class="hero-overlay"></div>
-      <div class="hero-content text-center">
-        <div class="max-w-lg">
-          <h1 class="mb-5 text-4xl font-bold sm:mb-7 sm:text-5xl">
-            {m.home_greetings()}, {user.username}
-          </h1>
-          <p class="mb-5 sm:mb-7 sm:text-lg">{m.home_info()}</p>
-          <a href="/" class="btn btn-accent sm:btn-wide">{m.home_getStarted()}</a>
+    <section>
+      <div class="container">
+        <div class="m-20 flex items-center justify-center">
+          <div class="flex max-w-lg flex-col items-center gap-5 text-center">
+            <h1 class="text-6xl font-extrabold">{user.username}</h1>
+            <p>{m.home_info()}</p>
+            <Button class="bg-blue-400 hover:bg-blue-300">{m.home_getStarted()}</Button>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </section>
