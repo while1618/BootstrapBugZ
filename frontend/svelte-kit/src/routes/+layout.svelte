@@ -16,16 +16,14 @@
   const { data, children }: Props = $props();
 </script>
 
-{#if $navigating}
-  <Loading />
-{:else}
-  <ParaglideJS {i18n}>
-    {#if data.user}
-      <UserNavbar isAdmin={data.isAdmin} />
-      {@render children?.()}
-    {:else}
-      <GuestNavbar />
-      {@render children?.()}
-    {/if}
-  </ParaglideJS>
-{/if}
+<ParaglideJS {i18n}>
+  {#if $navigating}
+    <Loading />
+  {:else if data.user}
+    <UserNavbar isAdmin={data.isAdmin} />
+    {@render children?.()}
+  {:else}
+    <GuestNavbar />
+    {@render children?.()}
+  {/if}
+</ParaglideJS>
