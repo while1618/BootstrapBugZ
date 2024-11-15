@@ -1,30 +1,32 @@
 <script lang="ts">
+  import { Button } from '$lib/components/ui/button';
   import { MoonIcon, SunIcon } from 'lucide-svelte';
   import { onMount } from 'svelte';
 
-  const defaultTheme = 'dark';
-  let currentTheme = '';
+  let currentTheme = $state('dark');
 
   onMount(() => {
-    const theme =
+    currentTheme =
       document.cookie
         .split('; ')
         .find((row) => row.startsWith('theme'))
-        ?.split('=')[1] ?? defaultTheme;
-    currentTheme = theme;
-    document.documentElement.setAttribute('data-theme', theme);
+        ?.split('=')[1] ?? 'dark';
+    document.documentElement.setAttribute('class', currentTheme);
   });
 
   function changeTheme() {
-    const changeTo = currentTheme === 'dark' ? 'pastel' : 'dark';
-    currentTheme = changeTo;
-    document.cookie = `theme=${changeTo}; max-age=${60 * 60 * 24 * 365}; path=/; SameSite=Strict;`;
-    document.documentElement.setAttribute('data-theme', changeTo);
+    currentTheme = currentTheme === 'dark' ? '' : 'dark';
+    document.cookie = `theme=${currentTheme}; max-age=${60 * 60 * 24 * 365}; path=/; SameSite=Strict;`;
+    document.documentElement.setAttribute('class', currentTheme);
   }
 </script>
 
-<label class="swap swap-rotate">
-  <input type="checkbox" class="theme-controller" onclick={changeTheme} />
-  <SunIcon class="swap-on" />
-  <MoonIcon class="swap-off" />
-</label>
+<Button onclick={changeTheme} variant="ghost" size="icon">
+  <SunIcon
+    class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+  />
+  <MoonIcon
+    class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+  />
+  <span class="sr-only">Change theme</span>
+</Button>

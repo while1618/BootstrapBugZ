@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Button } from '$lib/components/ui/button';
+  import * as Sheet from '$lib/components/ui/sheet';
   import * as m from '$lib/paraglide/messages.js';
   import { MenuIcon } from 'lucide-svelte';
   import LanguageSwitcher from './language-switcher.svelte';
@@ -7,35 +9,44 @@
 
 <header class="sticky top-0 z-50 py-2">
   <div class="container">
-    <div class="navbar px-0">
-      <div class="navbar-start">
-        <label for="my-drawer" class="btn btn-square btn-ghost lg:hidden">
-          <MenuIcon />
-        </label>
-        <a href="/" class="btn btn-ghost text-2xl">BootstrapBugZ</a>
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3 lg:hidden">
+        <Sheet.Root>
+          <Sheet.Trigger>
+            <MenuIcon />
+            <span class="sr-only">Toggle Menu</span>
+          </Sheet.Trigger>
+          <Sheet.Content side="left">
+            <Sheet.Header>
+              <Sheet.Description>
+                <div class="flex flex-col items-start gap-2">
+                  <LanguageSwitcher />
+                  <Button href="/auth/sign-in" variant="ghost" class="w-full justify-start">
+                    {m.navbar_singIn()}
+                  </Button>
+                  <Button href="/auth/sign-up" variant="ghost" class="w-full justify-start">
+                    {m.navbar_signUp()}
+                  </Button>
+                </div>
+              </Sheet.Description>
+            </Sheet.Header>
+          </Sheet.Content>
+        </Sheet.Root>
       </div>
-      <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal p-0">
-          <li><a href="/auth/sign-in">{m.navbar_singIn()}</a></li>
-          <li><a href="/auth/sign-up">{m.navbar_signUp()}</a></li>
-        </ul>
-      </div>
-      <div class="navbar-end hidden gap-3 lg:flex">
-        <ThemeSelector />
-        <LanguageSwitcher />
-      </div>
-    </div>
 
-    <div class="drawer">
-      <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-side">
-        <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul class="menu min-h-full w-80 gap-2 bg-base-200 p-4 text-base-content">
-          <li><a href="/auth/sign-in">{m.navbar_singIn()}</a></li>
-          <li><a href="/auth/sign-up">{m.navbar_signUp()}</a></li>
-          <li><LanguageSwitcher /></li>
-          <li class="w-8"><ThemeSelector /></li>
-        </ul>
+      <Button href="/" class="text-2xl" variant="ghost">BootstrapBugZ</Button>
+
+      <div class="ml-auto flex items-center gap-3">
+        <div class="flex gap-3 lg:hidden">
+          <ThemeSelector />
+        </div>
+
+        <div class="hidden gap-3 lg:flex">
+          <Button href="/auth/sign-in" variant="ghost">{m.navbar_singIn()}</Button>
+          <Button href="/auth/sign-up" variant="ghost">{m.navbar_signUp()}</Button>
+          <ThemeSelector />
+          <LanguageSwitcher />
+        </div>
       </div>
     </div>
   </div>
