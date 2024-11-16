@@ -3,6 +3,7 @@
   import GuestNavbar from '$lib/components/navbar/guest-navbar.svelte';
   import UserNavbar from '$lib/components/navbar/user-navbar.svelte';
   import Loading from '$lib/components/shared/loading.svelte';
+  import { Toaster } from '$lib/components/ui/sonner';
   import { i18n } from '$lib/i18n';
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
   import '../app.css';
@@ -17,6 +18,7 @@
 </script>
 
 <ParaglideJS {i18n}>
+  <Toaster />
   {#if $navigating}
     <Loading />
   {:else if data.user}

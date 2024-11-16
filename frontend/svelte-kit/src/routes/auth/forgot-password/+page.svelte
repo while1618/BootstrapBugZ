@@ -1,6 +1,10 @@
 <script lang="ts">
-  import FormControl from '$lib/components/form/form-control.svelte';
+  import * as Card from '$lib/components/ui/card';
+  import * as Form from '$lib/components/ui/form';
+  import { Input } from '$lib/components/ui/input';
+  import { Label } from '$lib/components/ui/label';
   import * as m from '$lib/paraglide/messages.js';
+  import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { PageServerData } from './$types';
@@ -14,33 +18,45 @@
   const superform = superForm(data.form, {
     validators: zodClient(forgotPasswordSchema),
   });
-  const { message, errors, enhance } = superform;
+  const { form, message, errors, enhance } = superform;
+
+  $effect(() => {
+    if ($message) toast.success($message);
+  });
 </script>
 
-<section class="py-10 md:py-16">
+<section>
   <div class="container">
-    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
-      <div class="flex flex-col gap-8">
-        <h1 class="text-center text-3xl font-bold">{m.auth_forgotPassword()}</h1>
-        <form
-          class="flex flex-col gap-4"
-          method="POST"
-          action="?/forgotPassword"
-          use:enhance
-          novalidate
-        >
-          <FormControl {superform} field="email" type="email" label={m.auth_email()} />
-          <p class="label-text text-error">{$errors?._errors}</p>
-          <button class="btn btn-primary">{m.general_send()}</button>
-        </form>
+    <div class="m-20 flex items-center justify-center">
+      <div class="flex max-w-lg flex-col items-center gap-5">
+        <Card.Root class="w-[350px]">
+          <Card.Header>
+            <Card.Title class="text-2xl">{m.auth_forgotPassword()}</Card.Title>
+          </Card.Header>
+          <Card.Content>
+            <form
+              class="flex flex-col gap-2"
+              method="POST"
+              action="?/forgotPassword"
+              use:enhance
+              novalidate
+            >
+              <Form.Field form={superform} name="email">
+                <Form.Control>
+                  {#snippet children({ props })}
+                    <Label>{m.auth_email()}</Label>
+                    <Input type="email" {...props} bind:value={$form.email} />
+                  {/snippet}
+                </Form.Control>
+                <Form.FieldErrors />
+              </Form.Field>
+
+              <Label class="text-destructive text-[0.8rem]">{$errors?._errors}</Label>
+              <Form.Button>{m.general_send()}</Form.Button>
+            </form>
+          </Card.Content>
+        </Card.Root>
       </div>
     </div>
-    {#if $message}
-      <div class="toast">
-        <div class="alert alert-info">
-          <span>{$message}</span>
-        </div>
-      </div>
-    {/if}
   </div>
 </section>
