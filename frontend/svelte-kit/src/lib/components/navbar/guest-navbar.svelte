@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Button } from '$lib/components/ui/button';
   import * as Sheet from '$lib/components/ui/sheet';
-  import * as m from '$lib/paraglide/messages.js';
   import { MenuIcon } from 'lucide-svelte';
   import LanguageSwitcher from './language-switcher.svelte';
   import ThemeSelector from './theme-selector.svelte';
@@ -21,12 +20,6 @@
               <Sheet.Description>
                 <div class="flex flex-col items-start gap-2">
                   <LanguageSwitcher />
-                  <Button href="/auth/sign-in" variant="ghost" class="w-full justify-start">
-                    {m.navbar_singIn()}
-                  </Button>
-                  <Button href="/auth/sign-up" variant="ghost" class="w-full justify-start">
-                    {m.navbar_signUp()}
-                  </Button>
                 </div>
               </Sheet.Description>
             </Sheet.Header>
@@ -42,8 +35,6 @@
         </div>
 
         <div class="hidden gap-3 lg:flex">
-          <Button href="/auth/sign-in" variant="ghost">{m.navbar_singIn()}</Button>
-          <Button href="/auth/sign-up" variant="ghost">{m.navbar_signUp()}</Button>
           <ThemeSelector />
           <LanguageSwitcher />
         </div>
