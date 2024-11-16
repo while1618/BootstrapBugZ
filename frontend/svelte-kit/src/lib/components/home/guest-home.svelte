@@ -9,7 +9,10 @@
       <div class="flex max-w-lg flex-col items-center gap-5 text-center">
         <h1 class="text-6xl font-extrabold">{m.home_greetings()}</h1>
         <p>{m.home_info()}</p>
-        <Button href="/" class="bg-blue-400 hover:bg-blue-300">{m.home_getStarted()}</Button>
+        <div class="flex gap-4">
+          <Button href="/auth/sign-in">{m.auth_signIn()}</Button>
+          <Button href="/auth/sign-up" variant="outline">{m.auth_signUp()}</Button>
+        </div>
       </div>
     </div>
   </div>
