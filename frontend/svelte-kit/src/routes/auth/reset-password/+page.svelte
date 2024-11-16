@@ -1,5 +1,8 @@
 <script lang="ts">
-  import FormControl from '$lib/components/form/form-control.svelte';
+  import * as Card from '$lib/components/ui/card';
+  import * as Form from '$lib/components/ui/form';
+  import { Input } from '$lib/components/ui/input';
+  import { Label } from '$lib/components/ui/label';
   import * as m from '$lib/paraglide/messages.js';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
@@ -14,31 +17,50 @@
   const superform = superForm(data.form, {
     validators: zodClient(resetPasswordSchema),
   });
-  const { errors, enhance } = superform;
+  const { form, errors, enhance } = superform;
 </script>
 
-<section class="py-10 md:py-16">
+<section>
   <div class="container">
-    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
-      <div class="flex flex-col gap-8">
-        <h1 class="text-center text-3xl font-bold">{m.auth_resetPassword()}</h1>
-        <form
-          class="flex flex-col gap-4"
-          method="POST"
-          action="?/resetPassword"
-          use:enhance
-          novalidate
-        >
-          <FormControl {superform} field="password" type="password" label={m.auth_password()} />
-          <FormControl
-            {superform}
-            field="confirmPassword"
-            type="password"
-            label={m.auth_confirmPassword()}
-          />
-          <p class="label-text text-error">{$errors?._errors}</p>
-          <button class="btn btn-primary">{m.auth_resetPassword()}</button>
-        </form>
+    <div class="m-20 flex items-center justify-center">
+      <div class="flex max-w-lg flex-col items-center gap-5">
+        <Card.Root class="w-[350px]">
+          <Card.Header>
+            <Card.Title class="text-2xl">{m.auth_resetPassword()}</Card.Title>
+          </Card.Header>
+          <Card.Content>
+            <form
+              class="flex flex-col gap-2"
+              method="POST"
+              action="?/resetPassword"
+              use:enhance
+              novalidate
+            >
+              <Form.Field form={superform} name="password">
+                <Form.Control>
+                  {#snippet children({ props })}
+                    <Label>{m.auth_password()}</Label>
+                    <Input type="password" {...props} bind:value={$form.password} />
+                  {/snippet}
+                </Form.Control>
+                <Form.FieldErrors />
+              </Form.Field>
+
+              <Form.Field form={superform} name="confirmPassword">
+                <Form.Control>
+                  {#snippet children({ props })}
+                    <Label>{m.auth_confirmPassword()}</Label>
+                    <Input type="password" {...props} bind:value={$form.confirmPassword} />
+                  {/snippet}
+                </Form.Control>
+                <Form.FieldErrors />
+              </Form.Field>
+
+              <Label class="text-[0.8rem] text-destructive">{$errors?._errors}</Label>
+              <Form.Button>{m.auth_resetPassword()}</Form.Button>
+            </form>
+          </Card.Content>
+        </Card.Root>
       </div>
     </div>
   </div>
