@@ -78,6 +78,13 @@
 
               <Label class="text-[0.8rem] text-destructive">{$errors?._errors}</Label>
               <Form.Button>{m.auth_signUp()}</Form.Button>
+
+              <div class="text-center">
+                <Label>{m.auth_alreadyHaveAnAccount()}</Label>
+                <a href="/auth/sign-in" class="text-sm font-medium underline">
+                  {m.auth_signIn()}
+                </a>
+              </div>
             </form>
           </Card.Content>
         </Card.Root>
