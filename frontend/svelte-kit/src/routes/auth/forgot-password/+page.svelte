@@ -51,7 +51,7 @@
                 <Form.FieldErrors />
               </Form.Field>
 
-              <Label class="text-destructive text-[0.8rem]">{$errors?._errors}</Label>
+              <Label class="text-[0.8rem] text-destructive">{$errors?._errors}</Label>
               <Form.Button>{m.general_send()}</Form.Button>
             </form>
           </Card.Content>
