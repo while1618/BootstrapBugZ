@@ -38,20 +38,16 @@
                     <UserIcon />
                     {m.navbar_profile()}
                   </Button>
+                  <Button href="/profile/settings" variant="ghost" class="w-full justify-start">
+                    <SettingsIcon />
+                    {m.navbar_settings()}
+                  </Button>
                   {#if isAdmin}
                     <Button href="/admin" variant="ghost" class="w-full justify-start">
                       <ChartBarIncreasingIcon />
                       {m.navbar_admin()}
                     </Button>
                   {/if}
-                  <Button
-                    href="/profile/settings/personal"
-                    variant="ghost"
-                    class="w-full justify-start"
-                  >
-                    <SettingsIcon />
-                    {m.navbar_settings()}
-                  </Button>
                   <Button href="/auth/sign-out" variant="ghost" class="w-full justify-start">
                     <LogOutIcon />
                     {m.navbar_signOut()}
@@ -87,6 +83,13 @@
                       <a {...props} href="/profile"><UserIcon />{m.navbar_profile()}</a>
                     {/snippet}
                   </DropdownMenu.Item>
+                  <DropdownMenu.Item class="cursor-pointer">
+                    {#snippet child({ props })}
+                      <a {...props} href="/profile/settings">
+                        <SettingsIcon />{m.navbar_settings()}
+                      </a>
+                    {/snippet}
+                  </DropdownMenu.Item>
                   {#if isAdmin}
                     <DropdownMenu.Item class="cursor-pointer">
                       {#snippet child({ props })}
@@ -94,13 +97,6 @@
                       {/snippet}
                     </DropdownMenu.Item>
                   {/if}
-                  <DropdownMenu.Item class="cursor-pointer">
-                    {#snippet child({ props })}
-                      <a {...props} href="/profile/settings/personal">
-                        <SettingsIcon />{m.navbar_settings()}
-                      </a>
-                    {/snippet}
-                  </DropdownMenu.Item>
                 </DropdownMenu.Group>
                 <DropdownMenu.Separator />
                 <DropdownMenu.Group>

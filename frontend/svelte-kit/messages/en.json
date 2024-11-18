@@ -27,7 +27,7 @@
 
   "profile": "Profile",
   "profile_bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-  "profile_personalInformation": "Personal Information",
+  "profile_personalInformation": "Personal information",
   "profile_security": "Security",
   "profile_currentPassword": "Current password",
   "profile_newPassword": "New password",
