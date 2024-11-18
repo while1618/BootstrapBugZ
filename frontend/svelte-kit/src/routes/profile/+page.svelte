@@ -9,16 +9,12 @@
   const { data }: Props = $props();
 </script>
 
-<section class="py-10 md:py-16">
+<section>
   <div class="container">
-    <div class="card bg-base-200 mx-auto w-full max-w-xl p-8 shadow-xl">
-      <div class="mb-4 mt-6 text-center">
-        <h1 class="text-2xl font-bold">{data.user?.username}</h1>
-      </div>
-      <div class="px-6 py-4">
-        <p class="text-base">
-          {m.profile_bio()}
-        </p>
+    <div class="m-20 flex items-center justify-center">
+      <div class="flex max-w-lg flex-col items-center gap-5 text-center">
+        <h1 class="text-6xl font-extrabold">{data.user?.username}</h1>
+        <p>{m.home_info()}</p>
       </div>
     </div>
   </div>

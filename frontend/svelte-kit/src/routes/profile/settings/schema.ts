@@ -1,6 +1,11 @@
 import * as m from '$lib/paraglide/messages.js';
-import { PASSWORD_REGEX } from '$lib/regex';
+import { EMAIL_REGEX, PASSWORD_REGEX, USERNAME_REGEX } from '$lib/regex';
 import { z, ZodIssueCode } from 'zod';
+
+export const updateProfileSchema = z.object({
+  username: z.string().regex(USERNAME_REGEX, { message: m.profile_usernameInvalid() }),
+  email: z.string().regex(EMAIL_REGEX, { message: m.profile_emailInvalid() }),
+});
 
 export const changePasswordSchema = z
   .object({
