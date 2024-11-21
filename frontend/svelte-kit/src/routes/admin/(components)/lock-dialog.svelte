@@ -1,0 +1,74 @@
+<script lang="ts">
+  import * as AlertDialog from '$lib/components/ui/alert-dialog';
+  import { Button } from '$lib/components/ui/button';
+  import type { User } from '$lib/models/user/user';
+  import * as m from '$lib/paraglide/messages.js';
+  import { LockKeyholeIcon, LockKeyholeOpenIcon } from 'lucide-svelte';
+  import { toast } from 'svelte-sonner';
+  import { superForm } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+  import type { PageServerData } from '../$types';
+  import { adminSchema } from '../schema';
+
+  interface Props {
+    data: PageServerData;
+    user: User;
+  }
+
+  const { data, user }: Props = $props();
+
+  const lockSuperform = superForm(data.lockForm, {
+    validators: zodClient(adminSchema),
+  });
+  const { errors: lockFormErrors, enhance: lockFormEnhance } = lockSuperform;
+  let lockDialogOpen = $state(false);
+
+  $effect(() => {
+    if ($lockFormErrors._errors) {
+      for (const error of $lockFormErrors._errors) {
+        toast.error(error);
+      }
+    }
+  });
+</script>
+
+<AlertDialog.Root bind:open={lockDialogOpen}>
+  <AlertDialog.Trigger>
+    <Button
+      variant="ghost"
+      class={user.lock
+        ? 'text-red-500 hover:text-red-500/90'
+        : 'text-blue-500 hover:text-blue-500/90'}
+    >
+      {#if user.lock}
+        <LockKeyholeIcon />
+      {:else}
+        <LockKeyholeOpenIcon />
+      {/if}
+    </Button>
+  </AlertDialog.Trigger>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>
+        {user.lock ? m.admin_unlockUser() : m.admin_lockUser()}
+      </AlertDialog.Title>
+      <AlertDialog.Description>
+        {user.lock
+          ? m.admin_unlockUserConfirmation({ username: user.username })
+          : m.admin_lockUserConfirmation({ username: user.username })}
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
+      <form
+        method="POST"
+        action="?/{user.lock ? 'unlock' : 'lock'}&id={user.id}"
+        use:lockFormEnhance
+      >
+        <AlertDialog.Action onclick={() => (lockDialogOpen = false)}>
+          {user.lock ? m.admin_unlock() : m.admin_lock()}
+        </AlertDialog.Action>
+      </form>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
