@@ -2,6 +2,7 @@
   import * as AlertDialog from '$lib/components/ui/alert-dialog';
   import { Button } from '$lib/components/ui/button';
   import { Checkbox } from '$lib/components/ui/checkbox';
+  import * as Form from '$lib/components/ui/form';
   import { Label } from '$lib/components/ui/label';
   import type { User } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
@@ -22,7 +23,7 @@
   const superform = superForm(data.roleForm, {
     validators: zodClient(roleSchema),
   });
-  const { form, errors, enhance } = superform;
+  const { errors, enhance } = superform;
   let dialogOpen = $state(false);
 
   $effect(() => {
@@ -50,15 +51,16 @@
           <div class="flex flex-col gap-3">
             {#each data.roleNames as roleName}
               {@const checked = user.roles?.some((role) => role.name === roleName)}
-              <div class="flex items-center space-x-2">
-                <Checkbox id={roleName} name="names" value={roleName} {checked} />
-                <Label
-                  for={roleName}
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {roleName}
-                </Label>
-              </div>
+              <Form.Field form={superform} name="names">
+                <Form.Control>
+                  {#snippet children({ props })}
+                    <div class="flex items-center space-x-2">
+                      <Checkbox {...props} id={roleName} value={roleName} {checked} />
+                      <Label class="cursor-pointer" for={roleName}>{roleName}</Label>
+                    </div>
+                  {/snippet}
+                </Form.Control>
+              </Form.Field>
             {/each}
           </div>
         </form>
