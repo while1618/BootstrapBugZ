@@ -32,33 +32,33 @@
           </Sheet.Trigger>
           <Sheet.Content side="left">
             <Sheet.Header>
-              <Sheet.Title>BootstrapBugZ</Sheet.Title>
+              <Sheet.Title class="self-center">BootstrapBugZ</Sheet.Title>
               <Separator />
               <Sheet.Description>
-                <div class="flex flex-col gap-2">
-                  <Button href="/profile" variant="ghost" class="w-full justify-start">
+                <div class="flex w-full flex-col gap-2">
+                  <Button href="/profile" variant="ghost">
                     <UserIcon />
                     {m.navbar_profile()}
                   </Button>
-                  <Button href="/profile/settings" variant="ghost" class="w-full justify-start">
+                  <Button href="/profile/settings" variant="ghost">
                     <SettingsIcon />
                     {m.navbar_settings()}
                   </Button>
                   {#if isAdmin}
-                    <Button href="/admin" variant="ghost" class="w-full justify-start">
+                    <Button href="/admin" variant="ghost">
                       <ChartBarIncreasingIcon />
                       {m.navbar_admin()}
                     </Button>
                   {/if}
                   <Separator />
-                  <Button href="/auth/sign-out" variant="ghost" class="w-full justify-start">
+                  <Button href="/auth/sign-out" variant="ghost">
                     <LogOutIcon />
                     {m.navbar_signOut()}
                   </Button>
-                  <Separator />
-                  <LanguageSwitcher />
                 </div>
               </Sheet.Description>
+              <Separator />
+              <div class="self-center"><LanguageSwitcher /></div>
             </Sheet.Header>
           </Sheet.Content>
         </Sheet.Root>

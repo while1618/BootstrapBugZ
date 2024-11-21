@@ -18,13 +18,9 @@
           </Sheet.Trigger>
           <Sheet.Content side="left">
             <Sheet.Header>
-              <Sheet.Title>BootstrapBugZ</Sheet.Title>
+              <Sheet.Title class="self-center">BootstrapBugZ</Sheet.Title>
               <Separator />
-              <Sheet.Description>
-                <div class="flex flex-col items-start gap-2">
-                  <LanguageSwitcher />
-                </div>
-              </Sheet.Description>
+              <div class="self-center"><LanguageSwitcher /></div>
             </Sheet.Header>
           </Sheet.Content>
         </Sheet.Root>
