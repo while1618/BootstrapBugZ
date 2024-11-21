@@ -17,22 +17,22 @@
 
   const { data, user }: Props = $props();
 
-  const lockSuperform = superForm(data.lockForm, {
+  const superform = superForm(data.lockForm, {
     validators: zodClient(adminSchema),
   });
-  const { errors: lockFormErrors, enhance: lockFormEnhance } = lockSuperform;
-  let lockDialogOpen = $state(false);
+  const { errors, enhance } = superform;
+  let dialogOpen = $state(false);
 
   $effect(() => {
-    if ($lockFormErrors._errors) {
-      for (const error of $lockFormErrors._errors) {
+    if ($errors._errors) {
+      for (const error of $errors._errors) {
         toast.error(error);
       }
     }
   });
 </script>
 
-<AlertDialog.Root bind:open={lockDialogOpen}>
+<AlertDialog.Root bind:open={dialogOpen}>
   <AlertDialog.Trigger>
     <Button
       variant="ghost"
@@ -60,12 +60,8 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
-      <form
-        method="POST"
-        action="?/{user.lock ? 'unlock' : 'lock'}&id={user.id}"
-        use:lockFormEnhance
-      >
-        <AlertDialog.Action onclick={() => (lockDialogOpen = false)}>
+      <form method="POST" action="?/{user.lock ? 'unlock' : 'lock'}&id={user.id}" use:enhance>
+        <AlertDialog.Action onclick={() => (dialogOpen = false)}>
           {user.lock ? m.admin_unlock() : m.admin_lock()}
         </AlertDialog.Action>
       </form>
