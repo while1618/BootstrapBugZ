@@ -19,8 +19,7 @@
   },
   "dependencies": {
     "@inlang/paraglide-sveltekit": "0.11.5",
-    "jsonwebtoken": "9.0.2",
-    "lucide-svelte": "0.456.0"
+    "jsonwebtoken": "9.0.2"
   },
   "devDependencies": {
     "@inlang/paraglide-js": "1.11.3",
@@ -31,7 +30,7 @@
     "@types/eslint": "9.6.1",
     "@types/jsonwebtoken": "9.0.7",
     "autoprefixer": "10.4.20",
-    "bits-ui": "1.0.0-next.59",
+    "bits-ui": "1.0.0-next.63",
     "clsx": "2.1.1",
     "daisyui": "4.12.14",
     "eslint": "9.14.0",
@@ -39,6 +38,7 @@
     "eslint-plugin-svelte": "2.46.0",
     "formsnap": "2.0.0-next.1",
     "globals": "15.12.0",
+    "lucide-svelte": "0.456.0",
     "postcss": "8.4.47",
     "prettier": "3.3.3",
     "prettier-plugin-svelte": "3.2.7",
