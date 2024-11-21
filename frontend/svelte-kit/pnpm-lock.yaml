@@ -84,9 +84,6 @@ importers:
       svelte-check:
         specifier: 4.0.9
         version: 4.0.9(svelte@5.2.7)(typescript@5.6.3)
-      svelte-radix:
-        specifier: 2.0.1
-        version: 2.0.1(svelte@5.2.7)
       svelte-sonner:
         specifier: 0.3.28
         version: 0.3.28(svelte@5.2.7)
@@ -2223,12 +2220,6 @@ packages:
     peerDependenciesMeta:
       svelte:
         optional: true
-
-  svelte-radix@2.0.1:
-    resolution: {integrity: sha512-YrX44Dj+Rp6YZuPSjdmyd6P8QTkb2NXwySUCZYzjwkP6Cl3dZaTBPPeaSOutP3v3ycQ2XwyNOpyn4p0QcN+uYQ==}
-    engines: {node: '>=18.0.0', npm: '>=7.0.0'}
-    peerDependencies:
-      svelte: ^5.0.0
 
   svelte-sonner@0.3.28:
     resolution: {integrity: sha512-K3AmlySeFifF/cKgsYNv5uXqMVNln0NBAacOYgmkQStLa/UoU0LhfAACU6Gr+YYC8bOCHdVmFNoKuDbMEsppJg==}
@@ -4556,10 +4547,6 @@ snapshots:
       postcss: 8.4.49
       postcss-scss: 4.0.9(postcss@8.4.49)
     optionalDependencies:
-      svelte: 5.2.7
-
-  svelte-radix@2.0.1(svelte@5.2.7):
-    dependencies:
       svelte: 5.2.7
 
   svelte-sonner@0.3.28(svelte@5.2.7):
