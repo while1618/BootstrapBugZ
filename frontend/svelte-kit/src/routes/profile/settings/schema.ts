@@ -17,6 +17,7 @@ export const changePasswordSchema = z
     if (newPassword !== confirmNewPassword) {
       ctx.addIssue({
         code: ZodIssueCode.custom,
+        path: ['confirmNewPassword'],
         message: m.profile_passwordsDoNotMatch(),
       });
     }

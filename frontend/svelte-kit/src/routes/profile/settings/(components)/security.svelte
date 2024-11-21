@@ -37,6 +37,16 @@
 
   $effect(() => {
     if ($changePasswordMessage) toast.success($changePasswordMessage);
+    if ($changePasswordErrors._errors) {
+      for (const error of $changePasswordErrors._errors) {
+        toast.error(error);
+      }
+    }
+    if ($deleteErrors._errors) {
+      for (const error of $deleteErrors._errors) {
+        toast.error(error);
+      }
+    }
   });
 </script>
 
@@ -79,7 +89,6 @@
         <Form.FieldErrors />
       </Form.Field>
 
-      <Label class="text-[0.8rem] text-destructive">{$changePasswordErrors?._errors}</Label>
       <Form.Button>{m.general_save()}</Form.Button>
     </form>
 
@@ -113,6 +122,5 @@
         </AlertDialog.Footer>
       </AlertDialog.Content>
     </AlertDialog.Root>
-    <Label class="text-[0.8rem] text-destructive">{$deleteErrors?._errors}</Label>
   </Card.Content>
 </Card.Root>

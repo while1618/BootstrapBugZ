@@ -4,6 +4,7 @@
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
   import * as m from '$lib/paraglide/messages.js';
+  import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { PageServerData } from './$types';
@@ -18,6 +19,14 @@
     validators: zodClient(signInSchema),
   });
   const { form, errors, enhance } = superform;
+
+  $effect(() => {
+    if ($errors._errors) {
+      for (const error of $errors._errors) {
+        toast.error(error);
+      }
+    }
+  });
 </script>
 
 <section>
@@ -61,7 +70,6 @@
                 <Form.FieldErrors />
               </Form.Field>
 
-              <Label class="text-[0.8rem] text-destructive">{$errors?._errors}</Label>
               <Form.Button>{m.auth_signIn()}</Form.Button>
 
               <div class="text-center">
