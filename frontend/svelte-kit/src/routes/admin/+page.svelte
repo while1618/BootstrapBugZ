@@ -59,7 +59,9 @@
           {/each}
         </Table.Body>
       </Table.Root>
-      <Pagination count={data.users.total} page={data.pageable.page} size={data.pageable.size} />
+      <div class="self-end">
+        <Pagination count={data.users.total} page={data.pageable.page} size={data.pageable.size} />
+      </div>
     </div>
   </div>
 </section>
