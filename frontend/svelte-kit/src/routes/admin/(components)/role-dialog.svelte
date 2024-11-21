@@ -19,22 +19,22 @@
 
   const { data, user }: Props = $props();
 
-  const roleSuperform = superForm(data.roleForm, {
+  const superform = superForm(data.roleForm, {
     validators: zodClient(roleSchema),
   });
-  const { form: roleForm, errors: roleFormErrors, enhance: roleFormEnhance } = roleSuperform;
-  let roleDialogOpen = $state(false);
+  const { form, errors, enhance } = superform;
+  let dialogOpen = $state(false);
 
   $effect(() => {
-    if ($roleFormErrors._errors) {
-      for (const error of $roleFormErrors._errors) {
+    if ($errors._errors) {
+      for (const error of $errors._errors) {
         toast.error(error);
       }
     }
   });
 </script>
 
-<AlertDialog.Root bind:open={roleDialogOpen}>
+<AlertDialog.Root bind:open={dialogOpen}>
   <AlertDialog.Trigger>
     <Button variant="ghost" class="text-blue-500 hover:text-blue-500/90">
       <PencilIcon />
@@ -46,7 +46,7 @@
         {m.admin_selectUserRoles({ username: user.username })}
       </AlertDialog.Title>
       <AlertDialog.Description>
-        <form id="roleForm" method="POST" action="?/roles&id={user.id}" use:roleFormEnhance>
+        <form id="roleForm" method="POST" action="?/roles&id={user.id}" use:enhance>
           <div class="flex flex-col gap-3">
             {#each data.roleNames as roleName}
               {@const checked = user.roles?.some((role) => role.name === roleName)}
@@ -66,7 +66,7 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
-      <Button form="roleForm" type="submit" onclick={() => (roleDialogOpen = false)}>
+      <Button form="roleForm" type="submit" onclick={() => (dialogOpen = false)}>
         {m.general_save()}
       </Button>
     </AlertDialog.Footer>

@@ -17,22 +17,22 @@
 
   const { data, user }: Props = $props();
 
-  const activateSuperform = superForm(data.activateForm, {
+  const superform = superForm(data.activateForm, {
     validators: zodClient(adminSchema),
   });
-  const { errors: activateFormErrors, enhance: activateFormEnhance } = activateSuperform;
-  let activateDialogOpen = $state(false);
+  const { errors, enhance } = superform;
+  let dialogOpen = $state(false);
 
   $effect(() => {
-    if ($activateFormErrors._errors) {
-      for (const error of $activateFormErrors._errors) {
+    if ($errors._errors) {
+      for (const error of $errors._errors) {
         toast.error(error);
       }
     }
   });
 </script>
 
-<AlertDialog.Root bind:open={activateDialogOpen}>
+<AlertDialog.Root bind:open={dialogOpen}>
   <AlertDialog.Trigger>
     <Button
       variant="ghost"
@@ -63,9 +63,9 @@
       <form
         method="POST"
         action="?/{user.active ? 'deactivate' : 'activate'}&id={user.id}"
-        use:activateFormEnhance
+        use:enhance
       >
-        <AlertDialog.Action onclick={() => (activateDialogOpen = false)}>
+        <AlertDialog.Action onclick={() => (dialogOpen = false)}>
           {user.active ? m.admin_deactivate() : m.admin_activate()}
         </AlertDialog.Action>
       </form>

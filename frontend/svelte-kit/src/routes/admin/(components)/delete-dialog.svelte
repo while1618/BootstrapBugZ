@@ -17,22 +17,22 @@
 
   const { data, user }: Props = $props();
 
-  const deleteSuperform = superForm(data.deleteForm, {
+  const superform = superForm(data.deleteForm, {
     validators: zodClient(adminSchema),
   });
-  const { errors: deleteFormErrors, enhance: deleteFormEnhance } = deleteSuperform;
-  let deleteDialogOpen = $state(false);
+  const { errors, enhance } = superform;
+  let dialogOpen = $state(false);
 
   $effect(() => {
-    if ($deleteFormErrors._errors) {
-      for (const error of $deleteFormErrors._errors) {
+    if ($errors._errors) {
+      for (const error of $errors._errors) {
         toast.error(error);
       }
     }
   });
 </script>
 
-<AlertDialog.Root bind:open={deleteDialogOpen}>
+<AlertDialog.Root bind:open={dialogOpen}>
   <AlertDialog.Trigger>
     <Button variant="ghost" class="text-red-500 hover:text-red-500/90">
       <Trash2Icon />
@@ -47,8 +47,8 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
-      <form method="POST" action="?/delete&id={user.id}" use:deleteFormEnhance>
-        <AlertDialog.Action onclick={() => (deleteDialogOpen = false)}>
+      <form method="POST" action="?/delete&id={user.id}" use:enhance>
+        <AlertDialog.Action onclick={() => (dialogOpen = false)}>
           {m.general_delete()}
         </AlertDialog.Action>
       </form>
