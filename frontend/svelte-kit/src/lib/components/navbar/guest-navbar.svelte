@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Button } from '$lib/components/ui/button';
+  import { Separator } from '$lib/components/ui/separator';
   import * as Sheet from '$lib/components/ui/sheet';
   import { MenuIcon } from 'lucide-svelte';
   import LanguageSwitcher from './language-switcher.svelte';
@@ -17,6 +18,8 @@
           </Sheet.Trigger>
           <Sheet.Content side="left">
             <Sheet.Header>
+              <Sheet.Title>BootstrapBugZ</Sheet.Title>
+              <Separator />
               <Sheet.Description>
                 <div class="flex flex-col items-start gap-2">
                   <LanguageSwitcher />
