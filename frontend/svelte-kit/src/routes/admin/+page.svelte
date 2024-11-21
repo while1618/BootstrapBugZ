@@ -29,6 +29,7 @@
             <Table.Head>{m.admin_userActive()}</Table.Head>
             <Table.Head>{m.admin_userLock()}</Table.Head>
             <Table.Head>{m.admin_userRoles()}</Table.Head>
+            <Table.Head></Table.Head>
           </Table.Row>
         </Table.Header>
         <Table.Body>
