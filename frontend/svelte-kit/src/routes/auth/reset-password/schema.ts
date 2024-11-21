@@ -12,6 +12,7 @@ export const resetPasswordSchema = z
     if (password !== confirmPassword) {
       ctx.addIssue({
         code: ZodIssueCode.custom,
+        path: ['confirmPassword'],
         message: m.auth_passwordsDoNotMatch(),
       });
     }

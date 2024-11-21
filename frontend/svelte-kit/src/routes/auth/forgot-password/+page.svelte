@@ -22,6 +22,11 @@
 
   $effect(() => {
     if ($message) toast.success($message);
+    if ($errors._errors) {
+      for (const error of $errors._errors) {
+        toast.error(error);
+      }
+    }
   });
 </script>
 
@@ -51,7 +56,6 @@
                 <Form.FieldErrors />
               </Form.Field>
 
-              <Label class="text-[0.8rem] text-destructive">{$errors?._errors}</Label>
               <Form.Button>{m.general_send()}</Form.Button>
             </form>
           </Card.Content>

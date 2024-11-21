@@ -8,6 +8,7 @@
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { PageServerData } from './$types';
   import { signUpSchema } from './schema';
+  import { toast } from 'svelte-sonner';
 
   interface Props {
     data: PageServerData;
@@ -18,6 +19,14 @@
     validators: zodClient(signUpSchema),
   });
   const { form, errors, enhance } = superform;
+
+  $effect(() => {
+    if ($errors._errors) {
+      for (const error of $errors._errors) {
+        toast.error(error);
+      }
+    }
+  });
 </script>
 
 <section>
@@ -76,7 +85,6 @@
                 <Form.FieldErrors />
               </Form.Field>
 
-              <Label class="text-[0.8rem] text-destructive">{$errors?._errors}</Label>
               <Form.Button>{m.auth_signUp()}</Form.Button>
 
               <div class="text-center">
