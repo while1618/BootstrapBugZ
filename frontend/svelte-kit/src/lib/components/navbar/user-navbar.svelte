@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Button } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+  import { Separator } from '$lib/components/ui/separator';
   import * as Sheet from '$lib/components/ui/sheet';
   import * as m from '$lib/paraglide/messages.js';
   import {
@@ -31,9 +32,10 @@
           </Sheet.Trigger>
           <Sheet.Content side="left">
             <Sheet.Header>
+              <Sheet.Title>BootstrapBugZ</Sheet.Title>
+              <Separator />
               <Sheet.Description>
                 <div class="flex flex-col gap-2">
-                  <LanguageSwitcher />
                   <Button href="/profile" variant="ghost" class="w-full justify-start">
                     <UserIcon />
                     {m.navbar_profile()}
@@ -48,10 +50,13 @@
                       {m.navbar_admin()}
                     </Button>
                   {/if}
+                  <Separator />
                   <Button href="/auth/sign-out" variant="ghost" class="w-full justify-start">
                     <LogOutIcon />
                     {m.navbar_signOut()}
                   </Button>
+                  <Separator />
+                  <LanguageSwitcher />
                 </div>
               </Sheet.Description>
             </Sheet.Header>
