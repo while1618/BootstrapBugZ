@@ -1,10 +1,11 @@
 import type { Pageable } from '$lib/models/shared/pageable';
 import { RoleName } from '$lib/models/user/role';
 import type { User } from '$lib/models/user/user';
+import * as m from '$lib/paraglide/messages.js';
 import { apiErrors, makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
 import { error } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import { adminSchema, roleSchema } from './schema';
@@ -53,6 +54,8 @@ export const actions = {
     });
 
     if ('error' in response) return apiErrors(response, form);
+
+    return message(form, m.admin_activateSuccess());
   },
   deactivate: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
@@ -66,6 +69,8 @@ export const actions = {
     });
 
     if ('error' in response) return apiErrors(response, form);
+
+    return message(form, m.admin_deactivateSuccess());
   },
   unlock: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
@@ -79,6 +84,8 @@ export const actions = {
     });
 
     if ('error' in response) return apiErrors(response, form);
+
+    return message(form, m.admin_unlockSuccess());
   },
   lock: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
@@ -92,6 +99,8 @@ export const actions = {
     });
 
     if ('error' in response) return apiErrors(response, form);
+
+    return message(form, m.admin_lockSuccess());
   },
   delete: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
@@ -104,6 +113,8 @@ export const actions = {
     });
 
     if ('error' in response) return apiErrors(response, form);
+
+    return message(form, m.admin_deleteUserSuccess());
   },
   roles: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
@@ -117,5 +128,7 @@ export const actions = {
     });
 
     if ('error' in response) return apiErrors(response, form);
+
+    return message(form, m.admin_rolesSuccess());
   },
 } satisfies Actions;

@@ -20,10 +20,11 @@
   const superform = superForm(data.activateForm, {
     validators: zodClient(adminSchema),
   });
-  const { errors, enhance } = superform;
+  const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);
 
   $effect(() => {
+    if ($message) toast.success($message);
     if ($errors._errors) {
       for (const error of $errors._errors) {
         toast.error(error);

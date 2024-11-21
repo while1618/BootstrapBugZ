@@ -23,10 +23,11 @@
   const superform = superForm(data.roleForm, {
     validators: zodClient(roleSchema),
   });
-  const { errors, enhance } = superform;
+  const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);
 
   $effect(() => {
+    if ($message) toast.success($message);
     if ($errors._errors) {
       for (const error of $errors._errors) {
         toast.error(error);
