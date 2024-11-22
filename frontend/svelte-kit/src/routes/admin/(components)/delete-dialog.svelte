@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as AlertDialog from '$lib/components/ui/alert-dialog';
-  import { Button } from '$lib/components/ui/button';
+  import { Button, buttonVariants } from '$lib/components/ui/button';
   import type { User } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
   import { Trash2Icon } from 'lucide-svelte';
@@ -50,11 +50,15 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
-      <form method="POST" action="?/delete&id={user.id}" use:enhance>
-        <AlertDialog.Action onclick={() => (dialogOpen = false)}>
-          {m.general_delete()}
-        </AlertDialog.Action>
-      </form>
+      <AlertDialog.Action onclick={() => (dialogOpen = false)}>
+        {#snippet child({ props })}
+          <form method="POST" action="?/delete&id={user.id}" use:enhance>
+            <Button {...props} type="submit" class={buttonVariants({ variant: 'destructive' })}>
+              {m.general_delete()}
+            </Button>
+          </form>
+        {/snippet}
+      </AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>

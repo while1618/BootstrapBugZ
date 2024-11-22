@@ -71,9 +71,9 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
-      <Button form="roleForm" type="submit" onclick={() => (dialogOpen = false)}>
+      <AlertDialog.Action form="roleForm" onclick={() => (dialogOpen = false)}>
         {m.general_save()}
-      </Button>
+      </AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>

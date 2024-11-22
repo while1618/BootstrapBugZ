@@ -64,11 +64,21 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
-      <form method="POST" action="?/{user.lock ? 'unlock' : 'lock'}&id={user.id}" use:enhance>
-        <AlertDialog.Action onclick={() => (dialogOpen = false)}>
-          {user.lock ? m.admin_unlock() : m.admin_lock()}
-        </AlertDialog.Action>
-      </form>
+      <AlertDialog.Action onclick={() => (dialogOpen = false)}>
+        {#snippet child({ props })}
+          <form method="POST" action="?/{user.lock ? 'unlock' : 'lock'}&id={user.id}" use:enhance>
+            <Button
+              {...props}
+              type="submit"
+              class={user.lock
+                ? 'bg-blue-500 hover:bg-blue-500/90'
+                : 'bg-red-500 hover:bg-red-500/90'}
+            >
+              {user.lock ? m.admin_unlock() : m.admin_lock()}
+            </Button>
+          </form>
+        {/snippet}
+      </AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>
