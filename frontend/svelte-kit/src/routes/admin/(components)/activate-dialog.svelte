@@ -64,15 +64,25 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
-      <form
-        method="POST"
-        action="?/{user.active ? 'deactivate' : 'activate'}&id={user.id}"
-        use:enhance
-      >
-        <AlertDialog.Action onclick={() => (dialogOpen = false)}>
-          {user.active ? m.admin_deactivate() : m.admin_activate()}
-        </AlertDialog.Action>
-      </form>
+      <AlertDialog.Action onclick={() => (dialogOpen = false)}>
+        {#snippet child({ props })}
+          <form
+            method="POST"
+            action="?/{user.active ? 'deactivate' : 'activate'}&id={user.id}"
+            use:enhance
+          >
+            <Button
+              {...props}
+              type="submit"
+              class={user.active
+                ? 'bg-red-500 hover:bg-red-500/90'
+                : 'bg-green-500 hover:bg-green-500/90'}
+            >
+              {user.active ? m.admin_deactivate() : m.admin_activate()}
+            </Button>
+          </form>
+        {/snippet}
+      </AlertDialog.Action>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>
