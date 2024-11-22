@@ -102,7 +102,9 @@
 
     <AlertDialog.Root bind:open={deleteDialogOpen}>
       <AlertDialog.Trigger>
-        <Button class="w-full" variant="destructive">{m.profile_delete()}</Button>
+        {#snippet child({ props })}
+          <Button {...props} class="w-full" variant="destructive">{m.profile_delete()}</Button>
+        {/snippet}
       </AlertDialog.Trigger>
       <AlertDialog.Content>
         <AlertDialog.Header>

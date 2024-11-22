@@ -35,18 +35,21 @@
 
 <AlertDialog.Root bind:open={dialogOpen}>
   <AlertDialog.Trigger>
-    <Button
-      variant="ghost"
-      class={user.lock
-        ? 'text-red-500 hover:text-red-500/90'
-        : 'text-blue-500 hover:text-blue-500/90'}
-    >
-      {#if user.lock}
-        <LockKeyholeIcon />
-      {:else}
-        <LockKeyholeOpenIcon />
-      {/if}
-    </Button>
+    {#snippet child({ props })}
+      <Button
+        {...props}
+        variant="ghost"
+        class={user.lock
+          ? 'text-red-500 hover:text-red-500/90'
+          : 'text-blue-500 hover:text-blue-500/90'}
+      >
+        {#if user.lock}
+          <LockKeyholeIcon />
+        {:else}
+          <LockKeyholeOpenIcon />
+        {/if}
+      </Button>
+    {/snippet}
   </AlertDialog.Trigger>
   <AlertDialog.Content>
     <AlertDialog.Header>

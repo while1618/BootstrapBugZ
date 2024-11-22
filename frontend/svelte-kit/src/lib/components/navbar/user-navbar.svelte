@@ -76,7 +76,9 @@
           <LanguageSwitcher />
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <Button variant="ghost" size="icon"><UserIcon /></Button>
+              {#snippet child({ props })}
+                <Button {...props} variant="ghost" size="icon"><UserIcon /></Button>
+              {/snippet}
             </DropdownMenu.Trigger>
             <DropdownMenu.Content class="w-56">
               <DropdownMenu.Group>
