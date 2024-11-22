@@ -35,9 +35,11 @@
 
 <AlertDialog.Root bind:open={dialogOpen}>
   <AlertDialog.Trigger>
-    <Button variant="ghost" class="text-red-500 hover:text-red-500/90">
-      <Trash2Icon />
-    </Button>
+    {#snippet child({ props })}
+      <Button {...props} variant="ghost" class="text-red-500 hover:text-red-500/90">
+        <Trash2Icon />
+      </Button>
+    {/snippet}
   </AlertDialog.Trigger>
   <AlertDialog.Content>
     <AlertDialog.Header>

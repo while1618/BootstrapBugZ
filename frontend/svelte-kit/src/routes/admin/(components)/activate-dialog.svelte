@@ -35,18 +35,21 @@
 
 <AlertDialog.Root bind:open={dialogOpen}>
   <AlertDialog.Trigger>
-    <Button
-      variant="ghost"
-      class={user.active
-        ? 'text-green-500 hover:text-green-500/90'
-        : 'text-red-500 hover:text-red-500/90'}
-    >
-      {#if user.active}
-        <CheckIcon />
-      {:else}
-        <XIcon />
-      {/if}
-    </Button>
+    {#snippet child({ props })}
+      <Button
+        {...props}
+        variant="ghost"
+        class={user.active
+          ? 'text-green-500 hover:text-green-500/90'
+          : 'text-red-500 hover:text-red-500/90'}
+      >
+        {#if user.active}
+          <CheckIcon />
+        {:else}
+          <XIcon />
+        {/if}
+      </Button>
+    {/snippet}
   </AlertDialog.Trigger>
   <AlertDialog.Content>
     <AlertDialog.Header>
