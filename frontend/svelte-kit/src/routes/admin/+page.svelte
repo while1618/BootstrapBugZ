@@ -60,7 +60,11 @@
         </Table.Body>
       </Table.Root>
       <div class="self-end">
-        <Pagination count={data.users.total} page={data.pageable.page} size={data.pageable.size} />
+        <Pagination
+          currentPage={data.pageable.page}
+          totalPages={Math.ceil(data.users.total / data.pageable.size)}
+          size={data.pageable.size}
+        />
       </div>
     </div>
   </div>
