@@ -1,59 +1,62 @@
 <script lang="ts">
-  import { page as pageStore } from '$app/stores';
+  import { page } from '$app/stores';
   import { Button } from '$lib/components/ui/button';
-  import * as Pagination from '$lib/components/ui/pagination';
   import * as m from '$lib/paraglide/messages.js';
-  import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-svelte';
+  import { ChevronLeftIcon, ChevronRightIcon, Ellipsis } from 'lucide-svelte';
 
   interface Props {
-    count: number;
-    page: number;
+    currentPage: number;
+    totalPages: number;
     size: number;
   }
 
-  const { count, page, size }: Props = $props();
+  const { currentPage, totalPages, size }: Props = $props();
+  const previousDisabled = currentPage <= 1;
+  const nextDisabled = currentPage >= totalPages;
 </script>
 
-<Pagination.Root {page} {count} perPage={size}>
-  {#snippet children({ pages, currentPage })}
-    <Pagination.Content>
-      <Pagination.Item>
-        <Pagination.PrevButton>
-          {#snippet child()}
-            <Button variant="ghost" href="{$pageStore.route.id}?page={currentPage - 1}&size={size}">
-              <ChevronLeftIcon />
-              {m.general_previous()}
-            </Button>
-          {/snippet}
-        </Pagination.PrevButton>
-      </Pagination.Item>
-      {#each pages as p (p.key)}
-        {#if p.type === 'ellipsis'}
-          <Pagination.Item>
-            <Pagination.Ellipsis />
-          </Pagination.Item>
-        {:else}
-          <Pagination.Item>
-            <Pagination.Link page={p} isActive={currentPage === p.value}>
-              {#snippet children()}
-                <Button variant="ghost" href="{$pageStore.route.id}?page={p.value}&size={size}">
-                  {p.value}
-                </Button>
-              {/snippet}
-            </Pagination.Link>
-          </Pagination.Item>
-        {/if}
-      {/each}
-      <Pagination.Item>
-        <Pagination.NextButton>
-          {#snippet child()}
-            <Button variant="ghost" href="{$pageStore.route.id}?page={currentPage + 1}&size={size}">
-              {m.general_next()}
-              <ChevronRightIcon />
-            </Button>
-          {/snippet}
-        </Pagination.NextButton>
-      </Pagination.Item>
-    </Pagination.Content>
-  {/snippet}
-</Pagination.Root>
+<div class="flex gap-1">
+  <Button
+    variant="ghost"
+    disabled={previousDisabled}
+    href={!previousDisabled ? `${$page.route.id}?page=${currentPage - 1}&size=${size}` : undefined}
+  >
+    <ChevronLeftIcon />
+    {m.general_previous()}
+  </Button>
+
+  {#if currentPage > 2}
+    <Button variant="ghost" href="{$page.route.id}?page=1&size={size}">1</Button>
+    <Ellipsis class="size-4 self-center" />
+  {/if}
+
+  {#if currentPage - 1 > 0}
+    <Button variant="ghost" href="{$page.route.id}?page={currentPage - 1}&size={size}">
+      {currentPage - 1}
+    </Button>
+  {/if}
+
+  <Button variant="outline">{currentPage}</Button>
+
+  {#if currentPage + 1 <= totalPages}
+    <Button variant="ghost" href="{$page.route.id}?page={currentPage + 1}&size={size}">
+      {currentPage + 1}
+    </Button>
+  {/if}
+
+  {#if currentPage < totalPages - 1}
+    <Ellipsis class="size-4 self-center" />
+    <Button variant="ghost" href="{$page.route.id}?page={totalPages}&size={size}">
+      {totalPages}
+    </Button>
+  {/if}
+
+  <Button
+    variant="ghost"
+    disabled={nextDisabled}
+    href={!nextDisabled ? `${$page.route.id}?page=${currentPage + 1}&size=${size}` : undefined}
+  >
+    {m.general_next()}
+    <ChevronRightIcon />
+  </Button>
+</div>
