@@ -4,11 +4,12 @@
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
   import * as m from '$lib/paraglide/messages.js';
+  import { LoaderCircle } from 'lucide-svelte';
+  import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { PageServerData } from './$types';
   import { signUpSchema } from './schema';
-  import { toast } from 'svelte-sonner';
 
   interface Props {
     data: PageServerData;
@@ -18,7 +19,7 @@
   const superform = superForm(data.form, {
     validators: zodClient(signUpSchema),
   });
-  const { form, errors, enhance } = superform;
+  const { form, errors, enhance, submitting } = superform;
 
   $effect(() => {
     if ($errors._errors) {
@@ -85,7 +86,14 @@
                 <Form.FieldErrors />
               </Form.Field>
 
-              <Form.Button>{m.auth_signUp()}</Form.Button>
+              {#if $submitting}
+                <Form.Button disabled>
+                  <LoaderCircle class="animate-spin" />
+                  {m.auth_signUp()}
+                </Form.Button>
+              {:else}
+                <Form.Button>{m.auth_signUp()}</Form.Button>
+              {/if}
 
               <div class="text-center">
                 <Label>{m.auth_alreadyHaveAnAccount()}</Label>

@@ -4,6 +4,7 @@
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
   import * as m from '$lib/paraglide/messages.js';
+  import { LoaderCircle } from 'lucide-svelte';
   import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
@@ -18,7 +19,7 @@
   const superform = superForm(data.form, {
     validators: zodClient(forgotPasswordSchema),
   });
-  const { form, message, errors, enhance } = superform;
+  const { form, message, errors, enhance, submitting } = superform;
 
   $effect(() => {
     if ($message) toast.success($message);
@@ -56,7 +57,14 @@
                 <Form.FieldErrors />
               </Form.Field>
 
-              <Form.Button>{m.general_send()}</Form.Button>
+              {#if $submitting}
+                <Form.Button disabled>
+                  <LoaderCircle class="animate-spin" />
+                  {m.general_send()}
+                </Form.Button>
+              {:else}
+                <Form.Button>{m.general_send()}</Form.Button>
+              {/if}
             </form>
           </Card.Content>
         </Card.Root>
