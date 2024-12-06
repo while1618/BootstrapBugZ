@@ -5,10 +5,10 @@
   import * as m from '$lib/paraglide/messages.js';
   import type { PageServerData } from './$types';
   import ActivateDialog from './(components)/activate-dialog.svelte';
+  import ChangeRolesDialog from './(components)/change-roles-dialog.svelte';
   import CreateDialog from './(components)/create-dialog.svelte';
   import DeleteDialog from './(components)/delete-dialog.svelte';
   import LockDialog from './(components)/lock-dialog.svelte';
-  import RoleDialog from './(components)/role-dialog.svelte';
 
   interface Props {
     data: PageServerData;
@@ -51,7 +51,7 @@
                         {#if i < user.roles.length - 1},{/if}
                       </Label>
                     {/each}
-                    <RoleDialog {data} {user} />
+                    <ChangeRolesDialog {data} {user} />
                   </div>
                 {/if}
               </Table.Cell>

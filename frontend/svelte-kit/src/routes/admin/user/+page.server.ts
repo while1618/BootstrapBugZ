@@ -8,7 +8,7 @@ import { error, fail } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
-import { actionSchema, createSchema, roleSchema } from './schema';
+import { actionSchema, changeRolesSchema, createSchema } from './schema';
 
 export const load = (async ({ cookies, url }) => {
   let page = Number(url.searchParams.get('page')) || 1;
@@ -17,37 +17,37 @@ export const load = (async ({ cookies, url }) => {
   if (page < 1) page = 1;
   if (size < 1) size = 10;
 
-  const userResponse = await makeRequest({
+  const usersResponse = await makeRequest({
     method: HttpRequest.GET,
     path: `/admin/users?page=${page}&size=${size}`,
     auth: cookies.get('accessToken'),
   });
 
-  if ('error' in userResponse) error(userResponse.status, { message: userResponse.error });
+  if ('error' in usersResponse) error(usersResponse.status, { message: usersResponse.error });
 
-  const roleResponse = await makeRequest({
+  const rolesResponse = await makeRequest({
     method: HttpRequest.GET,
     path: `/roles`,
     auth: cookies.get('accessToken'),
   });
 
-  if ('error' in roleResponse) error(roleResponse.status, { message: roleResponse.error });
+  if ('error' in rolesResponse) error(rolesResponse.status, { message: rolesResponse.error });
 
   const createForm = await superValidate(zod(createSchema));
   const activateForm = await superValidate(zod(actionSchema));
   const lockForm = await superValidate(zod(actionSchema));
   const deleteForm = await superValidate(zod(actionSchema));
-  const roleForm = await superValidate(zod(roleSchema));
+  const changeRolesForm = await superValidate(zod(changeRolesSchema));
 
   return {
-    users: userResponse as Pageable<User>,
-    roles: roleResponse as Role[],
+    users: usersResponse as Pageable<User>,
+    roles: rolesResponse as Role[],
     pageable: { page, size },
     createForm,
     activateForm,
     lockForm,
     deleteForm,
-    roleForm,
+    changeRolesForm,
   };
 }) satisfies PageServerLoad;
 
@@ -141,9 +141,9 @@ export const actions = {
 
     return message(form, m.admin_deleteUserSuccess());
   },
-  roles: async ({ request, cookies, url }) => {
+  changeRoles: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
-    const form = await superValidate(request, zod(roleSchema));
+    const form = await superValidate(request, zod(changeRolesSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,

@@ -11,7 +11,7 @@
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { PageServerData } from '../$types';
-  import { roleSchema } from '../schema';
+  import { changeRolesSchema } from '../schema';
 
   interface Props {
     data: PageServerData;
@@ -20,8 +20,8 @@
 
   const { data, user }: Props = $props();
 
-  const superform = superForm(data.roleForm, {
-    validators: zodClient(roleSchema),
+  const superform = superForm(data.changeRolesForm, {
+    validators: zodClient(changeRolesSchema),
   });
   const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);
@@ -51,7 +51,7 @@
       </Dialog.Title>
     </Dialog.Header>
 
-    <form id="roleForm" method="POST" action="?/roles&id={user.id}" use:enhance>
+    <form id="changeRolesForm" method="POST" action="?/changeRoles&id={user.id}" use:enhance>
       <div class="flex flex-col gap-3">
         <Form.Fieldset form={superform} name="roleNames">
           {#each data.roles as role}
@@ -71,7 +71,7 @@
 
     <Dialog.Footer>
       <Button variant="outline" onclick={() => (dialogOpen = false)}>{m.general_cancel()}</Button>
-      <Form.Button form="roleForm" onclick={() => (dialogOpen = false)}>
+      <Form.Button form="changeRolesForm" onclick={() => (dialogOpen = false)}>
         {m.general_save()}
       </Form.Button>
     </Dialog.Footer>
