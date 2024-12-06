@@ -1,8 +1,9 @@
 package org.bootstrapbugz.backend.auth.jwt.event.email;
 
-import com.google.common.io.Files;
+import com.google.common.io.CharStreams;
 import jakarta.mail.MessagingException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import org.bootstrapbugz.backend.shared.email.service.EmailService;
@@ -14,11 +15,11 @@ public class VerificationEmail implements JwtEmail {
   @Override
   public void sendEmail(EmailService emailService, Environment environment, User user, String token)
       throws IOException, MessagingException {
-    final var template = new ClassPathResource("templates/email/verify-email.html").getFile();
+    final var template =
+        new ClassPathResource("templates/email/verify-email.html").getInputStream();
     final var link = environment.getProperty("ui.app.url") + "/auth/verify-email?token=" + token;
     final var body =
-        Files.asCharSource(template, StandardCharsets.UTF_8)
-            .read()
+        CharStreams.toString(new InputStreamReader(template, StandardCharsets.UTF_8))
             .replace("$name", user.getUsername())
             .replace("$link", link)
             .replace("$appName", Objects.requireNonNull(environment.getProperty("app.name")));
