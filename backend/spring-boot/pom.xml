@@ -30,6 +30,7 @@
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <spotless.version>2.43.0</spotless.version>
     <google-java-format.version>1.17.0</google-java-format.version>
+    <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
   </properties>
 
   <dependencies>
@@ -221,6 +222,45 @@
             <goals>
               <goal>report</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${exec-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>generate verify-email.html</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <executable>npx</executable>
+              <arguments>
+                <argument>mjml</argument>
+                <argument>src/main/resources/templates/email/verify-email.mjml</argument>
+                <argument>-o</argument>
+                <argument>src/main/resources/templates/email/verify-email.html</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate reset-password.html</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <executable>npx</executable>
+              <arguments>
+                <argument>mjml</argument>
+                <argument>src/main/resources/templates/email/reset-password.mjml</argument>
+                <argument>-o</argument>
+                <argument>src/main/resources/templates/email/reset-password.html</argument>
+              </arguments>
+            </configuration>
           </execution>
         </executions>
       </plugin>

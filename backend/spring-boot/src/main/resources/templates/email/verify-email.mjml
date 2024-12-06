@@ -1,0 +1,29 @@
+<mjml>
+  <mj-body background-color="#f4f4f4">
+    <mj-section background-color="#ffffff" padding="30px 20px">
+      <mj-column>
+        <mj-text font-size="18px" color="#333333" line-height="1.5">
+          <h2>Welcome to ${appName}!</h2>
+          <p>Hi ${name},</p>
+          <p>Thank you for signing up with ${appName}! We are excited to have you on board. To complete your registration and activate your account, please click the button below to verify your email address.</p>
+        </mj-text>
+
+        <mj-button href="${link}" background-color="#020617" color="#f8fafc" font-size="16px" padding="15px 0" border-radius="5px">
+          Verify Your Email
+        </mj-button>
+
+        <mj-text font-size="14px" color="#777777" line-height="1.5" padding-top="20px">
+          If you did not sign up for ${appName}, please ignore this email.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section background-color="#f4f4f4" padding="20px 0">
+      <mj-column>
+        <mj-text font-size="12px" color="#888888" align="center">
+          <p>&copy; ${appName}. All rights reserved.</p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
