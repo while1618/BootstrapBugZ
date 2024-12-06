@@ -11,6 +11,7 @@
   "general_save": "Save",
   "general_cancel": "Cancel",
   "general_delete": "Delete",
+  "general_status": "Status",
 
   "home_getStarted": "Get Started",
   "home_greetings": "Hello there",
@@ -68,6 +69,8 @@
   "auth_resetPassword": "Reset password",
   "auth_tokenInvalid": "Invalid token",
 
+  "admin_userCreate": "Create user",
+  "admin_userCreatedSuccess": "User created successfully",
   "admin_users": "Users",
   "admin_userId": "User ID",
   "admin_userUsername": "Username",

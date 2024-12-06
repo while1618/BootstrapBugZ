@@ -6,6 +6,7 @@ import org.bootstrapbugz.backend.admin.payload.request.UserRequest;
 import org.bootstrapbugz.backend.admin.service.UserService;
 import org.bootstrapbugz.backend.auth.jwt.service.AccessTokenService;
 import org.bootstrapbugz.backend.auth.jwt.service.RefreshTokenService;
+import org.bootstrapbugz.backend.shared.error.exception.BadRequestException;
 import org.bootstrapbugz.backend.shared.error.exception.ConflictException;
 import org.bootstrapbugz.backend.shared.error.exception.ResourceNotFoundException;
 import org.bootstrapbugz.backend.shared.payload.dto.PageableDTO;
@@ -157,6 +158,8 @@ public class UserServiceImpl implements UserService {
   }
 
   private void setRoles(User user, Set<RoleName> roleNames) {
+    if (roleNames.isEmpty()) throw new BadRequestException("user.rolesEmpty");
+
     final var roles = Set.copyOf(roleRepository.findAllByNameIn(roleNames));
     if (user.getRoles().equals(roles)) return;
 

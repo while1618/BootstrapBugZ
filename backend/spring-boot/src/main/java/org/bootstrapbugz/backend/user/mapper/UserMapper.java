@@ -17,6 +17,8 @@ public interface UserMapper {
 
   Set<RoleDTO> rolesToRoleDTOs(Set<Role> roles);
 
+  RoleDTO roleToRoleDTO(Role role);
+
   @Mapping(source = "roles", target = "roleDTOs")
   UserDTO userToAdminUserDTO(User user);
 

@@ -1,14 +1,14 @@
 import type { Pageable } from '$lib/models/shared/pageable';
-import { RoleName } from '$lib/models/user/role';
+import { type Role } from '$lib/models/user/role';
 import type { User } from '$lib/models/user/user';
 import * as m from '$lib/paraglide/messages.js';
 import { apiErrors, makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
-import { error } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
-import { adminSchema, roleSchema } from './schema';
+import { actionSchema, createSchema, roleSchema } from './schema';
 
 export const load = (async ({ cookies, url }) => {
   let page = Number(url.searchParams.get('page')) || 1;
@@ -17,23 +17,33 @@ export const load = (async ({ cookies, url }) => {
   if (page < 1) page = 1;
   if (size < 1) size = 10;
 
-  const response = await makeRequest({
+  const userResponse = await makeRequest({
     method: HttpRequest.GET,
     path: `/admin/users?page=${page}&size=${size}`,
     auth: cookies.get('accessToken'),
   });
 
-  if ('error' in response) error(response.status, { message: response.error });
+  if ('error' in userResponse) error(userResponse.status, { message: userResponse.error });
 
-  const activateForm = await superValidate(zod(adminSchema));
-  const lockForm = await superValidate(zod(adminSchema));
-  const deleteForm = await superValidate(zod(adminSchema));
+  const roleResponse = await makeRequest({
+    method: HttpRequest.GET,
+    path: `/roles`,
+    auth: cookies.get('accessToken'),
+  });
+
+  if ('error' in roleResponse) error(roleResponse.status, { message: roleResponse.error });
+
+  const createForm = await superValidate(zod(createSchema));
+  const activateForm = await superValidate(zod(actionSchema));
+  const lockForm = await superValidate(zod(actionSchema));
+  const deleteForm = await superValidate(zod(actionSchema));
   const roleForm = await superValidate(zod(roleSchema));
 
   return {
-    users: response as Pageable<User>,
+    users: userResponse as Pageable<User>,
+    roles: roleResponse as Role[],
     pageable: { page, size },
-    roleNames: [RoleName.USER, RoleName.ADMIN],
+    createForm,
     activateForm,
     lockForm,
     deleteForm,
@@ -42,9 +52,24 @@ export const load = (async ({ cookies, url }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
+  create: async ({ request, cookies }) => {
+    const form = await superValidate(request, zod(createSchema));
+    if (!form.valid) return fail(400, { form });
+
+    const response = await makeRequest({
+      method: HttpRequest.POST,
+      path: `/admin/users`,
+      auth: cookies.get('accessToken'),
+      body: JSON.stringify(form.data),
+    });
+
+    if ('error' in response) return apiErrors(response, form);
+
+    return message(form, m.admin_userCreatedSuccess());
+  },
   activate: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
-    const form = await superValidate(request, zod(adminSchema));
+    const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
@@ -59,7 +84,7 @@ export const actions = {
   },
   deactivate: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
-    const form = await superValidate(request, zod(adminSchema));
+    const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
@@ -74,7 +99,7 @@ export const actions = {
   },
   unlock: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
-    const form = await superValidate(request, zod(adminSchema));
+    const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
@@ -89,7 +114,7 @@ export const actions = {
   },
   lock: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
-    const form = await superValidate(request, zod(adminSchema));
+    const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
@@ -104,7 +129,7 @@ export const actions = {
   },
   delete: async ({ request, cookies, url }) => {
     const id = url.searchParams.get('id');
-    const form = await superValidate(request, zod(adminSchema));
+    const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.DELETE,
@@ -124,7 +149,7 @@ export const actions = {
       method: HttpRequest.PATCH,
       path: `/admin/users/${id}`,
       auth: cookies.get('accessToken'),
-      body: JSON.stringify({ roleNames: form.data.names }),
+      body: JSON.stringify({ roleNames: form.data.roleNames }),
     });
 
     if ('error' in response) return apiErrors(response, form);

@@ -212,4 +212,24 @@ class AccessingResourcesIT extends DatabaseContainers {
         .andExpect(status().isForbidden())
         .andExpect(content().string(containsString(forbidden)));
   }
+
+  @Test
+  void getRoles_throwUnauthorized_userNotSignedIn() throws Exception {
+    mockMvc
+        .perform(get(Path.ROLES).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isUnauthorized())
+        .andExpect(content().string(containsString(unauthorized)));
+  }
+
+  @Test
+  void getRoles_throwForbidden_userNotAdmin() throws Exception {
+    final var authTokens = IntegrationTestUtil.authTokens(mockMvc, objectMapper, "user");
+    mockMvc
+        .perform(
+            get(Path.ROLES)
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(IntegrationTestUtil.authHeader(authTokens.accessToken())))
+        .andExpect(status().isForbidden())
+        .andExpect(content().string(containsString(forbidden)));
+  }
 }

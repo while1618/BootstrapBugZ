@@ -11,6 +11,7 @@
   "general_save": "Sačuvaj",
   "general_cancel": "Otkaži",
   "general_delete": "Obriši",
+  "general_status": "Status",
 
   "home_getStarted": "Počni",
   "home_greetings": "Zdravo",
@@ -68,6 +69,8 @@
   "auth_resetPassword": "Resetuj lozinku",
   "auth_tokenInvalid": "Nevalidan token",
 
+  "admin_userCreate": "Kreiraj korisnika",
+  "admin_userCreatedSuccess": "Korisnik uspešno kreiran",
   "admin_users": "Korisnici",
   "admin_userId": "Korisničko ime",
   "admin_userUsername": "Korisničko ime",

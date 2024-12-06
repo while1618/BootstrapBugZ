@@ -1,7 +1,7 @@
 <script lang="ts">
-  import * as AlertDialog from '$lib/components/ui/alert-dialog';
   import { Button } from '$lib/components/ui/button';
   import { Checkbox } from '$lib/components/ui/checkbox';
+  import * as Dialog from '$lib/components/ui/dialog';
   import * as Form from '$lib/components/ui/form';
   import { Label } from '$lib/components/ui/label';
   import type { User } from '$lib/models/user/user';
@@ -36,44 +36,44 @@
   });
 </script>
 
-<AlertDialog.Root bind:open={dialogOpen}>
-  <AlertDialog.Trigger>
+<Dialog.Root bind:open={dialogOpen}>
+  <Dialog.Trigger>
     {#snippet child({ props })}
       <Button {...props} variant="ghost" class="text-blue-500 hover:text-blue-500/90">
         <PencilIcon />
       </Button>
     {/snippet}
-  </AlertDialog.Trigger>
-  <AlertDialog.Content>
-    <AlertDialog.Header>
-      <AlertDialog.Title>
+  </Dialog.Trigger>
+  <Dialog.Content>
+    <Dialog.Header>
+      <Dialog.Title>
         {m.admin_selectUserRoles({ username: user.username })}
-      </AlertDialog.Title>
-      <AlertDialog.Description>
-        <form id="roleForm" method="POST" action="?/roles&id={user.id}" use:enhance>
-          <div class="flex flex-col gap-3">
-            {#each data.roleNames as roleName}
-              {@const checked = user.roles?.some((role) => role.name === roleName)}
-              <Form.Field form={superform} name="names">
-                <Form.Control>
-                  {#snippet children({ props })}
-                    <div class="flex items-center space-x-2">
-                      <Checkbox {...props} id={roleName} value={roleName} {checked} />
-                      <Label class="cursor-pointer" for={roleName}>{roleName}</Label>
-                    </div>
-                  {/snippet}
-                </Form.Control>
-              </Form.Field>
-            {/each}
-          </div>
-        </form>
-      </AlertDialog.Description>
-    </AlertDialog.Header>
-    <AlertDialog.Footer>
-      <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
-      <AlertDialog.Action form="roleForm" onclick={() => (dialogOpen = false)}>
+      </Dialog.Title>
+    </Dialog.Header>
+
+    <form id="roleForm" method="POST" action="?/roles&id={user.id}" use:enhance>
+      <div class="flex flex-col gap-3">
+        <Form.Fieldset form={superform} name="roleNames">
+          {#each data.roles as role}
+            {@const checked = user.roles?.some((r) => r.name === role.name)}
+            <Form.Control>
+              {#snippet children({ props })}
+                <div class="flex items-center space-x-2">
+                  <Checkbox {...props} id={role.name} value={role.name} {checked} />
+                  <Label class="cursor-pointer" for={role.name}>{role.name}</Label>
+                </div>
+              {/snippet}
+            </Form.Control>
+          {/each}
+        </Form.Fieldset>
+      </div>
+    </form>
+
+    <Dialog.Footer>
+      <Button variant="outline" onclick={() => (dialogOpen = false)}>{m.general_cancel()}</Button>
+      <Form.Button form="roleForm" onclick={() => (dialogOpen = false)}>
         {m.general_save()}
-      </AlertDialog.Action>
-    </AlertDialog.Footer>
-  </AlertDialog.Content>
-</AlertDialog.Root>
+      </Form.Button>
+    </Dialog.Footer>
+  </Dialog.Content>
+</Dialog.Root>

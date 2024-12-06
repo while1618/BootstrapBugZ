@@ -5,6 +5,7 @@
   import * as m from '$lib/paraglide/messages.js';
   import type { PageServerData } from './$types';
   import ActivateDialog from './(components)/activate-dialog.svelte';
+  import CreateDialog from './(components)/create-dialog.svelte';
   import DeleteDialog from './(components)/delete-dialog.svelte';
   import LockDialog from './(components)/lock-dialog.svelte';
   import RoleDialog from './(components)/role-dialog.svelte';
@@ -59,7 +60,8 @@
           {/each}
         </Table.Body>
       </Table.Root>
-      <div class="self-end">
+      <div class="flex justify-between">
+        <CreateDialog {data} />
         <Pagination
           currentPage={data.pageable.page}
           totalPages={Math.ceil(data.users.total / data.pageable.size)}

@@ -21,6 +21,8 @@ tags:
     description: Profile endpoints
   - name: users
     description: Users endpoints
+  - name: roles
+    description: Roles endpoints
   - name: admin
     description: Admin endpoints
 paths:
@@ -357,6 +359,29 @@ paths:
                 available: true
         400:
           $ref: "#/components/responses/BadRequest"
+  /roles:
+    get:
+      tags:
+        - roles
+      summary: Get roles
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Roles retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoleDTO"
+              example:
+                - name: ADMIN
+                - name: USER
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
   /admin/users:
     post:
       tags:

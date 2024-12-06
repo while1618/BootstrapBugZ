@@ -8,7 +8,7 @@
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import type { PageServerData } from '../$types';
-  import { adminSchema } from '../schema';
+  import { actionSchema } from '../schema';
 
   interface Props {
     data: PageServerData;
@@ -18,7 +18,7 @@
   const { data, user }: Props = $props();
 
   const superform = superForm(data.activateForm, {
-    validators: zodClient(adminSchema),
+    validators: zodClient(actionSchema),
   });
   const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);
