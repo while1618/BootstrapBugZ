@@ -10,8 +10,8 @@
   const { data }: Props = $props();
 </script>
 
-{#if data.user}
-  <UserHome user={data.user} />
+{#if data.profile}
+  <UserHome profile={data.profile} />
 {:else}
   <GuestHome />
 {/if}

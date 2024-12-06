@@ -1,4 +1,4 @@
-import type { User } from '$lib/models/user/user';
+import type { SimplifiedUser } from '$lib/models/user/user';
 import { makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
 import { error } from '@sveltejs/kit';
@@ -12,5 +12,5 @@ export const load = (async ({ params }) => {
 
   if ('error' in response) error(response.status, { message: response.error });
 
-  return { user: response as User };
+  return { user: response as SimplifiedUser };
 }) satisfies PageServerLoad;

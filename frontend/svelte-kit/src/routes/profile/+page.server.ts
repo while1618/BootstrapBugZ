@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ parent }) => {
-  const { user } = await parent();
-  return { user };
+  const { profile } = await parent();
+  return { profile };
 }) satisfies PageServerLoad;

@@ -21,7 +21,7 @@
   <Toaster />
   {#if $navigating}
     <Loading />
-  {:else if data.user}
+  {:else if data.profile}
     <UserNavbar isAdmin={data.isAdmin} />
     {@render children?.()}
   {:else}

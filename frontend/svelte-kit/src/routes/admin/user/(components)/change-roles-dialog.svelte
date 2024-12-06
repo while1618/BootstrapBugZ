@@ -4,7 +4,7 @@
   import * as Dialog from '$lib/components/ui/dialog';
   import * as Form from '$lib/components/ui/form';
   import { Label } from '$lib/components/ui/label';
-  import type { User } from '$lib/models/user/user';
+  import type { AdminUser } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
   import { PencilIcon } from 'lucide-svelte';
   import { toast } from 'svelte-sonner';
@@ -15,7 +15,7 @@
 
   interface Props {
     data: PageServerData;
-    user: User;
+    user: AdminUser;
   }
 
   const { data, user }: Props = $props();
@@ -55,7 +55,7 @@
       <div class="flex flex-col gap-3">
         <Form.Fieldset form={superform} name="roleNames">
           {#each data.roles as role}
-            {@const checked = user.roles?.some((r) => r.name === role.name)}
+            {@const checked = user.roles.some((r) => r.name === role.name)}
             <Form.Control>
               {#snippet children({ props })}
                 <div class="flex items-center space-x-2">

@@ -1,6 +1,6 @@
 import type { Pageable } from '$lib/models/shared/pageable';
 import { type Role } from '$lib/models/user/role';
-import type { User } from '$lib/models/user/user';
+import type { AdminUser } from '$lib/models/user/user';
 import * as m from '$lib/paraglide/messages.js';
 import { apiErrors, makeRequest } from '$lib/server/apis/api';
 import { HttpRequest } from '$lib/server/utils/util';
@@ -40,7 +40,7 @@ export const load = (async ({ cookies, url }) => {
   const changeRolesForm = await superValidate(zod(changeRolesSchema));
 
   return {
-    users: usersResponse as Pageable<User>,
+    users: usersResponse as Pageable<AdminUser>,
     roles: rolesResponse as Role[],
     pageable: { page, size },
     createForm,

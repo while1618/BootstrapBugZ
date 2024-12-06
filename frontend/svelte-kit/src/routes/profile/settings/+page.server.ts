@@ -16,10 +16,10 @@ import { changePasswordSchema, deleteSchema, updateProfileSchema } from './schem
 export const load = (async ({ parent }) => {
   const changePasswordForm = await superValidate(zod(changePasswordSchema));
   const deleteForm = await superValidate(zod(deleteSchema));
-  const { user } = await parent();
-  const updateProfileInitialData = { username: user?.username, email: user?.email };
+  const { profile } = await parent();
+  const updateProfileInitialData = { username: profile?.username, email: profile?.email };
   const updateProfileForm = await superValidate(updateProfileInitialData, zod(updateProfileSchema));
-  return { updateProfileForm, changePasswordForm, deleteForm, user };
+  return { updateProfileForm, changePasswordForm, deleteForm, profile };
 }) satisfies PageServerLoad;
 
 export const actions = {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as AlertDialog from '$lib/components/ui/alert-dialog';
   import { Button } from '$lib/components/ui/button';
-  import type { User } from '$lib/models/user/user';
+  import type { AdminUser } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
   import { CheckIcon, XIcon } from 'lucide-svelte';
   import { toast } from 'svelte-sonner';
@@ -12,7 +12,7 @@
 
   interface Props {
     data: PageServerData;
-    user: User;
+    user: AdminUser;
   }
 
   const { data, user }: Props = $props();
