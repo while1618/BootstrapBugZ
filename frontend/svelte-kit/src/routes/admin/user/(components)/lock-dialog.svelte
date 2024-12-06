@@ -19,6 +19,7 @@
 
   const superform = superForm(data.lockForm, {
     validators: zodClient(actionSchema),
+    id: `lock-form-${user.id}`,
   });
   const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);

@@ -19,6 +19,7 @@
 
   const superform = superForm(data.deleteForm, {
     validators: zodClient(actionSchema),
+    id: `delete-form-${user.id}`,
   });
   const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);

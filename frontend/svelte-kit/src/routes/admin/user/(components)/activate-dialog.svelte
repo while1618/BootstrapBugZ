@@ -19,6 +19,7 @@
 
   const superform = superForm(data.activateForm, {
     validators: zodClient(actionSchema),
+    id: `activate-form-${user.id}`,
   });
   const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);

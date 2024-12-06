@@ -22,6 +22,7 @@
 
   const superform = superForm(data.changeRolesForm, {
     validators: zodClient(changeRolesSchema),
+    id: `change-role-form-${user.id}`,
   });
   const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);
