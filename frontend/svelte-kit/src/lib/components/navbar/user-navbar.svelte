@@ -100,9 +100,10 @@
                   {#if isAdmin}
                     <DropdownMenu.Item class="cursor-pointer">
                       {#snippet child({ props })}
-                        <a {...props} href="/admin/user"
-                          ><ChartBarIncreasingIcon />{m.navbar_admin()}</a
-                        >
+                        <a {...props} href="/admin/user">
+                          <ChartBarIncreasingIcon />
+                          {m.navbar_admin()}
+                        </a>
                       {/snippet}
                     </DropdownMenu.Item>
                   {/if}

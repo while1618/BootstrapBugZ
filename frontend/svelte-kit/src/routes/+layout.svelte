@@ -18,7 +18,6 @@
 </script>
 
 <ParaglideJS {i18n}>
-  <Toaster />
   {#if $navigating}
     <Loading />
   {:else if data.profile}
@@ -29,3 +28,5 @@
     {@render children?.()}
   {/if}
 </ParaglideJS>
+
+<Toaster />
