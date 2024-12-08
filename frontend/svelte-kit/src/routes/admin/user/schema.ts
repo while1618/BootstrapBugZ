@@ -23,7 +23,10 @@ export const createSchema = z
   });
 
 export const changeRolesSchema = z.object({
+  id: z.number(),
   roleNames: z.string().array(),
 });
 
-export const actionSchema = z.object({});
+export const actionSchema = z.object({
+  id: z.number(),
+});

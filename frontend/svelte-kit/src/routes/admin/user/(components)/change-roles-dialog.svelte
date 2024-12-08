@@ -23,6 +23,9 @@
   const superform = superForm(data.changeRolesForm, {
     validators: zodClient(changeRolesSchema),
     id: `change-role-form-${user.id}`,
+    onSubmit({ formData }) {
+      formData.set('id', `${user.id}`);
+    },
   });
   const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);
@@ -52,7 +55,7 @@
       </Dialog.Title>
     </Dialog.Header>
 
-    <form id="changeRolesForm" method="POST" action="?/changeRoles&id={user.id}" use:enhance>
+    <form id="changeRolesForm" method="POST" action="?/changeRoles" use:enhance>
       <div class="flex flex-col gap-3">
         <Form.Fieldset form={superform} name="roleNames">
           {#each data.roles as role}

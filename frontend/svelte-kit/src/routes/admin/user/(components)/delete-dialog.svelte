@@ -20,6 +20,9 @@
   const superform = superForm(data.deleteForm, {
     validators: zodClient(actionSchema),
     id: `delete-form-${user.id}`,
+    onSubmit({ formData }) {
+      formData.set('id', `${user.id}`);
+    },
   });
   const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);
@@ -53,7 +56,7 @@
       <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
       <AlertDialog.Action onclick={() => (dialogOpen = false)}>
         {#snippet child({ props })}
-          <form method="POST" action="?/delete&id={user.id}" use:enhance>
+          <form method="POST" action="?/delete" use:enhance>
             <Button {...props} type="submit" class={buttonVariants({ variant: 'destructive' })}>
               {m.general_delete()}
             </Button>

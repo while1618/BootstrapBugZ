@@ -67,13 +67,12 @@ export const actions = {
 
     return message(form, m.admin_userCreatedSuccess());
   },
-  activate: async ({ request, cookies, url }) => {
-    const id = url.searchParams.get('id');
+  activate: async ({ request, cookies }) => {
     const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
+      path: `/admin/users/${form.data.id}`,
       auth: cookies.get('accessToken'),
       body: JSON.stringify({ active: true }),
     });
@@ -82,13 +81,12 @@ export const actions = {
 
     return message(form, m.admin_activateSuccess());
   },
-  deactivate: async ({ request, cookies, url }) => {
-    const id = url.searchParams.get('id');
+  deactivate: async ({ request, cookies }) => {
     const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
+      path: `/admin/users/${form.data.id}`,
       auth: cookies.get('accessToken'),
       body: JSON.stringify({ active: false }),
     });
@@ -97,13 +95,12 @@ export const actions = {
 
     return message(form, m.admin_deactivateSuccess());
   },
-  unlock: async ({ request, cookies, url }) => {
-    const id = url.searchParams.get('id');
+  unlock: async ({ request, cookies }) => {
     const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
+      path: `/admin/users/${form.data.id}`,
       auth: cookies.get('accessToken'),
       body: JSON.stringify({ lock: false }),
     });
@@ -112,13 +109,12 @@ export const actions = {
 
     return message(form, m.admin_unlockSuccess());
   },
-  lock: async ({ request, cookies, url }) => {
-    const id = url.searchParams.get('id');
+  lock: async ({ request, cookies }) => {
     const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
+      path: `/admin/users/${form.data.id}`,
       auth: cookies.get('accessToken'),
       body: JSON.stringify({ lock: true }),
     });
@@ -127,13 +123,12 @@ export const actions = {
 
     return message(form, m.admin_lockSuccess());
   },
-  delete: async ({ request, cookies, url }) => {
-    const id = url.searchParams.get('id');
+  delete: async ({ request, cookies }) => {
     const form = await superValidate(request, zod(actionSchema));
 
     const response = await makeRequest({
       method: HttpRequest.DELETE,
-      path: `/admin/users/${id}`,
+      path: `/admin/users/${form.data.id}`,
       auth: cookies.get('accessToken'),
     });
 
@@ -141,13 +136,12 @@ export const actions = {
 
     return message(form, m.admin_deleteUserSuccess());
   },
-  changeRoles: async ({ request, cookies, url }) => {
-    const id = url.searchParams.get('id');
+  changeRoles: async ({ request, cookies }) => {
     const form = await superValidate(request, zod(changeRolesSchema));
 
     const response = await makeRequest({
       method: HttpRequest.PATCH,
-      path: `/admin/users/${id}`,
+      path: `/admin/users/${form.data.id}`,
       auth: cookies.get('accessToken'),
       body: JSON.stringify({ roleNames: form.data.roleNames }),
     });

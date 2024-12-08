@@ -20,6 +20,9 @@
   const superform = superForm(data.activateForm, {
     validators: zodClient(actionSchema),
     id: `activate-form-${user.id}`,
+    onSubmit({ formData }) {
+      formData.set('id', `${user.id}`);
+    },
   });
   const { message, errors, enhance } = superform;
   let dialogOpen = $state(false);
@@ -67,11 +70,7 @@
       <AlertDialog.Cancel>{m.general_cancel()}</AlertDialog.Cancel>
       <AlertDialog.Action onclick={() => (dialogOpen = false)}>
         {#snippet child({ props })}
-          <form
-            method="POST"
-            action="?/{user.active ? 'deactivate' : 'activate'}&id={user.id}"
-            use:enhance
-          >
+          <form method="POST" action="?/{user.active ? 'deactivate' : 'activate'}" use:enhance>
             <Button
               {...props}
               type="submit"
