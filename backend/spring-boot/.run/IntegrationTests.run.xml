@@ -8,6 +8,7 @@
     <dir value="$PROJECT_DIR$/backend/src/test/java/org/bootstrapbugz/backend/*/integration" />
     <patterns>
       <pattern testClass="org.bootstrapbugz.backend.user.integration.UserControllerIT" />
+      <pattern testClass="org.bootstrapbugz.backend.user.integration.RoleControllerIT" />
       <pattern testClass="org.bootstrapbugz.backend.user.integration.ProfileControllerIT" />
       <pattern testClass="org.bootstrapbugz.backend.auth.integration.AuthControllerIT" />
       <pattern testClass="org.bootstrapbugz.backend.admin.integration.UserControllerIT" />

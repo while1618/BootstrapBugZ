@@ -33,10 +33,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @DirtiesContext
@@ -50,7 +50,7 @@ class AuthControllerIT extends DatabaseContainers {
   @Autowired private ResetPasswordTokenServiceImpl resetPasswordService;
   @Autowired private UserRepository userRepository;
 
-  @MockBean private EmailService emailService;
+  @MockitoBean private EmailService emailService;
 
   @Test
   void registerUser() throws Exception {
