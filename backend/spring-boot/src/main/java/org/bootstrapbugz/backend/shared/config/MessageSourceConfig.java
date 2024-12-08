@@ -10,7 +10,7 @@ public class MessageSourceConfig {
   @Bean
   public MessageSource messageSource() {
     final var messageSource = new ReloadableResourceBundleMessageSource();
-    messageSource.setBasename("classpath:error-codes.properties");
+    messageSource.setBasename("classpath:/error-codes");
     messageSource.setDefaultEncoding("UTF-8");
     return messageSource;
   }
