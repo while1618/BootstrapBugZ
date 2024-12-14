@@ -21,7 +21,7 @@
   const { isAdmin }: Props = $props();
 </script>
 
-<header class="sticky top-0 z-50 py-2">
+<header class="sticky top-0 z-50 bg-primary-foreground py-2">
   <div class="container">
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3 lg:hidden">
