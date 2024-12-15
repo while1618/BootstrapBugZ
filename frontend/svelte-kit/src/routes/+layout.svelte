@@ -6,6 +6,7 @@
   import { Toaster } from '$lib/components/ui/sonner';
   import { i18n } from '$lib/i18n';
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
+  import { ModeWatcher } from 'mode-watcher';
   import '../app.css';
   import type { LayoutData } from './$types';
 
@@ -30,3 +31,4 @@
 </ParaglideJS>
 
 <Toaster />
+<ModeWatcher />

@@ -38,6 +38,7 @@
     "formsnap": "2.0.0",
     "globals": "15.13.0",
     "lucide-svelte": "0.468.0",
+    "mode-watcher": "0.5.0",
     "postcss": "8.4.49",
     "prettier": "3.4.2",
     "prettier-plugin-svelte": "3.3.2",

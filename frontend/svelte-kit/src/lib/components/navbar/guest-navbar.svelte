@@ -4,7 +4,7 @@
   import * as Sheet from '$lib/components/ui/sheet';
   import { MenuIcon } from 'lucide-svelte';
   import LanguageSwitcher from './language-switcher.svelte';
-  import ThemeSelector from './theme-selector.svelte';
+  import ThemeSwitcher from './theme-switcher.svelte';
 </script>
 
 <header class="sticky top-0 z-50 bg-primary-foreground py-2">
@@ -30,11 +30,11 @@
 
       <div class="ml-auto flex items-center gap-3">
         <div class="flex gap-3 lg:hidden">
-          <ThemeSelector />
+          <ThemeSwitcher />
         </div>
 
         <div class="hidden gap-3 lg:flex">
-          <ThemeSelector />
+          <ThemeSwitcher />
           <LanguageSwitcher />
         </div>
       </div>

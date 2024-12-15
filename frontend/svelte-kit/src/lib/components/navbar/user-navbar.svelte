@@ -12,7 +12,7 @@
     UserIcon,
   } from 'lucide-svelte';
   import LanguageSwitcher from './language-switcher.svelte';
-  import ThemeSelector from './theme-selector.svelte';
+  import ThemeSwitcher from './theme-switcher.svelte';
 
   interface Props {
     isAdmin: boolean;
@@ -68,11 +68,11 @@
 
       <div class="ml-auto flex items-center gap-3">
         <div class="flex gap-3 lg:hidden">
-          <ThemeSelector />
+          <ThemeSwitcher />
         </div>
 
         <div class="hidden gap-3 lg:flex">
-          <ThemeSelector />
+          <ThemeSwitcher />
           <LanguageSwitcher />
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
