@@ -1,6 +1,6 @@
 services:
-  bootstrapbugz-backend:
-    image: "bootstrapbugz-backend:latest"
+  bootstrapbugz-api:
+    image: "bootstrapbugz-api:latest"
     build: .
     ports:
       - "8081:8080"

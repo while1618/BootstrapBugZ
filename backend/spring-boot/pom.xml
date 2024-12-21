@@ -11,10 +11,10 @@
     <!-- lookup parent from repository -->
   </parent>
   <groupId>org.bootstrapbugz</groupId>
-  <artifactId>backend</artifactId>
+  <artifactId>api</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>backend</name>
-  <description>BootstrapBugZ Backend</description>
+  <name>api</name>
+  <description>BootstrapBugZ API</description>
 
   <properties>
     <java.version>21</java.version>
