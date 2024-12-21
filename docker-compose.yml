@@ -34,8 +34,8 @@ services:
     environment:
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
 
-  bootstrapbugz-frontend:
-    image: "bootstrapbugz-frontend:latest"
+  bootstrapbugz-ui:
+    image: "bootstrapbugz-ui:latest"
     build:
       context: ./frontend/svelte-kit
       dockerfile: Dockerfile
