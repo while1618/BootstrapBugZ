@@ -1,4 +1,4 @@
-import { BACKEND_URL } from '$env/static/private';
+import { API_URL } from '$env/static/private';
 import { ErrorCode, type ErrorMessage } from '$lib/models/shared/error-message';
 import * as m from '$lib/paraglide/messages.js';
 import type { HttpRequest } from '$lib/server/utils/util';
@@ -26,7 +26,7 @@ export async function makeRequest(params: RequestParams): Promise<object | Error
   opts.method = params.method;
   opts.headers = headers;
 
-  const response = await fetch(`${BACKEND_URL}${params.path}`, opts);
+  const response = await fetch(`${API_URL}${params.path}`, opts);
 
   if (!response.ok) return (await response.json()) as ErrorMessage;
 

@@ -12,7 +12,7 @@ the following data:
 
 ```bash
 JWT_SECRET=secret
-BACKEND_URL=http://bootstrapbugz-backend:8080/v1
+API_URL=http://bootstrapbugz-api:8080/v1
 ```
 
 Then run docker-compose from the root directory:
@@ -24,7 +24,7 @@ docker-compose up --build -d
 You can find the application on the following urls:
 
 - frontend: http://localhost:5174
-- backend: http://localhost:8081/v1/users
+- api: http://localhost:8081/v1/users
 - swagger-ui: http://localhost:8081/swagger-ui/index.html
 
 Login credentials:
