@@ -1,7 +1,7 @@
 services:
   bootstrapbugz-api:
     container_name: bootstrapbugz-api
-    image: "bootstrapbugz-api:1.0.0"
+    image: bootstrapbugz-api:1.0.0
     build: .
     ports:
       - "8081:8080"
@@ -29,7 +29,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: "postgres:17.2-alpine"
+    image: postgres:17.2-alpine
     ports:
       - "5433:5432"
     environment:
@@ -52,7 +52,7 @@ services:
 
   redis:
     container_name: redis
-    image: "redis:7.4.1"
+    image: redis:7.4.1
     ports:
       - "6380:6379"
     command: redis-server --requirepass ${REDIS_PASSWORD:-root}
