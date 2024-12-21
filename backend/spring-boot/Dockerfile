@@ -12,7 +12,7 @@ COPY src ./src
 
 RUN mvn clean install -DskipTests
 
-FROM openjdk:21-jdk-slim
+FROM openjdk:21-jdk
 
 WORKDIR /app
 

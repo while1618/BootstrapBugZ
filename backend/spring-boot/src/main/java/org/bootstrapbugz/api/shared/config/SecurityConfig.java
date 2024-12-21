@@ -37,6 +37,7 @@ public class SecurityConfig {
   private static final String[] SWAGGER_WHITELIST = {
     "/swagger-ui/**", "/v3/api-docs/**", "/openapi.yml"
   };
+  private static final String[] ACTUATOR_WHITELIST = {"/actuator/**", "favicon.ico"};
   private final JWTFilter jwtFilter;
   private final UserDetailsServiceImpl userDetailsService;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -73,6 +74,8 @@ public class SecurityConfig {
                     .requestMatchers(USERS_WHITELIST)
                     .permitAll()
                     .requestMatchers(SWAGGER_WHITELIST)
+                    .permitAll()
+                    .requestMatchers(ACTUATOR_WHITELIST)
                     .permitAll()
                     .anyRequest()
                     .authenticated())
