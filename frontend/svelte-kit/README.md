@@ -9,7 +9,7 @@ create `.env` file in root of svelte-kit directory with the following data:
 
 ```bash
 JWT_SECRET=secret
-BACKEND_URL=http://localhost:8081/v1
+API_URL=http://localhost:8081/v1
 ```
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install`
