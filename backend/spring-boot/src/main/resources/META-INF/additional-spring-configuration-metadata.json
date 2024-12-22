@@ -6,7 +6,7 @@
       "description": "Application name."
     },
     {
-      "name": "ui.app.url",
+      "name": "ui.url",
       "type": "java.lang.String",
       "description": "UI application URL."
     },

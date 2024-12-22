@@ -17,7 +17,7 @@ public class VerificationEmail implements JwtEmail {
       throws IOException, MessagingException {
     final var template =
         new ClassPathResource("templates/email/verify-email.html").getInputStream();
-    final var link = environment.getProperty("ui.app.url") + "/auth/verify-email?token=" + token;
+    final var link = environment.getProperty("ui.url") + "/auth/verify-email?token=" + token;
     final var body =
         CharStreams.toString(new InputStreamReader(template, StandardCharsets.UTF_8))
             .replace("${name}", user.getUsername())

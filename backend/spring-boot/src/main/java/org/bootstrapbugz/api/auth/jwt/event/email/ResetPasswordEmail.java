@@ -17,7 +17,7 @@ public class ResetPasswordEmail implements JwtEmail {
       throws IOException, MessagingException {
     final var template =
         new ClassPathResource("templates/email/reset-password.html").getInputStream();
-    final var link = environment.getProperty("ui.app.url") + "/auth/reset-password?token=" + token;
+    final var link = environment.getProperty("ui.url") + "/auth/reset-password?token=" + token;
     final var body =
         CharStreams.toString(new InputStreamReader(template, StandardCharsets.UTF_8))
             .replace("${name}", user.getUsername())
