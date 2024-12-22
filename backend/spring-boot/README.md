@@ -5,5 +5,5 @@ form `backend/spring-boot`.
 
 You can find the application on the following urls:
 
-- api: http://localhost:8081/v1/users
-- swagger-ui: http://localhost:8081/swagger-ui/index.html
+- api: http://localhost:8080/v1/users
+- api-docs: http://localhost:8080/swagger-ui/index.html

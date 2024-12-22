@@ -15,9 +15,9 @@ docker-compose up --build -d
 
 You can find the application on the following urls:
 
-- ui: http://localhost:5174
-- api: http://localhost:8081/v1/users
-- api-docs: http://localhost:8081/swagger-ui/index.html
+- ui: http://localhost:5173
+- api: http://localhost:8080/v1/users
+- api-docs: http://localhost:8080/swagger-ui/index.html
 
 Login credentials:
 
