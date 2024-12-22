@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { navigating } from '$app/stores';
+  import { navigating } from '$app/state';
   import { PUBLIC_APP_NAME } from '$env/static/public';
   import GuestNavbar from '$lib/components/navbar/guest-navbar.svelte';
   import UserNavbar from '$lib/components/navbar/user-navbar.svelte';
@@ -24,7 +24,7 @@
 </svelte:head>
 
 <ParaglideJS {i18n}>
-  {#if $navigating}
+  {#if navigating.complete}
     <Loading />
   {:else if data.profile}
     <UserNavbar isAdmin={data.isAdmin} />
