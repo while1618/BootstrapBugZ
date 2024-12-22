@@ -33,18 +33,14 @@ Login credentials:
 | API_URL                  | URL on which API is running                                           | http://bootstrapbugz-api:8080/v1 |
 | UI_URL                   | URL on which UI is running                                            | http://bootstrapbugz-ui:5173     |
 | UI_PORT                  | Port on which you'll find UI running                                  | 5173                             |
-| EXPOSED_UI_PORT          | Port on which UI will be exposed when running via docker              | 5174                             |
 | SERVER_PORT              | Port on which you'll find API running                                 | 8080                             |
-| EXPOSED_SERVER_PORT      | Port on which API will be exposed when running via docker             | 8081                             |
 | POSTGRES_HOST            | Host on which postgres is running, used when locally starting the API | localhost                        |
 | POSTGRES_PORT            | Port on which you'll find postgres running                            | 5432                             |
-| EXPOSED_POSTGRES_PORT    | Port on which postgres will be exposed when running via docker        | 5433                             |
 | POSTGRES_DATABASE        | Name of the postgres database                                         | bootstrapbugz                    |
 | POSTGRES_USERNAME        | Postgres username                                                     | postgres                         |
 | POSTGRES_PASSWORD        | Postgres password                                                     | root                             |
 | REDIS_HOST               | Host on which redis is running, used when locally starting the API    | 127.0.0.1                        |
 | REDIS_PORT               | Port on which you'll find redis running                               | 6379                             |
-| EXPOSED_REDIS_PORT       | Port on which redis will be exposed when running via docker           | 6380                             |
 | REDIS_DATABASE           | Name of the redis database                                            | 0                                |
 | REDIS_PASSWORD           | Redis password                                                        | root                             |
 | MAIL_HOST                | SMTP host                                                             | smtp.mailgun.org                 |
