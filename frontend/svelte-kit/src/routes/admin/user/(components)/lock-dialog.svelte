@@ -3,7 +3,8 @@
   import { Button } from '$lib/components/ui/button';
   import type { AdminUser } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
-  import { LockKeyholeIcon, LockKeyholeOpenIcon } from 'lucide-svelte';
+  import LockKeyholeIcon from 'lucide-svelte/icons/lock-keyhole';
+  import LockKeyholeOpenIcon from 'lucide-svelte/icons/lock-keyhole-open';
   import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';

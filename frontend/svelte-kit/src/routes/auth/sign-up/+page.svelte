@@ -4,7 +4,7 @@
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
   import * as m from '$lib/paraglide/messages.js';
-  import { LoaderCircle } from 'lucide-svelte';
+  import LoaderCircleIcon from 'lucide-svelte/icons/loader-circle';
   import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
@@ -88,7 +88,7 @@
 
               {#if $submitting}
                 <Form.Button disabled>
-                  <LoaderCircle class="animate-spin" />
+                  <LoaderCircleIcon class="animate-spin" />
                   {m.auth_signUp()}
                 </Form.Button>
               {:else}

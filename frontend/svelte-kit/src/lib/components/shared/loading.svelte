@@ -1,5 +1,5 @@
 <script>
-  import { LoaderCircleIcon } from 'lucide-svelte';
+  import LoaderCircleIcon from 'lucide-svelte/icons/loader-circle';
 </script>
 
 <div class="flex h-screen flex-col items-center justify-center">

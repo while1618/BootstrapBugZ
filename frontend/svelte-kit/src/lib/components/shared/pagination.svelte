@@ -2,7 +2,9 @@
   import { page } from '$app/stores';
   import { Button } from '$lib/components/ui/button';
   import * as m from '$lib/paraglide/messages.js';
-  import { ChevronLeftIcon, ChevronRightIcon, Ellipsis } from 'lucide-svelte';
+  import ChevronLeftIcon from 'lucide-svelte/icons/chevron-left';
+  import ChevronRightIcon from 'lucide-svelte/icons/chevron-right';
+  import EllipsisIcon from 'lucide-svelte/icons/ellipsis';
 
   interface Props {
     currentPage: number;
@@ -27,7 +29,7 @@
 
   {#if currentPage > 2}
     <Button variant="ghost" href="{$page.route.id}?page=1&size={size}">1</Button>
-    <Ellipsis class="size-4 self-center" />
+    <EllipsisIcon class="size-4 self-center" />
   {/if}
 
   {#if currentPage - 1 > 0}
@@ -45,7 +47,7 @@
   {/if}
 
   {#if currentPage < totalPages - 1}
-    <Ellipsis class="size-4 self-center" />
+    <EllipsisIcon class="size-4 self-center" />
     <Button variant="ghost" href="{$page.route.id}?page={totalPages}&size={size}">
       {totalPages}
     </Button>

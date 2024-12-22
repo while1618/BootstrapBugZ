@@ -5,13 +5,11 @@
   import { Separator } from '$lib/components/ui/separator';
   import * as Sheet from '$lib/components/ui/sheet';
   import * as m from '$lib/paraglide/messages.js';
-  import {
-    ChartBarIncreasingIcon,
-    LogOutIcon,
-    MenuIcon,
-    SettingsIcon,
-    UserIcon,
-  } from 'lucide-svelte';
+  import ChartBarIncreasingIcon from 'lucide-svelte/icons/chart-bar-increasing';
+  import LogOutIcon from 'lucide-svelte/icons/log-out';
+  import MenuIcon from 'lucide-svelte/icons/menu';
+  import SettingsIcon from 'lucide-svelte/icons/settings';
+  import UserIcon from 'lucide-svelte/icons/user';
   import LanguageSwitcher from './language-switcher.svelte';
   import ThemeSwitcher from './theme-switcher.svelte';
 
@@ -22,7 +20,7 @@
   const { isAdmin }: Props = $props();
 </script>
 
-<header class="sticky top-0 z-50 bg-primary-foreground py-2">
+<header class="bg-primary-foreground sticky top-0 z-50 py-2">
   <div class="container">
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3 lg:hidden">

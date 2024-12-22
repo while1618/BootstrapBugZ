@@ -6,7 +6,7 @@
   import { Label } from '$lib/components/ui/label';
   import type { AdminUser } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
-  import { PencilIcon } from 'lucide-svelte';
+  import PencilIcon from 'lucide-svelte/icons/pencil';
   import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';

@@ -3,7 +3,7 @@
   import { Button, buttonVariants } from '$lib/components/ui/button';
   import type { AdminUser } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
-  import { Trash2Icon } from 'lucide-svelte';
+  import Trash2Icon from 'lucide-svelte/icons/trash-2';
   import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
