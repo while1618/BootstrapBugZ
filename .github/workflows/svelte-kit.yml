@@ -14,7 +14,8 @@ on:
 
 env:
   JWT_SECRET: ${{secrets.JWT_SECRET}}
-  API_URL: ${{secrets.API_URL}}
+  PUBLIC_APP_NAME: ${{vars.PUBLIC_APP_NAME}}
+  PUBLIC_API_URL: ${{vars.PUBLIC_API_URL}}
 
 jobs:
   build:

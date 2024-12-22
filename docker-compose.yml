@@ -97,7 +97,7 @@ services:
       dockerfile: Dockerfile
     environment:
       PUBLIC_APP_NAME: ${APP_NAME:-BootstrapBugZ}
-      API_URL: ${API_URL:-http://bootstrapbugz-api:8080/v1}
+      PUBLIC_API_URL: ${API_URL:-http://bootstrapbugz-api:8080/v1}
       JWT_SECRET: ${JWT_SECRET:-secret}
     ports:
       - "${EXPOSED_UI_PORT:-5174}:${UI_PORT:-5173}"

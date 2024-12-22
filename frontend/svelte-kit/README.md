@@ -8,8 +8,11 @@ by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create
 create `.env` file in root of svelte-kit directory with the following data:
 
 ```bash
+# Public
+PUBLIC_APP_NAME=BootstrapBugZ
+PUBLIC_API_URL=http://localhost:8081/v1
+# Private
 JWT_SECRET=secret
-API_URL=http://localhost:8081/v1
 ```
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install`
