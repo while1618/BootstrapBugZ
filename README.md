@@ -30,9 +30,9 @@ Login credentials:
 | Variable                 | Description                                                           | Default                          |
 | ------------------------ | --------------------------------------------------------------------- | -------------------------------- |
 | APP_NAME                 | Name of the app that will be used in the application                  | BootstrapBugZ                    |
-| API_URL                  | URL on which API is running                                           | http://bootstrapbugz-api:8080/v1 |
 | UI_URL                   | URL on which UI is running                                            | http://bootstrapbugz-ui:5173     |
 | UI_PORT                  | Port on which you'll find UI running                                  | 5173                             |
+| API_URL                  | URL on which API is running                                           | http://bootstrapbugz-api:8080/v1 |
 | SERVER_PORT              | Port on which you'll find API running                                 | 8080                             |
 | POSTGRES_HOST            | Host on which postgres is running, used when locally starting the API | localhost                        |
 | POSTGRES_PORT            | Port on which you'll find postgres running                            | 5432                             |
