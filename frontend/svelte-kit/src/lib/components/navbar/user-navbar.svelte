@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { PUBLIC_APP_NAME } from '$env/static/public';
   import { Button } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { Separator } from '$lib/components/ui/separator';
@@ -32,7 +33,7 @@
           </Sheet.Trigger>
           <Sheet.Content side="left">
             <Sheet.Header>
-              <Sheet.Title class="self-center">BootstrapBugZ</Sheet.Title>
+              <Sheet.Title class="self-center">{PUBLIC_APP_NAME}</Sheet.Title>
               <Separator />
               <Sheet.Description>
                 <div class="flex w-full flex-col gap-2">
@@ -64,7 +65,7 @@
         </Sheet.Root>
       </div>
 
-      <Button href="/" class="text-2xl" variant="ghost">BootstrapBugZ</Button>
+      <Button href="/" class="text-2xl" variant="ghost">{PUBLIC_APP_NAME}</Button>
 
       <div class="ml-auto flex items-center gap-3">
         <div class="flex gap-3 lg:hidden">

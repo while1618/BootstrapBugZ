@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { PUBLIC_APP_NAME } from '$env/static/public';
   import { Button } from '$lib/components/ui/button';
   import { Separator } from '$lib/components/ui/separator';
   import * as Sheet from '$lib/components/ui/sheet';
@@ -18,7 +19,7 @@
           </Sheet.Trigger>
           <Sheet.Content side="left">
             <Sheet.Header>
-              <Sheet.Title class="self-center">BootstrapBugZ</Sheet.Title>
+              <Sheet.Title class="self-center">{PUBLIC_APP_NAME}</Sheet.Title>
               <Separator />
               <div class="self-center"><LanguageSwitcher /></div>
             </Sheet.Header>
@@ -26,7 +27,7 @@
         </Sheet.Root>
       </div>
 
-      <Button href="/" class="text-2xl" variant="ghost">BootstrapBugZ</Button>
+      <Button href="/" class="text-2xl" variant="ghost">{PUBLIC_APP_NAME}</Button>
 
       <div class="ml-auto flex items-center gap-3">
         <div class="flex gap-3 lg:hidden">

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { navigating } from '$app/stores';
+  import { PUBLIC_APP_NAME } from '$env/static/public';
   import GuestNavbar from '$lib/components/navbar/guest-navbar.svelte';
   import UserNavbar from '$lib/components/navbar/user-navbar.svelte';
   import Loading from '$lib/components/shared/loading.svelte';
@@ -17,6 +18,10 @@
 
   const { data, children }: Props = $props();
 </script>
+
+<svelte:head>
+  <title>{PUBLIC_APP_NAME}</title>
+</svelte:head>
 
 <ParaglideJS {i18n}>
   {#if $navigating}

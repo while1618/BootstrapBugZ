@@ -96,8 +96,9 @@ services:
       context: ./frontend/svelte-kit
       dockerfile: Dockerfile
     environment:
-      JWT_SECRET: ${JWT_SECRET:-secret}
+      PUBLIC_APP_NAME: ${APP_NAME:-BootstrapBugZ}
       API_URL: ${API_URL:-http://bootstrapbugz-api:8080/v1}
+      JWT_SECRET: ${JWT_SECRET:-secret}
     ports:
       - "${EXPOSED_UI_PORT:-5174}:${UI_PORT:-5173}"
     depends_on:
