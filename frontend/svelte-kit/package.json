@@ -17,12 +17,9 @@
     "lint": "prettier --check . && eslint .",
     "lint:fix": "prettier --write . && eslint --fix ."
   },
-  "dependencies": {
-    "@inlang/paraglide-sveltekit": "0.15.0",
-    "jsonwebtoken": "9.0.2"
-  },
   "devDependencies": {
     "@inlang/paraglide-js": "1.11.3",
+    "@inlang/paraglide-sveltekit": "0.15.0",
     "@playwright/test": "1.49.1",
     "@sveltejs/adapter-auto": "3.3.1",
     "@sveltejs/kit": "2.13.0",
@@ -37,6 +34,7 @@
     "eslint-plugin-svelte": "2.46.1",
     "formsnap": "2.0.0",
     "globals": "15.14.0",
+    "jsonwebtoken": "9.0.2",
     "lucide-svelte": "0.469.0",
     "mode-watcher": "0.5.0",
     "postcss": "8.4.49",
