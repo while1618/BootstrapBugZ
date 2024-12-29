@@ -64,16 +64,4 @@ const checkProtectedRoutes: Handle = async ({ event, resolve }) => {
   return await resolve(event);
 };
 
-const applyTheme: Handle = async ({ event, resolve }) => {
-  const theme = event.cookies.get('theme');
-  return await resolve(event, {
-    transformPageChunk: ({ html }) => html.replace('data-theme=""', `data-theme="${theme}"`),
-  });
-};
-
-export const handle = sequence(
-  i18n.handle(),
-  tryToGetSignedInUser,
-  checkProtectedRoutes,
-  applyTheme,
-);
+export const handle = sequence(i18n.handle(), tryToGetSignedInUser, checkProtectedRoutes);
