@@ -17,7 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@Profile({"dev", "test"})
+@Profile({"dev", "prod", "test"})
 @Component
 public class DataInit implements ApplicationRunner {
   private final UserRepository userRepository;
