@@ -1,11 +1,20 @@
-# create-svelte
+# SvelteKit
 
-Everything you need to build a Svelte project, powered
-by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## Running locally (dev)
 
-## Developing
+### Requirements
 
-create `.env` file in root of svelte-kit directory with the following data:
+Before running, you'll need to have the following software installed on your machine:
+- node
+- npm
+- pnpm
+- docker
+
+### Running
+
+The API needs to be up and running in order for the UI to function properly, and the easiest way to do it is just to run `docker-compose-api-dev.yml`. Check README.md file in `backend/spring-boot` for more info.
+
+Once API is running, create `.env` file in root of svelte-kit directory with the following data:
 
 ```bash
 # Public
@@ -15,25 +24,14 @@ PUBLIC_API_URL=http://localhost:8080/v1
 JWT_SECRET=secret
 ```
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install`
-or `yarn`), start a development server:
+To start the app, first install dependencies with:
+
+```bash
+pnpm install
+```
+
+And then run the app with:
 
 ```bash
 pnpm run dev
-
-# or start the server and open the app in a new browser tab
-pnpm run dev -- --open
 ```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-pnpm run build
-```
-
-You can preview the production build with `pnpm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for
-> your target environment.
