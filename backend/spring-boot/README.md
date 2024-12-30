@@ -5,6 +5,7 @@
 ### Requirements
 
 Before running, you'll need to have the following software installed on your machine:
+
 - java 21
 - maven
 - docker
