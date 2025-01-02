@@ -15,9 +15,18 @@ clear
 echo "Choose your frontend: "
 FRONTEND=$(gum choose "svelte-kit")
 
-# delete all other folders except the choosen one
+# delete all other frameworks except the chosen ones
 find ./backend -mindepth 1 ! -regex "^./backend/$BACKEND\(/.*\)?" -delete
 find ./frontend -mindepth 1 ! -regex "^./frontend/$FRONTEND\(/.*\)?" -delete
+
+# delete all workflows except the chosen frameworks
+find .github/workflows -type f ! -name "${BACKEND}.yml" ! -name "${FRONTEND}.yml" -exec rm -f {} +
+
+sed -i "s/\/${BACKEND}//g" .github/workflows/${BACKEND}.yml
+sed -i "s/\/${FRONTEND}//g" .github/workflows/${FRONTEND}.yml
+
+sed -i "s/\/${BACKEND}//g" docker-compose.yml
+sed -i "s/\/${FRONTEND}//g" docker-compose.yml
 
 cp -r ./backend/$BACKEND/. ./backend
 cp -r ./frontend/$FRONTEND/. ./frontend
