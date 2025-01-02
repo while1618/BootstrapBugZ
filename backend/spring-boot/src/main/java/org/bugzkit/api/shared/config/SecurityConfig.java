@@ -37,7 +37,7 @@ public class SecurityConfig {
   private static final String[] SWAGGER_WHITELIST = {
     "/swagger-ui/**", "/v3/api-docs/**", "/openapi.yml"
   };
-  private static final String[] ACTUATOR_WHITELIST = {"/actuator/**", "favicon.ico"};
+  private static final String[] ACTUATOR_WHITELIST = {"/actuator/**", "/favicon.ico"};
   private final JWTFilter jwtFilter;
   private final UserDetailsServiceImpl userDetailsService;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
