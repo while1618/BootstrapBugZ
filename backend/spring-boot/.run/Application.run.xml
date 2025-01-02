@@ -2,10 +2,10 @@
   <configuration default="false" name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="dev" />
     <module name="api" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="org.bootstrapbugz.api.Application" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.bugzkit.api.Application" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.*" />
+        <option name="PATTERN" value="org.bugzkit.api.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

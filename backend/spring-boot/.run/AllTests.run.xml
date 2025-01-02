@@ -3,26 +3,26 @@
     <module name="api" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="org.bootstrapbugz.api.*" />
+        <option name="PATTERN" value="org.bugzkit.api.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="PACKAGE_NAME" value="org.bootstrapbugz.api" />
+    <option name="PACKAGE_NAME" value="org.bugzkit.api" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="pattern" />
     <patterns>
-      <pattern testClass="org.bootstrapbugz.api.user.integration.UserControllerIT" />
-      <pattern testClass="org.bootstrapbugz.api.user.integration.RoleControllerIT" />
-      <pattern testClass="org.bootstrapbugz.api.user.integration.ProfileControllerIT" />
-      <pattern testClass="org.bootstrapbugz.api.auth.integration.AuthControllerIT" />
-      <pattern testClass="org.bootstrapbugz.api.admin.integration.UserControllerIT" />
-      <pattern testClass="org.bootstrapbugz.api.shared.integration.AccessingResourcesIT" />
-      <pattern testClass="org.bootstrapbugz.api.shared.unit.EmailServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.shared.unit.MessageServiceTest" />
-      <pattern testClass="org.bootstrapbugz.api.user.data.UserRepositoryIT" />
-      <pattern testClass="org.bootstrapbugz.api.user.data.RoleRepositoryIT" />
-      <pattern testClass="org.bootstrapbugz.api.auth.data.RefreshTokenStoreRepositoryIT" />
+      <pattern testClass="org.bugzkit.api.user.integration.UserControllerIT" />
+      <pattern testClass="org.bugzkit.api.user.integration.RoleControllerIT" />
+      <pattern testClass="org.bugzkit.api.user.integration.ProfileControllerIT" />
+      <pattern testClass="org.bugzkit.api.auth.integration.AuthControllerIT" />
+      <pattern testClass="org.bugzkit.api.admin.integration.UserControllerIT" />
+      <pattern testClass="org.bugzkit.api.shared.integration.AccessingResourcesIT" />
+      <pattern testClass="org.bugzkit.api.shared.unit.EmailServiceTest" />
+      <pattern testClass="org.bugzkit.api.shared.unit.MessageServiceTest" />
+      <pattern testClass="org.bugzkit.api.user.data.UserRepositoryIT" />
+      <pattern testClass="org.bugzkit.api.user.data.RoleRepositoryIT" />
+      <pattern testClass="org.bugzkit.api.auth.data.RefreshTokenStoreRepositoryIT" />
     </patterns>
     <method v="2">
       <option name="Make" enabled="true" />

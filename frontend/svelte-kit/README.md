@@ -19,7 +19,7 @@ Once API is running, create `.env` file in root of svelte-kit directory with the
 
 ```bash
 # Public
-PUBLIC_APP_NAME=BootstrapBugZ
+PUBLIC_APP_NAME=bugzkit
 PUBLIC_API_URL=http://localhost:8080/v1
 # Private
 JWT_SECRET=secret

@@ -10,10 +10,10 @@ RUN mvn clean install -DskipTests
 
 FROM openjdk:21-jdk AS dev
 WORKDIR /app
-COPY --from=build /app/target/*.jar bootstrapbugz-api.jar
-ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "bootstrapbugz-api.jar"]
+COPY --from=build /app/target/*.jar bugzkit-api.jar
+ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "bugzkit-api.jar"]
 
 FROM openjdk:21-jdk AS prod
 WORKDIR /app
-COPY --from=build /app/target/*.jar bootstrapbugz-api.jar
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "bootstrapbugz-api.jar"]
+COPY --from=build /app/target/*.jar bugzkit-api.jar
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "bugzkit-api.jar"]

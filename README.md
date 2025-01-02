@@ -1,9 +1,9 @@
-# BootstrapBugZ
+# bugzkit
 
 ### GitHub Actions
 
-[![Spring Boot CI](https://github.com/while1618/BootstrapBugZ/actions/workflows/spring-boot.yml/badge.svg?branch=master)](https://github.com/while1618/BootstrapBugZ/actions/workflows/spring-boot.yml)
-[![Svelte Kit CI](https://github.com/while1618/BootstrapBugZ/actions/workflows/svelte-kit.yml/badge.svg)](https://github.com/while1618/BootstrapBugZ/actions/workflows/svelte-kit.yml)
+[![Spring Boot CI](https://github.com/while1618/bugzkit/actions/workflows/spring-boot.yml/badge.svg?branch=master)](https://github.com/while1618/bugzkit/actions/workflows/spring-boot.yml)
+[![Svelte Kit CI](https://github.com/while1618/bugzkit/actions/workflows/svelte-kit.yml/badge.svg)](https://github.com/while1618/bugzkit/actions/workflows/svelte-kit.yml)
 
 ### Run
 
@@ -29,14 +29,14 @@ Login credentials:
 
 | Variable                 | Description                                                                                               | Default          |
 | ------------------------ | --------------------------------------------------------------------------------------------------------- | ---------------- |
-| APP_NAME                 | Name of the app that will be used in the application                                                      | BootstrapBugZ    |
+| APP_NAME                 | Name of the app that will be used in the application                                                      | bugzkit          |
 | HTTP_PROTOCOL            | HTTP protocol                                                                                             | http             |
 | UI_HOST                  | UI Host                                                                                                   | localhost        |
 | UI_PORT                  | Port on which you'll find UI running                                                                      | 5173             |
 | API_PORT                 | Port on which you'll find API running                                                                     | 8080             |
 | POSTGRES_HOST            | **Used only to override application.properties when starting locally.** Host on which postgres is running | localhost        |
 | POSTGRES_PORT            | Port on which you'll find postgres running                                                                | 5432             |
-| POSTGRES_DATABASE        | Name of the postgres database                                                                             | bootstrapbugz    |
+| POSTGRES_DATABASE        | Name of the postgres database                                                                             | bugzkit          |
 | POSTGRES_USERNAME        | Postgres username                                                                                         | postgres         |
 | POSTGRES_PASSWORD        | Postgres password                                                                                         | root             |
 | REDIS_HOST               | **Used only to override application.properties when starting locally.** Host on which redis is running    | localhost        |

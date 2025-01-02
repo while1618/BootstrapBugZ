@@ -6,7 +6,7 @@ services:
       - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
     environment:
       PGPORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_DB: ${POSTGRES_DATABASE:-bootstrapbugz}
+      POSTGRES_DB: ${POSTGRES_DATABASE:-bugzkit}
       POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
     healthcheck:
@@ -17,7 +17,7 @@ services:
           "-U",
           "${POSTGRES_USERNAME:-postgres}",
           "-d",
-          "${POSTGRES_DATABASE:-bootstrapbugz}",
+          "${POSTGRES_DATABASE:-bugzkit}",
         ]
       start_period: 10s
       interval: 30s
