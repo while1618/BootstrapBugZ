@@ -1,3 +1,5 @@
-export default {
-  index: "Introduction",
+const config = {
+  index: 'Introduction',
 };
+
+export default config;
