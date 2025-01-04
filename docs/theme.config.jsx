@@ -3,7 +3,7 @@ export default {
   project: {
     link: 'https://github.com/while1618/bugzkit',
   },
-  docsRepositoryBase: 'https://github.com/while1618/bugzkit/docs',
+  docsRepositoryBase: 'https://github.com/while1618/bugzkit/tree/master/docs',
   footer: {
     content: (
       <span>
