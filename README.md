@@ -1,53 +1,48 @@
 # bugzkit
 
-### GitHub Actions
+A production-ready web application template designed to handle essential web app functionalities.
+Developers can focus on business logic while using this template as a robust starting point.
 
-[![Spring Boot CI](https://github.com/while1618/bugzkit/actions/workflows/spring-boot.yml/badge.svg?branch=master)](https://github.com/while1618/bugzkit/actions/workflows/spring-boot.yml)
-[![Svelte Kit CI](https://github.com/while1618/bugzkit/actions/workflows/svelte-kit.yml/badge.svg)](https://github.com/while1618/bugzkit/actions/workflows/svelte-kit.yml)
-[![Docs](https://github.com/while1618/bugzkit/actions/workflows/docs.yml/badge.svg)](https://github.com/while1618/bugzkit/actions/workflows/docs.yml)
+## 👀 Overview
 
-### Run
+This project is not a no-code solution, nor is it just another SaaS boilerplate stuffed with third-party integrations.
+It's designed specifically for experienced developers who want complete control over their applications.
+You'll need to understand the written code, which is entirely yours to adapt, extend, and own.
 
-Just run docker-compose from the root directory:
+The goal is to provide a reliable and customizable foundation that eliminates repetitive setup tasks, letting you focus entirely on crafting your unique business logic.
 
-```bash
-docker-compose up --build -d
-```
+### ⚡ Core features
 
-You can find the application on the following urls:
+| Feature            | Description                                                                     |
+| ------------------ | ------------------------------------------------------------------------------- |
+| **Authentication** | JWT-based auth with role-based access control, implemented in Spring Boot       |
+| **Admin Panel**    | Complete user management interface                                              |
+| **Error Handling** | Standardized error codes and handling mechanisms                                |
+| **i18n**           | Built-in internationalization support                                           |
+| **Email Support**  | Backend email integration with [MJML](https://github.com/mjmlio/mjml) templates |
+| **Logging**        | Comprehensive logging and monitoring system                                     |
 
-- ui: http://localhost:5173
-- api: http://localhost:8080/v1/users
-- api-docs: http://localhost:8080/swagger-ui/index.html
+### 🛠 Tech Stack
 
-Login credentials:
+**Backend:**
 
-- username: user/admin
-- password: qwerty123
+- [Java 21](https://openjdk.org/projects/jdk/21/)
+- [Spring Boot](https://spring.io/projects/spring-boot)
+- [Postgres](https://www.postgresql.org/)
+- [Redis](https://redis.io/)
 
+**Frontend:**
 
-### Environment variables
+- [SvelteKit](https://kit.svelte.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [shadcn-svelte](https://github.com/huntabyte/shadcn-svelte)
+- [paraglidejs](https://inlang.com/m/gerre34r/library-inlang-paraglideJs)
+- [Zod](https://zod.dev/)
+- [Superforms](https://superforms.rocks/)
+- [Formsnap](https://formsnap.dev/docs)
 
-| Variable                 | Description                                                                                               | Default          |
-| ------------------------ | --------------------------------------------------------------------------------------------------------- | ---------------- |
-| APP_NAME                 | Name of the app that will be used in the application                                                      | bugzkit          |
-| HTTP_PROTOCOL            | HTTP protocol                                                                                             | http             |
-| UI_HOST                  | UI Host                                                                                                   | localhost        |
-| UI_PORT                  | Port on which you'll find UI running                                                                      | 5173             |
-| API_PORT                 | Port on which you'll find API running                                                                     | 8080             |
-| POSTGRES_HOST            | **Used only to override application.properties when starting locally.** Host on which postgres is running | localhost        |
-| POSTGRES_PORT            | Port on which you'll find postgres running                                                                | 5432             |
-| POSTGRES_DATABASE        | Name of the postgres database                                                                             | bugzkit          |
-| POSTGRES_USERNAME        | Postgres username                                                                                         | postgres         |
-| POSTGRES_PASSWORD        | Postgres password                                                                                         | root             |
-| REDIS_HOST               | **Used only to override application.properties when starting locally.** Host on which redis is running    | localhost        |
-| REDIS_PORT               | Port on which you'll find redis running                                                                   | 6379             |
-| REDIS_DATABASE           | Name of the redis database                                                                                | 0                |
-| REDIS_PASSWORD           | Redis password                                                                                            | root             |
-| MAIL_HOST                | SMTP host                                                                                                 | smtp.mailgun.org |
-| MAIL_PORT                | SMTP port                                                                                                 | 587              |
-| MAIL_USERNAME            | SMTP username                                                                                             | username         |
-| MAIL_PASSWORD            | SMTP password                                                                                             | password         |
-| JWT_SECRET               | Secret used to sign jwt                                                                                   | secret           |
-| SPRING_SECURITY_PASSWORD | Password used for auto-generated users                                                                    | qwerty123        |
+**Devops:**
 
+- [GitHub Actions](https://github.com/features/actions)
+- [Docker](https://www.docker.com/)

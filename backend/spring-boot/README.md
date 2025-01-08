@@ -1,51 +1,28 @@
-# SpringBoot
+## 🖥️ Running the Backend
 
-## Running locally (dev)
+### 🧑‍💻 Running Backend Locally
 
-### Requirements
+If you prefer not to install PostgreSQL and Redis locally, you can use the `docker-compose-db-dev.yml` file in the `backend` directory:
 
-Before running, you'll need to have the following software installed on your machine:
-
-- java 21
-- maven
-- docker
-- postgres (optional)
-- redis (optional)
-
-### Running
-
-If you don't want to install postgres and redis locally, you can just use `docker-compose-db-dev.yml` to run them via docker. To start db, just run the following:
 ```bash
 docker-compose -f docker-compose-db-dev.yml up -d
 ```
 
-After db is up, run:
+After the services are running, start the application:
+
 ```bash
 mvn clean install
-```
-
-And then, you can start the API via terminal:
-```bash
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-Or just use intellij. Run config for intellij is already configured, so just start the `Application` config.
+Alternatively, use IntelliJ IDEA. A pre-configured `Application` run configuration is available—just click and run! 🛠️
 
-## Running with docker
+### 🐳 Running Backend via Docker
 
-### Requirements
+For running the backend API using Docker, execute:
 
-Before running, you'll need to have the following software installed on your machine:
-- docker
-
-### Running
-
-To start the API via docker you need to run:
 ```bash
 docker-compose -f docker-compose-api-dev.yml up --build -d
 ```
 
-You can find the API on the following urls:
-
-- api: http://localhost:8080/v1/users
-- api-docs: http://localhost:8080/swagger-ui/index.html
+💡 **Note**: Email functionalities require SMTP configuration. Refer to the Environment Variables section for setup.
