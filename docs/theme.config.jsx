@@ -7,7 +7,7 @@ export default {
   footer: {
     content: (
       <span>
-        MIT {new Date().getFullYear()} ©{' '}
+        {new Date().getFullYear()} ©{' '}
         <a href="https://github.com/while1618/bugzkit" target="_blank">
           bugzkit
         </a>
