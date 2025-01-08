@@ -1,5 +1,9 @@
 # bugzkit
 
+[![Spring Boot CI](https://github.com/while1618/bugzkit/actions/workflows/spring-boot.yml/badge.svg?branch=master)](https://github.com/while1618/bugzkit/actions/workflows/spring-boot.yml)
+[![Svelte Kit CI](https://github.com/while1618/bugzkit/actions/workflows/svelte-kit.yml/badge.svg)](https://github.com/while1618/bugzkit/actions/workflows/svelte-kit.yml)
+[![Docs](https://github.com/while1618/bugzkit/actions/workflows/docs.yml/badge.svg)](https://github.com/while1618/bugzkit/actions/workflows/docs.yml)
+
 A production-ready web application template designed to handle essential web app functionalities.
 Developers can focus on business logic while using this template as a robust starting point.
 
