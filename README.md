@@ -1,9 +1,5 @@
 # bugzkit
 
-[![Spring Boot CI](https://github.com/while1618/bugzkit/actions/workflows/spring-boot.yml/badge.svg?branch=master)](https://github.com/while1618/bugzkit/actions/workflows/spring-boot.yml)
-[![Svelte Kit CI](https://github.com/while1618/bugzkit/actions/workflows/svelte-kit.yml/badge.svg)](https://github.com/while1618/bugzkit/actions/workflows/svelte-kit.yml)
-[![Docs](https://github.com/while1618/bugzkit/actions/workflows/docs.yml/badge.svg)](https://github.com/while1618/bugzkit/actions/workflows/docs.yml)
-
 A production-ready web application template designed to handle essential web app functionalities.
 Developers can focus on business logic while using this template as a robust starting point.
 
@@ -13,13 +9,13 @@ This project is not a no-code solution, nor is it just another SaaS boilerplate 
 It's designed specifically for experienced developers who want complete control over their applications.
 You'll need to understand the written code, which is entirely yours to adapt, extend, and own.
 
-The goal is to provide a reliable and customizable foundation that eliminates repetitive setup tasks, letting you focus entirely on crafting your unique business logic.
+The goal is to provide a reliable and customizable foundation that eliminates repetitive tasks, letting you focus entirely on crafting your unique business logic.
 
 ### ⚡ Core features
 
 | Feature            | Description                                                                     |
 | ------------------ | ------------------------------------------------------------------------------- |
-| **Authentication** | JWT-based auth with role-based access control, implemented in Spring Boot       |
+| **Authentication** | JWT auth with role-based access control                                         |
 | **Admin Panel**    | Complete user management interface                                              |
 | **Error Handling** | Standardized error codes and handling mechanisms                                |
 | **i18n**           | Built-in internationalization support                                           |
@@ -28,14 +24,18 @@ The goal is to provide a reliable and customizable foundation that eliminates re
 
 ### 🛠 Tech Stack
 
-**Backend:**
+<details>
+  <summary>Backend</summary>
 
 - [Java 21](https://openjdk.org/projects/jdk/21/)
-- [Spring Boot](https://spring.io/projects/spring-boot)
+- [SpringBoot](https://spring.io/projects/spring-boot)
 - [Postgres](https://www.postgresql.org/)
 - [Redis](https://redis.io/)
 
-**Frontend:**
+</details>
+
+<details>
+  <summary>Frontend</summary>
 
 - [SvelteKit](https://kit.svelte.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
@@ -46,7 +46,12 @@ The goal is to provide a reliable and customizable foundation that eliminates re
 - [Superforms](https://superforms.rocks/)
 - [Formsnap](https://formsnap.dev/docs)
 
-**Devops:**
+</details>
+
+<details>
+  <summary>Devops</summary>
 
 - [GitHub Actions](https://github.com/features/actions)
 - [Docker](https://www.docker.com/)
+
+</details>

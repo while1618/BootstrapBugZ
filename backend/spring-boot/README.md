@@ -1,25 +1,25 @@
 ## 🖥️ Running the Backend
 
-### 🧑‍💻 Running Backend Locally
+### 🧑‍💻 Running Locally
 
-If you prefer not to install PostgreSQL and Redis locally, you can use the `docker-compose-db-dev.yml` file in the `backend` directory:
+For the API to start properly, I'll need Postgres and Redis running. The easies way to that is via `docker-compose-db-dev.yml` file in the `backend` directory:
 
 ```bash
 docker-compose -f docker-compose-db-dev.yml up -d
 ```
 
-After the services are running, start the application:
+After the services are up and running, start the application:
 
 ```bash
 mvn clean install
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-Alternatively, use IntelliJ IDEA. A pre-configured `Application` run configuration is available—just click and run! 🛠️
+Alternatively, use IntelliJ IDEA. A pre-configured run configuration is available - just click and run! 🚀
 
-### 🐳 Running Backend via Docker
+### 🐳 Running via Docker
 
-For running the backend API using Docker, execute:
+For running the API using Docker, execute:
 
 ```bash
 docker-compose -f docker-compose-api-dev.yml up --build -d
