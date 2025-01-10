@@ -10,11 +10,9 @@ GitHub Actions is used for Continuous Integration (CI). You'll find the workflow
 
 The workflows are automatically triggered when changes are made to the corresponding directories. You can also trigger them manually via the GitHub Actions interface.
 
-### 🔧 Setting Up Environment Variables
+### 🔧 Environment Variables
 
 The `svelte-kit.yml` workflow requires the following environment variables:
-
-#### Public Variables
 
 These should be added as **variables** in the settings of your repo, under **Secrets and variables > Actions**:
 
@@ -22,8 +20,6 @@ These should be added as **variables** in the settings of your repo, under **Sec
 PUBLIC_APP_NAME=your_app_name
 PUBLIC_API_URL=http://localhost:8080/v1
 ```
-
-#### Private Variable
 
 This should be added as a **secret** in the settings of your repo, under **Secrets and variables > Actions**:
 
