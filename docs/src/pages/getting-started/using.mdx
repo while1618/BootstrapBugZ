@@ -1,0 +1,80 @@
+## 🛠️ Using
+
+### 🔧 Prerequisites
+
+To use `bugzkit` ensure you have the following software installed:
+
+- [Gum](https://github.com/charmbracelet/gum)
+- [Docker](https://www.docker.com/)
+- [Java 21](https://openjdk.org/projects/jdk/21/)
+- [Maven](https://maven.apache.org/)
+- [Node.js 22](https://nodejs.org/)
+- [pnpm](https://pnpm.io/)
+
+### 📦 Initialize Your Project
+
+Go to a [bugzkit repo](https://github.com/while1618/bugzkit), click on a `Use this template` button (you need to be logged in on github for this button to appear).
+Once you created your repo, clone it and run the initialization script:
+
+```bash
+./init.sh
+```
+
+The script will:
+
+1. Ask for your project name.
+2. Replace all instances of `bugzkit` with your project name.
+3. Remove unnecessary files and folders, including the script itself.
+4. Ask if you want to keep this docs or not.
+
+Once completed, commit the changes and start coding! 🎉
+
+## 🖥️ Running the Backend
+
+### 🧑‍💻 Running Locally
+
+For the API to start properly, I'll need Postgres and Redis running. The easies way to that is via `docker-compose-db-dev.yml` file in the `backend` directory:
+
+```bash
+docker-compose -f docker-compose-db-dev.yml up -d
+```
+
+After the services are up and running, start the application:
+
+```bash
+mvn clean install
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+Alternatively, use IntelliJ IDEA. A pre-configured run configuration is available - just click and run! 🚀
+
+### 🐳 Running via Docker
+
+For running the API using Docker, execute:
+
+```bash
+docker-compose -f docker-compose-api-dev.yml up --build -d
+```
+
+💡 **Note**: Email functionalities require SMTP configuration. Refer to the Environment Variables section for setup.
+
+## 🌐 Running the Frontend
+
+Ensure the API is up and running before starting the UI. Then, create a `.env` file in the root of the frontend directory with the following content:
+
+```bash
+# Public
+PUBLIC_APP_NAME=your_app_name
+PUBLIC_API_URL=http://localhost:8080/v1
+# Private
+JWT_SECRET=secret
+```
+
+To start the UI, run:
+
+```bash
+pnpm install
+pnpm run dev
+```
+
+You're all set! 🚀
