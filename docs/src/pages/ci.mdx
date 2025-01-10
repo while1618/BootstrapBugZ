@@ -1,0 +1,40 @@
+## 🚀 Continuous Integration (CI)
+
+### 📄 Overview
+
+GitHub Actions is used for Continuous Integration (CI). You'll find the workflow files in the `.github/workflows` directory:
+
+- **`spring-boot.yml`**: Run linting, unit and integration tests for Sapring Boot API.
+- **`svelte-kit.yml`**: Run linting, unit and integration tests for SvelteKit UI.
+- **`docs.yml`**: Run linting for the docs.
+
+The workflows are automatically triggered when changes are made to the corresponding directories. You can also trigger them manually via the GitHub Actions interface.
+
+### 🔧 Setting Up Environment Variables
+
+The `svelte-kit.yml` workflow requires the following environment variables:
+
+#### Public Variables
+
+These should be added as **variables** in the settings of your repo, under **Secrets and variables > Actions**:
+
+```bash
+PUBLIC_APP_NAME=your_app_name
+PUBLIC_API_URL=http://localhost:8080/v1
+```
+
+#### Private Variable
+
+This should be added as a **secret** in the settings of your repo, under **Secrets and variables > Actions**:
+
+```bash
+JWT_SECRET=secret
+```
+
+### ▶️ Running Workflows Manually
+
+To manually trigger any workflow:
+
+1. Navigate to the **Actions** tab in your repository.
+2. Select the desired workflow (e.g., `spring-boot.yml`, `svelte-kit.yml`, or `docs.yml`).
+3. Click the **Run workflow** button.
