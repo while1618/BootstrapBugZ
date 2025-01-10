@@ -39,6 +39,13 @@ if [ "$BACKEND" == "spring-boot" ]; then
   mv ./backend/src/test/java/org/bugzkit ./backend/src/test/java/org/$APP_NAME
 fi
 
+clear
+if ! gum confirm "Do you want to keep the docs?"; then
+  rm -rf ./docs
+  rm -rf .github/workflows/docs.yml
+  sed -i '5d' README.md
+fi
+
 # replace all occurrences of the bugzkit in all files
 find . \
   -type f \
