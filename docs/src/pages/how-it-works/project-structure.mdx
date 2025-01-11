@@ -4,10 +4,10 @@
 
 The backend follows a typical Spring Boot structure with a clear organization into the following main directories:
 
-- **admin**: Handles administrative functionality and management features.
 - **auth**: Contains authentication and authorization logic.
-- **user**: Manages user-related features and endpoints.
-- **shared**: Includes shared utilities, services, or components used across different modules.
+- **user**: Contains user related logic.
+- **admin**: Contains admin related logic - user management.
+- **shared**: Includes shared utilities, services, configs and components used across different modules.
 - **resources**: Standard Spring Boot resources directory for configuration files, static assets, and templates.
 
 The test directory mirrors this structure, ensuring tests are organized alongside the corresponding features.
@@ -16,7 +16,7 @@ The test directory mirrors this structure, ensuring tests are organized alongsid
 
 The frontend is built using SvelteKit and adheres to its standard project structure. Key directories include:
 
-- **messages**: Located at the root level, this directory stores internationalization (i18n) files for multilingual support.
+- **messages**: Stores internationalization (i18n) files for multilingual support.
 - **src/routes**: Files here represent the routes of the web application, aligning with the file-based routing paradigm of SvelteKit.
 - **src/lib**: This directory contains reusable logic and components, organized into:
   - **components**: UI components and building blocks.

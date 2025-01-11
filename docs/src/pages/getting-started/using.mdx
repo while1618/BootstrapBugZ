@@ -25,7 +25,7 @@ The script will:
 1. Ask for your project name.
 2. Replace all instances of `bugzkit` with your project name.
 3. Remove unnecessary files and folders, including the script itself.
-4. Ask if you want to keep docs or not.
+4. Ask if you want to keep the docs or not.
 
 Once completed, commit the changes and start coding! 🎉
 
@@ -33,7 +33,7 @@ Once completed, commit the changes and start coding! 🎉
 
 ### 🧑‍💻 Running Locally
 
-For the API to start properly, I'll need Postgres and Redis running. The easies way to that is via `docker-compose-db-dev.yml` file in the `backend` directory:
+For the API to start properly, you'll need Postgres and Redis running. The easies way to that is via `docker-compose-db-dev.yml` file in the `backend` directory:
 
 ```bash
 docker-compose -f docker-compose-db-dev.yml up -d
@@ -56,7 +56,7 @@ For running the API using Docker, execute:
 docker-compose -f docker-compose-api-dev.yml up --build -d
 ```
 
-💡 **Note**: Email functionalities require SMTP configuration. Refer to the Environment Variables section for setup.
+💡 **Note**: Email functionalities (e.g., account confirmation, password reset) won't work without configuring SMTP. Check the Environment Variables section for the setup.
 
 ## 🌐 Running the Frontend
 
