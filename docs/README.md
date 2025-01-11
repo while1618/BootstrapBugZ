@@ -1,6 +1,6 @@
 ## bugzkit docs
 
-This is a project for `bugzkit` docs, generated with [nextra](https://github.com/shuding/nextra).
+This is a docs for `bugzkit`, generated with [nextra](https://github.com/shuding/nextra).
 
 ### Running locally
 
