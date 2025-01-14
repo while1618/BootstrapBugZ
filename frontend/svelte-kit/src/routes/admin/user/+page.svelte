@@ -1,5 +1,6 @@
 <script lang="ts">
   import Pagination from '$lib/components/shared/pagination.svelte';
+  import { Button } from '$lib/components/ui/button';
   import { Label } from '$lib/components/ui/label';
   import * as Table from '$lib/components/ui/table';
   import * as m from '$lib/paraglide/messages.js';
@@ -37,7 +38,9 @@
           {#each data.users.data as user}
             <Table.Row>
               <Table.Cell>{user.id}</Table.Cell>
-              <Table.Cell>{user.username}</Table.Cell>
+              <Table.Cell>
+                <Button variant="link" href="/user/{user.username}">{user.username}</Button>
+              </Table.Cell>
               <Table.Cell>{user.email}</Table.Cell>
               <Table.Cell>{new Date(user.createdAt).toLocaleString()}</Table.Cell>
               <Table.Cell><ActivateDialog {data} {user} /></Table.Cell>

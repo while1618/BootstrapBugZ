@@ -13,12 +13,12 @@
   "general_delete": "Obriši",
   "general_status": "Status",
 
-  "home_getStarted": "Počni",
   "home_greetings": "Zdravo",
   "home_info": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
 
   "navbar_singIn": "Prijavi se",
   "navbar_signUp": "Registruj se",
+  "navbar_home": "Početna",
   "navbar_profile": "Profil",
   "navbar_admin": "Admin",
   "navbar_settings": "Podešavanja",

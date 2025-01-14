@@ -6,6 +6,7 @@
   import * as Sheet from '$lib/components/ui/sheet';
   import * as m from '$lib/paraglide/messages.js';
   import ChartBarIncreasingIcon from 'lucide-svelte/icons/chart-bar-increasing';
+  import HouseIcon from 'lucide-svelte/icons/house';
   import LogOutIcon from 'lucide-svelte/icons/log-out';
   import MenuIcon from 'lucide-svelte/icons/menu';
   import SettingsIcon from 'lucide-svelte/icons/settings';
@@ -35,6 +36,10 @@
               <Separator />
               <Sheet.Description>
                 <div class="flex w-full flex-col gap-2">
+                  <Button href="/" variant="ghost">
+                    <HouseIcon />
+                    {m.navbar_home()}
+                  </Button>
                   <Button href="/profile" variant="ghost">
                     <UserIcon />
                     {m.navbar_profile()}
@@ -84,6 +89,11 @@
                 <DropdownMenu.GroupHeading>My Account</DropdownMenu.GroupHeading>
                 <DropdownMenu.Separator />
                 <DropdownMenu.Group>
+                  <DropdownMenu.Item class="cursor-pointer">
+                    {#snippet child({ props })}
+                      <a {...props} href="/"><HouseIcon />{m.navbar_home()}</a>
+                    {/snippet}
+                  </DropdownMenu.Item>
                   <DropdownMenu.Item class="cursor-pointer">
                     {#snippet child({ props })}
                       <a {...props} href="/profile"><UserIcon />{m.navbar_profile()}</a>
