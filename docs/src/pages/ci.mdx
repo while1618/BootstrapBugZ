@@ -12,16 +12,16 @@ The workflows are automatically triggered when changes are made to the correspon
 
 ### ⚙️ Environment Variables
 
-The `svelte-kit.yml` workflow requires the following environment variables:
+The `svelte-kit.yml` workflow requires secrets and environment variables.
 
-These should be added as **variables** in the settings of your repo, under **Secrets and variables > Actions**:
+Add the following as **variables** in the settings of your repo, under **Secrets and variables > Actions**:
 
 ```bash
 PUBLIC_APP_NAME=your_app_name
 PUBLIC_API_URL=http://localhost:8080/v1
 ```
 
-This should be added as a **secret** in the settings of your repo, under **Secrets and variables > Actions**:
+Add the following as a **secret** in the settings of your repo, under **Secrets and variables > Actions**:
 
 ```bash
 JWT_SECRET=secret
@@ -31,6 +31,6 @@ JWT_SECRET=secret
 
 To manually trigger any workflow:
 
-1. Navigate to the **Actions** tab in your repository.
-2. Select the desired workflow (e.g., `spring-boot.yml`, `svelte-kit.yml`, or `docs.yml`).
-3. Click the **Run workflow** button.
+- Navigate to the **Actions** tab in your repository.
+- Select the desired workflow (e.g., `spring-boot.yml`, `svelte-kit.yml`, or `docs.yml`).
+- Click the **Run workflow** button.
