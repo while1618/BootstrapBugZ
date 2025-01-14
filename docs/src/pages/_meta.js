@@ -5,6 +5,7 @@ const config = {
   'environment-variables': 'Environment Variables',
   ci: 'CI',
   deploy: 'Deploy',
+  features: 'Incoming Features',
 };
 
 export default config;

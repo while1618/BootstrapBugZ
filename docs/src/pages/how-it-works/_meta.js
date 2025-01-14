@@ -1,7 +1,8 @@
 const config = {
+  introduction: 'Introduction',
   'project-structure': 'Project Structure',
-  'spring-boot': 'Spring Boot',
-  'svelte-kit': 'Svelte Kit',
+  auth: 'Auth',
+  email: 'Email',
 };
 
 export default config;

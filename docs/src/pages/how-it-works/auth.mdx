@@ -1,0 +1,80 @@
+## Auth
+
+### Sign In
+
+When a user signs in, two tokens are created:
+
+- **Access Token**: used to access protected resources within the app.
+- **Refresh Token**: used to silently obtain a new access token when the current one expires, allowing the user to stay signed in without re-entering their password.
+
+Both tokens are sent to the user in the response body and consumed by the UI. First the request will be made to the API from SvelteKit server side.
+Both access and refresh tokens will be saved in HTTP-only cookie and they will be used to keep the user authenticated.
+
+#### Token Storage and Lifetime
+
+- **Access Token**: Not stored in a database on the backend and it is valid for 15 minutes.
+- **Refresh Token**: Stored in Redis on the backend and valid for 7 days.
+
+You can change expiration times through environment variables.
+
+#### Refreshing Token
+
+On the UI, each API request is intercepted and modified using the `hook`:
+
+- Check the HTTP-only cookie for an access token.
+- Check that access token is valid.
+- If the token is invalid, try to refresh it by sending a request to the API with the refresh token from the HTTP-only cookie.
+- If refreshing fails, the user is considered unauthenticated and redirected if necessary.
+
+Refer to `hooks.server.ts` to see how this is implemented.
+
+#### Refresh Token Rotation
+
+When a user requests a new access token, both refresh and access tokens are regenerated.
+This is called **refresh token rotation** and ensures that old refresh tokens are invalidated.
+For more details, see [Auth0's docs on refresh token rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation).
+
+### Sign Out
+
+When a user signs out:
+
+- Tokens are removed from HTTP-only cookies on the UI.
+- The refresh token is deleted from Redis.
+- The access token is blacklisted in Redis.
+
+#### Why Blacklist Access Tokens?
+
+JWTs cannot be invalidated directly. Removing them from cookies is not enough since the tokens remain valid until they expire.
+Blacklisting ensures they can no longer be used. Blacklisted access tokens are stored for a maximum of 15 minutes (the access token's lifetime),
+after which they are automatically removed.
+
+For more details, check [this Stack Overflow discussion](https://stackoverflow.com/questions/21978658/invalidating-json-web-tokens).
+
+#### Sign Out from All Devices
+
+When a user signs out from all devices:
+
+- All user's refresh tokens will be deleted.
+- The user's ID and the time of the request are stored in Redis. This is used to ensure that all access tokens created before the sign-out request are invalid.
+  Again, this data will only be stored in Redis for the access token lifetime (15 minutes).
+
+### Account Verification
+
+When a user signs up, a JWT with the purpose `verify_email_token` is created and sent to the user via email as part of a verification link.
+
+### Password Reset
+
+When a user requests a password reset, a JWT with the purpose `reset_password` is generated and sent to the user via email as part of a reset link.
+
+### JWT Structure
+
+All JWTs share the following structure:
+
+- **issuer**: Who created the token.
+- **issuedAt**: Timestamp of when the token was created.
+- **expireAt**: Timestamp of when the token expires.
+- **purpose**: Describes the token's purpose (`access_token`, `refresh_token`, `reset_password_token`, `verify_email_token`).
+
+Access and refresh tokens include an additional claim:
+
+- **roles**: Represents the roles assigned to the user.
