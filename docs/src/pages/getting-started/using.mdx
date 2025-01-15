@@ -1,6 +1,6 @@
-## 🛠️ Using
+## Using
 
-### 🔧 Prerequisites
+### Prerequisites
 
 To use `bugzkit` ensure you have the following software installed:
 
@@ -11,7 +11,7 @@ To use `bugzkit` ensure you have the following software installed:
 - [Node.js 22](https://nodejs.org/)
 - [pnpm](https://pnpm.io/)
 
-### 📦 Initialize Your Project
+### Initialize Your Project
 
 Go to a [bugzkit repo](https://github.com/while1618/bugzkit), click on a `Use this template` button (you need to be logged in on github for this button to appear).
 Once you created your repo, clone it and run the initialization script:
@@ -27,11 +27,11 @@ The script will:
 3. Remove unnecessary files and folders, including the script itself.
 4. Ask if you want to keep the docs or not.
 
-Once completed, commit the changes and start coding! 🎉
+Once completed, commit the changes and start coding!
 
-## 🖥️ Running the Backend
+## Running the Backend
 
-### 🧑‍💻 Running Locally
+### Running Locally
 
 For the API to start properly, you'll need Postgres and Redis running. The easies way to that is via `docker-compose-db-dev.yml` file in the `backend` directory:
 
@@ -46,9 +46,9 @@ mvn clean install
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-Alternatively, use IntelliJ IDEA. A pre-configured run configuration is available - just click and run! 🚀
+Alternatively, use IntelliJ IDEA. A pre-configured run configuration is available - just click and run!
 
-### 🐳 Running via Docker
+### Running via Docker
 
 For running the API using Docker, execute:
 
@@ -56,9 +56,9 @@ For running the API using Docker, execute:
 docker-compose -f docker-compose-api-dev.yml up --build -d
 ```
 
-💡 **Note**: Email functionalities (e.g., account confirmation, password reset) won't work without configuring SMTP. Check the Environment Variables section for the setup.
+**Note**: Email functionalities (e.g., account confirmation, password reset) won't work without configuring SMTP. Check the Environment Variables section for the setup.
 
-## 🌐 Running the Frontend
+## Running the Frontend
 
 Ensure the API is up and running before starting the UI. Then, create a `.env` file in the root of the frontend directory with the following content:
 
@@ -77,4 +77,4 @@ pnpm install
 pnpm run dev
 ```
 
-You're all set! 🚀
+You're all set!
