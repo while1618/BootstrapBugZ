@@ -7,19 +7,19 @@ When a user signs in, two tokens are created:
 - **Access Token**: used to access protected resources within the app.
 - **Refresh Token**: used to silently obtain a new access token when the current one expires, allowing the user to stay signed in without re-entering their password.
 
-Both tokens are sent to the user in the response body and consumed by the UI. First the request will be made to the API from SvelteKit server side.
-Both access and refresh tokens will be saved in HTTP-only cookie and they will be used to keep the user authenticated.
+Tokens are sent from the API in the response body. When the request is made from SvelteKit server side,
+both access and refresh tokens will be saved in HTTP-only cookie and they will be used to keep the user authenticated.
 
 #### Token Storage and Lifetime
 
-- **Access Token**: Not stored in a database on the backend and it is valid for 15 minutes.
-- **Refresh Token**: Stored in Redis on the backend and valid for 7 days.
+- **Access Token**: Not stored in a database, valid for 15 minutes.
+- **Refresh Token**: Stored in Redis, valid for 7 days.
 
 You can change expiration times through environment variables.
 
 #### Refreshing Token
 
-On the UI, each API request is intercepted and modified using the `hook`:
+On the UI, each API request is intercepted and modified using the server `hook`:
 
 - Check the HTTP-only cookie for an access token.
 - Check that access token is valid.
@@ -38,7 +38,7 @@ For more details, see [Auth0's docs on refresh token rotation](https://auth0.com
 
 When a user signs out:
 
-- Tokens are removed from HTTP-only cookies on the UI.
+- Tokens are removed from HTTP-only cookies.
 - The refresh token is deleted from Redis.
 - The access token is blacklisted in Redis.
 
