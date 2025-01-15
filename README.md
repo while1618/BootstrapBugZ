@@ -7,7 +7,7 @@
 A production-ready web application template designed to handle essential web app functionalities.
 Developers can focus on business logic while using this template as a robust starting point.
 
-## 👀 Overview
+## Overview
 
 This project is not a no-code solution, nor is it just another SaaS boilerplate stuffed with third-party integrations.
 It's designed specifically for experienced developers who want complete control over their applications.
@@ -15,7 +15,7 @@ You'll need to understand the written code, which is entirely yours to adapt, ex
 
 The goal is to provide a reliable and customizable foundation that eliminates repetitive tasks, letting you focus entirely on crafting your unique business logic.
 
-### ⚡ Core features
+### Core features
 
 | Feature                  | Description                                                                          |
 | ------------------------ | ------------------------------------------------------------------------------------ |
@@ -26,7 +26,7 @@ The goal is to provide a reliable and customizable foundation that eliminates re
 | **Email Support**        | Sending responsive emails ([MJML](https://github.com/mjmlio/mjml)) from your backend |
 | **Logging**              | Comprehensive logging and monitoring system                                          |
 
-### 🛠 Tech Stack
+### Tech Stack
 
 <details>
   <summary>Backend</summary>

@@ -1,4 +1,4 @@
-## 🌐 Running the Frontend
+## Running the Frontend
 
 Ensure the API is up and running before starting the UI. Then, create a `.env` file in the root of the frontend directory with the following content:
 
@@ -17,4 +17,4 @@ pnpm install
 pnpm run dev
 ```
 
-You're all set! 🚀
+You're all set!
