@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -235,34 +234,15 @@
         <version>${exec-maven-plugin.version}</version>
         <executions>
           <execution>
-            <id>generate verify-email.html</id>
+            <id>generate-email-templates</id>
             <goals>
               <goal>exec</goal>
             </goals>
             <phase>generate-resources</phase>
             <configuration>
-              <executable>npx</executable>
+              <executable>sh</executable>
               <arguments>
-                <argument>mjml</argument>
-                <argument>src/main/resources/templates/email/verify-email.mjml</argument>
-                <argument>-o</argument>
-                <argument>src/main/resources/templates/email/verify-email.html</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>generate reset-password.html</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>generate-resources</phase>
-            <configuration>
-              <executable>npx</executable>
-              <arguments>
-                <argument>mjml</argument>
-                <argument>src/main/resources/templates/email/reset-password.mjml</argument>
-                <argument>-o</argument>
-                <argument>src/main/resources/templates/email/reset-password.html</argument>
+                <argument>src/main/resources/templates/email/generate-html-emails.sh</argument>
               </arguments>
             </configuration>
           </execution>
