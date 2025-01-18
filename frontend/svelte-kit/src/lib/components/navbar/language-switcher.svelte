@@ -1,11 +1,10 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import * as Select from '$lib/components/ui/select';
   import { i18n } from '$lib/i18n.js';
   import * as m from '$lib/paraglide/messages.js';
   import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
-  import { get } from 'svelte/store';
 
   const labels = {
     en: `🇬🇧 ${m.language_english()}`,
@@ -15,7 +14,7 @@
   let selectedLanguage = $state(languageTag());
 
   const changeLanguage = () => {
-    const canonicalPath = i18n.route(get(page).url.pathname);
+    const canonicalPath = i18n.route(page.url.pathname);
     const localizedPath = i18n.resolveRoute(canonicalPath, selectedLanguage);
     goto(localizedPath);
   };

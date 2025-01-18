@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import { Button } from '$lib/components/ui/button';
   import * as m from '$lib/paraglide/messages.js';
   import ChevronLeftIcon from 'lucide-svelte/icons/chevron-left';
@@ -21,19 +21,19 @@
   <Button
     variant="ghost"
     disabled={previousDisabled}
-    href={!previousDisabled ? `${$page.route.id}?page=${currentPage - 1}&size=${size}` : undefined}
+    href={!previousDisabled ? `${page.route.id}?page=${currentPage - 1}&size=${size}` : undefined}
   >
     <ChevronLeftIcon />
     {m.general_previous()}
   </Button>
 
   {#if currentPage > 2}
-    <Button variant="ghost" href="{$page.route.id}?page=1&size={size}">1</Button>
+    <Button variant="ghost" href="{page.route.id}?page=1&size={size}">1</Button>
     <EllipsisIcon class="size-4 self-center" />
   {/if}
 
   {#if currentPage - 1 > 0}
-    <Button variant="ghost" href="{$page.route.id}?page={currentPage - 1}&size={size}">
+    <Button variant="ghost" href="{page.route.id}?page={currentPage - 1}&size={size}">
       {currentPage - 1}
     </Button>
   {/if}
@@ -41,14 +41,14 @@
   <Button variant="outline">{currentPage}</Button>
 
   {#if currentPage + 1 <= totalPages}
-    <Button variant="ghost" href="{$page.route.id}?page={currentPage + 1}&size={size}">
+    <Button variant="ghost" href="{page.route.id}?page={currentPage + 1}&size={size}">
       {currentPage + 1}
     </Button>
   {/if}
 
   {#if currentPage < totalPages - 1}
     <EllipsisIcon class="size-4 self-center" />
-    <Button variant="ghost" href="{$page.route.id}?page={totalPages}&size={size}">
+    <Button variant="ghost" href="{page.route.id}?page={totalPages}&size={size}">
       {totalPages}
     </Button>
   {/if}
@@ -56,7 +56,7 @@
   <Button
     variant="ghost"
     disabled={nextDisabled}
-    href={!nextDisabled ? `${$page.route.id}?page=${currentPage + 1}&size=${size}` : undefined}
+    href={!nextDisabled ? `${page.route.id}?page=${currentPage + 1}&size=${size}` : undefined}
   >
     {m.general_next()}
     <ChevronRightIcon />
