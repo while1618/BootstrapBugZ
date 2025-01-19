@@ -4,9 +4,9 @@ Sending emails requires additional setup and won't work out of the box.
 You'll need to configure your SMTP, provide host, username and password.
 You can set these up directly in the code or via environment variables. Refer to the corresponding section for more details.
 
-### HTML Emails
+### Adding your HTML templates
 
-You can create HTML email templates in the `resources/templates/email` directory and send them using the `sendHtmlEmail()` method from the `EmailService`.
+Emails are send via SpringBoot, you can create HTML email template in the `resources/templates/email` directory and send them using the `sendHtmlEmail()` method from the `EmailService`.
 However, creating responsive emails can be challenging.
 
 To simplify this, I've integrated [MJML](https://github.com/mjmlio/mjml).
