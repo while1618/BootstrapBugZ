@@ -7,7 +7,7 @@ When a user signs in, two tokens are created:
 - **Access Token**: used to access protected resources within the app.
 - **Refresh Token**: used to silently obtain a new access token when the current one expires, allowing the user to stay signed in without re-entering their password.
 
-Tokens are sent from the API in the response body. When the request is made from SvelteKit server side,
+Tokens are generated on the backend, and they are sent to the frontend in the request response body. When the request is made from SvelteKit server,
 both access and refresh tokens will be saved in HTTP-only cookie and they will be used to keep the user authenticated.
 
 #### Token Storage and Lifetime
@@ -19,7 +19,7 @@ You can change expiration times through environment variables.
 
 #### Refreshing Token
 
-On the UI, each API request is intercepted and modified using the server `hook`:
+In SvelteKit, each API request is intercepted and modified using the `hooks.server.ts`:
 
 - Check the HTTP-only cookie for an access token.
 - Check that access token is valid.
@@ -70,7 +70,7 @@ When a user requests a password reset, a JWT with the purpose `reset_password` i
 
 All JWTs share the following structure:
 
-- **issuer**: Who created the token.
+- **issuer**: ID of a user who created the token.
 - **issuedAt**: Timestamp of when the token was created.
 - **expireAt**: Timestamp of when the token expires.
 - **purpose**: Describes the token's purpose (`access_token`, `refresh_token`, `reset_password_token`, `verify_email_token`).
