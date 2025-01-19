@@ -7,8 +7,8 @@ When a user signs in, two tokens are created:
 - **Access Token**: used to access protected resources within the app.
 - **Refresh Token**: used to silently obtain a new access token when the current one expires, allowing the user to stay signed in without re-entering their password.
 
-Tokens are generated on the backend, and they are sent to the frontend in the request response body. When the request is made from SvelteKit server,
-both access and refresh tokens will be saved in HTTP-only cookie and they will be used to keep the user authenticated.
+Tokens are generated on the backend. When the request is made from SvelteKit server, tokens will be returned in the response body.
+Both access and refresh tokens will then be saved in HTTP-only cookie and they will be used to keep the user authenticated.
 
 #### Token Storage and Lifetime
 
