@@ -55,7 +55,7 @@ For more details, check [this Stack Overflow discussion](https://stackoverflow.c
 When a user signs out from all devices:
 
 - All user's refresh tokens will be deleted.
-- The user's ID and the time of the request are stored in Redis. This is used to ensure that all access tokens created before the sign-out request are invalid.
+- The user's ID and the time of the request are stored in Redis. This is used to ensure that all access tokens created before the sign-out-from-all-devices request are invalid.
   Again, this data will only be stored in Redis for the access token lifetime (15 minutes).
 
 ### Account Verification
