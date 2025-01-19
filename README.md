@@ -13,7 +13,7 @@ This project is not a no-code solution, nor is it just another SaaS boilerplate 
 It's designed specifically for experienced developers who want complete control over their applications.
 You'll need to understand the written code, which is entirely yours to adapt, extend, and own.
 
-The goal is to provide a reliable and customizable foundation that eliminates repetitive tasks, letting you focus entirely on crafting your unique business logic.
+The goal is to provide a reliable and customizable foundation that eliminates repetitive tasks, letting you focus entirely on your business logic.
 
 ### Core features
 
