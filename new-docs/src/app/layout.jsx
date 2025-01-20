@@ -18,7 +18,8 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <Head></Head>
-      <body>
+      {/* https://github.com/vercel/next.js/discussions/72035 */}
+      <body suppressHydrationWarning>
         <Layout
           navbar={navbar}
           pageMap={await getPageMap()}
