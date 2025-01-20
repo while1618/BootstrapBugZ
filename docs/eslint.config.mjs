@@ -14,7 +14,7 @@ const eslintConfig = [
     extends: ['next/core-web-vitals', 'next/typescript', 'prettier'],
   }),
   {
-    ignores: ['node_modules/', '.next/', 'next-env.d.ts'],
+    ignores: ['node_modules/', '.next/', 'next-env.d.ts', 'out/'],
   },
 ];
 

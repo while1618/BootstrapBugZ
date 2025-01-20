@@ -2,13 +2,12 @@ import type { NextConfig } from 'next';
 import nextra from 'nextra';
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactStrictMode: true,
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
 };
 
-const withNextra = nextra({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.tsx',
-});
+const withNextra = nextra({});
 
 export default withNextra(nextConfig);
