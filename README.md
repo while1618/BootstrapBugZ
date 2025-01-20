@@ -7,6 +7,8 @@
 A production-ready web application template designed to handle essential web app functionalities.
 Developers can focus on business logic while using this template as a robust starting point.
 
+[Docs](https://bugzkit.pages.dev/)
+
 ## Overview
 
 This project is not a no-code solution, nor is it just another SaaS boilerplate stuffed with third-party integrations.
