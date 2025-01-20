@@ -11,7 +11,7 @@ export const metadata = {
   },
 };
 
-const navbar = <Navbar logo={<b>Nextra</b>} projectLink="https://github.com/while1618/bugzkit" />;
+const navbar = <Navbar logo={<b>bugzkit</b>} projectLink="https://github.com/while1618/bugzkit" />;
 const footer = <Footer>{new Date().getFullYear()} © bugzkit.</Footer>;
 
 export default async function RootLayout({ children }) {
