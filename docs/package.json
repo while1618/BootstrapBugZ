@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build && pnpm postbuild",
+    "build": "next build",
     "postbuild": "pagefind --site .next/server/app --output-path out/_pagefind",
     "start": "next start",
     "format": "prettier --write .",
