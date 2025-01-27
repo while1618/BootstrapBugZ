@@ -8,14 +8,10 @@
   import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
-  import type { PageServerData } from '../$types';
+  import type { PageData } from '../$types';
   import { updateProfileSchema } from '../schema';
 
-  interface Props {
-    data: PageServerData;
-  }
-
-  const { data }: Props = $props();
+  const { data }: { data: PageData } = $props();
 
   const superform = superForm(data.updateProfileForm, {
     validators: zodClient(updateProfileSchema),

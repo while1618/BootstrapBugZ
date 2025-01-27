@@ -2,11 +2,7 @@
   import type { Profile } from '$lib/models/user/user';
   import * as m from '$lib/paraglide/messages.js';
 
-  interface Props {
-    profile: Profile;
-  }
-
-  const { profile }: Props = $props();
+  const { profile }: { profile: Profile } = $props();
 </script>
 
 <section>

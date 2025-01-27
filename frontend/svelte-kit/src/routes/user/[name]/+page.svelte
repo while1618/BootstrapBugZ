@@ -1,12 +1,8 @@
 <script lang="ts">
   import * as m from '$lib/paraglide/messages.js';
-  import type { PageServerData } from './$types';
+  import type { PageProps } from './$types';
 
-  interface Props {
-    data: PageServerData;
-  }
-
-  const { data }: Props = $props();
+  const { data }: PageProps = $props();
 </script>
 
 <section>

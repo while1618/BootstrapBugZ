@@ -14,11 +14,7 @@
   import LanguageSwitcher from './language-switcher.svelte';
   import ThemeSwitcher from './theme-switcher.svelte';
 
-  interface Props {
-    isAdmin: boolean;
-  }
-
-  const { isAdmin }: Props = $props();
+  const { isAdmin }: { isAdmin: boolean } = $props();
 </script>
 
 <header class="sticky top-0 z-50 bg-primary-foreground py-2">

@@ -4,18 +4,14 @@
   import { Label } from '$lib/components/ui/label';
   import * as Table from '$lib/components/ui/table';
   import * as m from '$lib/paraglide/messages.js';
-  import type { PageServerData } from './$types';
+  import type { PageProps } from './$types';
   import ActivateDialog from './(components)/activate-dialog.svelte';
   import ChangeRolesDialog from './(components)/change-roles-dialog.svelte';
   import CreateDialog from './(components)/create-dialog.svelte';
   import DeleteDialog from './(components)/delete-dialog.svelte';
   import LockDialog from './(components)/lock-dialog.svelte';
 
-  interface Props {
-    data: PageServerData;
-  }
-
-  const { data }: Props = $props();
+  const { data }: PageProps = $props();
 </script>
 
 <section>

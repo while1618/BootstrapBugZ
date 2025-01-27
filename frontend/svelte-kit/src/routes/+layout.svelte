@@ -9,14 +9,9 @@
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
   import { ModeWatcher } from 'mode-watcher';
   import '../app.css';
-  import type { LayoutData } from './$types';
+  import type { LayoutProps } from './$types';
 
-  interface Props {
-    data: LayoutData;
-    children?: import('svelte').Snippet;
-  }
-
-  const { data, children }: Props = $props();
+  const { data, children }: LayoutProps = $props();
 </script>
 
 <svelte:head>
@@ -28,10 +23,10 @@
     <Loading />
   {:else if data.profile}
     <UserNavbar isAdmin={data.isAdmin} />
-    {@render children?.()}
+    {@render children()}
   {:else}
     <GuestNavbar />
-    {@render children?.()}
+    {@render children()}
   {/if}
 </ParaglideJS>
 

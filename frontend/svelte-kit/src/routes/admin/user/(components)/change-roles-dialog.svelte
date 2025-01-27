@@ -10,15 +10,10 @@
   import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
-  import type { PageServerData } from '../$types';
+  import type { PageData } from '../$types';
   import { changeRolesSchema } from '../schema';
 
-  interface Props {
-    data: PageServerData;
-    user: AdminUser;
-  }
-
-  const { data, user }: Props = $props();
+  const { data, user }: { data: PageData; user: AdminUser } = $props();
 
   const superform = superForm(data.changeRolesForm, {
     validators: zodClient(changeRolesSchema),

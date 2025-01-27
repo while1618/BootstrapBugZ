@@ -10,14 +10,10 @@
   import { toast } from 'svelte-sonner';
   import { superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
-  import type { PageServerData } from '../$types';
+  import type { PageData } from '../$types';
   import { changePasswordSchema, deleteSchema } from '../schema';
 
-  interface Props {
-    data: PageServerData;
-  }
-
-  const { data }: Props = $props();
+  const { data }: { data: PageData } = $props();
 
   const changePasswordSuperform = superForm(data.changePasswordForm, {
     validators: zodClient(changePasswordSchema),

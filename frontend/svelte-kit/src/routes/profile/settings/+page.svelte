@@ -1,15 +1,11 @@
 <script lang="ts">
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import * as m from '$lib/paraglide/messages.js';
-  import type { PageServerData } from './$types';
+  import type { PageProps } from './$types';
   import PersonalInformation from './(components)/personal-information.svelte';
   import Security from './(components)/security.svelte';
 
-  interface Props {
-    data: PageServerData;
-  }
-
-  const { data }: Props = $props();
+  const { data }: PageProps = $props();
 </script>
 
 <section>
