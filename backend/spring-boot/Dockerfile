@@ -1,4 +1,4 @@
-FROM maven:3.9.6-amazoncorretto-21-debian AS build
+FROM maven:sapmachine AS build
 RUN apt-get update; apt-get install -y curl \
     && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
